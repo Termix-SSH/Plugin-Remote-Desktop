@@ -3,7 +3,7 @@ import {
   canUploadToRdpDrive,
   getFileDropDisposition,
   hasDraggedFiles,
-} from "./guacamole-file-drop.ts";
+} from "../../src/frontend/guacamole-file-drop.ts";
 
 describe("Guacamole file drop", () => {
   it("recognizes external file drags", () => {

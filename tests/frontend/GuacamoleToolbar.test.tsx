@@ -1,8 +1,8 @@
 import React from "react";
 import { fireEvent, render } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { GuacamoleToolbar } from "./GuacamoleToolbar.js";
-import type { GuacamoleDisplayHandle } from "./GuacamoleDisplay.js";
+import { GuacamoleToolbar } from "../../src/frontend/GuacamoleToolbar.js";
+import type { GuacamoleDisplayHandle } from "../../src/frontend/GuacamoleDisplay.js";
 
 vi.mock("react-i18next", () => ({
   useTranslation: () => ({ t: (key: string) => key }),

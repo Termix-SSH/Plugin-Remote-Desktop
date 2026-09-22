@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { bindPointerInput } from "./guacamole-pointer.js";
+import { bindPointerInput } from "../../src/frontend/guacamole-pointer.js";
 
 function listenedEvents(): {
   element: HTMLElement;

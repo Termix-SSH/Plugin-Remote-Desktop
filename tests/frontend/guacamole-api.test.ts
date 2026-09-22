@@ -25,7 +25,7 @@ import {
   getGuacdStatus,
   getGuacamoleConnectionId,
   getGuacamoleTokenFromHost,
-} from "./guacamole-api";
+} from "../../src/frontend/guacamole-api";
 
 beforeEach(() => {
   authApiMock.get.mockClear();

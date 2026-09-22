@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { clampGuacamoleZoom, stepGuacamoleZoom } from "./guacamole-zoom.js";
+import {
+  clampGuacamoleZoom,
+  stepGuacamoleZoom,
+} from "../../src/frontend/guacamole-zoom.js";
 
 describe("guacamole zoom", () => {
   it("steps in predictable quarter increments", () => {

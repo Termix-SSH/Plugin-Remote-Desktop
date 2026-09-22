@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { describeUploadError } from "./guacamole-filesystem";
+import { describeUploadError } from "../../src/frontend/guacamole-filesystem";
 
 const t = (key: string) => `#${key}`;
 

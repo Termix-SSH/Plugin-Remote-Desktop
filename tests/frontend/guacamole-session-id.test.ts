@@ -1,7 +1,9 @@
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
 const fetchId = vi.hoisted(() => vi.fn());
-vi.mock("./guacamole-api", () => ({ getGuacamoleConnectionId: fetchId }));
-import { watchGuacamoleConnectionId } from "./guacamole-session-id";
+vi.mock("../../src/frontend/guacamole-api", () => ({
+  getGuacamoleConnectionId: fetchId,
+}));
+import { watchGuacamoleConnectionId } from "../../src/frontend/guacamole-session-id";
 beforeEach(() => {
   vi.useFakeTimers();
   fetchId.mockReset();

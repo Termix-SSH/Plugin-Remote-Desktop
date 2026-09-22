@@ -6,7 +6,7 @@ import {
   MAX_SCROLL_CLICKS_PER_FLUSH,
   SCROLL_FLUSH_INTERVAL_MS,
   takeScrollClicks,
-} from "./guacamole-scroll.js";
+} from "../../src/frontend/guacamole-scroll.js";
 
 describe("guacamole scroll coalescing", () => {
   it("caps a click flood so a laggy tunnel cannot queue a backlog", () => {
