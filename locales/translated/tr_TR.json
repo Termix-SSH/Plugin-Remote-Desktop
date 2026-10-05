@@ -302,7 +302,6 @@
         "label": "Yapıştırmayı Devre Dışı Bırak",
         "description": "Uzak oturuma metin yapıştırmayı engelle"
       },
-      "group": "Uzak Masaüstü varsayılan ayarları",
       "colorDepth16": "16 bit",
       "colorDepth24": "24 bit",
       "colorDepth32": "32 bit"

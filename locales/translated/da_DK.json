@@ -302,7 +302,6 @@
         "label": "Deaktiver indsætning",
         "description": "Forhindr indsættelse af tekst i fjernsessionen"
       },
-      "group": "Standardindstillinger for fjernskrivebord",
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
       "colorDepth32": "32-bit"

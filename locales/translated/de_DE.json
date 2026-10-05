@@ -302,7 +302,6 @@
         "label": "Einfügen deaktivieren",
         "description": "Einfügen von Text in die entfernte Sitzung verhindern"
       },
-      "group": "Standardeinstellungen für Remotedesktop",
       "colorDepth16": "16-Bit",
       "colorDepth24": "24-Bit",
       "colorDepth32": "32-Bit"

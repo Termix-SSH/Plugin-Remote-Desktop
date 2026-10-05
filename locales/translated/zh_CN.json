@@ -302,7 +302,6 @@
         "label": "禁用粘贴",
         "description": "禁止粘贴文本到远程会话"
       },
-      "group": "远程桌面默认设置",
       "colorDepth16": "16 位",
       "colorDepth24": "24 位",
       "colorDepth32": "32 位"

@@ -302,7 +302,6 @@
         "label": "Inaktivera inklistring",
         "description": "Förhindra att text klistras in i fjärrsessionen"
       },
-      "group": "Standardinställningar för fjärrskrivbord",
       "colorDepth16": "16-bitars",
       "colorDepth24": "24-bitars",
       "colorDepth32": "32-bitars"

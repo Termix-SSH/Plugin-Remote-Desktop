@@ -302,7 +302,6 @@
         "label": "Désactiver le collage",
         "description": "Empêcher le collage de texte dans la session distante"
       },
-      "group": "Paramètres par défaut du Bureau à distance",
       "colorDepth16": "16 bits",
       "colorDepth24": "24 bits",
       "colorDepth32": "32 bits"

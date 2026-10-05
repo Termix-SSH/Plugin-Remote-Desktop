@@ -302,7 +302,6 @@
         "label": "Wyłącz wklejanie",
         "description": "Zapobiegaj wklejaniu tekstu do sesji zdalnej"
       },
-      "group": "Domyślne ustawienia pulpitu zdalnego",
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
       "colorDepth32": "32-bit"

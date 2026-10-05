@@ -302,7 +302,6 @@
         "label": "停用貼上",
         "description": "防止將文字貼上至遠端工作階段"
       },
-      "group": "遠端桌面預設設定",
       "colorDepth16": "16 位元",
       "colorDepth24": "24 位元",
       "colorDepth32": "32 位元"

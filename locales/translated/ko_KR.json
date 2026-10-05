@@ -302,7 +302,6 @@
         "label": "붙여넣기 비활성화",
         "description": "원격 세션으로 텍스트 붙여넣기 방지"
       },
-      "group": "원격 데스크톱 기본 설정",
       "colorDepth16": "16비트",
       "colorDepth24": "24비트",
       "colorDepth32": "32비트"

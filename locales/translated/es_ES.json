@@ -302,7 +302,6 @@
         "label": "Deshabilitar pegado",
         "description": "Impedir el pegado de texto en la sesión remota"
       },
-      "group": "Configuración predeterminada de Escritorio remoto",
       "colorDepth16": "16 bits",
       "colorDepth24": "24 bits",
       "colorDepth32": "32 bits"

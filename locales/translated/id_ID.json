@@ -302,7 +302,6 @@
         "label": "Nonaktifkan Tempel",
         "description": "Mencegah penyisipan teks ke dalam sesi jarak jauh"
       },
-      "group": "Pengaturan default Remote Desktop",
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
       "colorDepth32": "32-bit"

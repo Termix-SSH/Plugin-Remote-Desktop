@@ -302,7 +302,6 @@
         "label": "Disabilita incolla",
         "description": "Impedisce di incollare testo nella sessione remota"
       },
-      "group": "Impostazioni predefinite di Desktop remoto",
       "colorDepth16": "16 bit",
       "colorDepth24": "24 bit",
       "colorDepth32": "32 bit"

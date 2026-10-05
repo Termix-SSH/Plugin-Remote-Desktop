@@ -302,7 +302,6 @@
         "label": "Zakázat vkládání",
         "description": "Zabránit vkládání textu do vzdálené relace"
       },
-      "group": "Výchozí nastavení vzdálené plochy",
       "colorDepth16": "16bitový",
       "colorDepth24": "24bitový",
       "colorDepth32": "32bitový"

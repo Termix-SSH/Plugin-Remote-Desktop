@@ -302,7 +302,6 @@
         "label": "Dezactivați lipirea",
         "description": "Împiedicați lipirea textului în sesiunea la distanță"
       },
-      "group": "Setări implicite Desktop la distanță",
       "colorDepth16": "16 biți",
       "colorDepth24": "24 de biți",
       "colorDepth32": "32 de biți"

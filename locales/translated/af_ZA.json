@@ -302,7 +302,6 @@
         "label": "Deaktiveer plak",
         "description": "Voorkom die plak van teks in die afgeleë sessie"
       },
-      "group": "Afstandslessenaar-verstekwaardes",
       "colorDepth16": "16-bis",
       "colorDepth24": "24-bis",
       "colorDepth32": "32-bis"

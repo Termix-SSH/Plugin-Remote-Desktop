@@ -302,7 +302,6 @@
         "label": "Desactiva l'enganxament",
         "description": "Impedir enganxar text a la sessió remota"
       },
-      "group": "Valors predeterminats d'escriptori remot",
       "colorDepth16": "16 bits",
       "colorDepth24": "24 bits",
       "colorDepth32": "32 bits"

@@ -302,7 +302,6 @@
         "label": "Poista liittäminen käytöstä",
         "description": "Estä tekstin liittäminen etäistuntoon"
       },
-      "group": "Etätyöpöydän oletusasetukset",
       "colorDepth16": "16-bittinen",
       "colorDepth24": "24-bittinen",
       "colorDepth32": "32-bittinen"

@@ -302,7 +302,6 @@
         "label": "Disable Paste",
         "description": "Prevent pasting text into the remote session"
       },
-      "group": "Remote Desktop defaults",
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
       "colorDepth32": "32-bit"

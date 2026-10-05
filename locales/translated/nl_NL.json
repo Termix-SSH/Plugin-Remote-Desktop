@@ -302,7 +302,6 @@
         "label": "Plakken uitschakelen",
         "description": "Voorkom dat tekst in de externe sessie wordt geplakt."
       },
-      "group": "Standaardinstellingen voor Remote Desktop",
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
       "colorDepth32": "32-bit"

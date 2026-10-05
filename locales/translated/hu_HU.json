@@ -302,7 +302,6 @@
         "label": "Beillesztés letiltása",
         "description": "Szöveg beillesztésének megakadályozása a távoli munkamenetbe"
       },
-      "group": "Távoli asztal alapértelmezett beállításai",
       "colorDepth16": "16 bites",
       "colorDepth24": "24 bites",
       "colorDepth32": "32 bites"

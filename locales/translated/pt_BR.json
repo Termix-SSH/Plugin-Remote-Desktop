@@ -302,7 +302,6 @@
         "label": "Desativar colagem",
         "description": "Impedir a colagem de texto na sessão remota."
       },
-      "group": "Configurações padrão da Área de Trabalho Remota",
       "colorDepth16": "16 bits",
       "colorDepth24": "24 bits",
       "colorDepth32": "32 bits"

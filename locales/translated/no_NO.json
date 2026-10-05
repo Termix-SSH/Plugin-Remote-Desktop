@@ -302,7 +302,6 @@
         "label": "Deaktiver liming",
         "description": "Forhindre innliming av tekst i den eksterne økten"
       },
-      "group": "Standardinnstillinger for eksternt skrivebord",
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
       "colorDepth32": "32-bit"

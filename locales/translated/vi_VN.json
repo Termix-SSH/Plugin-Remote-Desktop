@@ -302,7 +302,6 @@
         "label": "Tắt dán",
         "description": "Ngăn dán văn bản vào phiên từ xa"
       },
-      "group": "Cài đặt mặc định của Remote Desktop",
       "colorDepth16": "16-bit",
       "colorDepth24": "24 bit",
       "colorDepth32": "32-bit"
