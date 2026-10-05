@@ -1,4 +1,4 @@
-import type { PluginContext } from "@termix/plugin-sdk/backend";
+import type { PluginContext } from "@termix-ssh/plugin-sdk/backend";
 import { GuacamoleTokenService } from "./token-service.js";
 import { RemoteSessions } from "./sessions.js";
 import {

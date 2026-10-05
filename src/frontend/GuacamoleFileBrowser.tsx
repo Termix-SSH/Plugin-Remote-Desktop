@@ -1,7 +1,7 @@
 import { errorMessage } from "./host-remote";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Guacamole from "guacamole-common-js";
-import { useTranslation } from "@termix/plugin-sdk/frontend";
+import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 import {
   ArrowUp,
   Download,
@@ -12,7 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@termix/plugin-sdk/ui";
+import { Button } from "@termix-ssh/plugin-sdk/ui";
 import {
   downloadFile,
   listDirectory,

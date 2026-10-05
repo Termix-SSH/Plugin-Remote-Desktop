@@ -1,7 +1,7 @@
 import {
   HOST_PROTOCOL_SECRET_KEPT,
   useTranslation,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 import {
   FakeSwitch,
   Input,
@@ -9,7 +9,7 @@ import {
   SectionCard,
   Select2,
   SettingRow,
-} from "@termix/plugin-sdk/ui";
+} from "@termix-ssh/plugin-sdk/ui";
 import {
   Activity,
   Copy,

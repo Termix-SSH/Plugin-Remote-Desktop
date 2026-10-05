@@ -1,4 +1,4 @@
-import type { ConnectionStage } from "@termix/plugin-sdk/ui";
+import type { ConnectionStage } from "@termix-ssh/plugin-sdk/ui";
 
 // Guacamole client states, per guacamole-common-js Guacamole.Client#STATE_*.
 const GUAC_STATE_IDLE = 0;

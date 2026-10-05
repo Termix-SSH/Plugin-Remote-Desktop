@@ -1,7 +1,7 @@
 import type {
   HostEditorSectionProps,
   HostProtocolAuthForm,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 import { PLUGIN_ID, remoteOptions, type Protocol } from "./host-remote";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */

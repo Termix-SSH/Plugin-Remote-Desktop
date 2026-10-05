@@ -9,7 +9,7 @@ import {
 } from "react";
 import Guacamole from "guacamole-common-js";
 import { Upload } from "lucide-react";
-import { useTranslation } from "@termix/plugin-sdk/frontend";
+import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 import { getGuacamoleToken } from "./guacamole-api";
 import { buildGuacamoleWebSocketBaseUrl } from "./guacamole-websocket-url.ts";
 import {
@@ -19,7 +19,7 @@ import {
   resolveConnectionOrigin,
   type ConnectionOrigin,
   type ConnectionStage,
-} from "@termix/plugin-sdk/ui";
+} from "@termix-ssh/plugin-sdk/ui";
 import { errorMessage } from "./host-remote";
 import { guacStateToStage } from "./guacamole-state.ts";
 import { isPasteShortcut, pasteTextToRemote } from "./guacamole-clipboard.ts";

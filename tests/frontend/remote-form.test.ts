@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { HostEditorSectionProps } from "@termix/plugin-sdk/frontend";
+import type { HostEditorSectionProps } from "@termix-ssh/plugin-sdk/frontend";
 import {
   loginOf,
   patchLogin,

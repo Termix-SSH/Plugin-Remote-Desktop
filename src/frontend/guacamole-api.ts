@@ -1,9 +1,9 @@
-import type { PluginApiClient, TermixApp } from "@termix/plugin-sdk/frontend";
+import type { PluginApiClient, TermixApp } from "@termix-ssh/plugin-sdk/frontend";
 import {
   isElectron,
   resolveRemoteHostId,
   type ConnectionOrigin,
-} from "@termix/plugin-sdk/ui";
+} from "@termix-ssh/plugin-sdk/ui";
 import type { GuacamoleConfig } from "./guacamole-config";
 import { errorMessage } from "./host-remote";
 

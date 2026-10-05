@@ -11,7 +11,7 @@ const remoteApiMock = vi.hoisted(() => ({
 const isElectronMock = vi.hoisted(() => vi.fn(() => false));
 const resolveRemoteHostIdMock = vi.hoisted(() => vi.fn());
 
-vi.mock("@termix/plugin-sdk/ui", () => ({
+vi.mock("@termix-ssh/plugin-sdk/ui", () => ({
   isElectron: isElectronMock,
   resolveRemoteHostId: resolveRemoteHostIdMock,
 }));

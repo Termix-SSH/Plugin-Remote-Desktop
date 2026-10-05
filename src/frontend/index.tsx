@@ -14,14 +14,14 @@ import {
   type StandaloneViewProps,
   type TabProps,
   type TermixApp,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 import {
   FakeSwitch,
   HostFeatureFields,
   SectionCard,
   SettingRow,
   isElectron,
-} from "@termix/plugin-sdk/ui";
+} from "@termix-ssh/plugin-sdk/ui";
 import { toast } from "sonner";
 import GuacamoleApp, { type GuacamoleAppHandle } from "./GuacamoleApp";
 import { GuacamoleDisplay } from "./GuacamoleDisplay";

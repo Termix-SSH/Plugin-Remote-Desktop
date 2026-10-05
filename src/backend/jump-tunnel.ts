@@ -1,6 +1,6 @@
 import net from "net";
 import type { Client } from "ssh2";
-import type { PluginContext } from "@termix/plugin-sdk/backend";
+import type { PluginContext } from "@termix-ssh/plugin-sdk/backend";
 import type { RemoteDesktopLogger } from "./log.js";
 
 /** The tunnels plugin's service, as ctx.services.get("tunnels.access") returns it. */

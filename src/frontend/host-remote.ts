@@ -2,7 +2,7 @@ import type {
   HostProtocolAuthSummary,
   PluginHostRecord,
   QuickConnectLogin,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 import type { GuacamoleConfig } from "./guacamole-config";
 
 export const PLUGIN_ID = "remote-desktop";

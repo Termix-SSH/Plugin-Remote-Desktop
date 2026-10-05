@@ -2,7 +2,7 @@ import crypto from "crypto";
 import net from "net";
 import path from "path";
 import type { Request, Response, Router } from "express";
-import type { PluginContext } from "@termix/plugin-sdk/backend";
+import type { PluginContext } from "@termix-ssh/plugin-sdk/backend";
 import {
   isServerOwnedSetting,
   type GuacamoleTokenService,

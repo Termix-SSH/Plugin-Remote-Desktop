@@ -21,7 +21,7 @@ import {
   useTranslation,
   useConnectionRetry,
   logActivity,
-} from "@termix/plugin-sdk/frontend";
+} from "@termix-ssh/plugin-sdk/frontend";
 import {
   Button,
   ConnectionLogProvider,
@@ -34,7 +34,7 @@ import {
   resolveConnectionOrigin,
   useConnectionLog,
   type ConnectionOrigin,
-} from "@termix/plugin-sdk/ui";
+} from "@termix-ssh/plugin-sdk/ui";
 import type { GuacamoleConfig } from "./guacamole-config";
 import {
   errorMessage,

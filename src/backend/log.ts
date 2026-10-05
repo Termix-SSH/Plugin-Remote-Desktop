@@ -1,4 +1,4 @@
-import type { PluginLogger } from "@termix/plugin-sdk/backend";
+import type { PluginLogger } from "@termix-ssh/plugin-sdk/backend";
 
 export type Meta = Record<string, unknown>;
 
