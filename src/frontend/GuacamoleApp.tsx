@@ -26,12 +26,8 @@ import {
   Button,
   ConnectionLogProvider,
   ConnectionScreen,
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
   Input,
+  PanePrompt,
   PasswordInput,
   isElectron,
   linkedServerUrl,
@@ -145,8 +141,8 @@ const GuacamoleApp = React.forwardRef<GuacamoleAppHandle, GuacamoleAppProps>(
       return (
         <div className="relative w-full h-full">
           <ConnectionScreen
-            status="disconnected"
-            message={t("remoteDesktop.hostNotFound")}
+            status="error"
+            unavailable={{ title: t("remoteDesktop.hostNotFound") }}
           />
         </div>
       );
@@ -442,25 +438,21 @@ const GuacamoleAppInner = React.forwardRef<
 
   reconnectRef.current = handleReconnect;
 
+  const hostDetail = [hostConfig.username, hostConfig.ip]
+    .filter(Boolean)
+    .join("@");
+
   if (promptOpen) {
     return (
-      <Dialog
-        open={promptOpen}
-        onOpenChange={(open) => {
-          if (!open) setPromptOpen(false);
-        }}
-      >
-        <DialogContent className="sm:max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="text-lg font-bold">
-              {t("remoteDesktop.credentialPromptTitle")}
-            </DialogTitle>
-            <DialogDescription className="text-xs text-muted-foreground">
-              {t("remoteDesktop.credentialPromptDescription")}
-            </DialogDescription>
-          </DialogHeader>
+      <div className="relative w-full h-full">
+        <PanePrompt
+          open
+          title={t("remoteDesktop.credentialPromptTitle")}
+          description={t("remoteDesktop.credentialPromptDescription")}
+          onCancel={() => setPromptOpen(false)}
+        >
           <form
-            className="flex flex-col gap-4 mt-1"
+            className="flex flex-col gap-3"
             onSubmit={(e) => {
               e.preventDefault();
               setPromptedCredentials({
@@ -503,14 +495,21 @@ const GuacamoleAppInner = React.forwardRef<
                 onChange={(e) => setPromptPassword(e.target.value)}
               />
             </div>
-            <div className="flex items-center justify-end gap-2 mt-2">
+            <div className="flex items-center justify-end gap-2">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={() => setPromptOpen(false)}
+              >
+                {t("common.cancel")}
+              </Button>
               <Button type="submit" variant="outline">
                 {t("remoteDesktop.connect")}
               </Button>
             </div>
           </form>
-        </DialogContent>
-      </Dialog>
+        </PanePrompt>
+      </div>
     );
   }
 
@@ -526,6 +525,8 @@ const GuacamoleAppInner = React.forwardRef<
               "remote"
             ).toUpperCase(),
           })}
+          detail={hostDetail}
+          errorDetail={error}
           attempt={tokenRetry.attempt}
           maxAttempts={tokenRetry.maxAttempts}
           nextRetryInMs={tokenRetry.nextRetryInMs}
@@ -549,6 +550,8 @@ const GuacamoleAppInner = React.forwardRef<
           message={t("remoteDesktop.connecting", {
             type: resolvedProtocol.toUpperCase(),
           })}
+          detail={hostDetail}
+          errorDetail={connectionError}
           onManualRetry={handleReconnect}
           retryLabel={t("remoteDesktop.reconnect")}
           className="z-50"
