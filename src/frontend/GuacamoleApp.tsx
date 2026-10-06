@@ -542,7 +542,6 @@ const GuacamoleAppInner = React.forwardRef<
           maxAttempts={tokenRetry.maxAttempts}
           nextRetryInMs={tokenRetry.nextRetryInMs}
           onManualRetry={handleReconnect}
-          retryLabel={t("remoteDesktop.retry")}
         />
       </div>
     );
@@ -564,7 +563,6 @@ const GuacamoleAppInner = React.forwardRef<
           detail={hostDetail}
           errorDetail={connectionError}
           onManualRetry={handleReconnect}
-          retryLabel={t("remoteDesktop.reconnect")}
           className="z-50"
         />
       )}

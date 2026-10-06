@@ -11,8 +11,6 @@
     "failedToConnect": "Failed to get connection token",
     "hostNotFound": "Host not found",
     "noHostSelected": "No host selected",
-    "reconnect": "Reconnect",
-    "retry": "Retry",
     "guacdUnavailable": "Remote desktop service (guacd) is not available. Please ensure guacd is running and accessible and configured properly in admin settings.",
     "credentialPromptTitle": "Enter RDP Credentials",
     "credentialPromptDescription": "This host is set to prompt for credentials on connect. They are used for this session only and are not saved.",
