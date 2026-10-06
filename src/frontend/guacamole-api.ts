@@ -239,7 +239,8 @@ export async function getGuacamoleTokenFromHost(
 
 export interface RemoteDesktopStatus {
   enabled: boolean;
-  guacd: { status: string };
+  /** host and port are where the server dials guacd, after env overrides. */
+  guacd: { status: string; host?: string; port?: number };
 }
 
 /** `probe: false` skips dialing guacd, for a caller that only needs `enabled`. */

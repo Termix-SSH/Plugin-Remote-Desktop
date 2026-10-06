@@ -5,6 +5,7 @@ import {
   Monitor,
   MonitorUp,
   MousePointerClick,
+  Server,
 } from "lucide-react";
 import {
   invokeAction,
@@ -51,6 +52,7 @@ import {
   type RemoteHostLogin,
 } from "./host-remote";
 import { remoteDesktopForm } from "./remote-form";
+import { GuacdSetupStep } from "./GuacdSetupStep";
 
 const PROTOCOLS: {
   id: Protocol;
@@ -445,13 +447,15 @@ export function activate(app: TermixApp): void {
     .then((status) => status.enabled !== false)
     .catch(() => true)
     .then((enabled) => {
-      if (!disposed && enabled) registerHostSurfaces(app);
+      if (disposed || !enabled) return;
+      registerHostSurfaces(app);
+      app.registerOnboardingStep({
+        id: "guacd",
+        titleKey: "onboarding.guacdTitle",
+        icon: Server,
+        component: GuacdSetupStep,
+        audience: "admin",
+        section: "setup",
+      });
     });
-
-  app.registerSlotContribution("onboarding.features", {
-    actionId: "remote-desktop.feature",
-    titleKey: "onboarding.feature_desktop",
-    descriptionKey: "onboarding.feature_desktop_desc",
-    icon: Monitor,
-  });
 }

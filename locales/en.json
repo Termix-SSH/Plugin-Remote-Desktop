@@ -246,8 +246,16 @@
     "connectionOriginGuacamoleNote": "RDP, VNC and Telnet use the remote server unless you pick \"This device\", which needs a guacd this machine can reach. Set one in the guacd URL setting, or per host under guacd Proxy."
   },
   "onboarding": {
-    "feature_desktop": "Remote desktop",
-    "feature_desktop_desc": "Open RDP, VNC and Telnet sessions in a tab, same as SSH."
+    "guacdTitle": "Set up remote desktop",
+    "guacdIntro": "Remote desktop needs guacd running next to Termix. Check that it answers, or point Termix at it.",
+    "guacdChecking": "Looking for guacd",
+    "guacdConnected": "guacd is running at {{address}}",
+    "guacdMissing": "guacd is not answering at {{address}}",
+    "guacdMissingDesc": "You can carry on and set it up later. Remote desktop sessions will not connect until it answers.",
+    "guacdCheckFailed": "Could not check guacd",
+    "guacdComposeTitle": "Add it to your docker compose file",
+    "guacdSaveAndCheck": "Save and check",
+    "guacdEnvNote": "If GUACD_URL, GUACD_HOST or GUACD_PORT is set on the server, that wins over this."
   },
   "settings": {
     "user": {
