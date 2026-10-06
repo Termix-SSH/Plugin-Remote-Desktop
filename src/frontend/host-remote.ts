@@ -76,7 +76,7 @@ function port(value: unknown, fallback: number): number {
     : fallback;
 }
 
-export function parseGuacamoleConfig(value: unknown): GuacamoleConfig {
+function parseGuacamoleConfig(value: unknown): GuacamoleConfig {
   if (!value) return {};
   if (typeof value === "string") {
     try {

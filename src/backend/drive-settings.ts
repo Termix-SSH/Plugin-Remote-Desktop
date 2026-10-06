@@ -1,4 +1,4 @@
-export const GUACD_DRIVE_PATH_ENV = "GUACD_DRIVE_PATH";
+const GUACD_DRIVE_PATH_ENV = "GUACD_DRIVE_PATH";
 const DEFAULT_DRIVE_ROOT = "/drive";
 
 /**

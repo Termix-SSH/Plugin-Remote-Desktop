@@ -58,7 +58,7 @@ interface GuacamoleToolbarProps {
 export const REMOTE_DESKTOP_TOOLBAR_SLOT = "remote-desktop.toolbar";
 
 /** What a "remote-desktop.toolbar" action is invoked with. */
-export interface RemoteDesktopToolbarContext {
+interface RemoteDesktopToolbarContext {
   hostId: number;
   /** guacd's connection id, once the session is up. */
   sessionId: string | null;

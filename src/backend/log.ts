@@ -1,6 +1,6 @@
 import type { PluginLogger } from "@termix-ssh/plugin-sdk/backend";
 
-export type Meta = Record<string, unknown>;
+type Meta = Record<string, unknown>;
 
 export interface RemoteDesktopLogger {
   info: (message: string, meta?: Meta) => void;

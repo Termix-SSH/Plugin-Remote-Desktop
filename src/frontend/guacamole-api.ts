@@ -1,4 +1,7 @@
-import type { PluginApiClient, TermixApp } from "@termix-ssh/plugin-sdk/frontend";
+import type {
+  PluginApiClient,
+  TermixApp,
+} from "@termix-ssh/plugin-sdk/frontend";
 import {
   isElectron,
   resolveRemoteHostId,
@@ -60,9 +63,7 @@ type GuacamoleConfigSource = {
   guacamoleConfig?: string | Record<string, unknown> | null;
 };
 
-export function getGuacamoleDpi(
-  source?: GuacamoleConfigSource,
-): number | undefined {
+function getGuacamoleDpi(source?: GuacamoleConfigSource): number | undefined {
   const config = source?.guacamoleConfig;
   if (!config) return undefined;
 

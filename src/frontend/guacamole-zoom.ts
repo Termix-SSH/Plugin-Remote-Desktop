@@ -1,6 +1,6 @@
-export const MIN_GUACAMOLE_ZOOM = 0.5;
-export const MAX_GUACAMOLE_ZOOM = 4;
-export const GUACAMOLE_ZOOM_STEP = 0.25;
+const MIN_GUACAMOLE_ZOOM = 0.5;
+const MAX_GUACAMOLE_ZOOM = 4;
+const GUACAMOLE_ZOOM_STEP = 0.25;
 
 export function clampGuacamoleZoom(zoom: number): number {
   return Math.min(MAX_GUACAMOLE_ZOOM, Math.max(MIN_GUACAMOLE_ZOOM, zoom));

@@ -2,7 +2,7 @@ import type { PluginContext } from "@termix-ssh/plugin-sdk/backend";
 
 export type RemoteProtocol = "rdp" | "vnc" | "telnet";
 
-export const PLUGIN_ID = "remote-desktop";
+const PLUGIN_ID = "remote-desktop";
 
 export interface RemoteDesktopHostSettings {
   enableRdp: boolean;

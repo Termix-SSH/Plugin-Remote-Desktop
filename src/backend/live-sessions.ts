@@ -3,7 +3,7 @@ import type { RemoteSessions } from "./sessions.js";
 import type { RemoteProtocol } from "./host-settings.js";
 
 /** sessions.live v1, as session-sharing reads it (plugins/session-sharing/src/backend/live.ts). */
-export interface LiveSessionInfo {
+interface LiveSessionInfo {
   id: string;
   userId: string;
   hostId: number;

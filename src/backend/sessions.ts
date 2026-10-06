@@ -14,7 +14,7 @@ export interface RemoteSession {
 type Cleanup = () => void;
 
 /** How long a minted token's tunnel waits for guacd to connect through it. */
-export const PENDING_TIMEOUT_MS = 5 * 60 * 1000;
+const PENDING_TIMEOUT_MS = 5 * 60 * 1000;
 
 /**
  * Live guacd sessions and what each one holds open.

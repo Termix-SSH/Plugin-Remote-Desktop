@@ -13,7 +13,7 @@ function parsePort(value: string | undefined, fallback: number) {
   return Number.isFinite(port) ? port : fallback;
 }
 
-export function parseGuacdUrl(
+function parseGuacdUrl(
   value: string,
   fallback: GuacdOptions = DEFAULT_GUACD_OPTIONS,
 ): GuacdOptions {
@@ -49,7 +49,7 @@ export function parseGuacdUrl(
   };
 }
 
-export function getGuacdEnvOptions(): GuacdOptions | null {
+function getGuacdEnvOptions(): GuacdOptions | null {
   if (process.env.GUACD_URL) {
     return parseGuacdUrl(process.env.GUACD_URL);
   }
@@ -77,10 +77,10 @@ export function resolveGuacdOptions(dbUrl?: string | null): GuacdOptions {
   return DEFAULT_GUACD_OPTIONS;
 }
 
-export function formatGuacdOptions(options: GuacdOptions): string {
+function formatGuacdOptions(options: GuacdOptions): string {
   return `${options.host}:${options.port}`;
 }
 
-export function getDefaultGuacdUrl(): string {
+function getDefaultGuacdUrl(): string {
   return formatGuacdOptions(resolveGuacdOptions());
 }

@@ -8,7 +8,7 @@ export interface GuacamoleFileStreamClient {
 
 // The root stream of a Guacamole.Object maps stream name to mimetype; a stream
 // carrying that same mimetype is itself a directory.
-export const STREAM_INDEX_MIMETYPE =
+const STREAM_INDEX_MIMETYPE =
   "application/vnd.glyptodon.guacamole.stream-index+json";
 
 export interface RemoteFileEntry {
@@ -18,11 +18,11 @@ export interface RemoteFileEntry {
   isDirectory: boolean;
 }
 
-export function isDirectoryMimetype(mimetype: string): boolean {
+function isDirectoryMimetype(mimetype: string): boolean {
   return mimetype === STREAM_INDEX_MIMETYPE;
 }
 
-export function joinPath(parent: string, name: string): string {
+function joinPath(parent: string, name: string): string {
   return parent === "/" ? `/${name}` : `${parent}/${name}`;
 }
 
@@ -31,16 +31,13 @@ export function parentPath(path: string): string {
   return cut <= 0 ? "/" : path.slice(0, cut);
 }
 
-export function basename(path: string): string {
+function basename(path: string): string {
   return path.slice(path.lastIndexOf("/") + 1) || path;
 }
 
 // guacd returns absolute paths as keys, but a malformed or relative key would
 // otherwise produce a broken path on the next descent.
-export function parseDirectoryIndex(
-  json: string,
-  path: string,
-): RemoteFileEntry[] {
+function parseDirectoryIndex(json: string, path: string): RemoteFileEntry[] {
   const index = JSON.parse(json) as Record<string, string>;
 
   return Object.entries(index)
@@ -152,7 +149,7 @@ export function uploadFileToClient(
   return writeUpload(createClientFileStream(client, file), file, onProgress);
 }
 
-export function createClientFileStream(
+function createClientFileStream(
   client: GuacamoleFileStreamClient,
   file: File,
 ): Guacamole.OutputStream {

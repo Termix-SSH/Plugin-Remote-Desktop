@@ -35,9 +35,9 @@ import {
 } from "./guacamole-filesystem.ts";
 import { clampGuacamoleZoom, stepGuacamoleZoom } from "./guacamole-zoom.ts";
 
-export type GuacamoleConnectionType = "rdp" | "vnc" | "telnet";
+type GuacamoleConnectionType = "rdp" | "vnc" | "telnet";
 
-export interface GuacamoleConnectionConfig {
+interface GuacamoleConnectionConfig {
   token?: string;
   protocol?: GuacamoleConnectionType;
   type?: GuacamoleConnectionType;
