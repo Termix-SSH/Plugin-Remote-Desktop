@@ -94,6 +94,8 @@ const silentLogger: TokenLogger = { warn: () => {}, error: () => {} };
 export class GuacamoleTokenService {
   private encryptionKey: Buffer;
   private macKey: Buffer;
+  /** Hashes of host tokens already used to open a display, with their expiry. */
+  private readonly spent = new Map<string, number>();
 
   constructor(
     private readonly log: TokenLogger = silentLogger,
@@ -187,6 +189,24 @@ export class GuacamoleTokenService {
     const decoded = this.decryptToken(token);
     if (!decoded || typeof decoded.exp !== "number") return null;
     return decoded.exp > this.now() ? decoded : null;
+  }
+
+  /**
+   * verifyToken, but a host token opens one display only: it carries the
+   * login, so a copy of the display URL must not open a second session.
+   * Join tokens carry no login and stay valid until they expire.
+   */
+  consumeToken(token: string): GuacamoleToken | null {
+    const decoded = this.verifyToken(token);
+    if (!decoded || decoded.connection.join) return decoded;
+    const now = this.now();
+    for (const [id, exp] of this.spent) {
+      if (exp <= now) this.spent.delete(id);
+    }
+    const id = crypto.createHash("sha256").update(token).digest("base64");
+    if (this.spent.has(id)) return null;
+    this.spent.set(id, decoded.exp as number);
+    return decoded;
   }
 
   decryptToken(token: string): GuacamoleToken | null {

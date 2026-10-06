@@ -73,6 +73,39 @@ describe("verifyToken", () => {
   });
 });
 
+describe("consumeToken", () => {
+  it("opens one display per host token", () => {
+    const tokens = new GuacamoleTokenService();
+    const token = tokens.createRdpToken("10.0.0.7", "admin", "secret");
+    expect(tokens.consumeToken(token)).not.toBeNull();
+    expect(tokens.consumeToken(token)).toBeNull();
+  });
+
+  it("keeps each host token separate", () => {
+    const tokens = new GuacamoleTokenService();
+    const first = tokens.createVncToken("10.0.0.7", undefined, "secret");
+    const second = tokens.createVncToken("10.0.0.7", undefined, "secret");
+    expect(tokens.consumeToken(first)).not.toBeNull();
+    expect(tokens.consumeToken(second)).not.toBeNull();
+  });
+
+  it("lets a join token open several viewers", () => {
+    const tokens = new GuacamoleTokenService();
+    const token = tokens.createJoinToken("session-1", true);
+    expect(tokens.consumeToken(token)).not.toBeNull();
+    expect(tokens.consumeToken(token)).not.toBeNull();
+  });
+
+  it("refuses a forged or expired token without spending anything", () => {
+    let now = 1_000_000;
+    const tokens = new GuacamoleTokenService(undefined, () => now);
+    expect(tokens.consumeToken("not-a-token")).toBeNull();
+    const token = tokens.createTelnetToken("10.0.0.7");
+    now += TOKEN_TTL_MS + 1;
+    expect(tokens.consumeToken(token)).toBeNull();
+  });
+});
+
 describe("isServerOwnedSetting", () => {
   it.each([
     "guacdHost",

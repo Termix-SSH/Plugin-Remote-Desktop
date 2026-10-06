@@ -438,6 +438,17 @@ const GuacamoleAppInner = React.forwardRef<
 
   reconnectRef.current = handleReconnect;
 
+  // A token opens one display, so a new touch mode needs a fresh one.
+  const handleTouchModeChange = useCallback(
+    (mode: GuacamoleTouchMode | null) => {
+      setTouchMode(mode);
+      setConnectionError(null);
+      tokenRetryRef.current.reset();
+      tokenRetryRef.current.retryNow();
+    },
+    [],
+  );
+
   const hostDetail = [hostConfig.username, hostConfig.ip]
     .filter(Boolean)
     .join("@");
@@ -558,7 +569,7 @@ const GuacamoleAppInner = React.forwardRef<
         />
       )}
       <GuacamoleDisplay
-        key={`${token}-${touchMode}`}
+        key={token}
         ref={displayRef}
         connectionConfig={{
           token,
@@ -632,7 +643,7 @@ const GuacamoleAppInner = React.forwardRef<
           hasFilesystem={filesystem !== null}
           fileBrowserOpen={fileBrowserOpen}
           onToggleFileBrowser={() => setFileBrowserOpen((open) => !open)}
-          onTouchModeChange={setTouchMode}
+          onTouchModeChange={handleTouchModeChange}
           zoom={displayZoom}
           onHide={() => setToolbarHidden(true)}
           slotContext={

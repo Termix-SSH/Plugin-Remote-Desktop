@@ -265,12 +265,13 @@ export function createGuacamoleServer(
   return {
     handleUpgrade(request, socket, head) {
       // The route is public, so the token is the only credential: refuse
-      // anything forged, edited or expired before guacamole-lite reads it.
+      // anything forged, edited, expired or already used before
+      // guacamole-lite reads it.
       const token = new URL(
         request.url ?? "/",
         "http://localhost",
       ).searchParams.get("token");
-      if (!token || !deps.tokens.verifyToken(token)) {
+      if (!token || !deps.tokens.consumeToken(token)) {
         try {
           socket.write(
             "HTTP/1.1 401 Unauthorized\r\nConnection: close\r\n\r\n",
