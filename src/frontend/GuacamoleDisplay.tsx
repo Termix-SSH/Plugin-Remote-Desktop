@@ -34,6 +34,7 @@ import {
   type GuacamoleFileStreamClient,
 } from "./guacamole-filesystem.ts";
 import { clampGuacamoleZoom, stepGuacamoleZoom } from "./guacamole-zoom.ts";
+import { createRdpReadyGate } from "./guacamole-ready.ts";
 
 type GuacamoleConnectionType = "rdp" | "vnc" | "telnet";
 
@@ -146,13 +147,17 @@ export const GuacamoleDisplay = forwardRef<
   // announcing the connection avoids a black screen with no connecting UI
   // during that window; VNC/telnet fail before ever reaching CONNECTED, so
   // they are unaffected.
-  const syncCountRef = useRef(0);
+  const readyGateRef = useRef<ReturnType<typeof createRdpReadyGate> | null>(
+    null,
+  );
 
   const disconnectClient = useCallback(() => {
     unbindPointerRef.current?.();
     unbindPointerRef.current = null;
     const client = clientRef.current;
     clientRef.current = null;
+    readyGateRef.current?.cancel();
+    readyGateRef.current = null;
     isConnectingRef.current = false;
     if (filesystemRef.current) {
       filesystemRef.current = null;
@@ -415,7 +420,8 @@ export const GuacamoleDisplay = forwardRef<
     isConnectingRef.current = true;
     setIsReady(false);
     setHasError(false);
-    syncCountRef.current = 0;
+    readyGateRef.current?.cancel();
+    readyGateRef.current = null;
 
     // Let layout settle before measuring without depending on animation frames,
     // which may be throttled while Electron windows or tabs are inactive.
@@ -620,14 +626,15 @@ export const GuacamoleDisplay = forwardRef<
     };
 
     if (protocol === "rdp") {
+      const gate = createRdpReadyGate(() => {
+        if (!isMountedRef.current || clientRef.current !== client) return;
+        setIsReady(true);
+        onConnect?.();
+      });
+      readyGateRef.current = gate;
       client.onsync = () => {
         if (!isMountedRef.current || clientRef.current !== client) return;
-        if (syncCountRef.current >= 2) return;
-        syncCountRef.current += 1;
-        if (syncCountRef.current >= 2) {
-          setIsReady(true);
-          onConnect?.();
-        }
+        gate.sync();
       };
     }
 

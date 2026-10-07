@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- An RDP session no longer stays behind the connecting screen when the remote screen does not change after its first frame
+
 ## 1.0.0
 
 ### Added
