@@ -4,7 +4,7 @@
 
 <h1>Remote Desktop</h1>
 
-<p>RDP, VNC and Telnet in your browser</p>
+<p>RDP, VNC and Telnet sessions in your browser, with clipboard, file transfer, sharing and recording</p>
 
 </div>
 
@@ -13,6 +13,12 @@
 ## Overview
 
 Remote Desktop opens RDP, VNC and Telnet sessions in a tab, just like an SSH terminal.
+
+<br />
+
+## Install
+
+Remote Desktop ships with [Termix](https://github.com/Termix-SSH/Termix). Admins can turn it on or off, update it or install it again from the Plugins tab. Want to see it first? Try the [demo](https://demo.termix.site/), any username and password works.
 
 <br />
 
@@ -37,6 +43,58 @@ Uses from other plugins:
 
 - `recordings.writer` to record sessions. Optional
 - `tunnels.access` for jump host tunnels. Optional
+
+<br />
+
+## Sponsors
+
+Interested in a paid placement to support development? Email [mail@termix.site](mailto:mail@termix.site).
+
+<!-- SPONSORS:START -->
+
+<div align="center">
+
+<br />
+
+<a href="https://www.digitalocean.com/">
+  <img src="https://termix.site/img/sponsors/digitalocean.svg" height="40" alt="DigitalOcean" />
+</a>
+&nbsp;&nbsp;&nbsp;
+<a href="https://crowdin.com/">
+  <img src="https://termix.site/img/sponsors/crowdin.svg" height="40" alt="Crowdin" />
+</a>
+&nbsp;&nbsp;&nbsp;
+<a href="https://www.blacksmith.sh/">
+  <img src="https://termix.site/img/sponsors/blacksmith.svg" height="40" alt="Blacksmith" />
+</a>
+&nbsp;&nbsp;&nbsp;
+<a href="https://www.cloudflare.com/">
+  <img src="https://termix.site/img/sponsors/cloudflare.png" height="40" alt="Cloudflare" />
+</a>
+&nbsp;&nbsp;&nbsp;
+<a href="https://akamai.com/">
+  <img src="https://termix.site/img/sponsors/akamai.svg" height="40" alt="Akamai" />
+</a>
+&nbsp;&nbsp;&nbsp;
+<a href="https://aws.amazon.com/">
+  <img src="https://termix.site/img/sponsors/aws.png" height="40" alt="AWS" />
+</a>
+&nbsp;&nbsp;&nbsp;
+<a href="https://rackgenius.com/">
+  <img src="https://termix.site/img/sponsors/rackgenius.png" height="40" alt="Rack Genius" />
+</a>
+&nbsp;&nbsp;&nbsp;
+<a href="https://ginernet.com/">
+  <img src="https://termix.site/img/sponsors/ginernet.png" height="40" alt="Ginernet" />
+</a>
+&nbsp;&nbsp;&nbsp;
+<a href="https://www.hetzner.com/?mtm_campaign=termix&mtm_medium=referral&mtm_content=sponsoring_link">
+  <img src="https://termix.site/img/sponsors/hetzner.png" height="40" alt="Hetzner" />
+</a>
+
+</div>
+
+<!-- SPONSORS:END -->
 
 <br />
 
