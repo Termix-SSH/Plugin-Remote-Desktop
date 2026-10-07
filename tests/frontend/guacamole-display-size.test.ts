@@ -14,13 +14,19 @@ describe("getGuacamoleDisplaySize", () => {
     });
   });
 
-  it("scales a configured RDP DPI with the device pixel ratio", () => {
-    expect(getGuacamoleDisplaySize(1000, 600, "rdp", 1.5, 120)).toEqual({
-      width: 1500,
-      height: 900,
-      dpi: 180,
-      pixelRatio: 1.5,
+  it("sends a configured RDP DPI as entered, at CSS pixels", () => {
+    expect(getGuacamoleDisplaySize(1000, 600, "rdp", 2, 192)).toEqual({
+      width: 1000,
+      height: 600,
+      dpi: 192,
+      pixelRatio: 1,
     });
+  });
+
+  it("does not multiply a configured resolution on HiDPI screens", () => {
+    expect(
+      getGuacamoleDisplaySize(1920, 1080, "rdp", 2, undefined, true),
+    ).toEqual({ width: 1920, height: 1080, dpi: 96, pixelRatio: 1 });
   });
 
   it("leaves non-RDP protocols at CSS-pixel dimensions", () => {

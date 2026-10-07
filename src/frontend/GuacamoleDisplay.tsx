@@ -285,6 +285,7 @@ export const GuacamoleDisplay = forwardRef<
           connectionProtocol,
           window.devicePixelRatio,
           connectionConfig.dpi,
+          hasConfiguredSize,
         );
 
         let wsBase: string | null;

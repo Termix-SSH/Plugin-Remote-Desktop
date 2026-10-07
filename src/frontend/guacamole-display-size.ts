@@ -17,20 +17,29 @@ export interface GuacamoleDisplaySize {
   pixelRatio: number;
 }
 
+/**
+ * RDP renders at native pixels on HiDPI screens unless the host pins the
+ * size or DPI. A pinned value is sent as entered, since older servers ignore
+ * the DPI and would show a native-pixel desktop at half size.
+ */
 export function getGuacamoleDisplaySize(
   cssWidth: number,
   cssHeight: number,
   protocol: string | undefined,
   devicePixelRatio: number,
   configuredDpi?: number,
+  configuredSize = false,
 ): GuacamoleDisplaySize {
   const isRdp = protocol === "rdp";
-  const pixelRatio = isRdp
-    ? Math.min(
-        MAX_DEVICE_PIXEL_RATIO,
-        Math.max(1, Number.isFinite(devicePixelRatio) ? devicePixelRatio : 1),
-      )
-    : 1;
+  const hasDpi =
+    !!configuredDpi && Number.isFinite(configuredDpi) && configuredDpi > 0;
+  const pixelRatio =
+    isRdp && !hasDpi && !configuredSize
+      ? Math.min(
+          MAX_DEVICE_PIXEL_RATIO,
+          Math.max(1, Number.isFinite(devicePixelRatio) ? devicePixelRatio : 1),
+        )
+      : 1;
 
   const size = {
     width: Math.max(1, Math.round(cssWidth * pixelRatio)),
@@ -40,9 +49,6 @@ export function getGuacamoleDisplaySize(
 
   if (!isRdp) return size;
 
-  const baseDpi =
-    configuredDpi && Number.isFinite(configuredDpi) && configuredDpi > 0
-      ? configuredDpi
-      : DEFAULT_RDP_DPI;
+  const baseDpi = hasDpi ? configuredDpi : DEFAULT_RDP_DPI;
   return { ...size, dpi: Math.round(baseDpi * pixelRatio) };
 }
