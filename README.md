@@ -27,19 +27,6 @@ Remote Desktop opens RDP, VNC and Telnet sessions in a tab, just like an SSH ter
 
 <br />
 
-## Services
-
-Provides to other plugins:
-
-- `sessions.live` as `rdp`, `vnc` and `telnet`: find a live session so it can be shared
-
-Uses from other plugins:
-
-- `recordings.writer` to record sessions. Optional
-- `tunnels.access` for jump host tunnels. Optional
-
-<br />
-
 ## Sponsors
 
 Interested in a paid placement to support development? Email [mail@termix.site](mailto:mail@termix.site).

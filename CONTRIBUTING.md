@@ -27,3 +27,14 @@ npm run format     # format the code with Prettier
 ## Permissions
 
 - `remote-desktop.sessions`: let session sharing and recording reach your remote desktop sessions. Admins and users have it by default.
+
+## Services
+
+Provides to other plugins:
+
+- `sessions.live` as `rdp`, `vnc` and `telnet`: find a live session so it can be shared
+
+Uses from other plugins:
+
+- `recordings.writer` to record sessions. Optional
+- `tunnels.access` for jump host tunnels. Optional
