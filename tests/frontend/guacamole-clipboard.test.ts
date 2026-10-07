@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import {
+  createPasteCatcher,
   isPasteShortcut,
   pasteTextToRemote,
   type GuacamoleClipboardClient,
@@ -59,5 +60,50 @@ describe("Guacamole clipboard paste", () => {
       "key:0:118",
       "key:0:65507",
     ]);
+  });
+});
+
+describe("paste catcher", () => {
+  function pasteEvent(text: string) {
+    const event = new Event("paste", { bubbles: true, cancelable: true });
+    Object.assign(event, { clipboardData: { getData: () => text } });
+    return event;
+  }
+
+  it("takes the paste on a hidden textarea and gives focus back", () => {
+    const display = document.createElement("div");
+    display.tabIndex = 0;
+    document.body.appendChild(display);
+    const onText = vi.fn();
+    const catcher = createPasteCatcher(display, onText);
+    document.body.appendChild(catcher.element);
+
+    display.focus();
+    catcher.capture();
+    expect(document.activeElement).toBe(catcher.element);
+
+    const event = pasteEvent("hello world");
+    catcher.element.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(true);
+    expect(onText).toHaveBeenCalledWith("hello world");
+    expect(document.activeElement).toBe(display);
+    document.body.innerHTML = "";
+  });
+
+  it("returns focus when no paste event arrives", () => {
+    vi.useFakeTimers();
+    const display = document.createElement("div");
+    display.tabIndex = 0;
+    document.body.appendChild(display);
+    const onText = vi.fn();
+    const catcher = createPasteCatcher(display, onText);
+    document.body.appendChild(catcher.element);
+
+    catcher.capture();
+    vi.advanceTimersByTime(200);
+    expect(document.activeElement).toBe(display);
+    expect(onText).not.toHaveBeenCalled();
+    vi.useRealTimers();
+    document.body.innerHTML = "";
   });
 });

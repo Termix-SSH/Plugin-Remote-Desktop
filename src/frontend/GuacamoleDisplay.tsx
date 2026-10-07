@@ -22,7 +22,11 @@ import {
 } from "@termix-ssh/plugin-sdk/ui";
 import { errorMessage } from "./host-remote";
 import { guacStateToStage } from "./guacamole-state.ts";
-import { isPasteShortcut, pasteTextToRemote } from "./guacamole-clipboard.ts";
+import {
+  createPasteCatcher,
+  isPasteShortcut,
+  pasteTextToRemote,
+} from "./guacamole-clipboard.ts";
 import { getGuacamoleDisplaySize } from "./guacamole-display-size.ts";
 import { bindPointerInput } from "./guacamole-pointer.ts";
 import {
@@ -482,9 +486,14 @@ export const GuacamoleDisplay = forwardRef<
     const displayElement = display.getElement();
     displayElementRef.current = displayElement;
 
+    const pasteCatcher = createPasteCatcher(displayElement, (text) => {
+      if (clientRef.current === client) pasteTextToRemote(client, text);
+    });
+
     if (displayRef.current) {
       displayRef.current.innerHTML = "";
       displayRef.current.appendChild(displayElement);
+      displayRef.current.appendChild(pasteCatcher.element);
     }
 
     displayElement.setAttribute("tabindex", "0");
@@ -499,6 +508,7 @@ export const GuacamoleDisplay = forwardRef<
       (event) => {
         if (isPasteShortcut(event)) {
           event.stopImmediatePropagation();
+          pasteCatcher.capture();
         }
       },
       true,
