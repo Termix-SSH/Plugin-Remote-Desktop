@@ -14,6 +14,8 @@
 
 Remote Desktop opens RDP, VNC and Telnet sessions in a tab, just like an SSH terminal.
 
+Read the [docs](https://docs.termix.site/plugins/remote-desktop) to set it up and use it.
+
 <br />
 
 ## Features

@@ -10,31 +10,6 @@ npm run validate   # check manifest.json
 npm run format     # format the code with Prettier
 ```
 
-## Settings
+## Docs
 
-### Admin
-
-- **Enable Remote Desktop:** turn remote desktop on or off for everyone
-- **guacd URL:** where guacd runs, as `host:port`. Changes apply without a restart
-
-### Host
-
-- **RDP, VNC and Telnet:** turn each protocol on and set its port
-- **Display, audio, device and performance options:** values left alone follow the host defaults
-- **guacd settings:** use a different guacd for this host
-- **Remote desktop toolbar:** show the toolbar in the session
-
-## Permissions
-
-- `remote-desktop.sessions`: let session sharing and recording reach your remote desktop sessions. Admins and users have it by default.
-
-## Services
-
-Provides to other plugins:
-
-- `sessions.live` as `rdp`, `vnc` and `telnet`: find a live session so it can be shared
-
-Uses from other plugins:
-
-- `recordings.writer` to record sessions. Optional
-- `tunnels.access` for jump host tunnels. Optional
+The docs for this plugin are in [docs/](docs/) and are published at https://docs.termix.site/plugins/remote-desktop. Settings, permissions, services, environment variables and the API reference are made from `manifest.json` and the `@openapi` comments in the code, so keep those up to date instead of writing them by hand. See [writing docs](https://docs.termix.site/develop/docs).

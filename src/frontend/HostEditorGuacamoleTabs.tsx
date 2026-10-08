@@ -24,6 +24,7 @@ import {
   Cpu,
 } from "lucide-react";
 import type { RemoteDesktopForm, RemoteFormSetField } from "./remote-form";
+import { docsUrl } from "./docs";
 
 type HostEditorForm = RemoteDesktopForm;
 type HostEditorSetField = RemoteFormSetField;
@@ -63,12 +64,7 @@ export function HostEditorRdpTab({
       <SectionCard
         title={t("hosts.guac.connection")}
         icon={<Globe className="size-3.5" />}
-        action={
-          <DocsLinkAction
-            href="https://docs.termix.site/setup/remote-desktop"
-            label={t("hosts.docsLink")}
-          />
-        }
+        action={<DocsLinkAction href={docsUrl()} label={t("hosts.docsLink")} />}
       >
         <div className="flex flex-col gap-4 py-3">
           <div className="flex flex-col gap-1.5">
@@ -811,7 +807,7 @@ export function HostEditorRdpTab({
         icon={<Activity className="size-3.5" />}
         action={
           <DocsLinkAction
-            href="https://docs.termix.site/setup/remote-desktop#session-recording"
+            href={docsUrl("", "recording")}
             label={t("hosts.docsLink")}
           />
         }
@@ -861,7 +857,7 @@ export function HostEditorRdpTab({
         icon={<Zap className="size-3.5" />}
         action={
           <DocsLinkAction
-            href="https://docs.termix.site/features/networking/wake-on-lan"
+            href={docsUrl("", "wake-on-lan")}
             label={t("hosts.docsLink")}
           />
         }
@@ -950,12 +946,7 @@ export function HostEditorVncTab({
       <SectionCard
         title={t("hosts.guac.connection")}
         icon={<Globe className="size-3.5" />}
-        action={
-          <DocsLinkAction
-            href="https://docs.termix.site/setup/remote-desktop"
-            label={t("hosts.docsLink")}
-          />
-        }
+        action={<DocsLinkAction href={docsUrl()} label={t("hosts.docsLink")} />}
       >
         <div className="flex flex-col gap-4 py-3">
           <div className="flex flex-col gap-1.5">
@@ -1301,7 +1292,7 @@ export function HostEditorVncTab({
         icon={<Activity className="size-3.5" />}
         action={
           <DocsLinkAction
-            href="https://docs.termix.site/setup/remote-desktop#session-recording"
+            href={docsUrl("", "recording")}
             label={t("hosts.docsLink")}
           />
         }
@@ -1351,7 +1342,7 @@ export function HostEditorVncTab({
         icon={<Zap className="size-3.5" />}
         action={
           <DocsLinkAction
-            href="https://docs.termix.site/features/networking/wake-on-lan"
+            href={docsUrl("", "wake-on-lan")}
             label={t("hosts.docsLink")}
           />
         }
@@ -1438,12 +1429,7 @@ export function HostEditorTelnetTab({
       <SectionCard
         title={t("hosts.guac.connection")}
         icon={<Globe className="size-3.5" />}
-        action={
-          <DocsLinkAction
-            href="https://docs.termix.site/setup/remote-desktop"
-            label={t("hosts.docsLink")}
-          />
-        }
+        action={<DocsLinkAction href={docsUrl()} label={t("hosts.docsLink")} />}
       >
         <div className="flex flex-col gap-4 py-3">
           <div className="flex flex-col gap-1.5">
@@ -1703,7 +1689,7 @@ export function HostEditorTelnetTab({
         icon={<Activity className="size-3.5" />}
         action={
           <DocsLinkAction
-            href="https://docs.termix.site/setup/remote-desktop#session-recording"
+            href={docsUrl("", "recording")}
             label={t("hosts.docsLink")}
           />
         }
