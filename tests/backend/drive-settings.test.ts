@@ -20,11 +20,11 @@ describe("withDriveSettings", () => {
     ).toMatchObject({ "drive-path": "/drive/user-1" });
   });
 
-  it("leaves a host-chosen drive-path alone", () => {
-    const config = { "enable-drive": true, "drive-path": "/mnt/share" };
+  it("replaces a host-chosen drive-path with the user's own folder", () => {
+    const config = { "enable-drive": true, "drive-path": "/etc" };
     expect(
       withDriveSettings(config, "user-1", { GUACD_DRIVE_PATH: "/x" }),
-    ).toBe(config);
+    ).toMatchObject({ "drive-path": "/x/user-1" });
   });
 
   it("does nothing when the drive is not enabled", () => {

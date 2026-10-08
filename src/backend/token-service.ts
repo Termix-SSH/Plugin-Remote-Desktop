@@ -72,8 +72,9 @@ const KEY_LENGTH = 32;
 export const TOKEN_TTL_MS = 5 * 60 * 1000;
 
 /**
- * Settings the server decides, never the caller: where guacd is, and every
- * path guacd writes or reads on its own filesystem.
+ * Settings the server decides, never the caller: where guacd is, every path
+ * guacd writes or reads on its own filesystem, and VNC listen mode, which
+ * would open a port on the guacd host.
  */
 export function isServerOwnedSetting(key: string): boolean {
   return (
@@ -81,7 +82,9 @@ export function isServerOwnedSetting(key: string): boolean {
     key.endsWith("-path") ||
     key.startsWith("create-") ||
     key.startsWith("recording-") ||
-    key.startsWith("typescript-")
+    key.startsWith("typescript-") ||
+    key === "reverse-connect" ||
+    key === "listen-timeout"
   );
 }
 

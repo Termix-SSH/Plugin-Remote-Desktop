@@ -75,8 +75,9 @@ function cleanGuacConfig(raw: Record<string, unknown>): {
   const guacdPort = config["guacd-port"]
     ? parseInt(String(config["guacd-port"]), 10) || undefined
     : undefined;
-  delete config["guacd-hostname"];
-  delete config["guacd-port"];
+  for (const key of Object.keys(config)) {
+    if (isServerOwnedSetting(key)) delete config[key];
+  }
   if (config.dpi != null) {
     const dpi = parseInt(String(config.dpi), 10);
     config.dpi = Number.isFinite(dpi) && dpi > 0 ? dpi : undefined;
@@ -174,69 +175,73 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *       500:
    *         description: Server error.
    */
-  router.post("/token", async (req: Request, res: Response) => {
-    try {
-      if (await refuseWhenOff(res)) return;
-      const { type, hostname, port, username, password, domain, ...raw } =
-        (req.body ?? {}) as Record<string, unknown>;
-      if (!type || !hostname) {
-        return res
-          .status(400)
-          .json({ error: "Missing required fields: type and hostname" });
-      }
-      if (!isRemoteProtocol(type)) {
-        return res.status(400).json({
-          error: "Invalid connection type. Must be rdp, vnc, or telnet",
-        });
-      }
-      const options: Record<string, unknown> = {};
-      for (const [key, value] of Object.entries(raw)) {
-        // A quick connect names a host, never where guacd is or what paths
-        // it writes to: those would let any user aim guacd anywhere.
-        if (isServerOwnedSetting(key)) continue;
-        if (value !== "auto") options[key] = value;
-      }
-      const host = String(hostname);
-      const user = username ? String(username) : "";
-      const pass = password ? String(password) : "";
-      const targetPort = Number(port) || DEFAULT_PORT[type];
-      const userId = ctx.currentActor();
-      if (type === "rdp" && userId) {
-        for (const [key, value] of Object.entries(
-          await readDisplayDefaults(ctx, userId),
-        )) {
-          if (isServerOwnedSetting(key)) continue;
-          if (options[key] === undefined) options[key] = value;
+  router.post(
+    "/token",
+    ctx.rbac.require("sessions"),
+    async (req: Request, res: Response) => {
+      try {
+        if (await refuseWhenOff(res)) return;
+        const { type, hostname, port, username, password, domain, ...raw } =
+          (req.body ?? {}) as Record<string, unknown>;
+        if (!type || !hostname) {
+          return res
+            .status(400)
+            .json({ error: "Missing required fields: type and hostname" });
         }
-      }
+        if (!isRemoteProtocol(type)) {
+          return res.status(400).json({
+            error: "Invalid connection type. Must be rdp, vnc, or telnet",
+          });
+        }
+        const options: Record<string, unknown> = {};
+        for (const [key, value] of Object.entries(raw)) {
+          // A quick connect names a host, never where guacd is or what paths
+          // it writes to: those would let any user aim guacd anywhere.
+          if (isServerOwnedSetting(key)) continue;
+          if (value !== "auto") options[key] = value;
+        }
+        const host = String(hostname);
+        const user = username ? String(username) : "";
+        const pass = password ? String(password) : "";
+        const targetPort = Number(port) || DEFAULT_PORT[type];
+        const userId = ctx.currentActor();
+        if (type === "rdp" && userId) {
+          for (const [key, value] of Object.entries(
+            await readDisplayDefaults(ctx, userId),
+          )) {
+            if (isServerOwnedSetting(key)) continue;
+            if (options[key] === undefined) options[key] = value;
+          }
+        }
 
-      let token: string;
-      if (type === "rdp") {
-        token = tokens.createRdpToken(host, user, pass, {
-          port: targetPort,
-          domain: domain ? String(domain) : undefined,
-          ...options,
+        let token: string;
+        if (type === "rdp") {
+          token = tokens.createRdpToken(host, user, pass, {
+            port: targetPort,
+            domain: domain ? String(domain) : undefined,
+            ...options,
+          });
+        } else if (type === "vnc") {
+          token = tokens.createVncToken(host, user || undefined, pass, {
+            port: targetPort,
+            ...options,
+          });
+        } else {
+          token = tokens.createTelnetToken(host, user, pass, {
+            port: targetPort,
+            ...options,
+          });
+        }
+        res.json({ token });
+      } catch (error) {
+        log.error("Failed to generate a connection token", {
+          operation: "guac_token_error",
+          error: errorMessage(error),
         });
-      } else if (type === "vnc") {
-        token = tokens.createVncToken(host, user || undefined, pass, {
-          port: targetPort,
-          ...options,
-        });
-      } else {
-        token = tokens.createTelnetToken(host, user, pass, {
-          port: targetPort,
-          ...options,
-        });
+        res.status(500).json({ error: "Failed to generate connection token" });
       }
-      res.json({ token });
-    } catch (error) {
-      log.error("Failed to generate a connection token", {
-        operation: "guac_token_error",
-        error: errorMessage(error),
-      });
-      res.status(500).json({ error: "Failed to generate connection token" });
-    }
-  });
+    },
+  );
 
   /**
    * @openapi
@@ -283,209 +288,213 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *       500:
    *         description: The tunnel or the token could not be set up.
    */
-  router.post("/connect-host/:hostId", async (req: Request, res: Response) => {
-    try {
-      const userId = actor(ctx, res);
-      if (!userId) return;
-      if (await refuseWhenOff(res)) return;
-
-      const hostId = Number.parseInt(String(req.params.hostId), 10);
-      if (!hostId) return res.status(400).json({ error: "Invalid host ID" });
-
-      const body = (req.body ?? {}) as Record<string, unknown>;
-      const settings = await readHostSettings(ctx, hostId);
-      const requested = body.protocol;
-      const protocol: RemoteProtocol | undefined = isRemoteProtocol(requested)
-        ? requested
-        : (["rdp", "vnc", "telnet"] as const).find(
-            (candidate) => settings[ENABLE_KEY[candidate]],
-          );
-      if (!protocol) {
-        return res
-          .status(400)
-          .json({ error: "Remote Desktop is not enabled for this host." });
-      }
-
-      const target = await ctx.credentials.resolveHostProtocol(
-        hostId,
-        protocol,
-      );
-      if (!target) {
-        return res.status(404).json({ error: "Host not found" });
-      }
-      if (!settings[ENABLE_KEY[protocol]]) {
-        return res.status(400).json({
-          error: `${protocol.toUpperCase()} is not enabled for this host.`,
-        });
-      }
-
-      // The display settings sit under whatever the host's guacd settings say.
-      const { config, guacdOverrides } = cleanGuacConfig({
-        ...(protocol === "rdp"
-          ? await readDisplayDefaults(ctx, userId, hostId)
-          : {}),
-        ...settings.guacamoleConfig,
-      });
-      let guacConfig = config;
-
-      const promptForLogin =
-        protocol === "rdp" && target.auth.authType === "none";
-      const username = promptForLogin
-        ? String(body.promptedUsername || "")
-        : target.auth.username;
-      const password = promptForLogin
-        ? String(body.promptedPassword || "")
-        : target.auth.password;
-      const domain = resolveRdpDomain(
-        target.auth.authType,
-        body.promptedDomain,
-        target.auth.fields.domain ?? "",
-      );
-
-      let hostname = target.host.ip;
-      let port =
-        (settings[PORT_KEY[protocol]] as number) || DEFAULT_PORT[protocol];
-      const termixConnectId = crypto.randomUUID();
-      const cleanups: Array<() => void> = [];
-      const jumpHosts = target.host.jumpHosts;
-      const needsVncProxy = protocol === "vnc" && !username;
-
-      const endpoint =
-        jumpHosts.length > 0 || needsVncProxy
-          ? resolveJumpTunnelEndpoint(
-              guacdOverrides.guacdHost || deps.guacd().host,
-            )
-          : null;
-
+  router.post(
+    "/connect-host/:hostId",
+    ctx.rbac.require("sessions"),
+    async (req: Request, res: Response) => {
       try {
-        if (jumpHosts.length > 0 && endpoint) {
-          const tunnel = await openJumpTunnel(ctx, log, {
-            jumpHosts,
-            targetHost: hostname,
-            targetPort: port,
-            bindHost: endpoint.bindHost,
-            connectId: termixConnectId,
-          });
-          cleanups.push(tunnel.close);
-          hostname = endpoint.advertisedHost;
-          port = tunnel.port;
+        const userId = actor(ctx, res);
+        if (!userId) return;
+        if (await refuseWhenOff(res)) return;
+
+        const hostId = Number.parseInt(String(req.params.hostId), 10);
+        if (!hostId) return res.status(400).json({ error: "Invalid host ID" });
+
+        const body = (req.body ?? {}) as Record<string, unknown>;
+        const settings = await readHostSettings(ctx, hostId);
+        const requested = body.protocol;
+        const protocol: RemoteProtocol | undefined = isRemoteProtocol(requested)
+          ? requested
+          : (["rdp", "vnc", "telnet"] as const).find(
+              (candidate) => settings[ENABLE_KEY[candidate]],
+            );
+        if (!protocol) {
+          return res
+            .status(400)
+            .json({ error: "Remote Desktop is not enabled for this host." });
         }
 
-        if (needsVncProxy && endpoint) {
-          const proxy = await createMacosVncCompatibilityProxy({
-            targetHost: hostname,
-            targetPort: port,
-            bindHost: endpoint.bindHost,
-          });
-          cleanups.push(proxy.close);
-          hostname = endpoint.advertisedHost;
-          port = proxy.port;
-        }
-      } catch (error) {
-        for (const cleanup of cleanups) cleanup();
-        log.error("Failed to reach the host through its jump hosts", {
-          operation: "guac_ssh_tunnel_error",
+        const target = await ctx.credentials.resolveHostProtocol(
           hostId,
+          protocol,
+        );
+        if (!target) {
+          return res.status(404).json({ error: "Host not found" });
+        }
+        if (!settings[ENABLE_KEY[protocol]]) {
+          return res.status(400).json({
+            error: `${protocol.toUpperCase()} is not enabled for this host.`,
+          });
+        }
+
+        // The display settings sit under whatever the host's guacd settings say.
+        const { config, guacdOverrides } = cleanGuacConfig({
+          ...(protocol === "rdp"
+            ? await readDisplayDefaults(ctx, userId, hostId)
+            : {}),
+          ...settings.guacamoleConfig,
+        });
+        let guacConfig = config;
+
+        const promptForLogin =
+          protocol === "rdp" && target.auth.authType === "none";
+        const username = promptForLogin
+          ? String(body.promptedUsername || "")
+          : target.auth.username;
+        const password = promptForLogin
+          ? String(body.promptedPassword || "")
+          : target.auth.password;
+        const domain = resolveRdpDomain(
+          target.auth.authType,
+          body.promptedDomain,
+          target.auth.fields.domain ?? "",
+        );
+
+        let hostname = target.host.ip;
+        let port =
+          (settings[PORT_KEY[protocol]] as number) || DEFAULT_PORT[protocol];
+        const termixConnectId = crypto.randomUUID();
+        const cleanups: Array<() => void> = [];
+        const jumpHosts = target.host.jumpHosts;
+        const needsVncProxy = protocol === "vnc" && !username;
+
+        const endpoint =
+          jumpHosts.length > 0 || needsVncProxy
+            ? resolveJumpTunnelEndpoint(
+                guacdOverrides.guacdHost || deps.guacd().host,
+              )
+            : null;
+
+        try {
+          if (jumpHosts.length > 0 && endpoint) {
+            const tunnel = await openJumpTunnel(ctx, log, {
+              jumpHosts,
+              targetHost: hostname,
+              targetPort: port,
+              bindHost: endpoint.bindHost,
+              connectId: termixConnectId,
+            });
+            cleanups.push(tunnel.close);
+            hostname = endpoint.advertisedHost;
+            port = tunnel.port;
+          }
+
+          if (needsVncProxy && endpoint) {
+            const proxy = await createMacosVncCompatibilityProxy({
+              targetHost: hostname,
+              targetPort: port,
+              bindHost: endpoint.bindHost,
+            });
+            cleanups.push(proxy.close);
+            hostname = endpoint.advertisedHost;
+            port = proxy.port;
+          }
+        } catch (error) {
+          for (const cleanup of cleanups) cleanup();
+          log.error("Failed to reach the host through its jump hosts", {
+            operation: "guac_ssh_tunnel_error",
+            hostId,
+            error: errorMessage(error),
+          });
+          return res
+            .status(500)
+            .json({ error: "Failed to establish SSH tunnel to remote host" });
+        }
+        sessions.park(termixConnectId, cleanups);
+
+        const recordings = deps.recordings();
+        const recordingEnabled =
+          protocol !== "vnc" &&
+          !!recordings &&
+          (await recordings.enabledFor(hostId));
+        const recordingName = `${crypto.randomUUID()}.guac`;
+        const guacdRecordingPath =
+          process.env.GUACD_RECORDING_PATH ||
+          process.env.GUACD_RECORDING_BACKEND_PATH ||
+          path.resolve(recordingsDir());
+        const recording = recordingEnabled
+          ? {
+              hostId,
+              userId,
+              protocol,
+              path: recordingName,
+              guacdPath: guacdRecordingPath,
+              startedAt: new Date().toISOString(),
+            }
+          : undefined;
+        if (recordingEnabled) {
+          guacConfig = withRecordingSettings(
+            guacConfig,
+            guacdRecordingPath,
+            recordingName,
+          );
+        }
+
+        const termixMeta = {
+          termixConnectId,
+          hostId,
+          hostName: target.host.name || target.host.ip,
+          ownerUserId: userId,
+          protocol,
+          tabInstanceId:
+            typeof body.tabInstanceId === "string" ? body.tabInstanceId : null,
+        };
+
+        let token: string;
+        if (protocol === "rdp") {
+          token = tokens.createRdpToken(
+            hostname,
+            username,
+            password,
+            buildRdpSettings({
+              port,
+              domain,
+              security: settings.rdpSecurity || undefined,
+              ignoreCert: settings.rdpIgnoreCert,
+              guacConfig: withDriveSettings(guacConfig, userId),
+              guacdOverrides,
+            }),
+            recording,
+            termixMeta,
+          );
+        } else if (protocol === "vnc") {
+          token = tokens.createVncToken(
+            hostname,
+            username || undefined,
+            password,
+            { port, ...guacConfig, ...guacdOverrides },
+            recording,
+            termixMeta,
+          );
+        } else {
+          token = tokens.createTelnetToken(
+            hostname,
+            username,
+            password,
+            { port, ...guacConfig, ...guacdOverrides },
+            recording,
+            termixMeta,
+          );
+        }
+
+        await ctx.audit.record({
+          action: `${protocol}_connect`,
+          resourceType: "host",
+          resourceId: String(hostId),
+          resourceName: `${hostname}:${port}`,
+          success: true,
+        });
+
+        res.json({ token, termixConnectId, guacamoleConnectionId: null });
+      } catch (error) {
+        log.error("Failed to generate a connection token for a host", {
+          operation: "guac_host_token_error",
           error: errorMessage(error),
         });
-        return res
-          .status(500)
-          .json({ error: "Failed to establish SSH tunnel to remote host" });
+        res.status(500).json({ error: "Failed to generate connection token" });
       }
-      sessions.park(termixConnectId, cleanups);
-
-      const recordings = deps.recordings();
-      const recordingEnabled =
-        protocol !== "vnc" &&
-        !!recordings &&
-        (await recordings.enabledFor(hostId));
-      const recordingName = `${crypto.randomUUID()}.guac`;
-      const guacdRecordingPath =
-        process.env.GUACD_RECORDING_PATH ||
-        process.env.GUACD_RECORDING_BACKEND_PATH ||
-        path.resolve(recordingsDir());
-      const recording = recordingEnabled
-        ? {
-            hostId,
-            userId,
-            protocol,
-            path: recordingName,
-            guacdPath: guacdRecordingPath,
-            startedAt: new Date().toISOString(),
-          }
-        : undefined;
-      if (recordingEnabled) {
-        guacConfig = withRecordingSettings(
-          guacConfig,
-          guacdRecordingPath,
-          recordingName,
-        );
-      }
-
-      const termixMeta = {
-        termixConnectId,
-        hostId,
-        hostName: target.host.name || target.host.ip,
-        ownerUserId: userId,
-        protocol,
-        tabInstanceId:
-          typeof body.tabInstanceId === "string" ? body.tabInstanceId : null,
-      };
-
-      let token: string;
-      if (protocol === "rdp") {
-        token = tokens.createRdpToken(
-          hostname,
-          username,
-          password,
-          buildRdpSettings({
-            port,
-            domain,
-            security: settings.rdpSecurity || undefined,
-            ignoreCert: settings.rdpIgnoreCert,
-            guacConfig: withDriveSettings(guacConfig, userId),
-            guacdOverrides,
-          }),
-          recording,
-          termixMeta,
-        );
-      } else if (protocol === "vnc") {
-        token = tokens.createVncToken(
-          hostname,
-          username || undefined,
-          password,
-          { port, ...guacConfig, ...guacdOverrides },
-          recording,
-          termixMeta,
-        );
-      } else {
-        token = tokens.createTelnetToken(
-          hostname,
-          username,
-          password,
-          { port, ...guacConfig, ...guacdOverrides },
-          recording,
-          termixMeta,
-        );
-      }
-
-      await ctx.audit.record({
-        action: `${protocol}_connect`,
-        resourceType: "host",
-        resourceId: String(hostId),
-        resourceName: `${hostname}:${port}`,
-        success: true,
-      });
-
-      res.json({ token, termixConnectId, guacamoleConnectionId: null });
-    } catch (error) {
-      log.error("Failed to generate a connection token for a host", {
-        operation: "guac_host_token_error",
-        error: errorMessage(error),
-      });
-      res.status(500).json({ error: "Failed to generate connection token" });
-    }
-  });
+    },
+  );
 
   /**
    * @openapi

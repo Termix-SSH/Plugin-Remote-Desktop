@@ -66,6 +66,7 @@ async function start(
     protocolTargets?: Record<string, PluginProtocolTarget>;
     services?: Record<string, object>;
     capabilities?: string[];
+    permissions?: string[];
   } = {},
 ): Promise<Server> {
   let router: Router | null = null;
@@ -76,6 +77,7 @@ async function start(
     router: () => (router = express.Router()),
     protocolTargets: options.protocolTargets,
     services: options.services,
+    permissions: options.permissions,
   });
   await activate(mock.ctx as PluginContext);
 
@@ -280,6 +282,32 @@ describe("the rest of the routes", () => {
     expect(token?.connection.settings["drive-path"]).toBeUndefined();
     expect(token?.connection.settings["recording-path"]).toBeUndefined();
     expect(token?.connection.settings.width).toBe(800);
+  });
+
+  it("drops VNC listen mode from a quick connect", async () => {
+    server = await start();
+    const response = await server.request("POST", "/token", {
+      type: "vnc",
+      hostname: "10.0.0.9",
+      "reverse-connect": true,
+      "listen-timeout": 60000,
+    });
+    expect(response.status).toBe(200);
+    const settings = tokens.decryptToken(response.body.token)?.connection
+      .settings;
+    expect(settings?.["reverse-connect"]).toBeUndefined();
+    expect(settings?.["listen-timeout"]).toBeUndefined();
+  });
+
+  it("needs the sessions permission to mint a token", async () => {
+    server = await start({ permissions: [] });
+    const quick = await server.request("POST", "/token", {
+      type: "rdp",
+      hostname: "10.0.0.9",
+    });
+    expect(quick.status).toBe(403);
+    const saved = await server.request("POST", "/connect-host/1", {});
+    expect(saved.status).toBe(403);
   });
 
   it("offers native RDP only in the desktop app", async () => {
