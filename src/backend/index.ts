@@ -15,6 +15,7 @@ import {
   readHostSettings,
 } from "./host-settings.js";
 import { createLogger } from "./log.js";
+import { migrateGuacdHosts } from "./guacd-host.js";
 
 export async function activate(ctx: PluginContext) {
   const log = createLogger(ctx.log);
@@ -67,6 +68,13 @@ export async function activate(ctx: PluginContext) {
     guacdUrl = typeof value === "string" ? value : "";
     server.restart();
   });
+
+  await migrateGuacdHosts(ctx).catch((error) =>
+    log.warn("Failed to move host guacd addresses", {
+      operation: "guacd_host_migrate_error",
+      error: error instanceof Error ? error.message : String(error),
+    }),
+  );
 
   registerRoutes(ctx.http.router(), {
     ctx,

@@ -78,6 +78,19 @@ async function start(
     protocolTargets: options.protocolTargets,
     services: options.services,
     permissions: options.permissions,
+    hosts: [
+      {
+        id: 7,
+        userId: "user-1",
+        name: "Win box",
+        ip: "10.0.0.7",
+        port: 22,
+        username: "admin",
+        tags: null,
+        folder: null,
+        authType: "password",
+      },
+    ],
   });
   await activate(mock.ctx as PluginContext);
 
@@ -374,10 +387,11 @@ describe("saved host guacd status", () => {
       const port = (guacd.address() as AddressInfo).port;
       server = await start({ protocolTargets: { "7:rdp": target() } });
       await server.mock.ctx.settings.setHost(7, "enableRdp", true);
-      await server.mock.ctx.settings.setHost(7, "guacamoleConfig", {
-        "guacd-hostname": "127.0.0.1",
-        "guacd-port": String(port),
+      const saved = await server.request("PUT", "/guacd-host/7", {
+        hostname: "127.0.0.1",
+        port,
       });
+      expect(saved.status).toBe(200);
       const status = await server.request(
         "GET",
         "/status?hostId=7&protocol=rdp",
@@ -409,8 +423,8 @@ describe("saved host guacd status", () => {
       "/status?probe=0&hostId=7&protocol=rdp",
     );
     expect(inherited.body.guacd).toEqual(global.body.guacd);
-    await server.mock.ctx.settings.setHost(7, "guacamoleConfig", {
-      "guacd-hostname": "custom.example",
+    await server.request("PUT", "/guacd-host/7", {
+      hostname: "custom.example",
     });
     const overridden = await server.request(
       "GET",
@@ -444,5 +458,105 @@ describe("saved host guacd status", () => {
   ])("rejects invalid queries: %s", async (query) => {
     server = await start();
     expect((await server.request("GET", `/status?${query}`)).status).toBe(400);
+  });
+});
+
+describe("per-host guacd address", () => {
+  it("ignores a guacd address written into the host's guacamoleConfig", async () => {
+    server = await start({ protocolTargets: { "7:rdp": target() } });
+    await server.mock.ctx.settings.setHost(7, "enableRdp", true);
+    const global = await server.request("GET", "/status?probe=0");
+    await server.mock.ctx.settings.setHost(7, "guacamoleConfig", {
+      "guacd-hostname": "attacker.example",
+      "guacd-port": "6000",
+    });
+
+    const status = await server.request(
+      "GET",
+      "/status?probe=0&hostId=7&protocol=rdp",
+    );
+    expect(status.body.guacd).toEqual(global.body.guacd);
+    const result = await server.request("POST", "/connect-host/7", {
+      protocol: "rdp",
+    });
+    const connection = tokens.decryptToken(result.body.token)?.connection;
+    expect(connection?.guacdHost).toBeUndefined();
+    expect(connection?.settings).not.toHaveProperty("guacd-hostname");
+  });
+
+  it("lets only admins set it", async () => {
+    server = await start({
+      protocolTargets: { "7:rdp": target() },
+      permissions: ["remote-desktop.sessions"],
+    });
+    await server.mock.ctx.settings.setHost(7, "enableRdp", true);
+    const global = await server.request("GET", "/status?probe=0");
+
+    const denied = await server.request("PUT", "/guacd-host/7", {
+      hostname: "attacker.example",
+    });
+    expect(denied.status).toBe(403);
+    const read = await server.request("GET", "/guacd-host/7");
+    expect(read.body).toEqual({ hostname: "", port: null, canEdit: false });
+    const status = await server.request(
+      "GET",
+      "/status?probe=0&hostId=7&protocol=rdp",
+    );
+    expect(status.body.guacd).toEqual(global.body.guacd);
+  });
+
+  it("saves, reads back and clears an admin's address", async () => {
+    server = await start({
+      protocolTargets: { "7:rdp": target() },
+      permissions: ["remote-desktop.sessions", "admin.plugins.manage"],
+    });
+    const saved = await server.request("PUT", "/guacd-host/7", {
+      hostname: " guacd-2 ",
+      port: "4823",
+    });
+    expect(saved.body).toEqual({
+      hostname: "guacd-2",
+      port: 4823,
+      canEdit: true,
+    });
+    expect(
+      await server.mock.ctx.settings.getHost(7, "guacamoleConfig"),
+    ).toEqual({ "guacd-hostname": "guacd-2", "guacd-port": "4823" });
+    expect((await server.request("GET", "/guacd-host/7")).body).toEqual(
+      saved.body,
+    );
+
+    await server.request("PUT", "/guacd-host/7", { hostname: "", port: null });
+    expect((await server.request("GET", "/guacd-host/7")).body).toEqual({
+      hostname: "",
+      port: null,
+      canEdit: true,
+    });
+  });
+
+  it("keeps addresses hosts already had, once", async () => {
+    const { migrateGuacdHosts } =
+      await import("../../src/backend/guacd-host.js");
+    server = await start({ protocolTargets: { "7:rdp": target() } });
+    const ctx = server.mock.ctx as PluginContext;
+    await ctx.settings.set("hostGuacdMigrated", false);
+    await ctx.settings.setHost(7, "guacamoleConfig", {
+      "guacd-hostname": "old-guacd",
+      "guacd-port": "4900",
+    });
+    await migrateGuacdHosts(ctx);
+    expect((await server.request("GET", "/guacd-host/7")).body).toMatchObject({
+      hostname: "old-guacd",
+      port: 4900,
+    });
+
+    // Written after the move, it no longer counts.
+    await ctx.settings.setHost(8, "guacamoleConfig", {
+      "guacd-hostname": "new-guacd",
+    });
+    await migrateGuacdHosts(ctx);
+    expect(await ctx.settings.get("hostGuacd")).toEqual({
+      "7": { hostname: "old-guacd", port: 4900 },
+    });
   });
 });

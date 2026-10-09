@@ -217,6 +217,7 @@ function RdpSection(props: HostEditorSectionProps) {
         form={form}
         setField={setField}
         setGuacField={setGuacField}
+        hostId={props.host?.id}
         host={{ macAddress }}
         credentials={props.credentials as never}
       />
@@ -235,6 +236,7 @@ function VncSection(props: HostEditorSectionProps) {
         form={form}
         setField={setField}
         setGuacField={setGuacField}
+        hostId={props.host?.id}
         host={{ macAddress }}
         credentials={props.credentials as never}
       />
@@ -252,6 +254,7 @@ function TelnetSection(props: HostEditorSectionProps) {
         form={form}
         setField={setField}
         setGuacField={setGuacField}
+        hostId={props.host?.id}
         credentials={props.credentials as never}
       />
       <ToolbarCard form={form} setField={setField} />

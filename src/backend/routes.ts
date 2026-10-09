@@ -27,6 +27,12 @@ import {
   type RemoteProtocol,
 } from "./host-settings.js";
 import { errorMessage, type RemoteDesktopLogger } from "./log.js";
+import {
+  ADMIN_PERMISSION,
+  normalizeGuacdAddress,
+  readGuacdHost,
+  writeGuacdHost,
+} from "./guacd-host.js";
 
 export interface RouteDeps {
   ctx: PluginContext;
@@ -60,21 +66,15 @@ function probeGuacd({ host, port }: GuacdOptions): Promise<boolean> {
 }
 
 /** guacd reads these settings as given; the editor stores "auto" for its default. */
-function cleanGuacConfig(raw: Record<string, unknown>): {
-  config: Record<string, unknown>;
-  guacdOverrides: { guacdHost?: string; guacdPort?: number };
-} {
+function cleanGuacConfig(
+  raw: Record<string, unknown>,
+): Record<string, unknown> {
   const config: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(raw)) {
     if (value !== "auto") config[key] = value;
   }
-  const guacdHost =
-    typeof config["guacd-hostname"] === "string" && config["guacd-hostname"]
-      ? (config["guacd-hostname"] as string)
-      : undefined;
-  const guacdPort = config["guacd-port"]
-    ? parseInt(String(config["guacd-port"]), 10) || undefined
-    : undefined;
+  // Includes guacd-hostname and guacd-port: a host's guacd address comes
+  // from readGuacdHost, never from settings a host editor can write.
   for (const key of Object.keys(config)) {
     if (isServerOwnedSetting(key)) delete config[key];
   }
@@ -82,12 +82,19 @@ function cleanGuacConfig(raw: Record<string, unknown>): {
     const dpi = parseInt(String(config.dpi), 10);
     config.dpi = Number.isFinite(dpi) && dpi > 0 ? dpi : undefined;
   }
+  return config;
+}
+
+/** A host's admin-set guacd address, as token settings. */
+async function guacdOverridesFor(
+  ctx: PluginContext,
+  hostId: number,
+  guacamoleConfig: Record<string, unknown>,
+): Promise<{ guacdHost?: string; guacdPort?: number }> {
+  const address = await readGuacdHost(ctx, hostId, guacamoleConfig);
   return {
-    config,
-    guacdOverrides: {
-      ...(guacdHost ? { guacdHost } : {}),
-      ...(guacdPort ? { guacdPort } : {}),
-    },
+    ...(address?.hostname ? { guacdHost: address.hostname } : {}),
+    ...(address?.port ? { guacdPort: address.port } : {}),
   };
 }
 
@@ -328,13 +335,17 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         }
 
         // The display settings sit under whatever the host's guacd settings say.
-        const { config, guacdOverrides } = cleanGuacConfig({
+        let guacConfig = cleanGuacConfig({
           ...(protocol === "rdp"
             ? await readDisplayDefaults(ctx, userId, hostId)
             : {}),
           ...settings.guacamoleConfig,
         });
-        let guacConfig = config;
+        const guacdOverrides = await guacdOverridesFor(
+          ctx,
+          hostId,
+          settings.guacamoleConfig,
+        );
 
         const promptForLogin =
           protocol === "rdp" && target.auth.authType === "none";
@@ -496,6 +507,133 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
     },
   );
 
+  const parseHostId = (raw: unknown): number | null => {
+    const hostId = Number(raw);
+    return Number.isSafeInteger(hostId) && hostId > 0 ? hostId : null;
+  };
+
+  /**
+   * @openapi
+   * /plugin-api/remote-desktop/guacd-host/{hostId}:
+   *   get:
+   *     summary: Read a host's guacd address
+   *     description: Returns the guacd address an admin set for this host, if any, and whether the caller may change it.
+   *     tags:
+   *       - Remote Desktop
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: hostId
+   *         required: true
+   *         schema:
+   *           type: integer
+   *     responses:
+   *       200:
+   *         description: The address (empty when the host uses the global guacd) and canEdit.
+   *       400:
+   *         description: Invalid host ID.
+   *       404:
+   *         description: Host not found.
+   */
+  router.get("/guacd-host/:hostId", async (req: Request, res: Response) => {
+    try {
+      const userId = actor(ctx, res);
+      if (!userId) return;
+      const hostId = parseHostId(req.params.hostId);
+      if (!hostId) return res.status(400).json({ error: "Invalid host ID" });
+      const access = await ctx.hosts.checkAccess(hostId, "view");
+      if (!access.hasAccess) {
+        return res.status(404).json({ error: "Host not found" });
+      }
+      const settings = await readHostSettings(ctx, hostId);
+      const address = await readGuacdHost(
+        ctx,
+        hostId,
+        settings.guacamoleConfig,
+      );
+      res.json({
+        hostname: address?.hostname ?? "",
+        port: address?.port ?? null,
+        canEdit: await ctx.rbac.has(ADMIN_PERMISSION),
+      });
+    } catch (error) {
+      log.error("Failed to read a host's guacd address", {
+        operation: "guacd_host_read_error",
+        error: errorMessage(error),
+      });
+      res.status(500).json({ error: "Failed to read the guacd address" });
+    }
+  });
+
+  /**
+   * @openapi
+   * /plugin-api/remote-desktop/guacd-host/{hostId}:
+   *   put:
+   *     summary: Set a host's guacd address
+   *     description: Sets or clears the guacd address this host's sessions use. Admins only, since it decides where the server opens a connection.
+   *     tags:
+   *       - Remote Desktop
+   *     security:
+   *       - bearerAuth: []
+   *     parameters:
+   *       - in: path
+   *         name: hostId
+   *         required: true
+   *         schema:
+   *           type: integer
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             properties:
+   *               hostname:
+   *                 type: string
+   *               port:
+   *                 type: integer
+   *     responses:
+   *       200:
+   *         description: Saved. Empty values clear it.
+   *       400:
+   *         description: Invalid host ID.
+   *       403:
+   *         description: Not an admin.
+   *       404:
+   *         description: Host not found or no edit access.
+   */
+  router.put("/guacd-host/:hostId", async (req: Request, res: Response) => {
+    try {
+      const userId = actor(ctx, res);
+      if (!userId) return;
+      if (!(await ctx.rbac.has(ADMIN_PERMISSION))) {
+        return res
+          .status(403)
+          .json({ error: "Only admins can set a host's guacd address" });
+      }
+      const hostId = parseHostId(req.params.hostId);
+      if (!hostId) return res.status(400).json({ error: "Invalid host ID" });
+      const access = await ctx.hosts.checkAccess(hostId, "edit");
+      if (!access.hasAccess) {
+        return res.status(404).json({ error: "Host not found" });
+      }
+      const address = normalizeGuacdAddress(req.body);
+      await writeGuacdHost(ctx, hostId, address);
+      res.json({
+        hostname: address?.hostname ?? "",
+        port: address?.port ?? null,
+        canEdit: true,
+      });
+    } catch (error) {
+      log.error("Failed to save a host's guacd address", {
+        operation: "guacd_host_write_error",
+        error: errorMessage(error),
+      });
+      res.status(500).json({ error: "Failed to save the guacd address" });
+    }
+  });
+
   /**
    * @openapi
    * /plugin-api/remote-desktop/status:
@@ -555,12 +693,11 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
             .status(400)
             .json({ error: "Protocol is not enabled for this host" });
         }
-        const { guacdOverrides } = cleanGuacConfig({
-          ...(protocol === "rdp"
-            ? await readDisplayDefaults(ctx, userId, hostId)
-            : {}),
-          ...settings.guacamoleConfig,
-        });
+        const guacdOverrides = await guacdOverridesFor(
+          ctx,
+          hostId,
+          settings.guacamoleConfig,
+        );
         guacd = {
           host: guacdOverrides.guacdHost || guacd.host,
           port: guacdOverrides.guacdPort || guacd.port,

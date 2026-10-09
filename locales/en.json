@@ -119,6 +119,11 @@
       "guacdHostnamePlaceholder": "Global default",
       "guacdPort": "guacd Port",
       "guacdProxyDesc": "Override the global guacd instance for this connection. Leave blank to use the globally configured guacd.",
+      "guacdAdminOnly": "Only admins can change the guacd server for a host.",
+      "guacdSaveHostFirst": "Save the host first, then set its guacd server here.",
+      "guacdSave": "Save guacd server",
+      "guacdSaved": "guacd server saved",
+      "guacdSaveFailed": "Failed to save the guacd server",
       "gatewayHostname": "Gateway Hostname",
       "gatewayPort": "Gateway Port",
       "gatewayUsername": "Gateway Username",
@@ -313,6 +318,12 @@
         "label": "guacd URL",
         "description": "Where guacd listens, as host:port. The GUACD_URL, GUACD_HOST and GUACD_PORT environment variables override this.",
         "placeholder": "guacd:4822"
+      },
+      "hostGuacd": {
+        "label": "Per-host guacd addresses"
+      },
+      "hostGuacdMigrated": {
+        "label": "Per-host guacd addresses moved"
       }
     },
     "host": {

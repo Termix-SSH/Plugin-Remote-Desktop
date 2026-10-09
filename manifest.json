@@ -172,6 +172,20 @@
           "placeholderKey": "settings.admin.guacdUrl.placeholder",
           "requires": "enabled",
           "default": ""
+        },
+        {
+          "key": "hostGuacd",
+          "type": "json",
+          "labelKey": "settings.admin.hostGuacd.label",
+          "default": {},
+          "hidden": true
+        },
+        {
+          "key": "hostGuacdMigrated",
+          "type": "boolean",
+          "labelKey": "settings.admin.hostGuacdMigrated.label",
+          "default": false,
+          "hidden": true
         }
       ],
       "host": {
