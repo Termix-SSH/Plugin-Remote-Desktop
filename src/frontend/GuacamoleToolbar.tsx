@@ -340,7 +340,7 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
               </TooltipContent>
             </Tooltip>
 
-            {/* Touch mode toggle — touch devices only */}
+            {/* Touch mode toggle, touch devices only */}
             {touchMode != null && onTouchModeChange && (
               <>
                 <div className={SEP} />
@@ -373,7 +373,7 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
               </>
             )}
 
-            {/* Drive files — only once guacd reports a redirected filesystem */}
+            {/* Drive files, only once guacd reports a redirected filesystem */}
             {hasFilesystem && onToggleFileBrowser && (
               <>
                 <div className={SEP} />
@@ -418,7 +418,7 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
               </>
             )}
 
-            {/* System combos — RDP/VNC only */}
+            {/* System combos, RDP/VNC only */}
             {isRdpVnc && (
               <>
                 <div className={SEP} />
@@ -443,7 +443,7 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
               </>
             )}
 
-            {/* Sticky modifiers — RDP/VNC only */}
+            {/* Sticky modifiers, RDP/VNC only */}
             {isRdpVnc && (
               <>
                 <div className={SEP} />

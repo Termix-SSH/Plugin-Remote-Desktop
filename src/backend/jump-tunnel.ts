@@ -106,6 +106,8 @@ async function forwardThroughChain(
   const server = net.createServer((socket) => {
     sockets.add(socket);
     socket.once("close", () => sockets.delete(socket));
+    // An unhandled socket error would take the whole backend down.
+    socket.on("error", () => socket.destroy());
     client.forwardOut(
       "127.0.0.1",
       0,
@@ -116,6 +118,8 @@ async function forwardThroughChain(
           socket.destroy();
           return;
         }
+        stream.on("error", () => socket.destroy());
+        socket.once("close", () => stream.destroy());
         socket.pipe(stream).pipe(socket);
       },
     );

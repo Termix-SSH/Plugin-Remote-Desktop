@@ -28,8 +28,10 @@ export async function createMacosVncCompatibilityProxy({
     const forget = (socket: net.Socket) => sockets.delete(socket);
     client.once("close", () => forget(client));
     upstream.once("close", () => forget(upstream));
-    client.once("error", () => upstream.destroy());
-    upstream.once("error", () => client.destroy());
+    client.on("error", () => upstream.destroy());
+    upstream.on("error", () => client.destroy());
+    client.once("close", () => upstream.destroy());
+    upstream.once("close", () => client.destroy());
     client.pipe(upstream);
 
     let pending = Buffer.alloc(0);

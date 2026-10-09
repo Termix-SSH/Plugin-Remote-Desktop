@@ -519,37 +519,16 @@ export function HostEditorRdpTab({
               onChange={(v) => setGuacField("enable-drive", v)}
             />
           </SettingRow>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 border-t border-border pt-3">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.driveName")}
-              </label>
-              <Input
-                placeholder={t("hosts.guac.driveNamePlaceholder")}
-                value={form.guacamoleConfig["drive-name"] ?? ""}
-                onChange={(e) => setGuacField("drive-name", e.target.value)}
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.drivePath")}
-              </label>
-              <Input
-                placeholder="/home/user/shared"
-                value={form.guacamoleConfig["drive-path"] ?? ""}
-                onChange={(e) => setGuacField("drive-path", e.target.value)}
-              />
-            </div>
-          </div>
-          <SettingRow
-            label={t("hosts.guac.createDrivePath")}
-            description={t("hosts.guac.createDrivePathDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["create-drive-path"]}
-              onChange={(v) => setGuacField("create-drive-path", v)}
+          <div className="flex flex-col gap-1.5 border-t border-border pt-3">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+              {t("hosts.guac.driveName")}
+            </label>
+            <Input
+              placeholder={t("hosts.guac.driveNamePlaceholder")}
+              value={form.guacamoleConfig["drive-name"] ?? ""}
+              onChange={(e) => setGuacField("drive-name", e.target.value)}
             />
-          </SettingRow>
+          </div>
           <SettingRow
             label={t("hosts.guac.disableDownload")}
             description={t("hosts.guac.disableDownloadDesc")}
@@ -813,15 +792,6 @@ export function HostEditorRdpTab({
         }
       >
         <div className="flex flex-col gap-4 py-3">
-          <SettingRow
-            label={t("hosts.guac.createPathIfMissing")}
-            description={t("hosts.guac.createPathIfMissingDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["create-recording-path"]}
-              onChange={(v) => setGuacField("create-recording-path", v)}
-            />
-          </SettingRow>
           <SettingRow
             label={t("hosts.guac.excludeOutput")}
             description={t("hosts.guac.excludeOutputDesc")}
@@ -1299,15 +1269,6 @@ export function HostEditorVncTab({
       >
         <div className="flex flex-col gap-4 py-3">
           <SettingRow
-            label={t("hosts.guac.createPathIfMissing")}
-            description={t("hosts.guac.createPathIfMissingDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["create-recording-path"]}
-              onChange={(v) => setGuacField("create-recording-path", v)}
-            />
-          </SettingRow>
-          <SettingRow
             label={t("hosts.guac.excludeOutput")}
             description={t("hosts.guac.excludeOutputDesc")}
           >
@@ -1695,15 +1656,6 @@ export function HostEditorTelnetTab({
         }
       >
         <div className="flex flex-col gap-4 py-3">
-          <SettingRow
-            label={t("hosts.guac.createPathIfMissing")}
-            description={t("hosts.guac.createPathIfMissingDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["create-recording-path"]}
-              onChange={(v) => setGuacField("create-recording-path", v)}
-            />
-          </SettingRow>
           <SettingRow
             label={t("hosts.guac.excludeOutput")}
             description={t("hosts.guac.excludeOutputDesc")}

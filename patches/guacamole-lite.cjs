@@ -41,12 +41,12 @@ if (
 // guacd 1.6.0 name handshake, dynamic argument answering, UTF-8 tokens and
 // read-only joins. If an upstream release moves an anchor string, silently
 // skipping would ship a Termix that looks fine and then drops VNC/RDP sessions
-// at runtime, so a missing anchor has to stop the install instead.
+// at runtime, so a missing anchor has to stop the build instead.
 function missingAnchor(patch) {
   console.error(
     `[patch-guacamole-lite] ${patch} anchor not found in guacamole-lite. ` +
-      "The upstream file has changed and this patch no longer applies — " +
-      "update scripts/patch-guacamole-lite.cjs to match the new source.",
+      "The upstream file has changed and this patch no longer applies, so " +
+      "update patches/guacamole-lite.cjs to match the new source.",
   );
   process.exit(1);
 }

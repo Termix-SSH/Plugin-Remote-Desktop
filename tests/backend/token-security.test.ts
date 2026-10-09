@@ -121,10 +121,16 @@ describe("isServerOwnedSetting", () => {
     expect(isServerOwnedSetting(key)).toBe(true);
   });
 
-  it.each(["width", "security", "ignore-cert", "color-depth", "enable-drive"])(
-    "lets a caller set %s",
-    (key) => {
-      expect(isServerOwnedSetting(key)).toBe(false);
-    },
-  );
+  it.each([
+    "width",
+    "security",
+    "ignore-cert",
+    "color-depth",
+    "enable-drive",
+    "recording-exclude-output",
+    "recording-exclude-mouse",
+    "recording-include-keys",
+  ])("lets a caller set %s", (key) => {
+    expect(isServerOwnedSetting(key)).toBe(false);
+  });
 });

@@ -2,7 +2,7 @@ import type { GuacamoleTokenService } from "./token-service.js";
 import type { RemoteSessions } from "./sessions.js";
 import type { RemoteProtocol } from "./host-settings.js";
 
-/** sessions.live v1, as session-sharing reads it (plugins/session-sharing/src/backend/live.ts). */
+/** sessions.live v1, as the session-sharing plugin reads it. */
 interface LiveSessionInfo {
   id: string;
   userId: string;

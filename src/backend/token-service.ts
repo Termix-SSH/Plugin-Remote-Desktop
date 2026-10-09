@@ -73,15 +73,17 @@ export const TOKEN_TTL_MS = 5 * 60 * 1000;
 
 /**
  * Settings the server decides, never the caller: where guacd is, every path
- * guacd writes or reads on its own filesystem, and VNC listen mode, which
- * would open a port on the guacd host.
+ * guacd writes or reads on its own filesystem, the recording file name, and
+ * VNC listen mode, which would open a port on the guacd host. What a
+ * recording contains (recording-exclude-output and the like) stays the
+ * host's choice.
  */
 export function isServerOwnedSetting(key: string): boolean {
   return (
     key.startsWith("guacd") ||
     key.endsWith("-path") ||
     key.startsWith("create-") ||
-    key.startsWith("recording-") ||
+    key === "recording-name" ||
     key.startsWith("typescript-") ||
     key === "reverse-connect" ||
     key === "listen-timeout"

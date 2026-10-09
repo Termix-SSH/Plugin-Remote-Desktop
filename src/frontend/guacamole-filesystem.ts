@@ -167,7 +167,7 @@ function writeUpload(
   return new Promise((resolve, reject) => {
     const writer = new Guacamole.BlobWriter(stream);
 
-    // A rejected blob stops the writer without firing onerror or oncomplete —
+    // A rejected blob stops the writer without firing onerror or oncomplete;
     // only the error ack reports it, so without this the upload hangs forever.
     writer.onack = (status: Guacamole.Status) => {
       if (status.isError()) {
