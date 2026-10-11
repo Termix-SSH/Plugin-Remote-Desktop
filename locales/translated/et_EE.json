@@ -1,0 +1,382 @@
+{
+  "remoteDesktop": {
+    "connecting": "Ühendamine {{type}} sessiooniga...",
+    "checkingGuacd": "Kaugjuhtimise teenuse kontrollimine...",
+    "requestingToken": "{{type}} ühendustokeni taotlemine...",
+    "openingSession": "{{type}} sessiooni avamine...",
+    "negotiating": "{{type}} käepigemise läbirääkimine...",
+    "sessionReady": "{{type}} sessioon on valmis",
+    "connectionError": "Ühendusviga",
+    "failedToConnect": "Ühendustokeni hankimine ebaõnnestus",
+    "hostNotFound": "Peremeesmasinat ei leitud",
+    "noHostSelected": "Ühtegi peremeesmasinat ei ole valitud",
+    "guacdUnavailable": "Kaugjuhtimise teenus (guacd) ei ole saadaval. Veenduge, et guacd töötab, on ligipääsetav ja on haldaja seadetes õigesti konfigureeritud.",
+    "credentialPromptTitle": "Sisestage RDP-teenindusandmed",
+    "credentialPromptDescription": "Selle peremeesmasina puhul küsitakse teenindusandmeid ühendumisel. Neid kasutatakse ainult selle sessiooni jaoks ja neid ei salvestata.",
+    "connect": "Ühendu",
+    "files": {
+      "title": "Ketta failid",
+      "parent": "Ülemine kaust",
+      "refresh": "Värskenda",
+      "empty": "See kaust on tühi",
+      "listFailed": "Selle kausta lugemine ebaõnnestus",
+      "download": "Laadi alla",
+      "downloadFailed": "{{name}} allalaadimine ebaõnnestus",
+      "upload": "Laadi failid üles",
+      "uploading": "{{name}} üleslaadimine...",
+      "uploaded": "{{name}} on üles laaditud",
+      "uploadFailed": "{{name}} üleslaadimine ebaõnnestus",
+      "uploadDisabled": "Üleslaadimine on sellel ühendusel keelatud",
+      "driveUnavailable": "Luba RDP-ketta ümbersuunamine enne failide üleslaadimist",
+      "driveNotWritable": "guacd ei saa kirjutada ketta kausta. Kontrollige GUACD_DRIVE_PATH ja selle õigusi.",
+      "dropToUpload": "Lohistage failid üleslaadimiseks"
+    },
+    "toolbar": {
+      "ctrlAltDel": "Ctrl+Alt+Del",
+      "winL": "Win+L (Ekraanilukustus)",
+      "winKey": "Windowsi klahv",
+      "superL": "Super+L (Ekraanilukustus)",
+      "superKey": "Super klahv",
+      "super": "Super",
+      "cmdL": "Cmd+L (Ekraanilukustus)",
+      "cmdKey": "Command klahv",
+      "cmd": "Cmd",
+      "ctrl": "Ctrl",
+      "alt": "Alt",
+      "shift": "Shift",
+      "win": "Win",
+      "stickyActive": "{{key}} (lukustatud – klõpsake vabastamiseks)",
+      "stickyInactive": "{{key}} (klõpsake lukustamiseks)",
+      "esc": "Escape",
+      "tab": "Tab",
+      "home": "Home",
+      "end": "End",
+      "pageUp": "Page Up",
+      "pageDown": "Page Down",
+      "arrowUp": "Nool üles",
+      "arrowDown": "Nool alla",
+      "arrowLeft": "Nool vasakule",
+      "arrowRight": "Nool paremale",
+      "fnToggle": "Funktsiooniklahvid",
+      "collapse": "Ahenda tööriistariba",
+      "expand": "Laienda tööriistariba",
+      "dragHandle": "Lohistage ümberpaigutamiseks",
+      "hide": "Peida selle sessiooni jaoks. Selle püsivalt keelamiseks avage Peremeesmasina seaded → Üldine → Ühenduse tööriistariba.",
+      "zoomIn": "Suurenda",
+      "zoomOut": "Vähenda",
+      "resetZoom": "Lähtesta suurus",
+      "fitToScreen": "Mahuta ekraanile",
+      "switchToTrackpad": "Lülita puuteplaadi režiimile (lohi kursori liigutamiseks, koputa klõpsamiseks)",
+      "switchToTouch": "Lülita puuterežiimile (koputa otse kohale, kuhu soovid klõpsata)"
+    },
+    "disabled": "Kaugtöölaud on väljas lülitatud. Haldaja saab selle Sätted menüüst sisse lülitada."
+  },
+  "hosts": {
+    "nativeRdpOpened": "Avatud Windowsi Kaugtöölaual",
+    "nativeRdpFailed": "Windowsi Kaugtöölaua avamine ebaõnnestus",
+    "openNativeRdp": "Ava Windowsi Kaugtöölaual",
+    "guac": {
+      "toolbar": "Tööriistariba",
+      "connection": "Ühendus",
+      "authentication": "Autentimine",
+      "storedCredential": "Salvestatud usaldusandmed",
+      "authMethod": "Autentimismeetod",
+      "authTypeDirect": "Otsene",
+      "authTypeCredential": "Usaldusandmed",
+      "authTypeNone": "Puudub",
+      "authTypeNoneDesc": "Usaldusandmeid ei salvestata. Iga kord, kui ühendust loote, küsitakse kasutajatunnust ja parooli; neid ei salvestata.",
+      "selectCredential": "Valige usaldusandmed...",
+      "connectionSettings": "Ühenduse sätted",
+      "displaySettings": "Kuvamise sätted",
+      "audioSettings": "Heli sätted",
+      "rdpPerformance": "RDP jõudlus",
+      "deviceRedirection": "Seadme ümbersuunamine",
+      "session": "Seanss",
+      "gateway": "Läbivärav",
+      "remoteApp": "RemoteApp",
+      "clipboard": "Lõikelaud",
+      "sessionRecording": "Seansi salvestamine",
+      "wakeOnLan": "Wake-on-LAN",
+      "vncSettings": "VNC sätted",
+      "terminalSettings": "Terminali sätted",
+      "rdpPort": "RDP port",
+      "username": "Kasutajatunnus",
+      "password": "Parool",
+      "passwordSaved": "Parool on salvestatud, muutmiseks trükkige",
+      "domain": "Domeen",
+      "securityMode": "Turvarežiim",
+      "width": "Laius",
+      "height": "Kõrgus",
+      "dpi": "DPI",
+      "clientName": "Kliendi nimi",
+      "initialProgram": "Algprogramm",
+      "serverLayout": "Serveri paigutus",
+      "timezone": "Ajalonts",
+      "loadBalanceInfo": "Koormuse tasakaalustamise info / küpsis",
+      "loadBalanceInfoDesc": "RD Connection Brokeri küpsis RDS-farmi koormuse tasakaalustamiseks (nt tsv://MS Terminal Services Plugin.1.CollectionName)",
+      "guacdProxy": "guacd proksi",
+      "guacdHostname": "guacd peremeesmasin",
+      "guacdHostnamePlaceholder": "Globaalne vaikeväärtus",
+      "guacdPort": "guacd port",
+      "guacdProxyDesc": "Asenda selle ühenduse jaoks globaalne guacd-instants. Jäta tühjaks, et kasutada globaalselt konfigureeritud guacd-i.",
+      "guacdAdminOnly": "Ainult haldajad saavad muuta peremeesmasina guacd-serverit.",
+      "guacdSaveHostFirst": "Salvestage peremeesmasin esmalt ja määrake seejärel selle guacd-server siin.",
+      "guacdSave": "Salvesta guacd-server",
+      "guacdSaved": "guacd-server on salvestatud",
+      "guacdSaveFailed": "guacd-serveri salvestamine ebaõnnestus",
+      "gatewayHostname": "Läbivärava peremeesmasina nimi",
+      "gatewayPort": "Läbivärava port",
+      "gatewayUsername": "Läbivärava kasutajatunnus",
+      "gatewayPassword": "Lähte parool",
+      "gatewayDomain": "Lähte domeen",
+      "remoteAppProgram": "RemoteAppi programm",
+      "workingDirectory": "Töökaust",
+      "arguments": "Argumendid",
+      "normalizeLineEndings": "Normaliseeri reavahetused",
+      "macAddress": "MAC-aadress",
+      "broadcastAddress": "Laialeviiaadress",
+      "udpPort": "UDP-port",
+      "waitTimeS": "Ooteaeg (s)",
+      "driveName": "Ketta nimi",
+      "ignoreCertificate": "Eira sertifikaati",
+      "ignoreCertificateDesc": "Luba ühendused hostidega, millel on isesertifitseeritud sertifikaadid",
+      "forceLossless": "Sünge kaotusteta kodeerimine",
+      "forceLosslessDesc": "Sünge kaotusteta pildikodeerimine (kõrgem kvaliteet, rohkem andmemahtu)",
+      "disableAudio": "Keela heli",
+      "disableAudioDesc": "Vaigista kogu heli kaugseansi käigus",
+      "enableAudioInput": "Luba helisisend (mikrofon)",
+      "enableAudioInputDesc": "Suuna kohalik mikrofon kaugseansile",
+      "wallpaper": "Taustapilt",
+      "wallpaperDesc": "Kuva töölaua taustapilt (keelamine parandab jõudlust)",
+      "theming": "Teemad",
+      "themingDesc": "Luba visuaalsed teemad ja stiilid",
+      "fontSmoothing": "Fondi siledus",
+      "fontSmoothingDesc": "Luba ClearType'i fondi renderdus",
+      "fullWindowDrag": "Akna täielik lohistamine",
+      "fullWindowDragDesc": "Kuva akna sisu lohistamise ajal",
+      "desktopComposition": "Töölaua kompositsioon",
+      "desktopCompositionDesc": "Luba Aero klaasiefektid",
+      "menuAnimations": "Menüü animatsioonid",
+      "menuAnimationsDesc": "Luba menüü hajumise ja libisemise animatsioonid",
+      "disableBitmapCaching": "Keela bitkaardi vahemälu",
+      "disableBitmapCachingDesc": "Lülita välja bitkaardi vahemälu (võib aidata vigade korral)",
+      "disableOffscreenCaching": "Keela ekraanivälise vahemälu",
+      "disableOffscreenCachingDesc": "Lülita välja ekraaniväline vahemälu",
+      "disableGlyphCaching": "Keela glüüfide vahemälu",
+      "disableGlyphCachingDesc": "Lülita välja glüüfide vahemälu",
+      "enableGfx": "Luba GFX",
+      "enableGfxDesc": "Kasuta RemoteFX-i graafikavoo",
+      "enablePrinting": "Luba trükkimine",
+      "enablePrintingDesc": "Suuna kohalikud printerid kaugseansile",
+      "enableDriveRedirection": "Luba ketta ümbersuunamine",
+      "enableDriveRedirectionDesc": "Kaardi kohalik kaust ketana kaugseansis",
+      "disableDownload": "Keela allalaadimine",
+      "disableDownloadDesc": "Ära luba failide allalaadimist kaugseansist",
+      "disableUpload": "Keela üleslaadimine",
+      "disableUploadDesc": "Ära luba failide üleslaadimist kaugseansile",
+      "enableTouch": "Luba puuteekraan",
+      "enableTouchDesc": "Luba puutesisendi ümbersuunamine",
+      "consoleSession": "Konsoolseanss",
+      "consoleSessionDesc": "Ühendu konsooliga (seanss 0) asemel uue seansiga",
+      "sendWolPacket": "Saada WOL-pakett",
+      "sendWolPacketDesc": "Saada maagipakett selle hosti ärkamiseks enne ühendumist",
+      "disableCopy": "Keela kopeerimine",
+      "disableCopyDesc": "Ära luba teksti kopeerimist kaugseansist",
+      "disablePaste": "Keela kleebimine",
+      "disablePasteDesc": "Ära luba teksti kleebimist kaugseansile",
+      "excludeOutput": "Jäta väljund välja",
+      "excludeOutputDesc": "Ära salvesta ekraaniväljundit (ainult metaandmed)",
+      "excludeMouse": "Jäta hiir välja",
+      "excludeMouseDesc": "Ära salvesta hiire liikumisi",
+      "includeKeystrokes": "Kaasa klahvivajutused",
+      "includeKeystrokesDesc": "Salvesta klahvivajutused lisaks ekraaniväljundile",
+      "vncPort": "VNC port",
+      "vncPassword": "VNC parool",
+      "vncUsernameOptional": "Kasutajanimi (valikuline)",
+      "vncLeaveBlank": "Jäta tühjaks, kui pole nõutud",
+      "cursorMode": "Kursori režiim",
+      "swapRedBlue": "Vaheta punane/sinine",
+      "swapRedBlueDesc": "Vaheta punase ja sinise värvikanali omavahel (parandab mõningaid värviprobleeme)",
+      "readOnly": "Kirjutuskaitsega",
+      "readOnlyDesc": "Vaata kaugkuva ilma sisendit saatmata",
+      "telnetPort": "Telneti port",
+      "terminalType": "Terminali tüüp",
+      "fontName": "Fondi nimi",
+      "fontSize": "Fondi suurus",
+      "colorScheme": "Värvipalett",
+      "backspaceKey": "Tagasikustutusklahv",
+      "colorDepth": "Värvide sügavus",
+      "resizeMethod": "Suuruse muutmise meetod",
+      "driveNamePlaceholder": "Termixi draiv",
+      "options": {
+        "any": "Suvaline",
+        "auto": "Automaatne",
+        "nlaExtended": "NLA Extended",
+        "color8": "8-bitine",
+        "color16": "16-bitine",
+        "color24": "24-bitine",
+        "color32": "32-bitine",
+        "displayUpdate": "Kuva värskendamine",
+        "reconnect": "Ühenda uuesti",
+        "preserve": "Säilita",
+        "unix": "Unix (LF)",
+        "windows": "Windows (CRLF)",
+        "local": "Lokaalne",
+        "remote": "Kaug",
+        "failsafe": "turvaline",
+        "blackOnWhite": "Must valgel",
+        "whiteOnBlack": "Valge mustal",
+        "grayOnBlack": "Hall mustal",
+        "greenOnBlack": "Roheline mustal"
+      }
+    },
+    "remoteDesktop": "Kaugtöölaud",
+    "tabRdp": "RDP",
+    "tabVnc": "VNC",
+    "tabTelnet": "Telnet",
+    "virtualNetwork": "Virtuaalne võrk",
+    "unencryptedShell": "Krüpteerimata shell",
+    "remoteDesktopNotes": "Märkused",
+    "userDefaultsNote": "Muutmata seaded järgivad hosti vaikeväärtusi.",
+    "connectionOriginNote": "Rakenduses kasutavad RDP, VNC ja Telnet kaugserverit, välja arvatud juhul, kui host on määratud kui See seade, mis vajab ligipääsu guacd-ile sellel masinal. Määra see Kaugtöölaua seadetes või hosti kaupa jaotises guacd Proxy.",
+    "docsLink": "Vaata dokumentatsiooni",
+    "connectionOriginGuacamoleNote": "RDP, VNC ja Telnet kasutavad kaugserverit, välja arvatud juhul, kui valite \"See seade\", mis vajab ligipääsu guacd-ile sellel masinal. Määra see guacd URL-i seadetes või hosti kaupa jaotises guacd Proxy."
+  },
+  "onboarding": {
+    "guacdTitle": "Kaugtöölaua seadistamine",
+    "guacdIntro": "Kaugtöölaud vajab guacd-i käivitamist Termixi kõrval. Veenduge, et see vastab, või suunake Termix selle poole.",
+    "guacdChecking": "guacd-i otsimine",
+    "guacdConnected": "guacd töötab aadressil {{address}}",
+    "guacdMissing": "guacd ei vasta aadressil {{address}}",
+    "guacdMissingDesc": "Võite jätkata ja seadistada hiljem. Kaugtöölaua sessioonid ei ühendu enne, kui see vastab.",
+    "guacdCheckFailed": "guacd-i kontrollimine ebaõnnestus",
+    "guacdComposeTitle": "Lisage see oma docker compose faili",
+    "guacdSaveAndCheck": "Salvesta ja kontrolli",
+    "guacdEnvNote": "Kui serveris on määratud GUACD_URL, GUACD_HOST või GUACD_PORT, siis need eelistatakse seda seadet."
+  },
+  "settings": {
+    "user": {
+      "colorDepth": {
+        "label": "Värvusüldis",
+        "description": "Kasutatakse RDP-hostide puhul, mis jätavad selle vaikeväärtusele."
+      },
+      "resizeMethod": {
+        "label": "Suuruse muutmise meetod",
+        "description": "Kuidas kaugkuvas akna suurusega kaasa liigub."
+      },
+      "resizeDisplayUpdate": "Kuva uuendamine",
+      "resizeReconnect": "Ühenduse taastamine",
+      "inherit": "Pärandamine",
+      "on": "Sees",
+      "off": "Väljas",
+      "forceLossless": {
+        "label": "Sunnitud kadudeta",
+        "description": "Sunnib kadudeta pildikodeerimist (kõrgem kvaliteet, rohkem ribalaiust)"
+      },
+      "enableWallpaper": {
+        "label": "Taustapilt",
+        "description": "Kuva töölaua taustapilt (väljalülitamine parandab jõudlust)"
+      },
+      "enableFontSmoothing": {
+        "label": "Fondi siledus",
+        "description": "Luba ClearType'i fondi renderdus"
+      },
+      "enableDesktopComposition": {
+        "label": "Töölaua kompositsioon",
+        "description": "Luba Aero klaasiefektid"
+      },
+      "disableAudio": {
+        "label": "Hääl väljas",
+        "description": "Vaigista kogu hääl kaugsessioonist"
+      },
+      "enablePrinting": {
+        "label": "Luba trükkimine",
+        "description": "Suuna kohalikud printerid kaugsessiooni"
+      },
+      "enableDrive": {
+        "label": "Luba draivi ümbersuunamine",
+        "description": "Kaardi kohalikust kaustast draivina kaugsessioonis"
+      },
+      "disableCopy": {
+        "label": "Kopeerimine väljas",
+        "description": "Takista teksti kopeerimist kaugsessioonist"
+      },
+      "disablePaste": {
+        "label": "Asetamine väljas",
+        "description": "Takista teksti asetamist kaugsessiooni"
+      },
+      "colorDepth16": "16-bitine",
+      "colorDepth24": "24-bitine",
+      "colorDepth32": "32-bitine"
+    },
+    "admin": {
+      "enabled": {
+        "label": "Luba kaugtöölaud",
+        "description": "Luba RDP, VNC ja Telnet ühendused läbi guacd."
+      },
+      "guacdUrl": {
+        "label": "guacd URL",
+        "description": "Kus guacd kuulab, vormingus host:port. Keskkonnamuutujad GUACD_URL, GUACD_HOST ja GUACD_PORT eelistavad seda.",
+        "placeholder": "guacd:4822"
+      },
+      "hostGuacd": {
+        "label": "Iga hosti jaoks eraldi guacd aadressid"
+      },
+      "hostGuacdMigrated": {
+        "label": "Iga hosti jaoks eraldi guacd aadressid on liigutatud"
+      }
+    },
+    "host": {
+      "enableRdp": {
+        "label": "RDP"
+      },
+      "enableVnc": {
+        "label": "VNC"
+      },
+      "enableTelnet": {
+        "label": "Telnet"
+      },
+      "rdpPort": {
+        "label": "RDP port"
+      },
+      "vncPort": {
+        "label": "VNC port"
+      },
+      "telnetPort": {
+        "label": "Telnet port"
+      },
+      "rdpSecurity": {
+        "label": "RDP turvarežiim"
+      },
+      "rdpIgnoreCert": {
+        "label": "Eira sertifikaadi vigu"
+      },
+      "guacamoleConfig": {
+        "label": "guacd seaded"
+      },
+      "enableToolbar": {
+        "label": "Kaugtöölaua tööriistariba",
+        "description": "Kuva tööriistariba RDP, VNC ja Telnet sessioonides."
+      },
+      "displayGroup": "Kuva",
+      "displayDefaultsTab": "Kaugtöölaud"
+    }
+  },
+  "palette": {
+    "connectRdp": "Ühendu RDP-ga",
+    "connectVnc": "Ühendu VNC-ga",
+    "connectTelnet": "Ühendu Telnetiga"
+  },
+  "permissions": {
+    "sessions": {
+      "title": "Jaga kaugtöölaua sessioone",
+      "description": "Luba sessioonide jagamisel ja koostööruumides näidata selle kasutaja RDP, VNC ja Telnet sessioone teistele."
+    }
+  },
+  "errors": {
+    "remoteServerRequired": "Nõutud on kaugserver. Ühenda kaugserver seadetes, et kasutada seda ühendustüüpi."
+  },
+  "plugin": {
+    "name": "Kaugtöölaud"
+  }
+}

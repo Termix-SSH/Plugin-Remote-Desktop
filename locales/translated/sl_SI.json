@@ -1,0 +1,382 @@
+{
+  "remoteDesktop": {
+    "connecting": "Povezovanje s sejo {{type}}...",
+    "checkingGuacd": "Preverjanje storitve za daljinsko namizje...",
+    "requestingToken": "Zahtevanje žetona za povezavo {{type}}...",
+    "openingSession": "Odpiranje seje {{type}}...",
+    "negotiating": "Pogajanje o rokoanju {{type}}...",
+    "sessionReady": "Seja {{type}} je pripravljena",
+    "connectionError": "Napaka pri povezavi",
+    "failedToConnect": "Pridobivanje žetona za povezavo ni uspelo",
+    "hostNotFound": "Gostitelja ni mogoče najti",
+    "noHostSelected": "Ni izbranega gostitelja",
+    "guacdUnavailable": "Storitev za daljinsko namizje (guacd) ni na voljo. Preverite, ali guacd teče, je dostopen in pravilno konfiguriran v nastavitvah upravitelja.",
+    "credentialPromptTitle": "Vnesite poverilnice za RDP",
+    "credentialPromptDescription": "Ta gostitelj je nastavljen na vprašanje za poverilnice ob povezavi. Uporabljajo se samo za to sejo in se ne shranijo.",
+    "connect": "Poveži",
+    "files": {
+      "title": "Datoteke pogona",
+      "parent": "Nadrejeni imenik",
+      "refresh": "Osveži",
+      "empty": "Ta mapo je prazna",
+      "listFailed": "Branje te mape ni uspelo",
+      "download": "Prenesi",
+      "downloadFailed": "Prenašanje {{name}} ni uspelo",
+      "upload": "Naloži datoteke",
+      "uploading": "Nalaganje {{name}}...",
+      "uploaded": "Naloženo {{name}}",
+      "uploadFailed": "Nalaganje {{name}} ni uspelo",
+      "uploadDisabled": "Nalaganje je za to povezavo onemogočeno",
+      "driveUnavailable": "Pred nalaganjem datotek omogočite preusmerjanje pogona RDP",
+      "driveNotWritable": "guacd ne more pisati v mapo pogona. Preverite GUACD_DRIVE_PATH in njegove pravice.",
+      "dropToUpload": "Spustite datoteke za nalaganje"
+    },
+    "toolbar": {
+      "ctrlAltDel": "Ctrl+Alt+Del",
+      "winL": "Win+L (Zakleni zaslon)",
+      "winKey": "Tipka Windows",
+      "superL": "Super+L (Zakleni zaslon)",
+      "superKey": "Tipka Super",
+      "super": "Super",
+      "cmdL": "Cmd+L (Zakleni zaslon)",
+      "cmdKey": "Tipka Command",
+      "cmd": "Cmd",
+      "ctrl": "Ctrl",
+      "alt": "Alt",
+      "shift": "Shift",
+      "win": "Win",
+      "stickyActive": "{{key}} (zaklenjeno - kliknite za sproščanje)",
+      "stickyInactive": "{{key}} (kliknite za zaklepanje)",
+      "esc": "Escape",
+      "tab": "Tab",
+      "home": "Home",
+      "end": "End",
+      "pageUp": "Page Up",
+      "pageDown": "Page Down",
+      "arrowUp": "Puščica gor",
+      "arrowDown": "Puščica dol",
+      "arrowLeft": "Puščica levo",
+      "arrowRight": "Puščica desno",
+      "fnToggle": "Funkcijske tipke",
+      "collapse": "Strni orodno vrstico",
+      "expand": "Razširi orodno vrstico",
+      "dragHandle": "Povlecite za premikanje",
+      "hide": "Skrij za to sejo. Za trajno onemogočanje odprite Nastavitve gostitelja → Splošno → Orodna vrstica povezave.",
+      "zoomIn": "Povečaj",
+      "zoomOut": "Pomanjšaj",
+      "resetZoom": "Ponastavi povečavo",
+      "fitToScreen": "Prilagodi zaslonu",
+      "switchToTrackpad": "Preklopi na način sledilne ploščice (povlecite za premik kazalca, tapnite za klik)",
+      "switchToTouch": "Preklopi na dotikalni način (tapnite neposredno tja, kjer želite klikniti)"
+    },
+    "disabled": "Oddaljena namizna površina je izklopljena. Skrbnik jo lahko vklopi v Nastavitev."
+  },
+  "hosts": {
+    "nativeRdpOpened": "Odprto v Windows Oddaljeno namizje",
+    "nativeRdpFailed": "Napaka pri odpiranju Windows Oddaljenega namizja",
+    "openNativeRdp": "Odpri v Windows Oddaljenem namizju",
+    "guac": {
+      "toolbar": "Orodna vrstica",
+      "connection": "Povezava",
+      "authentication": "Overjanje",
+      "storedCredential": "Shranjene poverilnice",
+      "authMethod": "Način overjanja",
+      "authTypeDirect": "Neposredno",
+      "authTypeCredential": "Poverilnice",
+      "authTypeNone": "Brez",
+      "authTypeNoneDesc": "Poverilnice niso shranjene. Ob vsaki povezavi boste vprašani za uporabniško ime in geslo; ta se ne shranijo.",
+      "selectCredential": "Izberite poverilnice...",
+      "connectionSettings": "Nastavitve povezave",
+      "displaySettings": "Nastavitve zaslona",
+      "audioSettings": "Nastavitve zvoka",
+      "rdpPerformance": "Učinkovitost RDP",
+      "deviceRedirection": "Preusmerjanje naprav",
+      "session": "Seja",
+      "gateway": "Prehod",
+      "remoteApp": "RemoteApp",
+      "clipboard": "Odložišče",
+      "sessionRecording": "Snemanje seje",
+      "wakeOnLan": "Wake-on-LAN",
+      "vncSettings": "Nastavitve VNC",
+      "terminalSettings": "Nastavitve terminala",
+      "rdpPort": "Vrata RDP",
+      "username": "Uporabniško ime",
+      "password": "Geslo",
+      "passwordSaved": "Geslo je shranjeno, vnesite za spremembo",
+      "domain": "Domena",
+      "securityMode": "Varnostni način",
+      "width": "Širina",
+      "height": "Višina",
+      "dpi": "DPI",
+      "clientName": "Ime odjemalca",
+      "initialProgram": "Začetni program",
+      "serverLayout": "Postavitev strežnika",
+      "timezone": "Časovni pas",
+      "loadBalanceInfo": "Informacije o uravnavanju obremenitve / Piškotek",
+      "loadBalanceInfoDesc": "Piškotek RD Connection Broker za uravnavanje obremenitve v farmi RDS (npr. tsv://MS Terminal Services Plugin.1.CollectionName)",
+      "guacdProxy": "Proxy guacd",
+      "guacdHostname": "Strežnik guacd",
+      "guacdHostnamePlaceholder": "Globalna privzeta nastavitev",
+      "guacdPort": "Vrata guacd",
+      "guacdProxyDesc": "Ponastavite globalno instanco guacd za to povezavo. Pustite prazno za uporabo globalno konfiguriranega guacd.",
+      "guacdAdminOnly": "Samo skrbniki lahko spremenijo strežnik guacd za gostitelja.",
+      "guacdSaveHostFirst": "Najprej shranite gostitelja, nato pa tukaj nastavite njegov strežnik guacd.",
+      "guacdSave": "Shrani strežnik guacd",
+      "guacdSaved": "Strežnik guacd je shranjen",
+      "guacdSaveFailed": "Napaka pri shranjevanju strežnika guacd",
+      "gatewayHostname": "Ime gostitelja prehoda",
+      "gatewayPort": "Vrata prehoda",
+      "gatewayUsername": "Uporabniško ime prehoda",
+      "gatewayPassword": "Geslo za prehodno strežnik",
+      "gatewayDomain": "Domena prehoda",
+      "remoteAppProgram": "Program RemoteApp",
+      "workingDirectory": "Delovni imenik",
+      "arguments": "Argumenti",
+      "normalizeLineEndings": "Normaliziraj konce vrstic",
+      "macAddress": "MAC naslov",
+      "broadcastAddress": "Naslov za oddajanje",
+      "udpPort": "UDP vrata",
+      "waitTimeS": "Čakalni čas (s)",
+      "driveName": "Ime pogona",
+      "ignoreCertificate": "Prezri certifikat",
+      "ignoreCertificateDesc": "Dovoli povezave s strežniki, ki imajo samopodpisane certifikate",
+      "forceLossless": "Vsili brez izgub",
+      "forceLosslessDesc": "Vsili kodiranje slike brez izgub (višja kakovost, več pasovne širine)",
+      "disableAudio": "Onemogoči zvok",
+      "disableAudioDesc": "Utišaj ves zvok iz oddaljene seje",
+      "enableAudioInput": "Omogoči vnos zvoka (mikrofon)",
+      "enableAudioInputDesc": "Posreduj lokalni mikrofon v oddaljeno sejo",
+      "wallpaper": "Ozadje namizja",
+      "wallpaperDesc": "Prikaži ozadje namizja (onemogočanje izboljša zmogljivost)",
+      "theming": "Teme",
+      "themingDesc": "Omogoči vizualne teme in stile",
+      "fontSmoothing": "Glajenje pisav",
+      "fontSmoothingDesc": "Omogoči upodabljanje pisav ClearType",
+      "fullWindowDrag": "Povleci celotno okno",
+      "fullWindowDragDesc": "Prikaži vsebino okna med vlečenjem",
+      "desktopComposition": "Sestavljanje namizja",
+      "desktopCompositionDesc": "Omogoči učinke Aero stekla",
+      "menuAnimations": "Animacije menijev",
+      "menuAnimationsDesc": "Omogoči animacije bledenja in drsenja menijev",
+      "disableBitmapCaching": "Onemogoči predpomnjenje bitnih slik",
+      "disableBitmapCachingDesc": "Izklopi predpomnilnik bitnih slik (lahko pomaga pri napakah)",
+      "disableOffscreenCaching": "Onemogoči predpomnjenje zunaj zaslona",
+      "disableOffscreenCachingDesc": "Izklopi predpomnilnik zunaj zaslona",
+      "disableGlyphCaching": "Onemogoči predpomnjenje znakov",
+      "disableGlyphCachingDesc": "Izklopi predpomnilnik znakov",
+      "enableGfx": "Omogoči GFX",
+      "enableGfxDesc": "Uporabi grafično cevovod RemoteFX",
+      "enablePrinting": "Omogoči tiskanje",
+      "enablePrintingDesc": "Preusmeri lokalne tiskalnike v oddaljeno sejo",
+      "enableDriveRedirection": "Omogoči preusmerjanje pogonov",
+      "enableDriveRedirectionDesc": "Preslikaj lokalni imenik kot pogon v oddaljeni seji",
+      "disableDownload": "Onemogoči prenos",
+      "disableDownloadDesc": "Prepreči prenos datotek iz oddaljene seje",
+      "disableUpload": "Onemogoči nalaganje",
+      "disableUploadDesc": "Prepreči nalaganje datotek v oddaljeno sejo",
+      "enableTouch": "Omogoči dotik",
+      "enableTouchDesc": "Omogoči posredovanje dotika",
+      "consoleSession": "Konzolna seja",
+      "consoleSessionDesc": "Poveži se s konzolo (seja 0) namesto nove seje",
+      "sendWolPacket": "Pošlji paket WOL",
+      "sendWolPacketDesc": "Pošlji magični paket za zagon tega strežnika pred povezavo",
+      "disableCopy": "Onemogoči kopiranje",
+      "disableCopyDesc": "Prepreči kopiranje besedila iz oddaljene seje",
+      "disablePaste": "Onemogoči prilepanje",
+      "disablePasteDesc": "Prepreči prileganje besedila v oddaljeno sejo",
+      "excludeOutput": "Izključi izhod",
+      "excludeOutputDesc": "Ne snemaj izhoda zaslona (samo metapodatki)",
+      "excludeMouse": "Izključi miško",
+      "excludeMouseDesc": "Ne zabeleži gibov miške",
+      "includeKeystrokes": "Vključi tipkovnico",
+      "includeKeystrokesDesc": "Zabeleži surove pritiske tipk na dodaten izhod zaslona",
+      "vncPort": "VNC vrata",
+      "vncPassword": "VNC geslo",
+      "vncUsernameOptional": "Uporabniško ime (izbirno)",
+      "vncLeaveBlank": "Pustite prazno, če ni zahtevano",
+      "cursorMode": "Način kazalca",
+      "swapRedBlue": "Zamenjava rdeče/modre",
+      "swapRedBlueDesc": "Zamenjava rdečega in modrega barvnega kanala (odpravlja nekatere težave z barvami)",
+      "readOnly": "Samo za branje",
+      "readOnlyDesc": "Oglejte si oddaljeni zaslon brez pošiljanja vnosov",
+      "telnetPort": "Telnet vrata",
+      "terminalType": "Vrsta terminala",
+      "fontName": "Ime pisave",
+      "fontSize": "Velikost pisave",
+      "colorScheme": "Barvna shema",
+      "backspaceKey": "Tipka Backspace",
+      "colorDepth": "Barvna globina",
+      "resizeMethod": "Način spreminjanja velikosti",
+      "driveNamePlaceholder": "Termix pogon",
+      "options": {
+        "any": "Katerikoli",
+        "auto": "Samodejno",
+        "nlaExtended": "NLA Extended",
+        "color8": "8-bitno",
+        "color16": "16-bitno",
+        "color24": "24-bitno",
+        "color32": "32-bitno",
+        "displayUpdate": "Posodobitev zaslona",
+        "reconnect": "Ponovna povezava",
+        "preserve": "Ohrani",
+        "unix": "Unix (LF)",
+        "windows": "Windows (CRLF)",
+        "local": "Lokalno",
+        "remote": "Oddaljeno",
+        "failsafe": "varnostni način",
+        "blackOnWhite": "Črna na beli",
+        "whiteOnBlack": "Bela na črni",
+        "grayOnBlack": "Siva na črni",
+        "greenOnBlack": "Zelena na črni"
+      }
+    },
+    "remoteDesktop": "Oddaljena namizna površina",
+    "tabRdp": "RDP",
+    "tabVnc": "VNC",
+    "tabTelnet": "Telnet",
+    "virtualNetwork": "Virtualno omrežje",
+    "unencryptedShell": "Nekriptirana lupina",
+    "remoteDesktopNotes": "Opombe",
+    "userDefaultsNote": "Nastavitve, ki jih ne spremenite, sledijo privzetim nastavitvam gostitelja.",
+    "connectionOriginNote": "Namizna aplikacija za RDP, VNC in Telnet uporablja oddaljeni strežnik, razen če je gostitelj nastavljen na Ta naprava, ki potrebuje guacd, ki ga lahko doseže ta naprava. Nastavite ga v nastavitvah Oddaljene namizne površine ali na gostitelja pod guacd Proxy.",
+    "docsLink": "Oglejte si dokumentacijo",
+    "connectionOriginGuacamoleNote": "RDP, VNC in Telnet uporabljata oddaljeni strežnik, razen če izberete \"Ta naprava\", ki potrebuje guacd, ki ga lahko doseže ta naprava. Nastavite ga v nastavitvi URL guacd ali na gostitelja pod guacd Proxy."
+  },
+  "onboarding": {
+    "guacdTitle": "Nastavitev oddaljene namizne površine",
+    "guacdIntro": "Oddaljena namizna površina potrebuje guacd, ki teče ob Termix. Preverite, ali odgovarja, ali usmerite Termix nanj.",
+    "guacdChecking": "Iskanje guacd",
+    "guacdConnected": "guacd teče na naslovu {{address}}",
+    "guacdMissing": "guacd ne odgovarja na naslovu {{address}}",
+    "guacdMissingDesc": "Lahko nadaljujete in ga nastavite kasneje. Seje oddaljene namizne površine se ne bodo povezale, dokler ne odgovori.",
+    "guacdCheckFailed": "Preverjanje guacd ni bilo mogoče",
+    "guacdComposeTitle": "Dodajte ga v svojo datoteko docker compose",
+    "guacdSaveAndCheck": "Shrani in preveri",
+    "guacdEnvNote": "Če sta na strežniku nastavljena GUACD_URL, GUACD_HOST ali GUACD_PORT, imata prednost pred tem."
+  },
+  "settings": {
+    "user": {
+      "colorDepth": {
+        "label": "Barvna globina",
+        "description": "Uporablja se za RDP gostitelje, ki uporabljajo privzeto nastavitev."
+      },
+      "resizeMethod": {
+        "label": "Metoda spreminjanja velikosti",
+        "description": "Kako se oddaljeni zaslon prilagaja velikosti okna."
+      },
+      "resizeDisplayUpdate": "Posodobitev zaslona",
+      "resizeReconnect": "Ponovna povezava",
+      "inherit": "Podeduj",
+      "on": "Vklopljeno",
+      "off": "Izklopljeno",
+      "forceLossless": {
+        "label": "Vsili brez izgub",
+        "description": "Vsili kodiranje slik brez izgub (višja kakovost, več pasovne širine)"
+      },
+      "enableWallpaper": {
+        "label": "Ozadje",
+        "description": "Prikaži ozadje namizja (izklop izboljša zmogljivost)"
+      },
+      "enableFontSmoothing": {
+        "label": "Zglajevanje pisav",
+        "description": "Omogoči upodabljanje pisav ClearType"
+      },
+      "enableDesktopComposition": {
+        "label": "Sestavljanje namizja",
+        "description": "Omogoči steklene učinke Aero"
+      },
+      "disableAudio": {
+        "label": "Onemogoči zvok",
+        "description": "Utišaj ves zvok iz oddaljene seje"
+      },
+      "enablePrinting": {
+        "label": "Omogoči tiskanje",
+        "description": "Preusmeri lokalne tiskalnike v oddaljeno sejo"
+      },
+      "enableDrive": {
+        "label": "Omogoči preusmerjanje pogona",
+        "description": "Preslikaj lokalno mapo kot pogon v oddaljeni seji"
+      },
+      "disableCopy": {
+        "label": "Onemogoči kopiranje",
+        "description": "Prepreči kopiranje besedila iz oddaljene seje"
+      },
+      "disablePaste": {
+        "label": "Onemogoči prilepanje",
+        "description": "Prepreči prileganje besedila v oddaljeno sejo"
+      },
+      "colorDepth16": "16-bitno",
+      "colorDepth24": "24-bitno",
+      "colorDepth32": "32-bitno"
+    },
+    "admin": {
+      "enabled": {
+        "label": "Omogoči oddaljeno namizje",
+        "description": "Dovoli povezave RDP, VNC in Telnet prek guacd."
+      },
+      "guacdUrl": {
+        "label": "URL naslov guacd",
+        "description": "Kje guacd posluša, kot gostitelj:vrata. Spremenljivke okolja GUACD_URL, GUACD_HOST in GUACD_PORT to nadpišejo.",
+        "placeholder": "guacd:4822"
+      },
+      "hostGuacd": {
+        "label": "Naslovi guacd za posamezne gostitelje"
+      },
+      "hostGuacdMigrated": {
+        "label": "Naslovi guacd za posamezne gostitelje so premaknjeni"
+      }
+    },
+    "host": {
+      "enableRdp": {
+        "label": "RDP"
+      },
+      "enableVnc": {
+        "label": "VNC"
+      },
+      "enableTelnet": {
+        "label": "Telnet"
+      },
+      "rdpPort": {
+        "label": "Vrata RDP"
+      },
+      "vncPort": {
+        "label": "Vrata VNC"
+      },
+      "telnetPort": {
+        "label": "Vrata Telnet"
+      },
+      "rdpSecurity": {
+        "label": "Varnostni način RDP"
+      },
+      "rdpIgnoreCert": {
+        "label": "Prezri napake certifikata"
+      },
+      "guacamoleConfig": {
+        "label": "Nastavitve guacd"
+      },
+      "enableToolbar": {
+        "label": "Orodna vrstica oddaljenega namizja",
+        "description": "Prikaži orodno vrstico v sejah RDP, VNC in Telnet."
+      },
+      "displayGroup": "Zaslon",
+      "displayDefaultsTab": "Oddaljeno namizje"
+    }
+  },
+  "palette": {
+    "connectRdp": "Poveži se z RDP",
+    "connectVnc": "Poveži se z VNC",
+    "connectTelnet": "Poveži se z Telnet"
+  },
+  "permissions": {
+    "sessions": {
+      "title": "Deli seje oddaljenega namizja",
+      "description": "Dovoli, da deljenje sej in sobe za sodelovanje prikažejo seje RDP, VNC in Telnet tega uporabnika drugim."
+    }
+  },
+  "errors": {
+    "remoteServerRequired": "Potreben je oddaljeni strežnik. Povežite oddaljeni strežnik v Nastavitvah, da uporabite to vrsto povezave."
+  },
+  "plugin": {
+    "name": "Oddaljeno namizje"
+  }
+}

@@ -2,22 +2,18 @@
   "remoteDesktop": {
     "connecting": "Łączenie z sesją {{type}}...",
     "checkingGuacd": "Sprawdzanie usługi pulpitu zdalnego...",
-    "requestingToken": "Żądanie tokena połączenia {{type}}...",
+    "requestingToken": "Żądanie tokenu połączenia {{type}}...",
     "openingSession": "Otwieranie sesji {{type}}...",
-    "negotiating": "Negocjowanie {{type}} uścisku dłoni...",
-    "sessionReady": "{{type}} sesja gotowa",
+    "negotiating": "Negocjowanie wstępu {{type}}...",
+    "sessionReady": "Sesja {{type}} gotowa",
     "connectionError": "Błąd połączenia",
-    "connectionFailed": "Połączenie nieudane",
-    "failedToConnect": "Nie udało się uzyskać tokena połączenia",
-    "hostNotFound": "Nie znaleziono hosta",
+    "failedToConnect": "Nie udało się uzyskać tokenu połączenia",
+    "hostNotFound": "Host nie znaleziony",
     "noHostSelected": "Nie wybrano hosta",
-    "reconnect": "Połącz ponownie",
-    "retry": "Ponów",
-    "guacdUnavailable": "Usługa pulpitu zdalnego (guacd) jest niedostępna. Upewnij się, że usługa guacd jest uruchomiona, dostępna i poprawnie skonfigurowana w ustawieniach administratora.",
-    "credentialPromptTitle": "Wprowadź poświadczenia RDP",
-    "credentialPromptDescription": "Ten host jest ustawiony tak, aby pytać o poświadczenia przy łączeniu. Są używane tylko w tej sesji i nie są zapisywane.",
-    "connect": "Połączenie",
-    "ctrlAltDel": "Ctrl+Alt+Del",
+    "guacdUnavailable": "Usługa pulpitu zdalnego (guacd) jest niedostępna. Upewnij się, że guacd jest uruchomiony, dostępny i poprawnie skonfigurowany w ustawieniach administratora.",
+    "credentialPromptTitle": "Wprowadź dane logowania RDP",
+    "credentialPromptDescription": "Ten host jest skonfigurowany do żądania danych logowania przy połączeniu. Są one używane tylko w tej sesji i nie są zapisywane.",
+    "connect": "Połącz",
     "files": {
       "title": "Pliki dysku",
       "parent": "Katalog nadrzędny",
@@ -30,28 +26,28 @@
       "uploading": "Przesyłanie {{name}}...",
       "uploaded": "Przesłano {{name}}",
       "uploadFailed": "Nie udało się przesłać {{name}}",
-      "uploadDisabled": "Przesyłanie plików jest wyłączone dla tego połączenia",
+      "uploadDisabled": "Przesyłanie jest wyłączone dla tego połączenia",
       "driveUnavailable": "Włącz przekierowanie dysku RDP przed przesłaniem plików",
-      "driveNotWritable": "guacd nie może zapisać do folderu dysku. Sprawdź zmienną GUACD_DRIVE_PATH (lub ścieżkę do dysku hosta) i jej uprawnienia.",
-      "dropToUpload": "Upuść pliki, aby je przesłać"
+      "driveNotWritable": "guacd nie może zapisywać w folderze dysku. Sprawdź GUACD_DRIVE_PATH i jego uprawnienia.",
+      "dropToUpload": "Upuść pliki, aby przesłać"
     },
     "toolbar": {
       "ctrlAltDel": "Ctrl+Alt+Del",
-      "winL": "Win+L (zablokuj ekran)",
+      "winL": "Win+L (Zablokuj ekran)",
       "winKey": "Klawisz Windows",
-      "superL": "Super+L (ekran blokady)",
-      "superKey": "Super klucz",
+      "superL": "Super+L (Zablokuj ekran)",
+      "superKey": "Klawisz Super",
       "super": "Super",
-      "cmdL": "Cmd+L (ekran blokady)",
-      "cmdKey": "Klawisz polecenia",
-      "cmd": "Polecenie",
+      "cmdL": "Cmd+L (Zablokuj ekran)",
+      "cmdKey": "Klawisz Command",
+      "cmd": "Cmd",
       "ctrl": "Ctrl",
       "alt": "Alt",
       "shift": "Shift",
       "win": "Win",
-      "stickyActive": "{{key}} (zatrzaśnięty - kliknij, aby zwolnić)",
-      "stickyInactive": "{{key}} (kliknij, aby zatrzasnąć)",
-      "esc": "Esc",
+      "stickyActive": "{{key}} (zablokowany – kliknij, aby zwolnić)",
+      "stickyInactive": "{{key}} (kliknij, aby zablokować)",
+      "esc": "Escape",
       "tab": "Tab",
       "home": "Home",
       "end": "End",
@@ -62,40 +58,39 @@
       "arrowLeft": "Strzałka w lewo",
       "arrowRight": "Strzałka w prawo",
       "fnToggle": "Klawisze funkcyjne",
-      "reconnect": "Połącz sesję ponownie",
       "collapse": "Zwiń pasek narzędzi",
       "expand": "Rozwiń pasek narzędzi",
-      "dragHandle": "Przeciągnij, aby zmienić położenie",
-      "hide": "Ukryj na czas tej sesji. Aby trwale wyłączyć tę opcję, otwórz Ustawienia hosta → Ogólne → Pasek narzędzi połączenia.",
+      "dragHandle": "Przeciągnij, aby zmienić pozycję",
+      "hide": "Ukryj w tej sesji. Aby wyłączyć go na stałe, otwórz Ustawienia hosta → Ogólne → Pasek narzędzi połączenia.",
       "zoomIn": "Powiększ",
-      "zoomOut": "Oddal",
-      "resetZoom": "Zresetuj powiększenie",
+      "zoomOut": "Pomniejsz",
+      "resetZoom": "Resetuj powiększenie",
       "fitToScreen": "Dopasuj do ekranu",
-      "switchToTrackpad": "Przełącz na tryb gładzika (przeciągnij, aby przesunąć kursor, dotknij, aby kliknąć)",
-      "switchToTouch": "Przełącz na tryb dotykowy (dotknij bezpośrednio miejsca, w którym chcesz kliknąć)"
+      "switchToTrackpad": "Przełącz na tryb touchpada (przeciągaj, aby przesuwać kursor, stuknij, aby kliknąć)",
+      "switchToTouch": "Przełącz na tryb dotykowy (stukaj bezpośrednio w miejscu, w którym chcesz kliknąć)"
     },
-    "disabled": "Pulpit zdalny jest wyłączony. Administrator może go włączyć w Ustawieniach."
+    "disabled": "Zdalny pulpit jest wyłączony. Administrator może go włączyć w ustawieniach."
   },
   "hosts": {
-    "nativeRdpOpened": "Otwarto w Pulpicie zdalnym systemu Windows",
-    "nativeRdpFailed": "Nie udało się otworzyć pulpitu zdalnego systemu Windows",
-    "openNativeRdp": "Otwórz w Pulpicie zdalnym systemu Windows",
+    "nativeRdpOpened": "Otwarto w Zdalnym pulpicie Windows",
+    "nativeRdpFailed": "Nie udało się otworzyć Zdalnego pulpitu Windows",
+    "openNativeRdp": "Otwórz w Zdalnym pulpicie Windows",
     "guac": {
       "toolbar": "Pasek narzędzi",
       "connection": "Połączenie",
       "authentication": "Uwierzytelnianie",
-      "storedCredential": "Zapisane poświadczenie",
+      "storedCredential": "Zapisane dane logowania",
       "authMethod": "Metoda uwierzytelniania",
-      "authTypeDirect": "Bezpośredni",
-      "authTypeCredential": "Poświadczenie",
+      "authTypeDirect": "Bezpośrednia",
+      "authTypeCredential": "Dane logowania",
       "authTypeNone": "Brak",
-      "authTypeNoneDesc": "Żadne poświadczenia nie są przechowywane. Przy każdym połączeniu pojawi się prośba o nazwę użytkownika i hasło; nie są zapisywane.",
-      "selectCredential": "Wybierz poświadczenie...",
+      "authTypeNoneDesc": "Nie zapisano żadnych danych logowania. Przy każdym połączeniu zostaniesz poproszony o podanie nazwy użytkownika i hasła; nie są one zapisywane.",
+      "selectCredential": "Wybierz dane logowania...",
       "connectionSettings": "Ustawienia połączenia",
       "displaySettings": "Ustawienia wyświetlania",
-      "audioSettings": "Ustawienia audio",
+      "audioSettings": "Ustawienia dźwięku",
       "rdpPerformance": "Wydajność RDP",
-      "deviceRedirection": "Przekierowanie urządzenia",
+      "deviceRedirection": "Przekierowanie urządzeń",
       "session": "Sesja",
       "gateway": "Brama",
       "remoteApp": "RemoteApp",
@@ -114,96 +109,96 @@
       "height": "Wysokość",
       "dpi": "DPI",
       "clientName": "Nazwa klienta",
-      "initialProgram": "Program początkowy",
+      "initialProgram": "Program startowy",
       "serverLayout": "Układ serwera",
       "timezone": "Strefa czasowa",
-      "loadBalanceInfo": "Informacje o równoważeniu obciążenia / cookie",
-      "loadBalanceInfoDesc": "Plik cookie brokera połączeń usług pulpitu zdalnego do równoważenia obciążenia farmy usług pulpitu zdalnego (np. tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "Serwer proxy guacd",
+      "loadBalanceInfo": "Informacje o równoważeniu obciążenia / Cookie",
+      "loadBalanceInfoDesc": "Cookie brokera połączeń RD do równoważenia obciążenia w farmie RDS (np. tsv://MS Terminal Services Plugin.1.CollectionName)",
+      "guacdProxy": "Proxy guacd",
       "guacdHostname": "Host guacd",
-      "guacdHostnamePlaceholder": "Globalne ustawienie domyślne",
+      "guacdHostnamePlaceholder": "Domyślna wartość globalna",
       "guacdPort": "Port guacd",
       "guacdProxyDesc": "Zastąp globalną instancję guacd dla tego połączenia. Pozostaw puste, aby użyć globalnie skonfigurowanego guacd.",
+      "guacdAdminOnly": "Tylko administratorzy mogą zmienić serwer guacd dla hosta.",
+      "guacdSaveHostFirst": "Najpierw zapisz hosta, a następnie ustaw jego serwer guacd tutaj.",
+      "guacdSave": "Zapisz serwer guacd",
+      "guacdSaved": "Serwer guacd został zapisany",
+      "guacdSaveFailed": "Nie udało się zapisać serwera guacd",
       "gatewayHostname": "Nazwa hosta bramy",
       "gatewayPort": "Port bramy",
       "gatewayUsername": "Nazwa użytkownika bramy",
-      "gatewayPassword": "Hasło bramy",
-      "gatewayDomain": "Domena bramy",
+      "gatewayPassword": "Hasło bramki",
+      "gatewayDomain": "Domena bramki",
       "remoteAppProgram": "Program RemoteApp",
       "workingDirectory": "Katalog roboczy",
       "arguments": "Argumenty",
-      "normalizeLineEndings": "Normalizuj zakończenia linii",
+      "normalizeLineEndings": "Normalizuj końce linii",
       "macAddress": "Adres MAC",
       "broadcastAddress": "Adres rozgłoszeniowy",
       "udpPort": "Port UDP",
       "waitTimeS": "Czas oczekiwania (s)",
       "driveName": "Nazwa dysku",
-      "drivePath": "Ścieżka dysku",
       "ignoreCertificate": "Ignoruj certyfikat",
       "ignoreCertificateDesc": "Zezwalaj na połączenia z hostami z certyfikatami samopodpisanymi",
       "forceLossless": "Wymuś bezstratność",
-      "forceLosslessDesc": "Wymuś bezstratne kodowanie obrazu (wyższa jakość, większa przepustowość)",
+      "forceLosslessDesc": "Wymuś kodowanie obrazu bezstratne (wyższa jakość, większe zużycie przepustowości)",
       "disableAudio": "Wyłącz dźwięk",
-      "disableAudioDesc": "Wycisz cały dźwięk z sesji zdalnej",
+      "disableAudioDesc": "Wycisz cały dźwięk z zdalnej sesji",
       "enableAudioInput": "Włącz wejście audio (mikrofon)",
-      "enableAudioInputDesc": "Przekaż lokalny mikrofon do sesji zdalnej",
+      "enableAudioInputDesc": "Przekieruj lokalny mikrofon do zdalnej sesji",
       "wallpaper": "Tapeta",
-      "wallpaperDesc": "Pokaż tapetę pulpitu (wyłączenie poprawia wydajność)",
-      "theming": "Motywy",
-      "themingDesc": "Włącz motywy i style wizualne",
+      "wallpaperDesc": "Wyświetlaj tapetę pulpitu (wyłączenie poprawia wydajność)",
+      "theming": "Motywowanie",
+      "themingDesc": "Włącz wizualne motywy i style",
       "fontSmoothing": "Wygładzanie czcionek",
       "fontSmoothingDesc": "Włącz renderowanie czcionek ClearType",
-      "fullWindowDrag": "Przeciąganie pełnego okna",
-      "fullWindowDragDesc": "Pokaż zawartość okna podczas przeciągania",
+      "fullWindowDrag": "Przeciąganie całego okna",
+      "fullWindowDragDesc": "Wyświetlaj zawartość okna podczas przeciągania",
       "desktopComposition": "Kompozycja pulpitu",
-      "desktopCompositionDesc": "Włącz efekty Aero Glass",
+      "desktopCompositionDesc": "Włącz efekty szkła Aero",
       "menuAnimations": "Animacje menu",
-      "menuAnimationsDesc": "Włącz animacje zanikania i wysuwania menu",
+      "menuAnimationsDesc": "Włącz animacje zanikania i przesuwania menu",
       "disableBitmapCaching": "Wyłącz buforowanie bitmap",
-      "disableBitmapCachingDesc": "Wyłącz pamięć podręczną bitmap (może pomóc przy artefaktach)",
+      "disableBitmapCachingDesc": "Wyłącz bufor bitmap (może pomóc przy błędach graficznych)",
       "disableOffscreenCaching": "Wyłącz buforowanie poza ekranem",
-      "disableOffscreenCachingDesc": "Wyłącz pamięć podręczną poza ekranem",
-      "disableGlyphCaching": "Wyłącz buforowanie glifów",
-      "disableGlyphCachingDesc": "Wyłącz pamięć podręczną glifów",
+      "disableOffscreenCachingDesc": "Wyłącz bufor poza ekranem",
+      "disableGlyphCaching": "Wyłącz buforowanie glikfów",
+      "disableGlyphCachingDesc": "Wyłącz bufor glikfów",
       "enableGfx": "Włącz GFX",
       "enableGfxDesc": "Użyj potoku graficznego RemoteFX",
       "enablePrinting": "Włącz drukowanie",
-      "enablePrintingDesc": "Przekieruj drukarki lokalne do sesji zdalnej",
-      "enableDriveRedirection": "Włącz przekierowanie dysku",
-      "enableDriveRedirectionDesc": "Mapuj folder lokalny jako dysk w sesji zdalnej",
-      "createDrivePath": "Utwórz ścieżkę dysku",
-      "createDrivePathDesc": "Automatycznie utwórz folder, jeśli nie istnieje",
+      "enablePrintingDesc": "Przekieruj lokalne drukarki do zdalnej sesji",
+      "enableDriveRedirection": "Włącz przekierowanie dysków",
+      "enableDriveRedirectionDesc": "Mapuj lokalny folder jako dysk w zdalnej sesji",
       "disableDownload": "Wyłącz pobieranie",
-      "disableDownloadDesc": "Zapobiegaj pobieraniu plików z sesji zdalnej",
+      "disableDownloadDesc": "Zablokuj pobieranie plików ze zdalnej sesji",
       "disableUpload": "Wyłącz przesyłanie",
-      "disableUploadDesc": "Zapobiegaj przesyłaniu plików do sesji zdalnej",
+      "disableUploadDesc": "Zablokuj przesyłanie plików do zdalnej sesji",
       "enableTouch": "Włącz dotyk",
-      "enableTouchDesc": "Włącz przekazywanie wejścia dotykowego",
+      "enableTouchDesc": "Włącz przekierowanie wejścia dotykowego",
       "consoleSession": "Sesja konsoli",
-      "consoleSessionDesc": "Połącz się z konsolą (sesja 0) zamiast z nową sesją",
+      "consoleSessionDesc": "Połącz się z konsolą (sesja 0) zamiast tworzyć nową sesję",
       "sendWolPacket": "Wyślij pakiet WOL",
-      "sendWolPacketDesc": "Wyślij magic packet, aby obudzić tego hosta przed połączeniem",
+      "sendWolPacketDesc": "Wyślij magiczny pakiet, aby uruchomić ten host przed połączeniem",
       "disableCopy": "Wyłącz kopiowanie",
-      "disableCopyDesc": "Zapobiegaj kopiowaniu tekstu z sesji zdalnej",
+      "disableCopyDesc": "Zablokuj kopiowanie tekstu ze zdalnej sesji",
       "disablePaste": "Wyłącz wklejanie",
-      "disablePasteDesc": "Zapobiegaj wklejaniu tekstu do sesji zdalnej",
-      "createPathIfMissing": "Utwórz ścieżkę, jeśli nie istnieje",
-      "createPathIfMissingDesc": "Automatycznie utwórz katalog nagrań",
-      "excludeOutput": "Wyklucz obraz",
-      "excludeOutputDesc": "Nie nagrywaj obrazu ekranu (tylko metadane)",
+      "disablePasteDesc": "Zablokuj wklejanie tekstu do zdalnej sesji",
+      "excludeOutput": "Wyklucz wyjście",
+      "excludeOutputDesc": "Nie nagrywaj wyjścia ekranu (tylko metadane)",
       "excludeMouse": "Wyklucz mysz",
-      "excludeMouseDesc": "Nie nagrywaj ruchów myszy",
+      "excludeMouseDesc": "Nie rejestruj ruchów myszy",
       "includeKeystrokes": "Uwzględnij naciśnięcia klawiszy",
-      "includeKeystrokesDesc": "Rejestruj surowe naciśnięcia klawiszy oprócz obrazu ekranu",
+      "includeKeystrokesDesc": "Rejestruj surowe naciśnięcia klawiszy oprócz wyjścia ekranu",
       "vncPort": "Port VNC",
       "vncPassword": "Hasło VNC",
       "vncUsernameOptional": "Nazwa użytkownika (opcjonalnie)",
       "vncLeaveBlank": "Pozostaw puste, jeśli nie jest wymagane",
       "cursorMode": "Tryb kursora",
       "swapRedBlue": "Zamień czerwony/niebieski",
-      "swapRedBlueDesc": "Zamień kanały kolorów czerwonego i niebieskiego (rozwiązuje niektóre problemy z kolorami)",
+      "swapRedBlueDesc": "Zamień kanały kolorów czerwonego i niebieskiego (naprawia niektóre problemy z kolorami)",
       "readOnly": "Tylko do odczytu",
-      "readOnlyDesc": "Oglądaj zdalny ekran bez wysyłania jakiegokolwiek wejścia",
+      "readOnlyDesc": "Podglądaj zdalny ekran bez wysyłania żadnych danych wejściowych",
       "telnetPort": "Port Telnet",
       "terminalType": "Typ terminala",
       "fontName": "Nazwa czcionki",
@@ -212,67 +207,75 @@
       "backspaceKey": "Klawisz Backspace",
       "colorDepth": "Głębia koloru",
       "resizeMethod": "Metoda zmiany rozmiaru",
-      "driveNamePlaceholder": "Napęd Termix",
+      "driveNamePlaceholder": "Dysk Termix",
       "options": {
-        "any": "Any",
-        "auto": "Auto",
+        "any": "Dowolny",
+        "auto": "Automatycznie",
         "nlaExtended": "NLA Extended",
         "color8": "8-bit",
         "color16": "16-bit",
         "color24": "24-bit",
         "color32": "32-bit",
-        "displayUpdate": "Display Update",
-        "reconnect": "Reconnect",
-        "preserve": "Preserve",
+        "displayUpdate": "Aktualizacja wyświetlania",
+        "reconnect": "Połącz ponownie",
+        "preserve": "Zachowaj",
         "unix": "Unix (LF)",
         "windows": "Windows (CRLF)",
-        "local": "Local",
-        "remote": "Remote",
-        "failsafe": "failsafe",
-        "blackOnWhite": "Black on White",
-        "whiteOnBlack": "White on Black",
-        "grayOnBlack": "Gray on Black",
-        "greenOnBlack": "Green on Black"
+        "local": "Lokalny",
+        "remote": "Zdalny",
+        "failsafe": "awaryjny",
+        "blackOnWhite": "Czarny na białym",
+        "whiteOnBlack": "Biały na czarnym",
+        "grayOnBlack": "Szary na czarnym",
+        "greenOnBlack": "Zielony na czarnym"
       }
     },
-    "remoteDesktop": "Pulpit zdalny",
+    "remoteDesktop": "Zdalny pulpit",
     "tabRdp": "RDP",
     "tabVnc": "VNC",
     "tabTelnet": "Telnet",
     "virtualNetwork": "Sieć wirtualna",
-    "unencryptedShell": "Niezaszyfrowana powłoka",
+    "unencryptedShell": "Nieszyfrowany powłoka",
     "remoteDesktopNotes": "Notatki",
-    "userDefaultsNote": "Ustawienia, które pozostawisz bez zmian, będą zgodne z ustawieniami domyślnymi Twojego hosta.",
-    "connectionOriginNote": "W aplikacji desktopowej RDP, VNC i Telnet korzystają ze zdalnego serwera, chyba że host jest ustawiony na „To urządzenie”, co wymaga identyfikatora GUACD, z którym ten komputer może się połączyć. Ustaw go w ustawieniach pulpitu zdalnego lub dla każdego hosta w sekcji Serwer proxy GUACD.",
+    "userDefaultsNote": "Ustawienia, które pozostawisz bez zmian, będą zgodne z domyślnymi ustawieniami hosta.",
+    "connectionOriginNote": "W aplikacji desktopowej RDP, VNC i Telnet używają zdalnego serwera, chyba że host jest ustawiony na To urządzenie, co wymaga guacd dostępnego dla tego komputera. Ustaw go w ustawieniach Zdalnego pulpitu lub dla każdego hosta w sekcji Proxy guacd.",
     "docsLink": "Zobacz dokumentację",
-    "connectionOriginGuacamoleNote": "RDP, VNC i Telnet korzystają ze zdalnego serwera, chyba że wybierzesz opcję „To urządzenie”, co wymaga identyfikatora GUACD, z którym ten komputer może się połączyć. Ustaw go w ustawieniu adresu URL GUACD lub dla każdego hosta w sekcji Serwer proxy GUACD."
+    "connectionOriginGuacamoleNote": "RDP, VNC i Telnet używają zdalnego serwera, chyba że wybierzesz „To urządzenie”, co wymaga guacd dostępnego dla tego komputera. Ustaw go w ustawieniu adresu URL guacd lub dla każdego hosta w sekcji Proxy guacd."
   },
   "onboarding": {
-    "feature_desktop": "Zdalny pulpit",
-    "feature_desktop_desc": "Otwieraj sesje RDP, VNC i Telnet w karcie, tak samo jak SSH."
+    "guacdTitle": "Skonfiguruj zdalny pulpit",
+    "guacdIntro": "Zdalny pulpit wymaga uruchomionego guacd obok Termix. Sprawdź, czy odpowiada, lub wskaż Termix na niego.",
+    "guacdChecking": "Szukam guacd",
+    "guacdConnected": "guacd działa pod adresem {{address}}",
+    "guacdMissing": "guacd nie odpowiada pod adresem {{address}}",
+    "guacdMissingDesc": "Możesz kontynuować i skonfigurować to później. Sesje zdalnego pulpitu nie będą się łączyć, dopóki nie zacznie odpowiadać.",
+    "guacdCheckFailed": "Nie udało się sprawdzić guacd",
+    "guacdComposeTitle": "Dodaj go do pliku docker compose",
+    "guacdSaveAndCheck": "Zapisz i sprawdź",
+    "guacdEnvNote": "Jeśli na serwerze ustawiono zmienne środowiskowe GUACD_URL, GUACD_HOST lub GUACD_PORT, mają one pierwszeństwo przed tą wartością."
   },
   "settings": {
     "user": {
       "colorDepth": {
-        "label": "Głębia koloru",
-        "description": "Używane w przypadku hostów RDP, które pozostawiają tę wartość domyślną."
+        "label": "Głębia kolorów",
+        "description": "Stosowane dla hostów RDP, które pozostawiają domyślną wartość."
       },
       "resizeMethod": {
         "label": "Metoda zmiany rozmiaru",
-        "description": "W jaki sposób zdalny ekran dostosowuje się do rozmiaru okna."
+        "description": "Jak ekran zdalny dostosowuje się do rozmiaru okna."
       },
-      "resizeDisplayUpdate": "Aktualizacja ekranu",
-      "resizeReconnect": "Połącz ponownie",
-      "inherit": "Dziedzicz",
-      "on": "Wł.",
-      "off": "Wył.",
+      "resizeDisplayUpdate": "Aktualizacja wyświetlania",
+      "resizeReconnect": "Ponowne połączenie",
+      "inherit": "Dziedziczenie",
+      "on": "Włączone",
+      "off": "Wyłączone",
       "forceLossless": {
         "label": "Wymuś bezstratność",
-        "description": "Wymuś bezstratne kodowanie obrazu (wyższa jakość, większa przepustowość)"
+        "description": "Wymuś bezstratne kodowanie obrazu (wyższa jakość, większe zużycie przepustowości)"
       },
       "enableWallpaper": {
         "label": "Tapeta",
-        "description": "Pokaż tapetę pulpitu (wyłączenie poprawia wydajność)"
+        "description": "Wyświetlaj tapetę pulpitu (wyłączenie poprawia wydajność)"
       },
       "enableFontSmoothing": {
         "label": "Wygładzanie czcionek",
@@ -280,27 +283,27 @@
       },
       "enableDesktopComposition": {
         "label": "Kompozycja pulpitu",
-        "description": "Włącz efekty Aero Glass"
+        "description": "Włącz efekty szkła Aero"
       },
       "disableAudio": {
         "label": "Wyłącz dźwięk",
-        "description": "Wycisz cały dźwięk z sesji zdalnej"
+        "description": "Wycisz cały dźwięk ze zdalnej sesji"
       },
       "enablePrinting": {
         "label": "Włącz drukowanie",
-        "description": "Przekieruj drukarki lokalne do sesji zdalnej"
+        "description": "Przekieruj lokalne drukarki do zdalnej sesji"
       },
       "enableDrive": {
-        "label": "Włącz przekierowanie dysku",
-        "description": "Mapuj folder lokalny jako dysk w sesji zdalnej"
+        "label": "Włącz przekierowanie dysków",
+        "description": "Mapuj lokalny folder jako dysk w zdalnej sesji"
       },
       "disableCopy": {
         "label": "Wyłącz kopiowanie",
-        "description": "Zapobiegaj kopiowaniu tekstu z sesji zdalnej"
+        "description": "Zablokuj kopiowanie tekstu ze zdalnej sesji"
       },
       "disablePaste": {
         "label": "Wyłącz wklejanie",
-        "description": "Zapobiegaj wklejaniu tekstu do sesji zdalnej"
+        "description": "Zablokuj wklejanie tekstu do zdalnej sesji"
       },
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
@@ -309,12 +312,18 @@
     "admin": {
       "enabled": {
         "label": "Włącz pulpit zdalny",
-        "description": "Zezwalaj na połączenia RDP, VNC i Telnet przez guacd."
+        "description": "Zezwól na połączenia RDP, VNC i Telnet przez guacd."
       },
       "guacdUrl": {
         "label": "Adres URL guacd",
-        "description": "Miejsce, w którym nasłuchuje GUACD, jako host:port. Zmienne środowiskowe GUACD_URL, GUACD_HOST i GUACD_PORT zastępują to ustawienie.",
+        "description": "Gdzie guacd nasłuchuje, w formacie host:port. Zmienne środowiskowe GUACD_URL, GUACD_HOST i GUACD_PORT nadpisują tę wartość.",
         "placeholder": "guacd:4822"
+      },
+      "hostGuacd": {
+        "label": "Adresy guacd dla poszczególnych hostów"
+      },
+      "hostGuacdMigrated": {
+        "label": "Adresy guacd dla poszczególnych hostów zostały przeniesione"
       }
     },
     "host": {
@@ -337,37 +346,37 @@
         "label": "Port Telnet"
       },
       "rdpSecurity": {
-        "label": "Tryb bezpieczeństwa RDP"
+        "label": "Tryb zabezpieczeń RDP"
       },
       "rdpIgnoreCert": {
         "label": "Ignoruj błędy certyfikatu"
       },
       "guacamoleConfig": {
-        "label": "ustawienia GUACD"
+        "label": "Ustawienia guacd"
       },
       "enableToolbar": {
         "label": "Pasek narzędzi pulpitu zdalnego",
-        "description": "Wyświetla pasek narzędzi w sesjach RDP, VNC i Telnet."
+        "description": "Wyświetlaj pasek narzędzi w sesjach RDP, VNC i Telnet."
       },
       "displayGroup": "Wyświetlanie",
       "displayDefaultsTab": "Pulpit zdalny"
     }
   },
   "palette": {
-    "connectRdp": "Połącz się z RDP",
-    "connectVnc": "Połącz się z VNC",
-    "connectTelnet": "Połącz się przez Telnet"
+    "connectRdp": "Połącz przez RDP",
+    "connectVnc": "Połącz przez VNC",
+    "connectTelnet": "Połącz przez Telnet"
   },
   "permissions": {
     "sessions": {
       "title": "Udostępniaj sesje pulpitu zdalnego",
-      "description": "Zezwól na udostępnianie sesji i współpracę w pokojach, aby sesje RDP, VNC i Telnet tego użytkownika były widoczne dla innych użytkowników."
+      "description": "Zezwól na udostępnianie sesji i pokoi współpracy, aby pokazywać innym sesje RDP, VNC i Telnet tego użytkownika."
     }
   },
   "errors": {
-    "remoteServerRequired": "Wymagany jest serwer zdalny. Połącz się z serwerem zdalnym w Ustawieniach, aby korzystać z tego typu połączenia."
+    "remoteServerRequired": "Wymagany serwer zdalny. Podłącz serwer zdalny w ustawieniach, aby korzystać z tego typu połączenia."
   },
   "plugin": {
-    "name": "Remote Desktop"
+    "name": "Pulpit zdalny"
   }
 }

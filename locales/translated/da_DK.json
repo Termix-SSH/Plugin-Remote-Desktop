@@ -1,27 +1,23 @@
 {
   "remoteDesktop": {
-    "connecting": "Forbinder til {{type}} session...",
-    "checkingGuacd": "Tjekker fjernskrivebordstjeneste...",
-    "requestingToken": "Anmoder om {{type}} forbindelsestoken...",
-    "openingSession": "Åbner {{type}} session...",
-    "negotiating": "Forhandler {{type}} håndtryk...",
-    "sessionReady": "{{type}} session klar",
+    "connecting": "Forbinder til {{type}}-session...",
+    "checkingGuacd": "Tjekker fjernskrivebordservice...",
+    "requestingToken": "Anmoder om {{type}}-forbindelsestoken...",
+    "openingSession": "Åbner {{type}}-session...",
+    "negotiating": "Forhandler {{type}}-håndtryk...",
+    "sessionReady": "{{type}}-session klar",
     "connectionError": "Forbindelsesfejl",
-    "connectionFailed": "Forbindelsen mislykkedes",
     "failedToConnect": "Kunne ikke hente forbindelsestoken",
-    "hostNotFound": "Værten blev ikke fundet",
+    "hostNotFound": "Vært ikke fundet",
     "noHostSelected": "Ingen vært valgt",
-    "reconnect": "Genopret forbindelse",
-    "retry": "Prøv igen",
-    "guacdUnavailable": "Fjernskrivebordstjenesten (guacd) er ikke tilgængelig. Sørg for, at guacd kører, er tilgængelig og konfigureret korrekt i administratorindstillingerne.",
+    "guacdUnavailable": "Fjernskrivebordservice (guacd) er ikke tilgængelig. Sørg for, at guacd kører, er tilgængelig og konfigureret korrekt i admin-indstillingerne.",
     "credentialPromptTitle": "Indtast RDP-legitimationsoplysninger",
-    "credentialPromptDescription": "Denne vært er indstillet til at bede om legitimationsoplysninger ved forbindelse. De bruges kun til denne session og gemmes ikke.",
-    "connect": "Forbinde",
-    "ctrlAltDel": "Ctrl+Alt+Del",
+    "credentialPromptDescription": "Denne vært er indstillet til at bede om legitimationsoplysninger ved forbindelse. De bruges kun for denne session og gemmes ikke.",
+    "connect": "Forbind",
     "files": {
-      "title": "Drev-filer",
-      "parent": "Forældreregister",
-      "refresh": "Opfriske",
+      "title": "Drevfiler",
+      "parent": "Overordnet mappe",
+      "refresh": "Opdater",
       "empty": "Denne mappe er tom",
       "listFailed": "Kunne ikke læse denne mappe",
       "download": "Download",
@@ -30,75 +26,74 @@
       "uploading": "Uploader {{name}}...",
       "uploaded": "Uploadet {{name}}",
       "uploadFailed": "Kunne ikke uploade {{name}}",
-      "uploadDisabled": "Uploads er deaktiveret for denne forbindelse",
-      "driveUnavailable": "Aktivér omdirigering af RDP-drev før upload af filer",
-      "driveNotWritable": "guacd kan ikke skrive til drevmappen. Kontroller GUACD_DRIVE_PATH (eller værtens drevsti) og dens tilladelser.",
+      "uploadDisabled": "Upload er deaktiveret for denne forbindelse",
+      "driveUnavailable": "Aktivér RDP-drevomdirigering, før du uploader filer",
+      "driveNotWritable": "guacd kan ikke skrive til drevmappen. Tjek GUACD_DRIVE_PATH og dets tilladelser.",
       "dropToUpload": "Slip filer for at uploade"
     },
     "toolbar": {
       "ctrlAltDel": "Ctrl+Alt+Del",
-      "winL": "Win+L (Låseskærm)",
-      "winKey": "Windows-nøgle",
-      "superL": "Super+L (Låseskærm)",
-      "superKey": "Supernøgle",
+      "winL": "Win+L (Lås skærm)",
+      "winKey": "Windows-tast",
+      "superL": "Super+L (Lås skærm)",
+      "superKey": "Super-tast",
       "super": "Super",
-      "cmdL": "Cmd+L (Låseskærm)",
-      "cmdKey": "Kommandotast",
-      "cmd": "Kommando",
+      "cmdL": "Cmd+L (Lås skærm)",
+      "cmdKey": "Command-tast",
+      "cmd": "Cmd",
       "ctrl": "Ctrl",
       "alt": "Alt",
-      "shift": "Flytte",
-      "win": "Vinde",
-      "stickyActive": "{{key}} (låst - klik for at slippe)",
+      "shift": "Shift",
+      "win": "Win",
+      "stickyActive": "{{key}} (låst - klik for at frigive)",
       "stickyInactive": "{{key}} (klik for at låse)",
-      "esc": "Flugt",
-      "tab": "Faneblad",
-      "home": "Hjem",
-      "end": "Ende",
-      "pageUp": "Side op",
-      "pageDown": "Side ned",
+      "esc": "Escape",
+      "tab": "Tab",
+      "home": "Home",
+      "end": "End",
+      "pageUp": "Page Up",
+      "pageDown": "Page Down",
       "arrowUp": "Pil op",
       "arrowDown": "Pil ned",
-      "arrowLeft": "Pil til venstre",
-      "arrowRight": "Pil til højre",
+      "arrowLeft": "Pil venstre",
+      "arrowRight": "Pil højre",
       "fnToggle": "Funktionstaster",
-      "reconnect": "Genopret forbindelse til sessionen",
-      "collapse": "Skjul værktøjslinjen",
-      "expand": "Udvid værktøjslinjen",
+      "collapse": "Skjul værktøjslinje",
+      "expand": "Udvid værktøjslinje",
       "dragHandle": "Træk for at flytte",
-      "hide": "Skjul for denne session. For at deaktivere det permanent skal du åbne Værtsindstillinger → Generelt → Forbindelsesværktøjslinje.",
+      "hide": "Skjul for denne session. For at deaktivere den permanent, åbn Værtindstillinger → Generelt → Forbindelsesværktøjslinje.",
       "zoomIn": "Zoom ind",
       "zoomOut": "Zoom ud",
       "resetZoom": "Nulstil zoom",
       "fitToScreen": "Tilpas til skærm",
-      "switchToTrackpad": "Skift til trackpad-tilstand (træk for at flytte markøren, tryk for at klikke)",
-      "switchToTouch": "Skift til berøringstilstand (tryk direkte der, hvor du vil klikke)"
+      "switchToTrackpad": "Skift til touchpad-tilstand (træk for at flytte markøren, tryk for at klikke)",
+      "switchToTouch": "Skift til touch-tilstand (tryk direkte, hvor du vil klikke)"
     },
-    "disabled": "Fjernskrivebord er slået fra. En administrator kan slå det til i Indstillinger."
+    "disabled": "Remote Desktop er slået fra. En administrator kan slå det til i Indstillinger."
   },
   "hosts": {
-    "nativeRdpOpened": "Åbnet i Windows Fjernskrivebord",
-    "nativeRdpFailed": "Kunne ikke åbne Windows Fjernskrivebord",
-    "openNativeRdp": "Åbn i Windows Fjernskrivebord",
+    "nativeRdpOpened": "Åbnet i Windows Remote Desktop",
+    "nativeRdpFailed": "Kunne ikke åbne Windows Remote Desktop",
+    "openNativeRdp": "Åbn i Windows Remote Desktop",
     "guac": {
       "toolbar": "Værktøjslinje",
       "connection": "Forbindelse",
       "authentication": "Godkendelse",
-      "storedCredential": "Gemte legitimationsoplysninger",
+      "storedCredential": "Gemt legitimationsoplysning",
       "authMethod": "Godkendelsesmetode",
       "authTypeDirect": "Direkte",
-      "authTypeCredential": "Legitimationsoplysninger",
+      "authTypeCredential": "Legitimationsoplysning",
       "authTypeNone": "Ingen",
-      "authTypeNoneDesc": "Ingen loginoplysninger gemmes. Du vil blive bedt om et brugernavn og en adgangskode, hver gang du opretter forbindelse; de gemmes ikke.",
-      "selectCredential": "Vælg en legitimationsoplysninger...",
+      "authTypeNoneDesc": "Der er ikke gemt nogen legitimationsoplysninger. Du bliver bedt om brugernavn og adgangskode hver gang, du opretter forbindelse; de gemmes ikke.",
+      "selectCredential": "Vælg en legitimationsoplysning...",
       "connectionSettings": "Forbindelsesindstillinger",
       "displaySettings": "Skærmindstillinger",
       "audioSettings": "Lydindstillinger",
       "rdpPerformance": "RDP-ydeevne",
-      "deviceRedirection": "Omdirigering af enhed",
+      "deviceRedirection": "Enhedsvideresendelse",
       "session": "Session",
       "gateway": "Gateway",
-      "remoteApp": "Fjernbetjening",
+      "remoteApp": "RemoteApp",
       "clipboard": "Udklipsholder",
       "sessionRecording": "Sessionsoptagelse",
       "wakeOnLan": "Wake-on-LAN",
@@ -114,193 +109,201 @@
       "height": "Højde",
       "dpi": "DPI",
       "clientName": "Klientnavn",
-      "initialProgram": "Indledende program",
+      "initialProgram": "Startprogram",
       "serverLayout": "Serverlayout",
       "timezone": "Tidszone",
-      "loadBalanceInfo": "Oplysninger om belastningsbalance / cookie",
-      "loadBalanceInfoDesc": "RD Connection Broker-cookie til belastningsbalancering af RDS-farm (f.eks. tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "guacd Proxy",
+      "loadBalanceInfo": "Load Balance Info / Cookie",
+      "loadBalanceInfoDesc": "RD Connection Broker-cookie til load balancing af RDS-farm (f.eks. tsv://MS Terminal Services Plugin.1.CollectionName)",
+      "guacdProxy": "guacd-proxy",
       "guacdHostname": "guacd-vært",
       "guacdHostnamePlaceholder": "Global standard",
-      "guacdPort": "guacd Port",
-      "guacdProxyDesc": "Tilsidesæt den globale guacd-instans for denne forbindelse. Lad være tom for at bruge den globalt konfigurerede guacd.",
+      "guacdPort": "guacd-port",
+      "guacdProxyDesc": "Overskriv den globale guacd-instans for denne forbindelse. Lad feltet være tomt for at bruge den globalt konfigurerede guacd.",
+      "guacdAdminOnly": "Kun administratorer kan ændre guacd-serveren for en vært.",
+      "guacdSaveHostFirst": "Gem værten først, og indstil derefter dens guacd-server her.",
+      "guacdSave": "Gem guacd-server",
+      "guacdSaved": "guacd-server gemt",
+      "guacdSaveFailed": "Kunne ikke gemme guacd-serveren",
       "gatewayHostname": "Gateway-værtsnavn",
-      "gatewayPort": "Gateway-porten",
+      "gatewayPort": "Gateway-port",
       "gatewayUsername": "Gateway-brugernavn",
       "gatewayPassword": "Gateway-adgangskode",
       "gatewayDomain": "Gateway-domæne",
-      "remoteAppProgram": "RemoteApp-programmet",
-      "workingDirectory": "Arbejdskatalog",
+      "remoteAppProgram": "RemoteApp-program",
+      "workingDirectory": "Arbejdsmappe",
       "arguments": "Argumenter",
-      "normalizeLineEndings": "Normaliser linjeafslutninger",
+      "normalizeLineEndings": "Normaliser linjeskift",
       "macAddress": "MAC-adresse",
-      "broadcastAddress": "Udsendelsesadresse",
+      "broadcastAddress": "Broadcast-adresse",
       "udpPort": "UDP-port",
       "waitTimeS": "Ventetid (s)",
       "driveName": "Drevnavn",
-      "drivePath": "Kørselssti",
       "ignoreCertificate": "Ignorer certifikat",
       "ignoreCertificateDesc": "Tillad forbindelser til værter med selvsignerede certifikater",
-      "forceLossless": "Tving tabsfri",
-      "forceLosslessDesc": "Tving tabsfri billedkodning (højere kvalitet, mere båndbredde)",
+      "forceLossless": "Tving tabfri komprimering",
+      "forceLosslessDesc": "Tving tabfri billedkodning (højere kvalitet, mere båndbredde)",
       "disableAudio": "Deaktiver lyd",
-      "disableAudioDesc": "Slå al lyd fra fra fjernsessionen",
-      "enableAudioInput": "Aktivér lydindgang (mikrofon)",
-      "enableAudioInputDesc": "Videresend den lokale mikrofon til den eksterne session",
-      "wallpaper": "Tapet",
+      "disableAudioDesc": "Slå lyd fra i den fjernsession",
+      "enableAudioInput": "Aktivér lydingang (mikrofon)",
+      "enableAudioInputDesc": "Videresend lokal mikrofon til den fjernsession",
+      "wallpaper": "Baggrundsbillede",
       "wallpaperDesc": "Vis skrivebordsbaggrund (deaktivering forbedrer ydeevnen)",
       "theming": "Temaer",
       "themingDesc": "Aktivér visuelle temaer og stilarter",
-      "fontSmoothing": "Skrifttypeudjævning",
-      "fontSmoothingDesc": "Aktivér gengivelse af ClearType-skrifttyper",
-      "fullWindowDrag": "Træk i hele vinduet",
-      "fullWindowDragDesc": "Vis vinduesindhold under træk",
+      "fontSmoothing": "Skriftglathed",
+      "fontSmoothingDesc": "Aktivér ClearType-skriftafbildning",
+      "fullWindowDrag": "Træk hele vinduet",
+      "fullWindowDragDesc": "Vis vinduets indhold under trækning",
       "desktopComposition": "Skrivebordskomposition",
-      "desktopCompositionDesc": "Aktivér Aero Glass-effekter",
-      "menuAnimations": "Menuanimationer",
-      "menuAnimationsDesc": "Aktivér menuudtoning og slideanimationer",
+      "desktopCompositionDesc": "Aktivér Aero-glas-effekter",
+      "menuAnimations": "Menu-animationer",
+      "menuAnimationsDesc": "Aktivér udtonings- og glideanimationer i menuer",
       "disableBitmapCaching": "Deaktiver bitmap-caching",
-      "disableBitmapCachingDesc": "Slå bitmap-cache fra (kan muligvis hjælpe med fejl)",
-      "disableOffscreenCaching": "Deaktiver cachelagring uden for skærmen",
-      "disableOffscreenCachingDesc": "Slå cache uden for skærmen fra",
-      "disableGlyphCaching": "Deaktiver glyf-cachelagring",
-      "disableGlyphCachingDesc": "Slå glyfcache fra",
+      "disableBitmapCachingDesc": "Slå bitmap-cache fra (kan hjælpe med visuelle fejl)",
+      "disableOffscreenCaching": "Deaktiver offscreen-caching",
+      "disableOffscreenCachingDesc": "Slå offscreen-cache fra",
+      "disableGlyphCaching": "Deaktiver glyph-caching",
+      "disableGlyphCachingDesc": "Slå glyph-cache fra",
       "enableGfx": "Aktivér GFX",
       "enableGfxDesc": "Brug RemoteFX-grafikpipeline",
       "enablePrinting": "Aktivér udskrivning",
-      "enablePrintingDesc": "Omdiriger lokale printere til fjernsessionen",
+      "enablePrintingDesc": "Omdiriger lokale skrivere til den fjernsession",
       "enableDriveRedirection": "Aktivér drevomdirigering",
-      "enableDriveRedirectionDesc": "Tilknyt en lokal mappe som et drev i den eksterne session",
-      "createDrivePath": "Opret drevsti",
-      "createDrivePathDesc": "Opret mappen automatisk, hvis den ikke findes",
+      "enableDriveRedirectionDesc": "Kortlæg en lokal mappe som et drev i den fjernsession",
       "disableDownload": "Deaktiver download",
-      "disableDownloadDesc": "Forhindr download af filer fra fjernsessionen",
+      "disableDownloadDesc": "Forhindre download af filer fra den fjernsession",
       "disableUpload": "Deaktiver upload",
-      "disableUploadDesc": "Forhindr upload af filer til fjernsessionen",
-      "enableTouch": "Aktivér berøring",
-      "enableTouchDesc": "Aktivér videresendelse af berøringsinput",
-      "consoleSession": "Konsolsession",
-      "consoleSessionDesc": "Opret forbindelse til konsollen (session 0) i stedet for en ny session",
+      "disableUploadDesc": "Forhindre upload af filer til den fjernsession",
+      "enableTouch": "Aktivér touch",
+      "enableTouchDesc": "Aktivér videresendelse af touch-input",
+      "consoleSession": "Konsol-session",
+      "consoleSessionDesc": "Forbind til konsollen (session 0) i stedet for en ny session",
       "sendWolPacket": "Send WOL-pakke",
-      "sendWolPacketDesc": "Send en magisk pakke for at vække denne vært før forbindelse",
+      "sendWolPacketDesc": "Send en magic packet for at vække denne vært, før der oprettes forbindelse",
       "disableCopy": "Deaktiver kopiering",
-      "disableCopyDesc": "Forhindr kopiering af tekst fra fjernsessionen",
+      "disableCopyDesc": "Forhindre kopiering af tekst fra den fjernsession",
       "disablePaste": "Deaktiver indsætning",
-      "disablePasteDesc": "Forhindr indsættelse af tekst i fjernsessionen",
-      "createPathIfMissing": "Opret sti, hvis den mangler",
-      "createPathIfMissingDesc": "Opret automatisk optagelsesmappen",
-      "excludeOutput": "Udeluk output",
-      "excludeOutputDesc": "Optag ikke skærmoutput (kun metadata)",
-      "excludeMouse": "Udeluk mus",
-      "excludeMouseDesc": "Optag ikke musebevægelser",
+      "disablePasteDesc": "Forhindre indsætning af tekst i den fjernsession",
+      "excludeOutput": "Udelad output",
+      "excludeOutputDesc": "Optag ikke skærmbillede-output (kun metadata)",
+      "excludeMouse": "Udelad mus",
+      "excludeMouseDesc": "Optag ikke musbevægelser",
       "includeKeystrokes": "Inkluder tastetryk",
-      "includeKeystrokesDesc": "Optag rå tastetryk ud over skærmoutput",
+      "includeKeystrokesDesc": "Optag rå tastetryk udover skærmbilledet",
       "vncPort": "VNC-port",
       "vncPassword": "VNC-adgangskode",
       "vncUsernameOptional": "Brugernavn (valgfrit)",
-      "vncLeaveBlank": "Lad stå tomt, hvis det ikke er nødvendigt",
+      "vncLeaveBlank": "Lad være tomt, hvis det ikke er påkrævet",
       "cursorMode": "Markørtilstand",
-      "swapRedBlue": "Skift rød/blå",
-      "swapRedBlueDesc": "Byt de røde og blå farvekanaler (løser nogle farveproblemer)",
+      "swapRedBlue": "Byt rød/blå",
+      "swapRedBlueDesc": "Byt de røde og blå farvekanaler (retter nogle farveproblemer)",
       "readOnly": "Skrivebeskyttet",
-      "readOnlyDesc": "Se fjernskærmen uden at sende input",
+      "readOnlyDesc": "Se det fjerne skærmbillede uden at sende nogen input",
       "telnetPort": "Telnet-port",
       "terminalType": "Terminaltype",
-      "fontName": "Skrifttypenavn",
+      "fontName": "Skrifttype",
       "fontSize": "Skriftstørrelse",
-      "colorScheme": "Farveskema",
-      "backspaceKey": "Tilbagetast",
+      "colorScheme": "Farveschema",
+      "backspaceKey": "Backspace-tast",
       "colorDepth": "Farvedybde",
-      "resizeMethod": "Ændre størrelse-metode",
-      "driveNamePlaceholder": "Termix Drive",
+      "resizeMethod": "Størrelsesændringsmetode",
+      "driveNamePlaceholder": "Termix-drev",
       "options": {
-        "any": "Any",
+        "any": "Alle",
         "auto": "Auto",
         "nlaExtended": "NLA Extended",
         "color8": "8-bit",
         "color16": "16-bit",
         "color24": "24-bit",
         "color32": "32-bit",
-        "displayUpdate": "Display Update",
-        "reconnect": "Reconnect",
-        "preserve": "Preserve",
+        "displayUpdate": "Skærmopdatering",
+        "reconnect": "Genopret forbindelse",
+        "preserve": "Bevar",
         "unix": "Unix (LF)",
         "windows": "Windows (CRLF)",
-        "local": "Local",
-        "remote": "Remote",
+        "local": "Lokal",
+        "remote": "Fjern",
         "failsafe": "failsafe",
-        "blackOnWhite": "Black on White",
-        "whiteOnBlack": "White on Black",
-        "grayOnBlack": "Gray on Black",
-        "greenOnBlack": "Green on Black"
+        "blackOnWhite": "Sort på hvid",
+        "whiteOnBlack": "Hvid på sort",
+        "grayOnBlack": "Grå på sort",
+        "greenOnBlack": "Grøn på sort"
       }
     },
     "remoteDesktop": "Fjernskrivebord",
-    "tabRdp": "Landdistriktsudviklingsplan",
+    "tabRdp": "RDP",
     "tabVnc": "VNC",
     "tabTelnet": "Telnet",
     "virtualNetwork": "Virtuelt netværk",
-    "unencryptedShell": "Ukrypteret skal",
+    "unencryptedShell": "Ukrypteret shell",
     "remoteDesktopNotes": "Noter",
-    "userDefaultsNote": "Indstillinger, du lader være uændrede, følger din værts standardindstillinger.",
-    "connectionOriginNote": "I desktop-appen bruger RDP, VNC og Telnet den eksterne server, medmindre værten er indstillet til Denne enhed, som kræver en guacd, som denne maskine kan nå. Angiv en i indstillingerne for Fjernskrivebord, eller pr. vært under guacd Proxy.",
-    "docsLink": "Se dokumenter",
-    "connectionOriginGuacamoleNote": "RDP, VNC og Telnet bruger den eksterne server, medmindre du vælger \"Denne enhed\", som kræver en guacd, som denne maskine kan nå. Angiv en i guacd URL-indstillingen eller pr. vært under guacd Proxy."
+    "userDefaultsNote": "Indstillinger, du ikke ændrer, følger dine standardindstillinger for værten.",
+    "connectionOriginNote": "I desktop-appen bruger RDP, VNC og Telnet den fjerne server, medmindre værten er indstillet til Denne enhed, hvilket kræver en guacd, som denne maskine kan nå. Indstil én i indstillingerne for Fjernskrivebord, eller pr. vært under guacd Proxy.",
+    "docsLink": "Se dokumentation",
+    "connectionOriginGuacamoleNote": "RDP, VNC og Telnet bruger den fjerne server, medmindre du vælger \"Denne enhed\", hvilket kræver en guacd, som denne maskine kan nå. Indstil én i indstillingen for guacd URL, eller pr. vært under guacd Proxy."
   },
   "onboarding": {
-    "feature_desktop": "Fjernskrivebord",
-    "feature_desktop_desc": "Åbn RDP-, VNC- og Telnet-sessioner i en fane, ligesom med SSH."
+    "guacdTitle": "Opsæt fjernskrivebord",
+    "guacdIntro": "Fjernskrivebord kræver, at guacd kører ved siden af Termix. Tjek, at den svarer, eller peg Termix på den.",
+    "guacdChecking": "Søger efter guacd",
+    "guacdConnected": "guacd kører på {{address}}",
+    "guacdMissing": "guacd svarer ikke på {{address}}",
+    "guacdMissingDesc": "Du kan fortsætte og opsætte det senere. Fjernskrivebordssessioner kan ikke oprette forbindelse, før den svarer.",
+    "guacdCheckFailed": "Kunne ikke tjekke guacd",
+    "guacdComposeTitle": "Tilføj den til din docker compose-fil",
+    "guacdSaveAndCheck": "Gem og tjek",
+    "guacdEnvNote": "Hvis GUACD_URL, GUACD_HOST eller GUACD_PORT er indstillet på serveren, har disse forrang."
   },
   "settings": {
     "user": {
       "colorDepth": {
         "label": "Farvedybde",
-        "description": "Bruges til RDP-værter, der lader den være på standardværdien."
+        "description": "Bruges til RDP-værter, der bruger standardindstillingen."
       },
       "resizeMethod": {
-        "label": "Ændre størrelse-metode",
-        "description": "Hvordan fjernskærmen følger vinduets størrelse."
+        "label": "Skaleringsmetode",
+        "description": "Hvordan den fjernskærm følger vinduets størrelse."
       },
-      "resizeDisplayUpdate": "Opdatering af display",
+      "resizeDisplayUpdate": "Skærmapdatering",
       "resizeReconnect": "Genopret forbindelse",
-      "inherit": "Arve",
-      "on": "På",
+      "inherit": "Arv",
+      "on": "Tændt",
       "off": "Slukket",
       "forceLossless": {
-        "label": "Tving tabsfri",
-        "description": "Tving tabsfri billedkodning (højere kvalitet, mere båndbredde)"
+        "label": "Tving tabfri komprimering",
+        "description": "Tving tabfri billedkomprimering (højere kvalitet, mere båndbredde)"
       },
       "enableWallpaper": {
-        "label": "Tapet",
+        "label": "Baggrundsbillede",
         "description": "Vis skrivebordsbaggrund (deaktivering forbedrer ydeevnen)"
       },
       "enableFontSmoothing": {
         "label": "Skrifttypeudjævning",
-        "description": "Aktivér gengivelse af ClearType-skrifttyper"
+        "description": "Aktivér ClearType-skrifttypeafbildning"
       },
       "enableDesktopComposition": {
         "label": "Skrivebordskomposition",
-        "description": "Aktivér Aero Glass-effekter"
+        "description": "Aktivér Aero-glas-effekter"
       },
       "disableAudio": {
         "label": "Deaktiver lyd",
-        "description": "Slå al lyd fra fra fjernsessionen"
+        "description": "Lyd fra den fjernsession"
       },
       "enablePrinting": {
         "label": "Aktivér udskrivning",
-        "description": "Omdiriger lokale printere til fjernsessionen"
+        "description": "Omdiriger lokale skrivere til den fjernsession"
       },
       "enableDrive": {
         "label": "Aktivér drevomdirigering",
-        "description": "Tilknyt en lokal mappe som et drev i den eksterne session"
+        "description": "Kortlæg en lokal mappe som et drev i den fjernsession"
       },
       "disableCopy": {
         "label": "Deaktiver kopiering",
-        "description": "Forhindr kopiering af tekst fra fjernsessionen"
+        "description": "Forhindre kopiering af tekst fra den fjernsession"
       },
       "disablePaste": {
         "label": "Deaktiver indsætning",
-        "description": "Forhindr indsættelse af tekst i fjernsessionen"
+        "description": "Forhindre indsætning af tekst i den fjernsession"
       },
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
@@ -309,17 +312,23 @@
     "admin": {
       "enabled": {
         "label": "Aktivér fjernskrivebord",
-        "description": "Tillad RDP-, VNC- og Telnet-forbindelser via guacd."
+        "description": "Tillad RDP-, VNC- og Telnet-forbindelser gennem guacd."
       },
       "guacdUrl": {
         "label": "guacd-URL",
-        "description": "Hvor guacd lytter som host:port. Miljøvariablerne GUACD_URL, GUACD_HOST og GUACD_PORT tilsidesætter dette.",
+        "description": "Hvor guacd lytter, som host:port. Miljøvariablerne GUACD_URL, GUACD_HOST og GUACD_PORT tilsidesætter dette.",
         "placeholder": "guacd:4822"
+      },
+      "hostGuacd": {
+        "label": "guacd-adresser pr. vært"
+      },
+      "hostGuacdMigrated": {
+        "label": "guacd-adresser pr. vært flyttet"
       }
     },
     "host": {
       "enableRdp": {
-        "label": "Landdistriktsudviklingsplan"
+        "label": "RDP"
       },
       "enableVnc": {
         "label": "VNC"
@@ -337,7 +346,7 @@
         "label": "Telnet-port"
       },
       "rdpSecurity": {
-        "label": "RDP-sikkerhedstilstand"
+        "label": "RDP-sikkerhedsmodus"
       },
       "rdpIgnoreCert": {
         "label": "Ignorer certifikatfejl"
@@ -346,28 +355,28 @@
         "label": "guacd-indstillinger"
       },
       "enableToolbar": {
-        "label": "Værktøjslinjen til fjernskrivebord",
+        "label": "Værktøjslinje til fjernskrivebord",
         "description": "Vis værktøjslinjen i RDP-, VNC- og Telnet-sessioner."
       },
-      "displayGroup": "Vise",
+      "displayGroup": "Skærm",
       "displayDefaultsTab": "Fjernskrivebord"
     }
   },
   "palette": {
-    "connectRdp": "Opret forbindelse med RDP",
-    "connectVnc": "Opret forbindelse med VNC",
-    "connectTelnet": "Opret forbindelse med Telnet"
+    "connectRdp": "Forbind med RDP",
+    "connectVnc": "Forbind med VNC",
+    "connectTelnet": "Forbind med Telnet"
   },
   "permissions": {
     "sessions": {
       "title": "Del fjernskrivebordssessioner",
-      "description": "Lad sessionsdeling og samarbejdsrum vise denne brugers RDP-, VNC- og Telnet-sessioner til andre."
+      "description": "Lad deling af sessioner og samarbejdsværelser vise denne brugers RDP-, VNC- og Telnet-sessioner til andre."
     }
   },
   "errors": {
-    "remoteServerRequired": "Fjernserver kræves. Opret forbindelse til en fjernserver i Indstillinger for at bruge denne forbindelsestype."
+    "remoteServerRequired": "Fjernserver påkrævet. Forbind en fjernserver i Indstillinger for at bruge denne type forbindelse."
   },
   "plugin": {
-    "name": "Remote Desktop"
+    "name": "Fjernskrivebord"
   }
 }

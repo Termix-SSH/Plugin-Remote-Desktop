@@ -1,0 +1,382 @@
+{
+  "remoteDesktop": {
+    "connecting": "Pripájanie k relácii {{type}}...",
+    "checkingGuacd": "Kontrola služby vzdialenej plochy...",
+    "requestingToken": "Žiadosť o token pripojenia {{type}}...",
+    "openingSession": "Otváranie relácie {{type}}...",
+    "negotiating": "Vyjednávania rukovania {{type}}...",
+    "sessionReady": "Relácia {{type}} je pripravená",
+    "connectionError": "Chyba pripojenia",
+    "failedToConnect": "Nepodarilo sa získať token pripojenia",
+    "hostNotFound": "Hostiteľ sa nenašiel",
+    "noHostSelected": "Nie je vybraný žiadny hostiteľ",
+    "guacdUnavailable": "Služba vzdialenej plochy (guacd) nie je dostupná. Uistite sa, že guacd beží, je prístupný a je správne nakonfigurovaný v administratívnych nastaveniach.",
+    "credentialPromptTitle": "Zadajte prihlasovacie údaje RDP",
+    "credentialPromptDescription": "Tento hostiteľ je nastavený na žiadosť o prihlasovacie údaje pri pripojení. Používajú sa len pre túto reláciu a neukladajú sa.",
+    "connect": "Pripojiť",
+    "files": {
+      "title": "Súbory jednotky",
+      "parent": "Nadradený adresár",
+      "refresh": "Obnoviť",
+      "empty": "Táto priečinok je prázdny",
+      "listFailed": "Nepodarilo sa prečítať tento priečinok",
+      "download": "Stiahnuť",
+      "downloadFailed": "Nepodarilo sa stiahnuť {{name}}",
+      "upload": "Nahrať súbory",
+      "uploading": "Nahrávanie {{name}}...",
+      "uploaded": "Nahrané {{name}}",
+      "uploadFailed": "Nepodarilo sa nahrať {{name}}",
+      "uploadDisabled": "Nahrávanie je pre toto pripojenie zakázané",
+      "driveUnavailable": "Pred nahrávaním súborov povoľte presmerovanie jednotky RDP",
+      "driveNotWritable": "guacd nemôže zapisovať do priečinka jednotky. Skontrolujte GUACD_DRIVE_PATH a jeho oprávnenia.",
+      "dropToUpload": "Presuňte súbory sem na nahratie"
+    },
+    "toolbar": {
+      "ctrlAltDel": "Ctrl+Alt+Del",
+      "winL": "Win+L (Uzamknúť obrazovku)",
+      "winKey": "Kľúč Windows",
+      "superL": "Super+L (Uzamknúť obrazovku)",
+      "superKey": "Kľúč Super",
+      "super": "Super",
+      "cmdL": "Cmd+L (Uzamknúť obrazovku)",
+      "cmdKey": "Kľúč Command",
+      "cmd": "Cmd",
+      "ctrl": "Ctrl",
+      "alt": "Alt",
+      "shift": "Shift",
+      "win": "Win",
+      "stickyActive": "{{key}} (zaseknuté – kliknutím uvoľníte)",
+      "stickyInactive": "{{key}} (kliknutím zaseknete)",
+      "esc": "Escape",
+      "tab": "Tab",
+      "home": "Home",
+      "end": "End",
+      "pageUp": "Page Up",
+      "pageDown": "Page Down",
+      "arrowUp": "Šípka hore",
+      "arrowDown": "Šípka dole",
+      "arrowLeft": "Šípka vľavo",
+      "arrowRight": "Šípka vpravo",
+      "fnToggle": "Funkčné klávesy",
+      "collapse": "Zložiť panel nástrojov",
+      "expand": "Rozbaliť panel nástrojov",
+      "dragHandle": "Ťahaním premiestnite",
+      "hide": "Skryť pre túto reláciu. Ak ho chcete trvalo vypnúť, otvorte Nastavenia hostiteľa → Všeobecné → Panel nástrojov pripojenia.",
+      "zoomIn": "Priblížiť",
+      "zoomOut": "Oddialiť",
+      "resetZoom": "Obnoviť priblíženie",
+      "fitToScreen": "Prispôsobiť obrazovke",
+      "switchToTrackpad": "Prepnúť na režim touchpadu (presúvanie kurzora ťahaním, kliknutie ťuknutím)",
+      "switchToTouch": "Prepnúť na dotykový režim (kliknutie priamym ťuknutím na cieľ)"
+    },
+    "disabled": "Vzdialená plocha je vypnutá. Správca ju môže zapnúť v Nastaveniach."
+  },
+  "hosts": {
+    "nativeRdpOpened": "Otvorené vo Windows Remote Desktop",
+    "nativeRdpFailed": "Nepodarilo sa otvoriť Windows Remote Desktop",
+    "openNativeRdp": "Otvoriť vo Windows Remote Desktop",
+    "guac": {
+      "toolbar": "Panel nástrojov",
+      "connection": "Pripojenie",
+      "authentication": "Overenie",
+      "storedCredential": "Uložené poverenia",
+      "authMethod": "Metóda overenia",
+      "authTypeDirect": "Priame",
+      "authTypeCredential": "Poverenia",
+      "authTypeNone": "Žiadne",
+      "authTypeNoneDesc": "Nie sú uložené žiadne poverenia. Pri každom pripojení budete vyzvaní na zadanie používateľského mena a hesla; nie sú ukladané.",
+      "selectCredential": "Vyberte poverenia...",
+      "connectionSettings": "Nastavenia pripojenia",
+      "displaySettings": "Nastavenia zobrazenia",
+      "audioSettings": "Nastavenia zvuku",
+      "rdpPerformance": "Výkon RDP",
+      "deviceRedirection": "Presmerovanie zariadení",
+      "session": "Relácia",
+      "gateway": "Brána",
+      "remoteApp": "RemoteApp",
+      "clipboard": "Schránka",
+      "sessionRecording": "Záznam relácie",
+      "wakeOnLan": "Wake-on-LAN",
+      "vncSettings": "Nastavenia VNC",
+      "terminalSettings": "Nastavenia terminálu",
+      "rdpPort": "Port RDP",
+      "username": "Používateľské meno",
+      "password": "Heslo",
+      "passwordSaved": "Heslo uložené, pre zmenu ho zadajte znova",
+      "domain": "Doména",
+      "securityMode": "Režim zabezpečenia",
+      "width": "Šírka",
+      "height": "Výška",
+      "dpi": "DPI",
+      "clientName": "Názov klienta",
+      "initialProgram": "Počiatočný program",
+      "serverLayout": "Rozloženie servera",
+      "timezone": "Časové pásmo",
+      "loadBalanceInfo": "Informácie o vyvažovaní záťaže / Cookie",
+      "loadBalanceInfoDesc": "Cookie pre RD Connection Broker na vyvažovanie záťaže v farme RDS (napr. tsv://MS Terminal Services Plugin.1.CollectionName)",
+      "guacdProxy": "Proxy guacd",
+      "guacdHostname": "Hostiteľ guacd",
+      "guacdHostnamePlaceholder": "Globálne predvolené",
+      "guacdPort": "Port guacd",
+      "guacdProxyDesc": "Prekryť globálnu inštanciu guacd pre toto pripojenie. Nechajte prázdne, ak chcete použiť globálne nastavený guacd.",
+      "guacdAdminOnly": "Server guacd pre hostiteľa môžu meniť iba správcovia.",
+      "guacdSaveHostFirst": "Najprv uložte hostiteľa a potom tu nastavte jeho server guacd.",
+      "guacdSave": "Uložiť server guacd",
+      "guacdSaved": "Server guacd uložený",
+      "guacdSaveFailed": "Nepodarilo sa uložiť server guacd",
+      "gatewayHostname": "Názov hostiteľa brány",
+      "gatewayPort": "Port brány",
+      "gatewayUsername": "Používateľské meno brány",
+      "gatewayPassword": "Heslo brány",
+      "gatewayDomain": "Doména brány",
+      "remoteAppProgram": "Program RemoteApp",
+      "workingDirectory": "Pracovný adresár",
+      "arguments": "Argumenty",
+      "normalizeLineEndings": "Normalizovať konce riadkov",
+      "macAddress": "MAC adresa",
+      "broadcastAddress": "Vysielacia adresa",
+      "udpPort": "UDP port",
+      "waitTimeS": "Čakacia doba (s)",
+      "driveName": "Názov jednotky",
+      "ignoreCertificate": "Ignorovať certifikát",
+      "ignoreCertificateDesc": "Povoliť pripojenie k hostiteľom s vlastnými certifikátmi",
+      "forceLossless": "Vynútiť bezstratovosť",
+      "forceLosslessDesc": "Vynútiť bezstratové kódovanie obrazu (vyššia kvalita, viac šírky pásma)",
+      "disableAudio": "Zakázať zvuk",
+      "disableAudioDesc": "Stlmiť všetok zvuk z vzdialenej relácie",
+      "enableAudioInput": "Povoliť zvukový vstup (mikrofón)",
+      "enableAudioInputDesc": "Presmerovať lokálny mikrofón do vzdialenej relácie",
+      "wallpaper": "Tapeta",
+      "wallpaperDesc": "Zobraziť tapetu na ploche (zakázanie zlepšuje výkon)",
+      "theming": "Témy",
+      "themingDesc": "Povoliť vizuálne témy a štýly",
+      "fontSmoothing": "Vyhladzovanie písiem",
+      "fontSmoothingDesc": "Povoliť vykresľovanie písiem ClearType",
+      "fullWindowDrag": "Ťahanie celého okna",
+      "fullWindowDragDesc": "Zobraziť obsah okna počas ťahania",
+      "desktopComposition": "Kompozícia plochy",
+      "desktopCompositionDesc": "Povoliť efekty Aero Glass",
+      "menuAnimations": "Animácie ponúk",
+      "menuAnimationsDesc": "Povoliť animácie blednutia a posúvania ponúk",
+      "disableBitmapCaching": "Zakázať vyrovnávaciu pamäť bitmap",
+      "disableBitmapCachingDesc": "Vypnúť vyrovnávaciu pamäť bitmap (môže pomôcť pri chybách)",
+      "disableOffscreenCaching": "Zakázať vyrovnávaciu pamäť mimo obrazovky",
+      "disableOffscreenCachingDesc": "Vypnúť vyrovnávaciu pamäť mimo obrazovky",
+      "disableGlyphCaching": "Zakázať vyrovnávaciu pamäť glyfov",
+      "disableGlyphCachingDesc": "Vypnúť vyrovnávaciu pamäť glyfov",
+      "enableGfx": "Povoliť GFX",
+      "enableGfxDesc": "Použiť grafické potrubie RemoteFX",
+      "enablePrinting": "Povoliť tlač",
+      "enablePrintingDesc": "Presmerovať lokálne tlačiarne do vzdialenej relácie",
+      "enableDriveRedirection": "Povoliť presmerovanie jednotiek",
+      "enableDriveRedirectionDesc": "Mapovať lokálny adresár ako jednotku vo vzdialenej relácii",
+      "disableDownload": "Zakázať sťahovanie",
+      "disableDownloadDesc": "Zakázať sťahovanie súborov zo vzdialenej relácie",
+      "disableUpload": "Zakázať nahrávanie",
+      "disableUploadDesc": "Zakázať nahrávanie súborov do vzdialenej relácie",
+      "enableTouch": "Povoliť dotyk",
+      "enableTouchDesc": "Povoliť presmerovanie dotykového vstupu",
+      "consoleSession": "Konzolová relácia",
+      "consoleSessionDesc": "Pripojiť sa ku konzole (relácia 0) namiesto novej relácie",
+      "sendWolPacket": "Poslať WOL paket",
+      "sendWolPacketDesc": "Poslať magický paket na prebudenie tohto hostiteľa pred pripojením",
+      "disableCopy": "Zakázať kopírovanie",
+      "disableCopyDesc": "Zakázať kopírovanie textu zo vzdialenej relácie",
+      "disablePaste": "Zakázať vkladanie",
+      "disablePasteDesc": "Zakázať vkladanie textu do vzdialenej relácie",
+      "excludeOutput": "Vylúčiť výstup",
+      "excludeOutputDesc": "Nezaznamenávať výstup obrazovky (iba metadáta)",
+      "excludeMouse": "Vylúčiť myš",
+      "excludeMouseDesc": "Nenahrávať pohyby myši",
+      "includeKeystrokes": "Zahrnúť stlačenia klávesov",
+      "includeKeystrokesDesc": "Nahrávať surové stlačenia klávesov okrem výstupu obrazovky",
+      "vncPort": "Port VNC",
+      "vncPassword": "Heslo VNC",
+      "vncUsernameOptional": "Meno používateľa (voliteľné)",
+      "vncLeaveBlank": "Nechať prázdne, ak nie je vyžadované",
+      "cursorMode": "Režim kurzora",
+      "swapRedBlue": "Vymeniť červenú/modrú",
+      "swapRedBlueDesc": "Vymeniť červený a modrý farebný kanál (opravuje niektoré farebné problémy)",
+      "readOnly": "Iba na čítanie",
+      "readOnlyDesc": "Zobraziť vzdialenú obrazovku bez odosielania akéhokoľvek vstupu",
+      "telnetPort": "Port Telnet",
+      "terminalType": "Typ terminálu",
+      "fontName": "Názov písma",
+      "fontSize": "Veľkosť písma",
+      "colorScheme": "Farebná schéma",
+      "backspaceKey": "Kláves Backspace",
+      "colorDepth": "Farebná hĺbka",
+      "resizeMethod": "Metóda zmeny veľkosti",
+      "driveNamePlaceholder": "Disk Termix",
+      "options": {
+        "any": "Ľubovoľný",
+        "auto": "Automaticky",
+        "nlaExtended": "Rozšírené NLA",
+        "color8": "8-bitové",
+        "color16": "16-bitové",
+        "color24": "24-bitové",
+        "color32": "32-bitové",
+        "displayUpdate": "Aktualizácia displeja",
+        "reconnect": "Opätovné pripojenie",
+        "preserve": "Zachovať",
+        "unix": "Unix (LF)",
+        "windows": "Windows (CRLF)",
+        "local": "Lokálne",
+        "remote": "Vzdialené",
+        "failsafe": "failsafe",
+        "blackOnWhite": "Čierna na bielej",
+        "whiteOnBlack": "Biela na čiernej",
+        "grayOnBlack": "Šedá na čiernej",
+        "greenOnBlack": "Zelená na čiernej"
+      }
+    },
+    "remoteDesktop": "Vzdialená plocha",
+    "tabRdp": "RDP",
+    "tabVnc": "VNC",
+    "tabTelnet": "Telnet",
+    "virtualNetwork": "Virtuálna sieť",
+    "unencryptedShell": "Nešifrovaný shell",
+    "remoteDesktopNotes": "Poznámky",
+    "userDefaultsNote": "Nastavenia, ktoré nezmeníte, sa riadia predvolenými hodnotami hostiteľa.",
+    "connectionOriginNote": "V desktopovej aplikácii používajú RDP, VNC a Telnet vzdialený server, pokiaľ nie je hostiteľ nastavený na Toto zariadenie, čo vyžaduje guacd, ktorého toto zariadenie môže dosiahnuť. Nastavte ho v nastaveniach Vzdialenej plochy alebo pre jednotlivého hostiteľa v sekcii guacd Proxy.",
+    "docsLink": "Zobraziť dokumentáciu",
+    "connectionOriginGuacamoleNote": "RDP, VNC a Telnet používajú vzdialený server, pokiaľ nevyberiete „Toto zariadenie“, čo vyžaduje guacd, ktorého toto zariadenie môže dosiahnuť. Nastavte ho v nastavení URL guacd alebo pre jednotlivého hostiteľa v sekcii guacd Proxy."
+  },
+  "onboarding": {
+    "guacdTitle": "Nastaviť vzdialenú plochu",
+    "guacdIntro": "Vzdialená plocha potrebuje guacd bežať vedľa Termix. Skontrolujte, či odpovedá, alebo ukážte Termix naň.",
+    "guacdChecking": "Hľadanie guacd",
+    "guacdConnected": "guacd beží na adrese {{address}}",
+    "guacdMissing": "guacd neodpovedá na adrese {{address}}",
+    "guacdMissingDesc": "Môžete pokračovať a nastaviť ho neskôr. Relácie vzdialenej plochy sa nepripoja, kým neodpovie.",
+    "guacdCheckFailed": "Nepodarilo sa skontrolovať guacd",
+    "guacdComposeTitle": "Pridajte ho do vášho súboru docker compose",
+    "guacdSaveAndCheck": "Uložiť a skontrolovať",
+    "guacdEnvNote": "Ak sú na serveri nastavené premenné GUACD_URL, GUACD_HOST alebo GUACD_PORT, majú prednosť pred týmto nastavením."
+  },
+  "settings": {
+    "user": {
+      "colorDepth": {
+        "label": "Farbová hĺbka",
+        "description": "Používa sa pre RDP hosty, ktoré ponechávajú predvolenú hodnotu."
+      },
+      "resizeMethod": {
+        "label": "Metóda zmeny veľkosti",
+        "description": "Ako sa vzdialená obrazovka prispôsobuje veľkosti okna."
+      },
+      "resizeDisplayUpdate": "Aktualizácia zobrazenia",
+      "resizeReconnect": "Opätovné pripojenie",
+      "inherit": "Zdediť",
+      "on": "Zapnuté",
+      "off": "Vypnuté",
+      "forceLossless": {
+        "label": "Vynútiť bez strát",
+        "description": "Vynútiť kódovanie obrazu bez strát (vyššia kvalita, vyššia spotreba šírky pásma)"
+      },
+      "enableWallpaper": {
+        "label": "Tapeta",
+        "description": "Zobraziť tapetu na ploche (vypnutie zlepšuje výkon)"
+      },
+      "enableFontSmoothing": {
+        "label": "Vyhladzovanie písiem",
+        "description": "Povoliť vykresľovanie písiem ClearType"
+      },
+      "enableDesktopComposition": {
+        "label": "Zloženie plochy",
+        "description": "Povoliť efekty Aero Glass"
+      },
+      "disableAudio": {
+        "label": "Zakázať zvuk",
+        "description": "Stlmiť všetok zvuk zo vzdialenej relácie"
+      },
+      "enablePrinting": {
+        "label": "Povoliť tlač",
+        "description": "Presmerovať lokálne tlačiarne do vzdialenej relácie"
+      },
+      "enableDrive": {
+        "label": "Povoliť presmerovanie jednotiek",
+        "description": "Mapovať lokálny priečinok ako jednotku vo vzdialenej relácii"
+      },
+      "disableCopy": {
+        "label": "Zakázať kopírovanie",
+        "description": "Zakázať kopírovanie textu zo vzdialenej relácie"
+      },
+      "disablePaste": {
+        "label": "Zakázať vkladanie",
+        "description": "Zakázať vkladanie textu do vzdialenej relácie"
+      },
+      "colorDepth16": "16-bit",
+      "colorDepth24": "24-bit",
+      "colorDepth32": "32-bit"
+    },
+    "admin": {
+      "enabled": {
+        "label": "Povoliť vzdialenú plochu",
+        "description": "Povoliť pripojenia RDP, VNC a Telnet cez guacd."
+      },
+      "guacdUrl": {
+        "label": "URL adresa guacd",
+        "description": "Kde guacd počúva, v tvare host:port. Premenné prostredia GUACD_URL, GUACD_HOST a GUACD_PORT toto nastavenie prepíšu.",
+        "placeholder": "guacd:4822"
+      },
+      "hostGuacd": {
+        "label": "Adresy guacd pre jednotlivé hosty"
+      },
+      "hostGuacdMigrated": {
+        "label": "Adresy guacd pre jednotlivé hosty boli presunuté"
+      }
+    },
+    "host": {
+      "enableRdp": {
+        "label": "RDP"
+      },
+      "enableVnc": {
+        "label": "VNC"
+      },
+      "enableTelnet": {
+        "label": "Telnet"
+      },
+      "rdpPort": {
+        "label": "Port RDP"
+      },
+      "vncPort": {
+        "label": "Port VNC"
+      },
+      "telnetPort": {
+        "label": "Port Telnet"
+      },
+      "rdpSecurity": {
+        "label": "Režim zabezpečenia RDP"
+      },
+      "rdpIgnoreCert": {
+        "label": "Ignorovať chyby certifikátu"
+      },
+      "guacamoleConfig": {
+        "label": "Nastavenia guacd"
+      },
+      "enableToolbar": {
+        "label": "Panel nástrojov vzdialenej plochy",
+        "description": "Zobraziť panel nástrojov v reláciách RDP, VNC a Telnet."
+      },
+      "displayGroup": "Zobrazenie",
+      "displayDefaultsTab": "Vzdialená plocha"
+    }
+  },
+  "palette": {
+    "connectRdp": "Pripojiť cez RDP",
+    "connectVnc": "Pripojiť cez VNC",
+    "connectTelnet": "Pripojiť cez Telnet"
+  },
+  "permissions": {
+    "sessions": {
+      "title": "Zdieľať relácie vzdialenej plochy",
+      "description": "Nechajte zdieľanie relácií a kolaboračné miestnosti zobrazovať relácie RDP, VNC a Telnet tohto používateľa ostatným."
+    }
+  },
+  "errors": {
+    "remoteServerRequired": "Vyžaduje sa vzdialený server. Pripojte vzdialený server v Nastaveniach, aby ste mohli použiť tento typ pripojenia."
+  },
+  "plugin": {
+    "name": "Vzdialená plocha"
+  }
+}

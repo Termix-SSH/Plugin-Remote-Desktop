@@ -1,85 +1,80 @@
 {
   "remoteDesktop": {
     "connecting": "{{type}} セッションに接続中...",
-    "checkingGuacd": "リモートデスクトップサービスを確認しています...",
-    "requestingToken": "{{type}} 接続トークンを要求しています...",
-    "openingSession": "{{type}} セッションを開始しています...",
-    "negotiating": "交渉中 {{type}} 握手...",
-    "sessionReady": "{{type}} セッション準備完了",
+    "checkingGuacd": "リモートデスクトップサービスを確認中...",
+    "requestingToken": "{{type}} 接続トークンを要求中...",
+    "openingSession": "{{type}} セッションを開いています...",
+    "negotiating": "{{type}} ハンドシェイクをネゴシエート中...",
+    "sessionReady": "{{type}} セッションの準備ができました",
     "connectionError": "接続エラー",
-    "connectionFailed": "接続に失敗しました",
     "failedToConnect": "接続トークンの取得に失敗しました",
     "hostNotFound": "ホストが見つかりません",
     "noHostSelected": "ホストが選択されていません",
-    "reconnect": "再接続",
-    "retry": "再試行",
-    "guacdUnavailable": "リモートデスクトップサービス (guacd) が利用できません。guacd が実行中でアクセス可能であり、管理者設定で正しく構成されていることを確認してください。",
-    "credentialPromptTitle": "RDP認証情報を入力してください",
-    "credentialPromptDescription": "このホストは、接続時に認証情報の入力を求めるように設定されています。認証情報は今回のセッションのみで使用され、保存されません。",
+    "guacdUnavailable": "リモートデスクトップサービス (guacd) が利用できません。guacd が実行中でアクセス可能であり、管理者設定で適切に構成されていることを確認してください。",
+    "credentialPromptTitle": "RDP 認証情報を入力",
+    "credentialPromptDescription": "このホストは接続時に認証情報の入力を求めるように設定されています。これらはこのセッションでのみ使用され、保存されません。",
     "connect": "接続",
-    "ctrlAltDel": "Ctrl+Alt+Del",
     "files": {
-      "title": "ドライブファイル",
+      "title": "ドライブ ファイル",
       "parent": "親ディレクトリ",
-      "refresh": "再読み込み",
-      "empty": "このフォルダーは空です",
+      "refresh": "更新",
+      "empty": "このフォルダは空です",
       "listFailed": "このフォルダの読み取りに失敗しました",
       "download": "ダウンロード",
-      "downloadFailed": "ダウンロードに失敗しました {{name}}",
-      "upload": "ファイルをアップロードする",
+      "downloadFailed": "{{name}} のダウンロードに失敗しました",
+      "upload": "ファイルをアップロード",
       "uploading": "{{name}} をアップロード中...",
-      "uploaded": "アップロード済み {{name}}",
-      "uploadFailed": "アップロードに失敗しました {{name}}",
-      "uploadDisabled": "この接続ではアップロードが無効になっています。",
-      "driveUnavailable": "ファイルをアップロードする前に、RDPドライブリダイレクトを有効にしてください。",
-      "driveNotWritable": "guacd はドライブフォルダに書き込むことができません。GUACD_DRIVE_PATH（またはホストのドライブパス）とそのアクセス許可を確認してください。",
-      "dropToUpload": "アップロードするファイルをドロップしてください"
+      "uploaded": "{{name}} をアップロードしました",
+      "uploadFailed": "{{name}} のアップロードに失敗しました",
+      "uploadDisabled": "この接続ではアップロードが無効になっています",
+      "driveUnavailable": "ファイルをアップロードする前に RDP ドライブリダイレクトを有効にしてください",
+      "driveNotWritable": "guacd がドライブフォルダに書き込めません。GUACD_DRIVE_PATH とその権限を確認してください。",
+      "dropToUpload": "アップロードするにはファイルをドロップ"
     },
     "toolbar": {
       "ctrlAltDel": "Ctrl+Alt+Del",
       "winL": "Win+L (画面ロック)",
       "winKey": "Windows キー",
-      "superL": "Super+L（ロック画面）",
-      "superKey": "スーパーキー",
-      "super": "素晴らしい",
-      "cmdL": "Cmd+L（画面ロック）",
-      "cmdKey": "コマンドキー",
-      "cmd": "コマンド",
+      "superL": "Super+L (画面ロック)",
+      "superKey": "Super キー",
+      "super": "Super",
+      "cmdL": "Cmd+L (画面ロック)",
+      "cmdKey": "Command キー",
+      "cmd": "Cmd",
       "ctrl": "Ctrl",
       "alt": "Alt",
       "shift": "Shift",
       "win": "Win",
-      "stickyActive": "{{key}}（ラッチ中 - クリックで解除）",
-      "stickyInactive": "{{key}}（クリックでラッチ）",
+      "stickyActive": "{{key}} (ラッチ済み - クリックして解除)",
+      "stickyInactive": "{{key}} (クリックしてラッチ)",
       "esc": "Escape",
       "tab": "Tab",
       "home": "Home",
-      "end": "エンド",
+      "end": "End",
       "pageUp": "Page Up",
       "pageDown": "Page Down",
-      "arrowUp": "↑",
-      "arrowDown": "↓",
-      "arrowLeft": "←",
-      "arrowRight": "→",
+      "arrowUp": "上矢印",
+      "arrowDown": "下矢印",
+      "arrowLeft": "左矢印",
+      "arrowRight": "右矢印",
       "fnToggle": "ファンクションキー",
-      "reconnect": "セッション再接続",
       "collapse": "ツールバーを折りたたむ",
       "expand": "ツールバーを展開",
-      "dragHandle": "ドラッグで位置変更",
-      "hide": "このセッション中は非表示にします。完全に無効にするには、ホスト設定 → 一般 → 接続ツールバーを開いてください。",
-      "zoomIn": "ズームイン",
+      "dragHandle": "ドラッグして位置を調整",
+      "hide": "このセッション中は非表示にします。恒久的に無効にするには、ホスト設定 → 一般 → 接続ツールバーを開いてください。",
+      "zoomIn": "拡大",
       "zoomOut": "ズームアウト",
       "resetZoom": "ズームをリセット",
       "fitToScreen": "画面に合わせる",
-      "switchToTrackpad": "トラックパッドモードに切り替える（ドラッグでカーソルを移動、タップでクリック）",
-      "switchToTouch": "タッチモードに切り替える（クリックしたい場所を直接タップする）"
+      "switchToTrackpad": "トラックパッドモードに切り替え（ドラッグでカーソル移動、タップでクリック）",
+      "switchToTouch": "タッチモードに切り替え（クリックしたい場所を直接タップ）"
     },
-    "disabled": "リモートデスクトップは無効になっています。管理者は設定画面で有効にできます。"
+    "disabled": "リモートデスクトップは無効化されています。管理者が設定で有効化できます。"
   },
   "hosts": {
-    "nativeRdpOpened": "Windowsリモートデスクトップで開きました",
-    "nativeRdpFailed": "Windowsリモートデスクトップを開くことができませんでした",
-    "openNativeRdp": "Windowsリモートデスクトップで開く",
+    "nativeRdpOpened": "Windows リモートデスクトップで開きました",
+    "nativeRdpFailed": "Windows リモートデスクトップを開けませんでした",
+    "openNativeRdp": "Windows リモートデスクトップで開く",
     "guac": {
       "toolbar": "ツールバー",
       "connection": "接続",
@@ -88,8 +83,8 @@
       "authMethod": "認証方法",
       "authTypeDirect": "直接",
       "authTypeCredential": "認証情報",
-      "authTypeNone": "すべて解除",
-      "authTypeNoneDesc": "認証情報は保存されません。接続するたびにユーザー名とパスワードの入力を求められますが、それらは保存されません。",
+      "authTypeNone": "なし",
+      "authTypeNoneDesc": "認証情報は保存されません。接続するたびにユーザー名とパスワードの入力が求められ、それらは保存されません。",
       "selectCredential": "認証情報を選択...",
       "connectionSettings": "接続設定",
       "displaySettings": "表示設定",
@@ -100,14 +95,14 @@
       "gateway": "ゲートウェイ",
       "remoteApp": "RemoteApp",
       "clipboard": "クリップボード",
-      "sessionRecording": "セッション記録",
+      "sessionRecording": "セッション録画",
       "wakeOnLan": "Wake-on-LAN",
-      "vncSettings": "VNC設定",
+      "vncSettings": "VNC 設定",
       "terminalSettings": "ターミナル設定",
-      "rdpPort": "RDPポート",
+      "rdpPort": "RDP ポート",
       "username": "ユーザー名",
       "password": "パスワード",
-      "passwordSaved": "パスワードが保存されました。変更するには入力してください。",
+      "passwordSaved": "パスワードが保存されました。変更するには入力してください",
       "domain": "ドメイン",
       "securityMode": "セキュリティモード",
       "width": "幅",
@@ -117,122 +112,122 @@
       "initialProgram": "初期プログラム",
       "serverLayout": "サーバーレイアウト",
       "timezone": "タイムゾーン",
-      "loadBalanceInfo": "負荷分散情報 / Cookie",
-      "loadBalanceInfoDesc": "RDSファームの負荷分散用RD接続ブローカーCookie (例: tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "guacdプロキシ",
-      "guacdHostname": "guacdホスト",
-      "guacdHostnamePlaceholder": "全体のデフォルト",
-      "guacdPort": "guacdポート",
-      "guacdProxyDesc": "この接続に対してグローバル guacd インスタンスを上書きします。空白にするとグローバルに設定された guacd を使用します。",
+      "loadBalanceInfo": "ロードバランシング情報 / クッキー",
+      "loadBalanceInfoDesc": "RDS ファームのロードバランシング用 RD 接続ブローカークッキー（例：tsv://MS Terminal Services Plugin.1.CollectionName）",
+      "guacdProxy": "guacd プロキシ",
+      "guacdHostname": "guacd ホスト",
+      "guacdHostnamePlaceholder": "グローバルデフォルト",
+      "guacdPort": "guacd ポート",
+      "guacdProxyDesc": "この接続のグローバル guacd インスタンスを上書きします。グローバルに設定された guacd を使用する場合は空白のままにしてください。",
+      "guacdAdminOnly": "ホストの guacd サーバーを変更できるのは管理者のみです。",
+      "guacdSaveHostFirst": "まずホストを保存し、その後ここで guacd サーバーを設定してください。",
+      "guacdSave": "guacd サーバーを保存",
+      "guacdSaved": "guacd サーバーが保存されました",
+      "guacdSaveFailed": "guacd サーバーの保存に失敗しました",
       "gatewayHostname": "ゲートウェイホスト名",
       "gatewayPort": "ゲートウェイポート",
       "gatewayUsername": "ゲートウェイユーザー名",
       "gatewayPassword": "ゲートウェイパスワード",
       "gatewayDomain": "ゲートウェイドメイン",
-      "remoteAppProgram": "RemoteAppプログラム",
+      "remoteAppProgram": "RemoteApp プログラム",
       "workingDirectory": "作業ディレクトリ",
       "arguments": "引数",
       "normalizeLineEndings": "改行コードの正規化",
-      "macAddress": "MACアドレス",
+      "macAddress": "MAC アドレス",
       "broadcastAddress": "ブロードキャストアドレス",
-      "udpPort": "UDPポート",
-      "waitTimeS": "待機時間（秒）",
+      "udpPort": "UDP ポート",
+      "waitTimeS": "待機時間 (秒)",
       "driveName": "ドライブ名",
-      "drivePath": "ドライブパス",
-      "ignoreCertificate": "証明書を無視",
+      "ignoreCertificate": "証明書を無視する",
       "ignoreCertificateDesc": "自己署名証明書を持つホストへの接続を許可する",
-      "forceLossless": "ロスレスを強制",
-      "forceLosslessDesc": "ロスレス画像エンコーディングを強制する（高品質だが帯域幅を多く消費）",
-      "disableAudio": "オーディオを無効化",
-      "disableAudioDesc": "リモートセッションの音声をすべてミュートする",
-      "enableAudioInput": "音声入力（マイク）を有効化",
-      "enableAudioInputDesc": "ローカルマイクをリモートセッションに転送する",
+      "forceLossless": "ロスレスを強制する",
+      "forceLosslessDesc": "ロスレス画像エンコーディングを強制する（高品質、帯域幅増加）",
+      "disableAudio": "オーディオを無効にする",
+      "disableAudioDesc": "リモートセッションからのすべてのオーディオをミュートする",
+      "enableAudioInput": "オーディオ入力（マイク）を有効にする",
+      "enableAudioInputDesc": "ローカルのマイクをリモートセッションにフォワードする",
       "wallpaper": "壁紙",
-      "wallpaperDesc": "デスクトップ壁紙を表示する（無効にするとパフォーマンスが向上）",
+      "wallpaperDesc": "デスクトップの壁紙を表示する（無効にするとパフォーマンスが向上します）",
       "theming": "テーマ",
       "themingDesc": "ビジュアルテーマとスタイルを有効にする",
       "fontSmoothing": "フォントスムージング",
-      "fontSmoothingDesc": "ClearTypeフォントレンダリングを有効にする",
-      "fullWindowDrag": "フルウィンドウドラッグ",
-      "fullWindowDragDesc": "ウィンドウドラッグ中に内容を表示する",
+      "fontSmoothingDesc": "ClearType フォントレンダリングを有効にする",
+      "fullWindowDrag": "ウィンドル全体ドラッグ",
+      "fullWindowDragDesc": "ドラッグ中にウィンドウの内容を表示する",
       "desktopComposition": "デスクトップコンポジション",
-      "desktopCompositionDesc": "Aero Glass効果を有効にする",
+      "desktopCompositionDesc": "Aero ガラス効果を有効にする",
       "menuAnimations": "メニューアニメーション",
-      "menuAnimationsDesc": "メニューのフェードおよびスライドアニメーションを有効にする",
-      "disableBitmapCaching": "ビットマップキャッシュを無効化",
-      "disableBitmapCachingDesc": "ビットマップキャッシュをオフにする（不具合の解決に役立つ場合がある）",
-      "disableOffscreenCaching": "オフスクリーンキャッシュを無効化",
+      "menuAnimationsDesc": "メニューのフェードとスライドアニメーションを有効にする",
+      "disableBitmapCaching": "ビットマップキャッシュを無効にする",
+      "disableBitmapCachingDesc": "ビットマップキャッシュをオフにする（グリッチの解消に役立つ場合があります）",
+      "disableOffscreenCaching": "オフスクリーンキャッシュを無効にする",
       "disableOffscreenCachingDesc": "オフスクリーンキャッシュをオフにする",
-      "disableGlyphCaching": "グリフキャッシュを無効化",
+      "disableGlyphCaching": "グリフキャッシュを無効にする",
       "disableGlyphCachingDesc": "グリフキャッシュをオフにする",
-      "enableGfx": "GFXを有効化",
-      "enableGfxDesc": "RemoteFXグラフィックスパイプラインを使用する",
-      "enablePrinting": "印刷を有効化",
-      "enablePrintingDesc": "ローカルプリンターをリモートセッションにリダイレクトする",
-      "enableDriveRedirection": "ドライブリダイレクションを有効化",
-      "enableDriveRedirectionDesc": "リモートセッションでローカルフォルダーをドライブとしてマッピングする",
-      "createDrivePath": "ドライブパスを作成",
-      "createDrivePathDesc": "フォルダが存在しない場合に自動的に作成します",
+      "enableGfx": "GFX を有効にする",
+      "enableGfxDesc": "RemoteFX グラフィックスパイプラインを使用する",
+      "enablePrinting": "印刷を有効にする",
+      "enablePrintingDesc": "ローカルプリンタをリモートセッションにリダイレクトする",
+      "enableDriveRedirection": "ドライブリダイレクトを有効にする",
+      "enableDriveRedirectionDesc": "ローカルフォルダをリモートセッション内のドライブとしてマッピングする",
       "disableDownload": "ダウンロードを無効にする",
-      "disableDownloadDesc": "リモートセッションからファイルをダウンロードできないようにします",
+      "disableDownloadDesc": "リモートセッションからのファイルダウンロードを防止する",
       "disableUpload": "アップロードを無効にする",
-      "disableUploadDesc": "リモートセッションにファイルをアップロードできないようにします",
+      "disableUploadDesc": "リモートセッションへのファイルアップロードを防止する",
       "enableTouch": "タッチを有効にする",
-      "enableTouchDesc": "タッチ入力転送を有効にします",
+      "enableTouchDesc": "タッチ入力フォワードを有効にする",
       "consoleSession": "コンソールセッション",
-      "consoleSessionDesc": "新しいセッションではなくコンソール（セッション0）に接続します",
-      "sendWolPacket": "WOLパケットを送信",
-      "sendWolPacketDesc": "接続前にこのホストを起動するためのマジックパケットを送信します",
+      "consoleSessionDesc": "新しいセッションではなく、コンソール（セッション 0）に接続する",
+      "sendWolPacket": "WOL パケットを送信する",
+      "sendWolPacketDesc": "接続前にこのホストを起動するためのマジックパケットを送信する",
       "disableCopy": "コピーを無効にする",
-      "disableCopyDesc": "リモートセッションからのテキストコピーを禁止します",
+      "disableCopyDesc": "リモートセッションからのテキストコピーを防止する",
       "disablePaste": "貼り付けを無効にする",
-      "disablePasteDesc": "リモートセッションへのテキスト貼り付けを禁止します",
-      "createPathIfMissing": "パスが存在しない場合に作成",
-      "createPathIfMissingDesc": "レコーディングディレクトリが存在しない場合に自動的に作成します",
-      "excludeOutput": "出力を除外",
-      "excludeOutputDesc": "画面出力を記録しません（メタデータのみ）",
-      "excludeMouse": "マウスを除外",
-      "excludeMouseDesc": "マウスの動きを記録しません",
-      "includeKeystrokes": "キーストロークを含める",
-      "includeKeystrokesDesc": "画面出力に加えて生のキーストロークを記録します",
-      "vncPort": "VNCポート",
-      "vncPassword": "VNCパスワード",
-      "vncUsernameOptional": "ユーザー名（オプション）",
-      "vncLeaveBlank": "必要ない場合は空白のままにしてください",
+      "disablePasteDesc": "リモートセッションへのテキスト貼り付けを防止する",
+      "excludeOutput": "出力を除外する",
+      "excludeOutputDesc": "画面出力を記録しない（メタデータのみ）",
+      "excludeMouse": "マウスを除外する",
+      "excludeMouseDesc": "マウスの移動を記録しない",
+      "includeKeystrokes": "キー入力を記録する",
+      "includeKeystrokesDesc": "画面出力に加えて、生のキー入力を記録します",
+      "vncPort": "VNC ポート",
+      "vncPassword": "VNC パスワード",
+      "vncUsernameOptional": "ユーザー名（任意）",
+      "vncLeaveBlank": "不要な場合は空白のままにしてください",
       "cursorMode": "カーソルモード",
-      "swapRedBlue": "赤/青を入れ替え",
-      "swapRedBlueDesc": "赤と青の色チャネルを入れ替えます（色の問題を修正）",
+      "swapRedBlue": "赤と青を反転",
+      "swapRedBlueDesc": "赤と青のカラーチャンネルを反転します（一部のカラー問題を修正）",
       "readOnly": "読み取り専用",
       "readOnlyDesc": "入力を送信せずにリモート画面を表示します",
-      "telnetPort": "Telnetポート",
-      "terminalType": "端末タイプ",
+      "telnetPort": "Telnet ポート",
+      "terminalType": "ターミナルタイプ",
       "fontName": "フォント名",
       "fontSize": "フォントサイズ",
-      "colorScheme": "カラースキーム",
-      "backspaceKey": "バックスペースキー",
-      "colorDepth": "色深度",
+      "colorScheme": "カラーテーマ",
+      "backspaceKey": "Backspace キー",
+      "colorDepth": "カラー深度",
       "resizeMethod": "リサイズ方法",
-      "driveNamePlaceholder": "ターミックスドライブ",
+      "driveNamePlaceholder": "Termix Drive",
       "options": {
-        "any": "Any",
-        "auto": "Auto",
-        "nlaExtended": "NLA Extended",
-        "color8": "8-bit",
-        "color16": "16-bit",
-        "color24": "24-bit",
-        "color32": "32-bit",
-        "displayUpdate": "Display Update",
-        "reconnect": "Reconnect",
-        "preserve": "Preserve",
+        "any": "すべて",
+        "auto": "自動",
+        "nlaExtended": "NLA 拡張",
+        "color8": "8 ビット",
+        "color16": "16 ビット",
+        "color24": "24 ビット",
+        "color32": "32 ビット",
+        "displayUpdate": "ディスプレイ更新",
+        "reconnect": "再接続",
+        "preserve": "保持",
         "unix": "Unix (LF)",
         "windows": "Windows (CRLF)",
-        "local": "Local",
-        "remote": "Remote",
-        "failsafe": "failsafe",
-        "blackOnWhite": "Black on White",
-        "whiteOnBlack": "White on Black",
-        "grayOnBlack": "Gray on Black",
-        "greenOnBlack": "Green on Black"
+        "local": "ローカル",
+        "remote": "リモート",
+        "failsafe": "フェイルセーフ",
+        "blackOnWhite": "白背景黒文字",
+        "whiteOnBlack": "黒背景白文字",
+        "grayOnBlack": "黒背景グレー文字",
+        "greenOnBlack": "黒背景緑文字"
       }
     },
     "remoteDesktop": "リモートデスクトップ",
@@ -242,65 +237,73 @@
     "virtualNetwork": "仮想ネットワーク",
     "unencryptedShell": "暗号化されていないシェル",
     "remoteDesktopNotes": "メモ",
-    "userDefaultsNote": "変更しない設定は、ホストのデフォルト設定に従います。",
-    "connectionOriginNote": "デスクトップアプリでは、ホストが「このデバイス」に設定されていない限り、RDP、VNC、Telnetはリモートサーバーを使用します。「このデバイス」に設定するには、このマシンがアクセスできるguacdが必要です。リモートデスクトップの設定、またはguacdプロキシでホストごとに設定してください。",
+    "userDefaultsNote": "変更しない設定は、ホストのデフォルトに従います。",
+    "connectionOriginNote": "デスクトップアプリでは、RDP、VNC、Telnet はデフォルトでリモートサーバーを使用します。ただし、ホストが「このデバイス」に設定されている場合は、このマシンからアクセス可能な guacd が必要です。リモートデスクトップの設定または各ホストの guacd プロキシで設定してください。",
     "docsLink": "ドキュメントを表示",
-    "connectionOriginGuacamoleNote": "RDP、VNC、Telnetは、リモートサーバーを使用します。「このデバイス」を選択した場合は、このマシンからアクセスできるguacdが必要です。guacd URL設定で設定するか、guacdプロキシでホストごとに設定してください。"
+    "connectionOriginGuacamoleNote": "RDP、VNC、Telnet はデフォルトでリモートサーバーを使用します。ただし、「このデバイス」を選択した場合は、このマシンからアクセス可能な guacd が必要です。guacd URL の設定または各ホストの guacd プロキシで設定してください。"
   },
   "onboarding": {
-    "feature_desktop": "リモートデスクトップ",
-    "feature_desktop_desc": "RDP、VNC、Telnetのセッションは、SSHと同様にタブで開きます。"
+    "guacdTitle": "リモートデスクトップの設定",
+    "guacdIntro": "リモートデスクトップには、Termix と同じ場所で guacd が実行されている必要があります。応答しているか確認するか、Termix で guacd の場所を指定してください。",
+    "guacdChecking": "guacd を検索中",
+    "guacdConnected": "guacd は {{address}} で実行されています",
+    "guacdMissing": "guacd は {{address}} で応答していません",
+    "guacdMissingDesc": "続行して後で設定することもできます。guacd が応答するまで、リモートデスクトップセッションは接続されません。",
+    "guacdCheckFailed": "guacd の確認に失敗しました",
+    "guacdComposeTitle": "Docker Compose ファイルに追加",
+    "guacdSaveAndCheck": "保存して確認",
+    "guacdEnvNote": "サーバーで GUACD_URL、GUACD_HOST、または GUACD_PORT が設定されている場合、それらが優先されます。"
   },
   "settings": {
     "user": {
       "colorDepth": {
-        "label": "色深度",
-        "description": "デフォルト設定のままになっているRDPホストで使用されます。"
+        "label": "カラー深度",
+        "description": "デフォルト設定のままの RDP ホストで使用されます。"
       },
       "resizeMethod": {
         "label": "リサイズ方法",
-        "description": "リモート画面がウィンドウサイズに追従する仕組み。"
+        "description": "リモート画面がウィンドウサイズに追従する方法です。"
       },
-      "resizeDisplayUpdate": "ディスプレイの更新",
+      "resizeDisplayUpdate": "ディスプレイ更新",
       "resizeReconnect": "再接続",
-      "inherit": "継承する",
+      "inherit": "継承",
       "on": "オン",
       "off": "オフ",
       "forceLossless": {
-        "label": "ロスレスを強制",
-        "description": "ロスレス画像エンコーディングを強制する（高品質だが帯域幅を多く消費）"
+        "label": "ロスレス強制",
+        "description": "ロスレス画像エンコーディングを強制します（高品質、帯域幅増加）"
       },
       "enableWallpaper": {
         "label": "壁紙",
-        "description": "デスクトップ壁紙を表示する（無効にするとパフォーマンスが向上）"
+        "description": "デスクトップの壁紙を表示します（無効にするとパフォーマンスが向上します）"
       },
       "enableFontSmoothing": {
         "label": "フォントスムージング",
-        "description": "ClearTypeフォントレンダリングを有効にする"
+        "description": "ClearType フォントレンダリングを有効にします"
       },
       "enableDesktopComposition": {
         "label": "デスクトップコンポジション",
-        "description": "Aero Glass効果を有効にする"
+        "description": "Aero ガラス効果を有効にします"
       },
       "disableAudio": {
-        "label": "オーディオを無効化",
-        "description": "リモートセッションの音声をすべてミュートする"
+        "label": "オーディオ無効化",
+        "description": "リモートセッションからのすべてのオーディオをミュートします"
       },
       "enablePrinting": {
         "label": "印刷を有効化",
-        "description": "ローカルプリンターをリモートセッションにリダイレクトする"
+        "description": "ローカルプリンターをリモートセッションにリダイレクトします"
       },
       "enableDrive": {
-        "label": "ドライブリダイレクションを有効化",
-        "description": "リモートセッションでローカルフォルダーをドライブとしてマッピングする"
+        "label": "ドライブリダイレクトを有効化",
+        "description": "ローカルフォルダーをリモートセッション内のドライブとしてマッピングします"
       },
       "disableCopy": {
-        "label": "コピーを無効にする",
-        "description": "リモートセッションからのテキストコピーを禁止します"
+        "label": "コピー無効化",
+        "description": "リモートセッションからのテキストコピーを防止します"
       },
       "disablePaste": {
-        "label": "貼り付けを無効にする",
-        "description": "リモートセッションへのテキスト貼り付けを禁止します"
+        "label": "貼り付け無効化",
+        "description": "リモートセッションへのテキスト貼り付けを防止します"
       },
       "colorDepth16": "16ビット",
       "colorDepth24": "24ビット",
@@ -308,13 +311,19 @@
     },
     "admin": {
       "enabled": {
-        "label": "リモートデスクトップを有効にする",
-        "description": "guacd を介して RDP、VNC、および Telnet 接続を許可する。"
+        "label": "リモートデスクトップを有効化",
+        "description": "guacd を介した RDP、VNC、Telnet 接続を許可します。"
       },
       "guacdUrl": {
         "label": "guacd URL",
-        "description": "guacd がリッスンする場所をホスト:ポートとして指定します。GUACD_URL、GUACD_HOST、GUACD_PORT 環境変数によって、この設定は上書きされます。",
+        "description": "guacd がリッスンするホスト:ポートです。GUACD_URL、GUACD_HOST、GUACD_PORT 環境変数がこれを上書きします。",
         "placeholder": "guacd:4822"
+      },
+      "hostGuacd": {
+        "label": "ホストごとの guacd アドレス"
+      },
+      "hostGuacdMigrated": {
+        "label": "ホストごとの guacd アドレスが移動されました"
       }
     },
     "host": {
@@ -328,46 +337,46 @@
         "label": "Telnet"
       },
       "rdpPort": {
-        "label": "RDPポート"
+        "label": "RDP ポート"
       },
       "vncPort": {
-        "label": "VNCポート"
+        "label": "VNC ポート"
       },
       "telnetPort": {
-        "label": "Telnetポート"
+        "label": "Telnet ポート"
       },
       "rdpSecurity": {
-        "label": "RDPセキュリティモード"
+        "label": "RDP セキュリティモード"
       },
       "rdpIgnoreCert": {
-        "label": "証明書エラーを無視する"
+        "label": "証明書エラーを無視"
       },
       "guacamoleConfig": {
         "label": "guacd 設定"
       },
       "enableToolbar": {
         "label": "リモートデスクトップツールバー",
-        "description": "RDP、VNC、Telnetセッションでツールバーを表示する。"
+        "description": "RDP、VNC、Telnet セッションでツールバーを表示します。"
       },
-      "displayGroup": "画面",
+      "displayGroup": "ディスプレイ",
       "displayDefaultsTab": "リモートデスクトップ"
     }
   },
   "palette": {
-    "connectRdp": "RDPで接続する",
-    "connectVnc": "VNCで接続する",
-    "connectTelnet": "Telnetで接続する"
+    "connectRdp": "RDP で接続",
+    "connectVnc": "VNC で接続",
+    "connectTelnet": "Telnet で接続"
   },
   "permissions": {
     "sessions": {
-      "title": "リモートデスクトップセッションを共有する",
-      "description": "セッション共有とコラボレーションルームで、このユーザーのRDP、VNC、およびTelnetセッションを他のユーザーに表示できるようにする。"
+      "title": "リモートデスクトップセッションの共有",
+      "description": "セッション共有とコラボレーションルームで、このユーザーの RDP、VNC、Telnet セッションを他のユーザーに表示できるようにします。"
     }
   },
   "errors": {
     "remoteServerRequired": "リモートサーバーが必要です。この接続タイプを使用するには、設定でリモートサーバーを接続してください。"
   },
   "plugin": {
-    "name": "Remote Desktop"
+    "name": "リモートデスクトップ"
   }
 }

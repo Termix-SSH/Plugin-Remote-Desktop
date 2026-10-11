@@ -1,373 +1,382 @@
 {
   "remoteDesktop": {
-    "connecting": "Свързване към сесия {{type}}...",
+    "connecting": "Свързване към {{type}} сесия...",
     "checkingGuacd": "Проверка на услугата за отдалечен работен плот...",
     "requestingToken": "Заявка за {{type}} токен за връзка...",
     "openingSession": "Отваряне на {{type}} сесия...",
-    "negotiating": "Преговаряне {{type}} ръкостискане...",
+    "negotiating": "Преговори за {{type}} ръкостискане...",
     "sessionReady": "{{type}} сесията е готова",
-    "connectionError": "Грешка във връзката",
-    "connectionFailed": "Връзката не бе успешна",
+    "connectionError": "Грешка при свързване",
     "failedToConnect": "Неуспешно получаване на токен за връзка",
     "hostNotFound": "Хостът не е намерен",
-    "noHostSelected": "Няма избран хост",
-    "reconnect": "Свържете се отново",
-    "retry": "Опитай отново",
-    "guacdUnavailable": "Услугата за отдалечен работен плот (guacd) не е налична. Моля, уверете се, че guacd работи, е достъпна и е конфигурирана правилно в администраторските настройки.",
+    "noHostSelected": "Не е избран хост",
+    "guacdUnavailable": "Услугата за отдалечен работен плот (guacd) не е налична. Моля, уверете се, че guacd работи, е достъпен и е конфигуриран правилно в настройките за администратор.",
     "credentialPromptTitle": "Въведете RDP идентификационни данни",
-    "credentialPromptDescription": "Този хост е настроен да изисква идентификационни данни при свързване. Те се използват само за тази сесия и не се запазват.",
-    "connect": "Свържете се",
-    "ctrlAltDel": "Ctrl+Alt+Del",
+    "credentialPromptDescription": "Този хост е настроен да иска идентификационни данни при свързване. Те се използват само за тази сесия и не се запазват.",
+    "connect": "Свързване",
     "files": {
-      "title": "Файлове на Диск",
-      "parent": "Родителска директория",
-      "refresh": "Обновяване",
+      "title": "Файлове от диск",
+      "parent": "Родна директория",
+      "refresh": "Опресняване",
       "empty": "Тази папка е празна",
       "listFailed": "Неуспешно четене на тази папка",
       "download": "Изтегляне",
-      "downloadFailed": "Неуспешно изтегляне {{name}}",
+      "downloadFailed": "Неуспешно изтегляне на {{name}}",
       "upload": "Качване на файлове",
-      "uploading": "Качване {{name}}...",
-      "uploaded": "Качено {{name}}",
-      "uploadFailed": "Качването не бе успешно {{name}}",
-      "uploadDisabled": "Качванията са деактивирани за тази връзка",
-      "driveUnavailable": "Активирайте пренасочването на RDP устройството, преди да качвате файлове",
-      "driveNotWritable": "guacd не може да записва в папката на устройството. Проверете GUACD_DRIVE_PATH (или пътя на устройството на хоста) и неговите разрешения.",
-      "dropToUpload": "Пуснете файловете, за да ги качите"
+      "uploading": "Качване на {{name}}...",
+      "uploaded": "Качено е {{name}}",
+      "uploadFailed": "Неуспешно качване на {{name}}",
+      "uploadDisabled": "Качването е деактивирано за тази връзка",
+      "driveUnavailable": "Активирайте пренасочването на RDP диск преди качване на файлове",
+      "driveNotWritable": "guacd не може да записва в папката на диска. Проверете GUACD_DRIVE_PATH и неговите права за достъп.",
+      "dropToUpload": "Пуснете файлове за качване"
     },
     "toolbar": {
       "ctrlAltDel": "Ctrl+Alt+Del",
-      "winL": "Win+L (Заключен екран)",
-      "winKey": "Клавиш за Windows",
-      "superL": "Супер+L (Заключен екран)",
-      "superKey": "Супер ключ",
-      "super": "Супер",
-      "cmdL": "Cmd+L (Заключен екран)",
-      "cmdKey": "Команден ключ",
-      "cmd": "Команда",
+      "winL": "Win+L (Заключване на екрана)",
+      "winKey": "Windows клавиш",
+      "superL": "Super+L (Заключване на екрана)",
+      "superKey": "Super клавиш",
+      "super": "Super",
+      "cmdL": "Cmd+L (Заключване на екрана)",
+      "cmdKey": "Command клавиш",
+      "cmd": "Cmd",
       "ctrl": "Ctrl",
-      "alt": "Алтернативно",
-      "shift": "Изместване",
-      "win": "Спечелете",
-      "stickyActive": "{{key}} (заключено - щракнете за освобождаване)",
-      "stickyInactive": "{{key}} (щракнете, за да заключите)",
-      "esc": "Бягство",
-      "tab": "Раздел",
-      "home": "Дом",
-      "end": "Край",
-      "pageUp": "Страница нагоре",
-      "pageDown": "Страница надолу",
+      "alt": "Alt",
+      "shift": "Shift",
+      "win": "Win",
+      "stickyActive": "{{key}} (заключен - кликнете за освобождаване)",
+      "stickyInactive": "{{key}} (кликнете за заключване)",
+      "esc": "Escape",
+      "tab": "Tab",
+      "home": "Home",
+      "end": "End",
+      "pageUp": "Page Up",
+      "pageDown": "Page Down",
       "arrowUp": "Стрелка нагоре",
       "arrowDown": "Стрелка надолу",
       "arrowLeft": "Стрелка наляво",
       "arrowRight": "Стрелка надясно",
       "fnToggle": "Функционални клавиши",
-      "reconnect": "Сесия за повторно свързване",
       "collapse": "Свиване на лентата с инструменти",
       "expand": "Разгъване на лентата с инструменти",
-      "dragHandle": "Плъзнете, за да препозиционирате",
-      "hide": "Скриване за тази сесия. За да го деактивирате за постоянно, отворете Настройки на хоста → Общи → Лента с инструменти за връзка.",
+      "dragHandle": "Плъзнете за преместване",
+      "hide": "Скриване за тази сесия. За да я деактивирате постоянно, отворете Настройки на хоста → Общи → Лента с инструменти за връзка.",
       "zoomIn": "Увеличаване",
-      "zoomOut": "Намаляване на мащаба",
-      "resetZoom": "Нулиране на мащаба",
-      "fitToScreen": "Побиране на екрана",
-      "switchToTrackpad": "Превключване в режим на тракпад (плъзнете, за да преместите курсора, докоснете, за да щракнете)",
-      "switchToTouch": "Превключване към режим на докосване (докоснете директно там, където искате да щракнете)"
+      "zoomOut": "Намали мащаба",
+      "resetZoom": "Нулирай мащаба",
+      "fitToScreen": "Подреди по екрана",
+      "switchToTrackpad": "Превключи на режим на тъчпад (плъзни за преместване на курсора, докосни за клик)",
+      "switchToTouch": "Превключи на тъч режим (докосни директно там, където искате да кликнете)"
     },
-    "disabled": "Отдалеченият работен плот е изключен. Администратор може да го включи в „Настройки“."
+    "disabled": "Remote Desktop е изключен. Администратор може да го включи в Настройките."
   },
   "hosts": {
-    "nativeRdpOpened": "Отворено в отдалечен работен плот на Windows",
-    "nativeRdpFailed": "Неуспешно отваряне на отдалечения работен плот на Windows",
-    "openNativeRdp": "Отваряне в отдалечен работен плот на Windows",
+    "nativeRdpOpened": "Отворено в Windows Remote Desktop",
+    "nativeRdpFailed": "Грешка при отваряне на Windows Remote Desktop",
+    "openNativeRdp": "Отвори в Windows Remote Desktop",
     "guac": {
       "toolbar": "Лента с инструменти",
       "connection": "Връзка",
       "authentication": "Удостоверяване",
-      "storedCredential": "Съхранени идентификационни данни",
+      "storedCredential": "Запазено удостоверение",
       "authMethod": "Метод за удостоверяване",
-      "authTypeDirect": "Директно",
-      "authTypeCredential": "Пълномощия",
+      "authTypeDirect": "Директен",
+      "authTypeCredential": "Удостоверение",
       "authTypeNone": "Няма",
-      "authTypeNoneDesc": "Не се съхраняват идентификационни данни. Ще бъдете подканени да въведете потребителско име и парола всеки път, когато се свържете; те не се запазват.",
-      "selectCredential": "Изберете идентификационен номер...",
-      "connectionSettings": "Настройки за връзка",
+      "authTypeNoneDesc": "Няма запазени удостоверения. Ще бъдете попитани за потребителско име и парола при всяко свързване; те не се запазват.",
+      "selectCredential": "Изберете удостоверение...",
+      "connectionSettings": "Настройки на връзката",
       "displaySettings": "Настройки на дисплея",
-      "audioSettings": "Аудио настройки",
+      "audioSettings": "Настройки на звука",
       "rdpPerformance": "Производителност на RDP",
-      "deviceRedirection": "Пренасочване на устройството",
+      "deviceRedirection": "Пренасочване на устройства",
       "session": "Сесия",
-      "gateway": "Портал",
-      "remoteApp": "Отдалечено приложение",
-      "clipboard": "Клипборд",
+      "gateway": "Гейтуей",
+      "remoteApp": "RemoteApp",
+      "clipboard": "Буфер за обмен",
       "sessionRecording": "Запис на сесия",
-      "wakeOnLan": "Събуждане по локална мрежа",
-      "vncSettings": "VNC настройки",
+      "wakeOnLan": "Wake-on-LAN",
+      "vncSettings": "Настройки на VNC",
       "terminalSettings": "Настройки на терминала",
-      "rdpPort": "RDP порт",
+      "rdpPort": "Порт за RDP",
       "username": "Потребителско име",
       "password": "Парола",
-      "passwordSaved": "Паролата е запазена, въведете, за да я промените",
+      "passwordSaved": "Паролата е запазена, въведете нова за промяна",
       "domain": "Домейн",
       "securityMode": "Режим на сигурност",
       "width": "Ширина",
       "height": "Височина",
       "dpi": "DPI",
       "clientName": "Име на клиента",
-      "initialProgram": "Първоначална програма",
-      "serverLayout": "Разположение на сървъра",
+      "initialProgram": "Начална програма",
+      "serverLayout": "Подредба на сървъра",
       "timezone": "Часова зона",
-      "loadBalanceInfo": "Информация за балансиране на натоварването / бисквитка",
-      "loadBalanceInfoDesc": "„бисквитка“ на RD Connection Broker за балансиране на натоварването на RDS фермата (напр. tsv://MS Terminal Services Plugin.1.CollectionName)",
+      "loadBalanceInfo": "Информация за балансиране на натоварването / Бисквитка",
+      "loadBalanceInfoDesc": "Бисквитка на RD Connection Broker за балансиране на натоварването в RDS ферма (напр. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd прокси",
       "guacdHostname": "guacd хост",
       "guacdHostnamePlaceholder": "Глобално по подразбиране",
-      "guacdPort": "порт guacd",
-      "guacdProxyDesc": "Заменете глобалния екземпляр на guacd за тази връзка. Оставете празно, за да използвате глобално конфигурирания guacd.",
-      "gatewayHostname": "Име на хост на шлюз",
-      "gatewayPort": "Порт на шлюза",
-      "gatewayUsername": "Потребителско име на шлюз",
-      "gatewayPassword": "Парола за шлюз",
-      "gatewayDomain": "Домейн на шлюз",
-      "remoteAppProgram": "Програма за отдалечено приложение",
+      "guacdPort": "guacd порт",
+      "guacdProxyDesc": "Заместете глобалния guacd инстанс за тази връзка. Оставете празно, за да използвате глобално конфигурирания guacd.",
+      "guacdAdminOnly": "Само администраторите могат да променят guacd сървъра за хост.",
+      "guacdSaveHostFirst": "Първо запазете хоста, след което задайте неговия guacd сървър тук.",
+      "guacdSave": "Запази guacd сървър",
+      "guacdSaved": "guacd сървърът е запазен",
+      "guacdSaveFailed": "Грешка при запазване на guacd сървъра",
+      "gatewayHostname": "Име на гейтуей хоста",
+      "gatewayPort": "Порт на гейтуея",
+      "gatewayUsername": "Потребителско име на гейтуея",
+      "gatewayPassword": "Парола на шлюза",
+      "gatewayDomain": "Домейн на шлюза",
+      "remoteAppProgram": "Програма за RemoteApp",
       "workingDirectory": "Работна директория",
       "arguments": "Аргументи",
-      "normalizeLineEndings": "Нормализиране на края на редовете",
+      "normalizeLineEndings": "Нормализиране на край на ред",
       "macAddress": "MAC адрес",
-      "broadcastAddress": "Адрес за излъчване",
+      "broadcastAddress": "Бродкаст адрес",
       "udpPort": "UDP порт",
-      "waitTimeS": "Време за изчакване (и)",
-      "driveName": "Име на устройството",
-      "drivePath": "Път на устройството",
-      "ignoreCertificate": "Игнориране на сертификата",
-      "ignoreCertificateDesc": "Разрешаване на връзки към хостове със самоподписани сертификати",
-      "forceLossless": "Принудително беззагубно",
-      "forceLosslessDesc": "Принудително кодиране на изображения без загуби (по-високо качество, по-голяма честотна лента)",
+      "waitTimeS": "Време за изчакване (с)",
+      "driveName": "Име на диска",
+      "ignoreCertificate": "Игнориране на сертификат",
+      "ignoreCertificateDesc": "Позволяване на връзки към хостове със самоподписани сертификати",
+      "forceLossless": "Принудително без загуба",
+      "forceLosslessDesc": "Принудително кодиране на изображения без загуба (по-високо качество, повече пропускателна способност)",
       "disableAudio": "Деактивиране на звука",
-      "disableAudioDesc": "Изключване на звука от отдалечената сесия",
+      "disableAudioDesc": "Заглушаване на целия звук от отдалечената сесия",
       "enableAudioInput": "Активиране на аудио вход (микрофон)",
       "enableAudioInputDesc": "Пренасочване на локалния микрофон към отдалечената сесия",
       "wallpaper": "Тапет",
-      "wallpaperDesc": "Показване на тапет на работния плот (деактивирането му подобрява производителността)",
-      "theming": "Темиране",
+      "wallpaperDesc": "Показване на тапета на работния плот (деактивирането подобрява производителността)",
+      "theming": "Тематизация",
       "themingDesc": "Активиране на визуални теми и стилове",
-      "fontSmoothing": "Изглаждане на шрифта",
-      "fontSmoothingDesc": "Активиране на рендирането на шрифтове ClearType",
-      "fullWindowDrag": "Плъзгане на целия прозорец",
-      "fullWindowDragDesc": "Показване на съдържанието на прозореца при плъзгане",
+      "fontSmoothing": "Изглаждане на шрифтове",
+      "fontSmoothingDesc": "Активиране на рендиране на шрифтове ClearType",
+      "fullWindowDrag": "Пълно влачене на прозорец",
+      "fullWindowDragDesc": "Показване на съдържанието на прозореца по време на влачене",
       "desktopComposition": "Композиция на работния плот",
-      "desktopCompositionDesc": "Активиране на ефектите на Aero Glass",
+      "desktopCompositionDesc": "Активиране на ефектите Aero Glass",
       "menuAnimations": "Анимации на менюто",
-      "menuAnimationsDesc": "Активиране на анимации за избледняване на менюта и слайдове",
-      "disableBitmapCaching": "Деактивиране на кеширането на растерни изображения",
-      "disableBitmapCachingDesc": "Изключете кеша на растерните изображения (може да помогне с проблеми)",
+      "menuAnimationsDesc": "Активиране на анимации за избледняване и плъзгане на менюто",
+      "disableBitmapCaching": "Деактивиране на кеширането на битмапи",
+      "disableBitmapCachingDesc": "Изключване на кеша за битмапи (може да помогне при грешки)",
       "disableOffscreenCaching": "Деактивиране на кеширането извън екрана",
       "disableOffscreenCachingDesc": "Изключване на кеша извън екрана",
       "disableGlyphCaching": "Деактивиране на кеширането на глифи",
-      "disableGlyphCachingDesc": "Изключване на кеша на глифове",
-      "enableGfx": "Активиране на графични ефекти",
-      "enableGfxDesc": "Използвайте графичен конвейер RemoteFX",
-      "enablePrinting": "Активиране на печат",
-      "enablePrintingDesc": "Пренасочване на локални принтери към отдалечена сесия",
-      "enableDriveRedirection": "Активиране на пренасочване на устройството",
-      "enableDriveRedirectionDesc": "Карта на локална папка като устройство в отдалечена сесия",
-      "createDrivePath": "Създаване на път за устройство",
-      "createDrivePathDesc": "Автоматично създаване на папката, ако тя не съществува",
-      "disableDownload": "Деактивиране на изтеглянето",
-      "disableDownloadDesc": "Предотвратяване на изтеглянето на файлове от отдалечената сесия",
-      "disableUpload": "Деактивиране на качването",
-      "disableUploadDesc": "Предотвратяване на качването на файлове към отдалечената сесия",
+      "disableGlyphCachingDesc": "Изключване на кеша за глифи",
+      "enableGfx": "Активиране на GFX",
+      "enableGfxDesc": "Използване на графичния канал RemoteFX",
+      "enablePrinting": "Активиране на отпечатване",
+      "enablePrintingDesc": "Пренасочване на локалните принтери към отдалечената сесия",
+      "enableDriveRedirection": "Активиране на пренасочване на дискове",
+      "enableDriveRedirectionDesc": "Мапиране на локална папка като диск в отдалечената сесия",
+      "disableDownload": "Деактивиране на изтегляне",
+      "disableDownloadDesc": "Предотвратяване на изтегляне на файлове от отдалечената сесия",
+      "disableUpload": "Деактивиране на качване",
+      "disableUploadDesc": "Предотвратяване на качване на файлове към отдалечената сесия",
       "enableTouch": "Активиране на докосване",
-      "enableTouchDesc": "Активиране на пренасочване на сензорен вход",
+      "enableTouchDesc": "Активиране на пренасочване на вход чрез докосване",
       "consoleSession": "Конзолна сесия",
-      "consoleSessionDesc": "Свържете се с конзолата (сесия 0) вместо с нова сесия",
+      "consoleSessionDesc": "Връзка с конзолата (сесия 0) вместо нова сесия",
       "sendWolPacket": "Изпращане на WOL пакет",
-      "sendWolPacketDesc": "Изпратете магически пакет, за да събудите този хост преди свързване",
-      "disableCopy": "Деактивиране на копирането",
-      "disableCopyDesc": "Предотвратяване на копирането на текст от отдалечената сесия",
-      "disablePaste": "Деактивиране на поставянето",
-      "disablePasteDesc": "Предотвратяване на поставянето на текст в отдалечената сесия",
-      "createPathIfMissing": "Създаване на път, ако липсва",
-      "createPathIfMissingDesc": "Автоматично създаване на директорията за записи",
+      "sendWolPacketDesc": "Изпращане на магически пакет за събуждане на този хост преди свързване",
+      "disableCopy": "Деактивиране на копиране",
+      "disableCopyDesc": "Предотвратяване на копиране на текст от отдалечената сесия",
+      "disablePaste": "Деактивиране на поставяне",
+      "disablePasteDesc": "Предотвратяване на поставяне на текст в отдалечената сесия",
       "excludeOutput": "Изключване на изхода",
-      "excludeOutputDesc": "Не записвайте изхода на екрана (само метаданни)",
+      "excludeOutputDesc": "Не записвайте видеоизхода (само метаданни)",
       "excludeMouse": "Изключване на мишката",
-      "excludeMouseDesc": "Не записвайте движенията на мишката",
-      "includeKeystrokes": "Включи клавишни комбинации",
-      "includeKeystrokesDesc": "Записване на сурови натискания на клавиши в допълнение към изхода на екрана",
+      "excludeMouseDesc": "Не записвай движения на мишката",
+      "includeKeystrokes": "Включи натисканията на клавиши",
+      "includeKeystrokesDesc": "Записвай суровите натискания на клавиши в допълнение към изхода на екрана",
       "vncPort": "VNC порт",
       "vncPassword": "VNC парола",
       "vncUsernameOptional": "Потребителско име (по избор)",
-      "vncLeaveBlank": "Оставете празно, ако не е необходимо",
+      "vncLeaveBlank": "Остави празно, ако не е задължително",
       "cursorMode": "Режим на курсора",
-      "swapRedBlue": "Разменете червено/синьо",
-      "swapRedBlueDesc": "Разменете червените и сините цветови канали (коригира някои проблеми с цветовете)",
+      "swapRedBlue": "Размени червено/синьо",
+      "swapRedBlueDesc": "Размени червения и синия цветови канал (поправя някои цветови проблеми)",
       "readOnly": "Само за четене",
-      "readOnlyDesc": "Преглед на отдалечения екран без изпращане на каквито и да било входни данни",
+      "readOnlyDesc": "Прегледай отдалечения екран без изпращане на входни данни",
       "telnetPort": "Telnet порт",
       "terminalType": "Тип терминал",
       "fontName": "Име на шрифта",
       "fontSize": "Размер на шрифта",
       "colorScheme": "Цветова схема",
       "backspaceKey": "Клавиш Backspace",
-      "colorDepth": "Дълбочина на цвета",
-      "resizeMethod": "Метод за преоразмеряване",
-      "driveNamePlaceholder": "Термикс Драйв",
+      "colorDepth": "Цветна дълбочина",
+      "resizeMethod": "Метод за промяна на размера",
+      "driveNamePlaceholder": "Диск на Termix",
       "options": {
-        "any": "Any",
-        "auto": "Auto",
+        "any": "Всеки",
+        "auto": "Автоматично",
         "nlaExtended": "NLA Extended",
-        "color8": "8-bit",
-        "color16": "16-bit",
-        "color24": "24-bit",
-        "color32": "32-bit",
-        "displayUpdate": "Display Update",
-        "reconnect": "Reconnect",
-        "preserve": "Preserve",
+        "color8": "8-битов",
+        "color16": "16-битов",
+        "color24": "24-битов",
+        "color32": "32-битов",
+        "displayUpdate": "Обновяване на дисплея",
+        "reconnect": "Повторно свързване",
+        "preserve": "Запази",
         "unix": "Unix (LF)",
         "windows": "Windows (CRLF)",
-        "local": "Local",
-        "remote": "Remote",
+        "local": "Локален",
+        "remote": "Отдалечен",
         "failsafe": "failsafe",
-        "blackOnWhite": "Black on White",
-        "whiteOnBlack": "White on Black",
-        "grayOnBlack": "Gray on Black",
-        "greenOnBlack": "Green on Black"
+        "blackOnWhite": "Черно върху бяло",
+        "whiteOnBlack": "Бяло върху черно",
+        "grayOnBlack": "Сиво върху черно",
+        "greenOnBlack": "Зелено върху черно"
       }
     },
     "remoteDesktop": "Отдалечен работен плот",
-    "tabRdp": "ПРСР",
+    "tabRdp": "RDP",
     "tabVnc": "VNC",
-    "tabTelnet": "Телнет",
+    "tabTelnet": "Telnet",
     "virtualNetwork": "Виртуална мрежа",
-    "unencryptedShell": "Некриптирана обвивка",
+    "unencryptedShell": "Нешифрован shell",
     "remoteDesktopNotes": "Бележки",
-    "userDefaultsNote": "Настройките, които оставяте непроменени, следват настройките по подразбиране на вашия хост.",
-    "connectionOriginNote": "В настолното приложение RDP, VNC и Telnet използват отдалечения сървър, освен ако хостът не е зададен на „Това устройство“, което изисква guacd, до който тази машина може да достигне. Задайте такъв в настройките на отдалечения работен плот или за всеки хост под guacd Proxy.",
-    "docsLink": "Преглед на документи",
-    "connectionOriginGuacamoleNote": "RDP, VNC и Telnet използват отдалечения сървър, освен ако не изберете „Това устройство“, което изисква guacd, до който тази машина може да достигне. Задайте такъв в настройката на guacd URL или за всеки хост под guacd Proxy."
+    "userDefaultsNote": "Настройките, които оставиш непроменени, следват стандартните настройки на хоста.",
+    "connectionOriginNote": "В десктоп приложението RDP, VNC и Telnet използват отдалечения сървър, освен ако хостът не е зададен на Това устройство, което изисква guacd, достъпен от тази машина. Задай един в настройките за Отдалечен работен плот или за всеки хост под guacd Proxy.",
+    "docsLink": "Преглед на документацията",
+    "connectionOriginGuacamoleNote": "RDP, VNC и Telnet използват отдалечения сървър, освен ако не избереш \"Това устройство\", което изисква guacd, достъпен от тази машина. Задай един в настройката за guacd URL или за всеки хост под guacd Proxy."
   },
   "onboarding": {
-    "feature_desktop": "Отдалечен работен плот",
-    "feature_desktop_desc": "Отваряне на RDP, VNC и Telnet сесии в раздел, както при SSH."
+    "guacdTitle": "Настройка на отдалечен работен плот",
+    "guacdIntro": "Отдалеченият работен плот изисква guacd да работи до Termix. Провери дали отговаря или насочи Termix към него.",
+    "guacdChecking": "Търсене на guacd",
+    "guacdConnected": "guacd работи на {{address}}",
+    "guacdMissing": "guacd не отговаря на {{address}}",
+    "guacdMissingDesc": "Можеш да продължиш и да го настроиш по-късно. Сесиите за отдалечен работен плот няма да се свържат, докато не отговори.",
+    "guacdCheckFailed": "Не можа да се провери guacd",
+    "guacdComposeTitle": "Добави го към твоя docker compose файл",
+    "guacdSaveAndCheck": "Запази и провери",
+    "guacdEnvNote": "Ако GUACD_URL, GUACD_HOST или GUACD_PORT са зададени на сървъра, те имат предимство пред тази настройка."
   },
   "settings": {
     "user": {
       "colorDepth": {
-        "label": "Дълбочина на цвета",
-        "description": "Използва се за RDP хостове, които го оставят по подразбиране."
+        "label": "Дълбочина на цветовете",
+        "description": "Използва се за RDP хостове, които оставят стойността по подразбиране."
       },
       "resizeMethod": {
-        "label": "Метод за преоразмеряване",
-        "description": "Как отдалеченият екран следва размера на прозореца."
+        "label": "Метод за промяна на размера",
+        "description": "Как екранът отдалечено следва размера на прозореца."
       },
-      "resizeDisplayUpdate": "Актуализация на дисплея",
-      "resizeReconnect": "Свържете се отново",
+      "resizeDisplayUpdate": "Обновяване на дисплея",
+      "resizeReconnect": "Повторно свързване",
       "inherit": "Наследяване",
       "on": "Включено",
       "off": "Изключено",
       "forceLossless": {
-        "label": "Принудително беззагубно",
-        "description": "Принудително кодиране на изображения без загуби (по-високо качество, по-голяма честотна лента)"
+        "label": "Принудително без загуба",
+        "description": "Принудително кодиране на изображения без загуба (по-високо качество, повече пропускателна способност)"
       },
       "enableWallpaper": {
         "label": "Тапет",
-        "description": "Показване на тапет на работния плот (деактивирането му подобрява производителността)"
+        "description": "Показване на тапет на работния плот (изключването подобрява производителността)"
       },
       "enableFontSmoothing": {
-        "label": "Изглаждане на шрифта",
-        "description": "Активиране на рендирането на шрифтове ClearType"
+        "label": "Изглаждане на шрифтове",
+        "description": "Включване на рендиране на шрифтове ClearType"
       },
       "enableDesktopComposition": {
         "label": "Композиция на работния плот",
-        "description": "Активиране на ефектите на Aero Glass"
+        "description": "Включване на ефектите Aero glass"
       },
       "disableAudio": {
-        "label": "Деактивиране на звука",
-        "description": "Изключване на звука от отдалечената сесия"
+        "label": "Изключване на звука",
+        "description": "Заглушаване на целия звук от отдалечената сесия"
       },
       "enablePrinting": {
-        "label": "Активиране на печат",
-        "description": "Пренасочване на локални принтери към отдалечена сесия"
+        "label": "Включване на отпечатване",
+        "description": "Пренасочване на локалните принтери към отдалечената сесия"
       },
       "enableDrive": {
-        "label": "Активиране на пренасочване на устройството",
-        "description": "Карта на локална папка като устройство в отдалечена сесия"
+        "label": "Включване на пренасочване на дискове",
+        "description": "Мапиране на локална папка като диск в отдалечената сесия"
       },
       "disableCopy": {
-        "label": "Деактивиране на копирането",
-        "description": "Предотвратяване на копирането на текст от отдалечената сесия"
+        "label": "Изключване на копиране",
+        "description": "Предотвратяване на копиране на текст от отдалечената сесия"
       },
       "disablePaste": {
-        "label": "Деактивиране на поставянето",
-        "description": "Предотвратяване на поставянето на текст в отдалечената сесия"
+        "label": "Изключване на поставяне",
+        "description": "Предотвратяване на поставяне на текст в отдалечената сесия"
       },
-      "colorDepth16": "16-битов",
-      "colorDepth24": "24-битов",
-      "colorDepth32": "32-битов"
+      "colorDepth16": "16-битови",
+      "colorDepth24": "24-битови",
+      "colorDepth32": "32-битови"
     },
     "admin": {
       "enabled": {
-        "label": "Активиране на отдалечен работен плот",
-        "description": "Разрешаване на RDP, VNC и Telnet връзки чрез guacd."
+        "label": "Включване на отдалечен работен плот",
+        "description": "Позволяване на RDP, VNC и Telnet връзки чрез guacd."
       },
       "guacdUrl": {
-        "label": "URL адрес на GUACD",
-        "description": "Където guacd слуша, като host:port. Променливите на средата GUACD_URL, GUACD_HOST и GUACD_PORT отменят това.",
-        "placeholder": "гуакд:4822"
+        "label": "URL адрес на guacd",
+        "description": "Къде guacd слуша, като host:port. Променливите на околната среда GUACD_URL, GUACD_HOST и GUACD_PORT заменят това.",
+        "placeholder": "guacd:4822"
+      },
+      "hostGuacd": {
+        "label": "Адреси на guacd за всеки хост"
+      },
+      "hostGuacdMigrated": {
+        "label": "Адресите на guacd за всеки хост са преместени"
       }
     },
     "host": {
       "enableRdp": {
-        "label": "ПРСР"
+        "label": "RDP"
       },
       "enableVnc": {
         "label": "VNC"
       },
       "enableTelnet": {
-        "label": "Телнет"
+        "label": "Telnet"
       },
       "rdpPort": {
-        "label": "RDP порт"
+        "label": "Порт за RDP"
       },
       "vncPort": {
-        "label": "VNC порт"
+        "label": "Порт за VNC"
       },
       "telnetPort": {
-        "label": "Telnet порт"
+        "label": "Порт за Telnet"
       },
       "rdpSecurity": {
-        "label": "Режим на защита на RDP"
+        "label": "Режим на сигурност за RDP"
       },
       "rdpIgnoreCert": {
-        "label": "Игнориране на грешки в сертификатите"
+        "label": "Игнориране на грешки със сертификати"
       },
       "guacamoleConfig": {
-        "label": "настройки на GUACD"
+        "label": "Настройки на guacd"
       },
       "enableToolbar": {
         "label": "Лента с инструменти за отдалечен работен плот",
-        "description": "Показване на лентата с инструменти в RDP, VNC и Telnet сесии."
+        "description": "Показване на лентата с инструменти в сесиите RDP, VNC и Telnet."
       },
       "displayGroup": "Дисплей",
       "displayDefaultsTab": "Отдалечен работен плот"
     }
   },
   "palette": {
-    "connectRdp": "Свържете се с RDP",
-    "connectVnc": "Свържете се с VNC",
-    "connectTelnet": "Свържете се с Telnet"
+    "connectRdp": "Свързване чрез RDP",
+    "connectVnc": "Свързване чрез VNC",
+    "connectTelnet": "Свързване чрез Telnet"
   },
   "permissions": {
     "sessions": {
       "title": "Споделяне на сесии за отдалечен работен плот",
-      "description": "Позволете на споделянето на сесии и стаите за сътрудничество да показват RDP, VNC и Telnet сесиите на този потребител на други."
+      "description": "Позволете на споделянето на сесии и стаите за сътрудничество да показват сесиите RDP, VNC и Telnet на този потребител на други."
     }
   },
   "errors": {
-    "remoteServerRequired": "Изисква се отдалечен сървър. Свържете се с отдалечен сървър в „Настройки“, за да използвате този тип връзка."
+    "remoteServerRequired": "Изисква се отдалечен сървър. Свържете отдалечен сървър в Настройки, за да използвате този тип връзка."
   },
   "plugin": {
-    "name": "Remote Desktop"
+    "name": "Отдалечен работен плот"
   }
 }

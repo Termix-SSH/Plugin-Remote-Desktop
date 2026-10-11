@@ -1,0 +1,382 @@
+{
+  "remoteDesktop": {
+    "connecting": "Menyambung ke sesi {{type}}...",
+    "checkingGuacd": "Menyemak perkhidmatan desktop jauh...",
+    "requestingToken": "Meminta token sambungan {{type}}...",
+    "openingSession": "Membuka sesi {{type}}...",
+    "negotiating": "Menegosiasikan jabat tangan {{type}}...",
+    "sessionReady": "Sesi {{type}} sedia",
+    "connectionError": "Ralat sambungan",
+    "failedToConnect": "Gagal mendapatkan token sambungan",
+    "hostNotFound": "Hos tidak dijumpai",
+    "noHostSelected": "Tiada hos dipilih",
+    "guacdUnavailable": "Perkhidmatan desktop jauh (guacd) tidak tersedia. Sila pastikan guacd sedang berjalan, boleh diakses, dan dikonfigurasi dengan betul dalam tetapan pentadbir.",
+    "credentialPromptTitle": "Masukkan Kelayakan RDP",
+    "credentialPromptDescription": "Hos ini ditetapkan untuk meminta kelayakan semasa sambungan. Ia hanya digunakan untuk sesi ini dan tidak disimpan.",
+    "connect": "Sambung",
+    "files": {
+      "title": "Fail Pemacu",
+      "parent": "Direktori induk",
+      "refresh": "Muat semula",
+      "empty": "Folder ini kosong",
+      "listFailed": "Gagal membaca folder ini",
+      "download": "Muat turun",
+      "downloadFailed": "Gagal memuat turun {{name}}",
+      "upload": "Muat naik fail",
+      "uploading": "Memuat naik {{name}}...",
+      "uploaded": "Telah dimuat naik {{name}}",
+      "uploadFailed": "Gagal memuat naik {{name}}",
+      "uploadDisabled": "Muat naik dilumpuhkan untuk sambungan ini",
+      "driveUnavailable": "Dayakan pengalihan pemacu RDP sebelum memuat naik fail",
+      "driveNotWritable": "guacd tidak boleh menulis ke folder pemacu. Semak GUACD_DRIVE_PATH dan keizinanannya.",
+      "dropToUpload": "Lepaskan fail untuk memuat naik"
+    },
+    "toolbar": {
+      "ctrlAltDel": "Ctrl+Alt+Del",
+      "winL": "Win+L (Skrin Kunci)",
+      "winKey": "Kunci Windows",
+      "superL": "Super+L (Skrin Kunci)",
+      "superKey": "Kunci Super",
+      "super": "Super",
+      "cmdL": "Cmd+L (Skrin Kunci)",
+      "cmdKey": "Kunci Command",
+      "cmd": "Cmd",
+      "ctrl": "Ctrl",
+      "alt": "Alt",
+      "shift": "Shift",
+      "win": "Win",
+      "stickyActive": "{{key}} (terkunci - klik untuk lepaskan)",
+      "stickyInactive": "{{key}} (klik untuk kunci)",
+      "esc": "Escape",
+      "tab": "Tab",
+      "home": "Home",
+      "end": "End",
+      "pageUp": "Page Up",
+      "pageDown": "Page Down",
+      "arrowUp": "Anak panah atas",
+      "arrowDown": "Anak panah bawah",
+      "arrowLeft": "Anak panah kiri",
+      "arrowRight": "Anak panah kanan",
+      "fnToggle": "Kunci Fungsi",
+      "collapse": "Runtuhkan bar alat",
+      "expand": "Kembangkan bar alat",
+      "dragHandle": "Seret untuk mengubah kedudukan",
+      "hide": "Sembunyikan untuk sesi ini. Untuk melumpuhkannya secara kekal, buka Tetapan Hos → Umum → Bar Alat Sambungan.",
+      "zoomIn": "Zum masuk",
+      "zoomOut": "Zum keluar",
+      "resetZoom": "Set semula zum",
+      "fitToScreen": "Muat ke skrin",
+      "switchToTrackpad": "Tukar ke mod trackpad (seret untuk menggerakkan kursor, ketuk untuk klik)",
+      "switchToTouch": "Tukar ke mod sentuh (ketuk terus di tempat yang ingin diklik)"
+    },
+    "disabled": "Remote Desktop dimatikan. Admin boleh menghidupkannya dalam Tetapan."
+  },
+  "hosts": {
+    "nativeRdpOpened": "Dibuka dalam Windows Remote Desktop",
+    "nativeRdpFailed": "Gagal membuka Windows Remote Desktop",
+    "openNativeRdp": "Buka dalam Windows Remote Desktop",
+    "guac": {
+      "toolbar": "Bar alat",
+      "connection": "Sambungan",
+      "authentication": "Pengesahan",
+      "storedCredential": "Kelayakan Tersimpan",
+      "authMethod": "Kaedah Pengesahan",
+      "authTypeDirect": "Langsung",
+      "authTypeCredential": "Kelayakan",
+      "authTypeNone": "Tiada",
+      "authTypeNoneDesc": "Tiada kelayakan disimpan. Anda akan diminta nama pengguna dan kata laluan setiap kali menyambung; ia tidak disimpan.",
+      "selectCredential": "Pilih kelayakan...",
+      "connectionSettings": "Tetapan Sambungan",
+      "displaySettings": "Tetapan Paparan",
+      "audioSettings": "Tetapan Audio",
+      "rdpPerformance": "Prestasi RDP",
+      "deviceRedirection": "Pengalihan Arah Peranti",
+      "session": "Sesi",
+      "gateway": "Gerbang",
+      "remoteApp": "RemoteApp",
+      "clipboard": "Papan klip",
+      "sessionRecording": "Rakaman Sesi",
+      "wakeOnLan": "Wake-on-LAN",
+      "vncSettings": "Tetapan VNC",
+      "terminalSettings": "Tetapan Terminal",
+      "rdpPort": "Port RDP",
+      "username": "Nama pengguna",
+      "password": "Kata laluan",
+      "passwordSaved": "Kata laluan disimpan, taip untuk mengubah",
+      "domain": "Domain",
+      "securityMode": "Mod Keselamatan",
+      "width": "Lebar",
+      "height": "Tinggi",
+      "dpi": "DPI",
+      "clientName": "Nama Pelanggan",
+      "initialProgram": "Program Awal",
+      "serverLayout": "Susun Atur Pelayan",
+      "timezone": "Zon masa",
+      "loadBalanceInfo": "Maklumat Imbangan Beban / Kuki",
+      "loadBalanceInfoDesc": "Kuki RD Connection Broker untuk imbangan beban ladang RDS (cth. tsv://MS Terminal Services Plugin.1.CollectionName)",
+      "guacdProxy": "Proksi guacd",
+      "guacdHostname": "Hos guacd",
+      "guacdHostnamePlaceholder": "Lalai global",
+      "guacdPort": "Port guacd",
+      "guacdProxyDesc": "Tindih instance guacd global untuk sambungan ini. Kosongkan untuk menggunakan guacd yang dikonfigurasi secara global.",
+      "guacdAdminOnly": "Hanya admin boleh mengubah pelayan guacd untuk hos.",
+      "guacdSaveHostFirst": "Simpan hos terlebih dahulu, kemudian tetapkan pelayan guacdnya di sini.",
+      "guacdSave": "Simpan pelayan guacd",
+      "guacdSaved": "pelayan guacd disimpan",
+      "guacdSaveFailed": "Gagal menyimpan pelayan guacd",
+      "gatewayHostname": "Nama Hos Gerbang",
+      "gatewayPort": "Port Gerbang",
+      "gatewayUsername": "Nama Pengguna Gerbang",
+      "gatewayPassword": "Kata Laluan Gerbang",
+      "gatewayDomain": "Domain Gerbang",
+      "remoteAppProgram": "Program RemoteApp",
+      "workingDirectory": "Direktori Kerja",
+      "arguments": "Argumen",
+      "normalizeLineEndings": "Normalisasi Hujung Baris",
+      "macAddress": "Alamat MAC",
+      "broadcastAddress": "Alamat Siaran",
+      "udpPort": "Port UDP",
+      "waitTimeS": "Masa Tunggu (s)",
+      "driveName": "Nama Pemacu",
+      "ignoreCertificate": "Abaikan Sijil",
+      "ignoreCertificateDesc": "Benarkan sambungan ke hos dengan sijil tandatangan sendiri",
+      "forceLossless": "Paksa Tanpa Kehilangan",
+      "forceLosslessDesc": "Paksa pengekodan imej tanpa kehilangan (kualiti lebih tinggi, lebih banyak jalur lebar)",
+      "disableAudio": "Lumpuhkan Audio",
+      "disableAudioDesc": "Bisukan semua audio dari sesi jauh",
+      "enableAudioInput": "Dayakan Input Audio (Mikrofon)",
+      "enableAudioInputDesc": "Teruskan mikrofon tempatan ke sesi jauh",
+      "wallpaper": "Tapak Meja",
+      "wallpaperDesc": "Paparkan tapak meja desktop (melumpuhkan meningkatkan prestasi)",
+      "theming": "Tema",
+      "themingDesc": "Dayakan tema dan gaya visual",
+      "fontSmoothing": "Pelancian Fon",
+      "fontSmoothingDesc": "Dayakan rendering fon ClearType",
+      "fullWindowDrag": "Seret Tetingkap Penuh",
+      "fullWindowDragDesc": "Paparkan kandungan tetingkap semasa menyeret",
+      "desktopComposition": "Komposisi Meja Kerja",
+      "desktopCompositionDesc": "Dayakan kesan kaca Aero",
+      "menuAnimations": "Animasi Menu",
+      "menuAnimationsDesc": "Dayakan animasi pudar dan gelongsor menu",
+      "disableBitmapCaching": "Lumpuhkan Penimbulan Bitmap",
+      "disableBitmapCachingDesc": "Matikan cache bitmap (mungkin membantu dengan masalah visual)",
+      "disableOffscreenCaching": "Lumpuhkan Penimbulan Luar Skrin",
+      "disableOffscreenCachingDesc": "Matikan cache luar skrin",
+      "disableGlyphCaching": "Lumpuhkan Penimbulan Glif",
+      "disableGlyphCachingDesc": "Matikan cache glif",
+      "enableGfx": "Dayakan GFX",
+      "enableGfxDesc": "Gunakan paip grafik RemoteFX",
+      "enablePrinting": "Dayakan Pencetakan",
+      "enablePrintingDesc": "Arahkan semula pencetak tempatan ke sesi jauh",
+      "enableDriveRedirection": "Dayakan Pengalihan Pemacu",
+      "enableDriveRedirectionDesc": "Peta folder tempatan sebagai pemacu dalam sesi jauh",
+      "disableDownload": "Lumpuhkan Muat Turun",
+      "disableDownloadDesc": "Cegah muat turun fail dari sesi jauh",
+      "disableUpload": "Lumpuhkan Muat Naik",
+      "disableUploadDesc": "Cegah muat naik fail ke sesi jauh",
+      "enableTouch": "Dayakan Sentuhan",
+      "enableTouchDesc": "Dayakan terusan input sentuhan",
+      "consoleSession": "Sesi Konsol",
+      "consoleSessionDesc": "Sambung ke konsol (sesi 0) bukannya sesi baru",
+      "sendWolPacket": "Hantar Pakej WOL",
+      "sendWolPacketDesc": "Hantar pakej ajaib untuk menghidupkan hos ini sebelum menyambung",
+      "disableCopy": "Lumpuhkan Salin",
+      "disableCopyDesc": "Cegah menyalin teks dari sesi jauh",
+      "disablePaste": "Lumpuhkan Tampal",
+      "disablePasteDesc": "Cegah menampal teks ke dalam sesi jauh",
+      "excludeOutput": "Eksklusi Output",
+      "excludeOutputDesc": "Jangan rekod output skrin (metadata sahaja)",
+      "excludeMouse": "Eksklusi Tetikus",
+      "excludeMouseDesc": "Jangan rekod pergerakan tetikus",
+      "includeKeystrokes": "Sertakan Pengecaman Kekunci",
+      "includeKeystrokesDesc": "Rekod pengecaman kekunci mentah selain output skrin",
+      "vncPort": "Port VNC",
+      "vncPassword": "Kata Laluan VNC",
+      "vncUsernameOptional": "Nama Pengguna (pilihan)",
+      "vncLeaveBlank": "Biarkan kosong jika tidak diperlukan",
+      "cursorMode": "Mod Kursor",
+      "swapRedBlue": "Tukar Merah/Biru",
+      "swapRedBlueDesc": "Tukar saluran warna merah dan biru (membetulkan beberapa isu warna)",
+      "readOnly": "Baca sahaja",
+      "readOnlyDesc": "Lihat skrin jauh tanpa menghantar sebarang input",
+      "telnetPort": "Port Telnet",
+      "terminalType": "Jenis Terminal",
+      "fontName": "Nama Fon",
+      "fontSize": "Saiz Fon",
+      "colorScheme": "Skema Warna",
+      "backspaceKey": "Kekunci Backspace",
+      "colorDepth": "Kedalaman Warna",
+      "resizeMethod": "Kaedah Saiz Semula",
+      "driveNamePlaceholder": "Pemacu Termix",
+      "options": {
+        "any": "Mana-mana",
+        "auto": "Auto",
+        "nlaExtended": "NLA Diperluaskan",
+        "color8": "8-bit",
+        "color16": "16-bit",
+        "color24": "24-bit",
+        "color32": "32-bit",
+        "displayUpdate": "Kemas Kini Paparan",
+        "reconnect": "Sambung Semula",
+        "preserve": "Kekalkan",
+        "unix": "Unix (LF)",
+        "windows": "Windows (CRLF)",
+        "local": "Tempatan",
+        "remote": "Jauh",
+        "failsafe": "failsafe",
+        "blackOnWhite": "Hitam pada Putih",
+        "whiteOnBlack": "Putih pada Hitam",
+        "grayOnBlack": "Kelabu pada Hitam",
+        "greenOnBlack": "Hijau pada Hitam"
+      }
+    },
+    "remoteDesktop": "Meja Kerja Jauh",
+    "tabRdp": "RDP",
+    "tabVnc": "VNC",
+    "tabTelnet": "Telnet",
+    "virtualNetwork": "Rangkaian Maya",
+    "unencryptedShell": "Shell tidak disulitkan",
+    "remoteDesktopNotes": "Nota",
+    "userDefaultsNote": "Tetapan yang anda biarkan tidak berubah mengikuti lalai hos anda.",
+    "connectionOriginNote": "Pada aplikasi desktop, RDP, VNC dan Telnet menggunakan pelayan jauh melainkan hos ditetapkan ke Peranti ini, yang memerlukan guacd yang boleh dicapai oleh mesin ini. Tetapkan satu dalam tetapan Meja Kerja Jauh, atau setiap hos di bawah Proksi guacd.",
+    "docsLink": "Lihat dokumen",
+    "connectionOriginGuacamoleNote": "RDP, VNC dan Telnet menggunakan pelayan jauh melainkan anda memilih \"Peranti ini\", yang memerlukan guacd yang boleh dicapai oleh mesin ini. Tetapkan satu dalam tetapan URL guacd, atau setiap hos di bawah Proksi guacd."
+  },
+  "onboarding": {
+    "guacdTitle": "Sediakan meja kerja jauh",
+    "guacdIntro": "Meja kerja jauh memerlukan guacd berjalan bersebelahan dengan Termix. Semak bahawa ia menjawab, atau tunjuk Termix ke arahnya.",
+    "guacdChecking": "Mencari guacd",
+    "guacdConnected": "guacd sedang berjalan di {{address}}",
+    "guacdMissing": "guacd tidak menjawab di {{address}}",
+    "guacdMissingDesc": "Anda boleh meneruskan dan menyediakannya kemudian. Sesi meja kerja jauh tidak akan bersambung sehingga ia menjawab.",
+    "guacdCheckFailed": "Tidak dapat menyemak guacd",
+    "guacdComposeTitle": "Tambahkannya ke fail docker compose anda",
+    "guacdSaveAndCheck": "Simpan dan semak",
+    "guacdEnvNote": "Jika GUACD_URL, GUACD_HOST atau GUACD_PORT ditetapkan pada pelayan, ia akan mengatasi tetapan ini."
+  },
+  "settings": {
+    "user": {
+      "colorDepth": {
+        "label": "Kedalaman Warna",
+        "description": "Digunakan untuk hos RDP yang mengekalkan tetapan lalai mereka."
+      },
+      "resizeMethod": {
+        "label": "Kaedah Saiz Semula",
+        "description": "Bagaimana skrin jauh mengikuti saiz tetingkap."
+      },
+      "resizeDisplayUpdate": "Kemas Kini Paparan",
+      "resizeReconnect": "Sambung Semula",
+      "inherit": "Warisi",
+      "on": "Hidup",
+      "off": "Mati",
+      "forceLossless": {
+        "label": "Paksa Tanpa Kehilangan",
+        "description": "Paksa pengekodan imej tanpa kehilangan (kualiti lebih tinggi, lebih banyak jalur lebar)"
+      },
+      "enableWallpaper": {
+        "label": "Tapak Meja",
+        "description": "Paparkan tapak meja desktop (mematikkannya meningkatkan prestasi)"
+      },
+      "enableFontSmoothing": {
+        "label": "Pelancasan Fon",
+        "description": "Dayakan rendering fon ClearType"
+      },
+      "enableDesktopComposition": {
+        "label": "Komposisi Meja Kerja",
+        "description": "Dayakan kesan kaca Aero"
+      },
+      "disableAudio": {
+        "label": "Lumpuhkan Audio",
+        "description": "Bisukan semua audio dari sesi jauh"
+      },
+      "enablePrinting": {
+        "label": "Dayakan Pencetakan",
+        "description": "Arahkan semula pencetak tempatan ke sesi jauh"
+      },
+      "enableDrive": {
+        "label": "Dayakan Pengalihan Pemacu",
+        "description": "Petakan folder tempatan sebagai pemacu dalam sesi jauh"
+      },
+      "disableCopy": {
+        "label": "Lumpuhkan Salin",
+        "description": "Cegah menyalin teks dari sesi jauh"
+      },
+      "disablePaste": {
+        "label": "Lumpuhkan Tampal",
+        "description": "Cegah menampal teks ke dalam sesi jauh"
+      },
+      "colorDepth16": "16-bit",
+      "colorDepth24": "24-bit",
+      "colorDepth32": "32-bit"
+    },
+    "admin": {
+      "enabled": {
+        "label": "Dayakan Meja Kerja Jauh",
+        "description": "Benarkan sambungan RDP, VNC dan Telnet melalui guacd."
+      },
+      "guacdUrl": {
+        "label": "URL guacd",
+        "description": "Di mana guacd mendengar, sebagai hos:port. Pembolehubah persekitaran GUACD_URL, GUACD_HOST dan GUACD_PORT mengatasi ini.",
+        "placeholder": "guacd:4822"
+      },
+      "hostGuacd": {
+        "label": "Alamat guacd setiap hos"
+      },
+      "hostGuacdMigrated": {
+        "label": "Alamat guacd setiap hos telah dipindahkan"
+      }
+    },
+    "host": {
+      "enableRdp": {
+        "label": "RDP"
+      },
+      "enableVnc": {
+        "label": "VNC"
+      },
+      "enableTelnet": {
+        "label": "Telnet"
+      },
+      "rdpPort": {
+        "label": "Port RDP"
+      },
+      "vncPort": {
+        "label": "Port VNC"
+      },
+      "telnetPort": {
+        "label": "Port Telnet"
+      },
+      "rdpSecurity": {
+        "label": "Mod keselamatan RDP"
+      },
+      "rdpIgnoreCert": {
+        "label": "Abaikan ralat sijil"
+      },
+      "guacamoleConfig": {
+        "label": "Tetapan guacd"
+      },
+      "enableToolbar": {
+        "label": "Bar alat meja kerja jauh",
+        "description": "Paparkan bar alat dalam sesi RDP, VNC dan Telnet."
+      },
+      "displayGroup": "Paparan",
+      "displayDefaultsTab": "Meja Kerja Jauh"
+    }
+  },
+  "palette": {
+    "connectRdp": "Sambung dengan RDP",
+    "connectVnc": "Sambung dengan VNC",
+    "connectTelnet": "Sambung dengan Telnet"
+  },
+  "permissions": {
+    "sessions": {
+      "title": "Kongsi sesi meja kerja jauh",
+      "description": "Benarkan perkongsian sesi dan bilik kolaborasi memaparkan sesi RDP, VNC dan Telnet pengguna ini kepada orang lain."
+    }
+  },
+  "errors": {
+    "remoteServerRequired": "Pelayan jauh diperlukan. Sambungkan pelayan jauh dalam Tetapan untuk menggunakan jenis sambungan ini."
+  },
+  "plugin": {
+    "name": "Meja Kerja Jauh"
+  }
+}

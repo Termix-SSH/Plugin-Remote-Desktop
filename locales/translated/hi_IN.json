@@ -1,60 +1,56 @@
 {
   "remoteDesktop": {
     "connecting": "{{type}} सत्र से कनेक्ट हो रहा है...",
-    "checkingGuacd": "रिमोट डेस्कटॉप सेवा की जाँच की जा रही है...",
-    "requestingToken": "{{type}} कनेक्शन टोकन का अनुरोध किया जा रहा है...",
-    "openingSession": "Opening {{type}} session...",
-    "negotiating": "बातचीत चल रही है {{type}} हाथ मिलाना...",
+    "checkingGuacd": "रिमोट डेस्कटॉप सेवा की जाँच हो रही है...",
+    "requestingToken": "{{type}} कनेक्शन टोकन अनुरोध किया जा रहा है...",
+    "openingSession": "{{type}} सत्र खोला जा रहा है...",
+    "negotiating": "{{type}} हैंडशेक का विनिमय हो रहा है...",
     "sessionReady": "{{type}} सत्र तैयार है",
     "connectionError": "कनेक्शन त्रुटि",
-    "connectionFailed": "कनेक्शन विफल",
     "failedToConnect": "कनेक्शन टोकन प्राप्त करने में विफल",
     "hostNotFound": "होस्ट नहीं मिला",
     "noHostSelected": "कोई होस्ट चयनित नहीं है",
-    "reconnect": "पुनः कनेक्ट करें",
-    "retry": "पुनः प्रयास करें",
-    "guacdUnavailable": "रिमोट डेस्कटॉप सेवा (guacd) उपलब्ध नहीं है। कृपया सुनिश्चित करें कि guacd चल रहा है और पहुंच योग्य है और एडमिन सेटिंग्स में ठीक से कॉन्फ़िगर किया गया है।",
-    "credentialPromptTitle": "आरडीपी क्रेडेंशियल दर्ज करें",
-    "credentialPromptDescription": "इस होस्ट पर कनेक्ट होने पर क्रेडेंशियल मांगे जाएंगे। ये क्रेडेंशियल केवल इसी सेशन के लिए उपयोग किए जाएंगे और सेव नहीं किए जाएंगे।",
-    "connect": "कनेक्ट",
-    "ctrlAltDel": "Ctrl+Alt+Del",
+    "guacdUnavailable": "रिमोट डेस्कटॉप सेवा (guacd) उपलब्ध नहीं है। कृपया सुनिश्चित करें कि guacd चल रहा है, सुलभ है और एडमिन सेटिंग्स में ठीक से कॉन्फ़िगर किया गया है।",
+    "credentialPromptTitle": "RDP क्रेडेंशियल दर्ज करें",
+    "credentialPromptDescription": "इस होस्ट को कनेक्ट होने पर क्रेडेंशियल के लिए प्रॉम्प्ट करने के लिए सेट किया गया है। इन्हें केवल इस सत्र के लिए उपयोग किया जाता है और ये सेव नहीं होते।",
+    "connect": "कनेक्ट करें",
     "files": {
       "title": "ड्राइव फ़ाइलें",
-      "parent": "मूल निर्देशिका",
-      "refresh": "ताज़ा करें",
+      "parent": "पैरेंट डायरेक्टरी",
+      "refresh": "रिफ़्रेश करें",
       "empty": "यह फ़ोल्डर खाली है",
-      "listFailed": "इस फ़ोल्डर को पढ़ने में विफल रहा",
-      "download": "डाउनलोड",
-      "downloadFailed": "डाउनलोड करने में विफल {{name}}",
-      "upload": "फाइलें अपलोड करें",
+      "listFailed": "इस फ़ोल्डर को पढ़ने में विफल",
+      "download": "डाउनलोड करें",
+      "downloadFailed": "{{name}} डाउनलोड करने में विफल",
+      "upload": "फ़ाइलें अपलोड करें",
       "uploading": "{{name}} अपलोड हो रहा है...",
-      "uploaded": "अपलोड किया गया {{name}}",
-      "uploadFailed": "अपलोड करने में विफल {{name}}",
-      "uploadDisabled": "इस कनेक्शन के लिए अपलोड अक्षम हैं।",
-      "driveUnavailable": "फ़ाइलें अपलोड करने से पहले RDP ड्राइव रीडायरेक्शन को सक्षम करें",
-      "driveNotWritable": "GUACD ड्राइव फ़ोल्डर में लिख नहीं सकता। कृपया GUACD_DRIVE_PATH (या होस्ट का ड्राइव पाथ) और उसकी अनुमतियाँ जाँचें।",
-      "dropToUpload": "अपलोड करने के लिए फ़ाइलें ड्रॉप करें"
+      "uploaded": "{{name}} अपलोड हो गया",
+      "uploadFailed": "{{name}} अपलोड करने में विफल",
+      "uploadDisabled": "इस कनेक्शन के लिए अपलोड अक्षम हैं",
+      "driveUnavailable": "फ़ाइलें अपलोड करने से पहले RDP ड्राइव रीडायरेक्शन सक्षम करें",
+      "driveNotWritable": "guacd ड्राइव फ़ोल्डर में लिख नहीं सकता। GUACD_DRIVE_PATH और इसके अनुमतियों की जाँच करें।",
+      "dropToUpload": "अपलोड करने के लिए फ़ाइलें छोड़ें"
     },
     "toolbar": {
       "ctrlAltDel": "Ctrl+Alt+Del",
       "winL": "Win+L (लॉक स्क्रीन)",
-      "winKey": "विंडोज की",
-      "superL": "सुपर+एल (लॉक स्क्रीन)",
-      "superKey": "सुपर कुंजी",
-      "super": "बहुत अच्छा",
+      "winKey": "Windows कुंजी",
+      "superL": "Super+L (लॉक स्क्रीन)",
+      "superKey": "Super कुंजी",
+      "super": "Super",
       "cmdL": "Cmd+L (लॉक स्क्रीन)",
-      "cmdKey": "कमांड कुंजी",
-      "cmd": "अध्यक्ष एवं प्रबंध निदेशक",
+      "cmdKey": "Command कुंजी",
+      "cmd": "Cmd",
       "ctrl": "Ctrl",
       "alt": "Alt",
       "shift": "Shift",
       "win": "Win",
-      "stickyActive": "{{key}} (लैच्ड - रिलीज़ करने के लिए क्लिक करें)",
+      "stickyActive": "{{key}} (लैचेड - रिलीज करने के लिए क्लिक करें)",
       "stickyInactive": "{{key}} (लैच करने के लिए क्लिक करें)",
       "esc": "Escape",
       "tab": "Tab",
       "home": "Home",
-      "end": "एंड",
+      "end": "End",
       "pageUp": "Page Up",
       "pageDown": "Page Down",
       "arrowUp": "ऊपर तीर",
@@ -62,40 +58,39 @@
       "arrowLeft": "बाएँ तीर",
       "arrowRight": "दाएँ तीर",
       "fnToggle": "फ़ंक्शन कुंजियाँ",
-      "reconnect": "सत्र पुनः कनेक्ट करें",
-      "collapse": "टूलबार समेटें",
+      "collapse": "टूलबार संक्षिप्त करें",
       "expand": "टूलबार विस्तारित करें",
-      "dragHandle": "स्थान बदलने के लिए खींचें",
-      "hide": "इस सत्र के लिए इसे छुपाएं। इसे स्थायी रूप से अक्षम करने के लिए, होस्ट सेटिंग्स → सामान्य → कनेक्शन टूलबार खोलें।",
+      "dragHandle": "पुनः स्थानांतरित करने के लिए खींचें",
+      "hide": "इस सत्र के लिए छिपाएं। इसे स्थायी रूप से अक्षम करने के लिए, होस्ट सेटिंग्स → सामान्य → कनेक्शन टूलबार खोलें।",
       "zoomIn": "ज़ूम इन",
       "zoomOut": "ज़ूम आउट",
       "resetZoom": "ज़ूम रीसेट करें",
-      "fitToScreen": "स्क्रीनिंग के लिए उपयुक्त",
-      "switchToTrackpad": "ट्रैकपैड मोड पर स्विच करें (कर्सर को स्थानांतरित करने के लिए ड्रैग करें, क्लिक करने के लिए टैप करें)",
-      "switchToTouch": "टच मोड पर स्विच करें (जहां क्लिक करना चाहते हैं वहां सीधे टैप करें)"
+      "fitToScreen": "स्क्रीन पर फिट करें",
+      "switchToTrackpad": "ट्रैकपैड मोड पर स्विच करें (कर्सर को चलाने के लिए खींचें, क्लिक करने के लिए टैप करें)",
+      "switchToTouch": "टच मोड पर स्विच करें (जहाँ क्लिक करना चाहें वहाँ सीधे टैप करें)"
     },
-    "disabled": "रिमोट डेस्कटॉप बंद है। व्यवस्थापक सेटिंग्स में जाकर इसे चालू कर सकते हैं।"
+    "disabled": "रिमोट डेस्कटॉप बंद है। एक एडमिन सेटिंग्स में इसे चालू कर सकता है।"
   },
   "hosts": {
-    "nativeRdpOpened": "विंडोज़ रिमोट डेस्कटॉप में खोला गया",
-    "nativeRdpFailed": "विंडोज़ रिमोट डेस्कटॉप खोलने में विफल",
-    "openNativeRdp": "विंडोज़ रिमोट डेस्कटॉप में खोलें",
+    "nativeRdpOpened": "Windows Remote Desktop में खोला गया",
+    "nativeRdpFailed": "Windows Remote Desktop खोलने में विफल",
+    "openNativeRdp": "Windows Remote Desktop में खोलें",
     "guac": {
-      "toolbar": "उपकरण पट्टी",
+      "toolbar": "टूलबार",
       "connection": "कनेक्शन",
       "authentication": "प्रमाणीकरण",
-      "storedCredential": "संग्रहीत क्रेडेंशियल",
+      "storedCredential": "संग्रहित क्रेडेंशियल",
       "authMethod": "प्रमाणीकरण विधि",
       "authTypeDirect": "सीधा",
       "authTypeCredential": "क्रेडेंशियल",
       "authTypeNone": "कोई नहीं",
-      "authTypeNoneDesc": "कोई भी क्रेडेंशियल स्टोर नहीं किए जाते हैं। हर बार कनेक्ट करते समय आपसे उपयोगकर्ता नाम और पासवर्ड मांगा जाएगा; वे सहेजे नहीं जाते हैं।",
+      "authTypeNoneDesc": "कोई क्रेडेंशियल संग्रहित नहीं हैं। कनेक्ट करने पर आपको हर बार उपयोगकर्ता नाम और पासवर्ड के लिए प्रॉम्प्ट किया जाएगा; उन्हें सेव नहीं किया जाएगा।",
       "selectCredential": "एक क्रेडेंशियल चुनें...",
       "connectionSettings": "कनेक्शन सेटिंग्स",
-      "displaySettings": "प्रदर्शन सेटिंग्स",
+      "displaySettings": "डिस्प्ले सेटिंग्स",
       "audioSettings": "ऑडियो सेटिंग्स",
       "rdpPerformance": "RDP प्रदर्शन",
-      "deviceRedirection": "डिवाइस पुनर्निर्देशन",
+      "deviceRedirection": "डिवाइस रीडायरेक्शन",
       "session": "सत्र",
       "gateway": "गेटवे",
       "remoteApp": "RemoteApp",
@@ -107,172 +102,180 @@
       "rdpPort": "RDP पोर्ट",
       "username": "उपयोगकर्ता नाम",
       "password": "पासवर्ड",
-      "passwordSaved": "पासवर्ड सहेज लिया गया है, बदलने के लिए टाइप करें",
+      "passwordSaved": "पासवर्ड सेव हो गया, बदलने के लिए टाइप करें",
       "domain": "डोमेन",
       "securityMode": "सुरक्षा मोड",
       "width": "चौड़ाई",
       "height": "ऊंचाई",
       "dpi": "DPI",
       "clientName": "क्लाइंट नाम",
-      "initialProgram": "आरंभिक प्रोग्राम",
+      "initialProgram": "प्रारंभिक प्रोग्राम",
       "serverLayout": "सर्वर लेआउट",
       "timezone": "समय क्षेत्र",
       "loadBalanceInfo": "लोड बैलेंस जानकारी / कुकी",
-      "loadBalanceInfoDesc": "RDS फ़ार्म लोड संतुलन के लिए RD कनेक्शन ब्रोकर कुकी (उदा. tsv://MS Terminal Services Plugin.1.CollectionName)",
+      "loadBalanceInfoDesc": "RDS फार्म लोड बैलेंसिंग के लिए RD कनेक्शन ब्रोकर कुकी (उदा. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd प्रॉक्सी",
       "guacdHostname": "guacd होस्ट",
       "guacdHostnamePlaceholder": "वैश्विक डिफ़ॉल्ट",
       "guacdPort": "guacd पोर्ट",
-      "guacdProxyDesc": "इस कनेक्शन के लिए वैश्विक guacd इंस्टेंस को अधिलेखित करें। वैश्विक रूप से कॉन्फ़िगर किए गए guacd का उपयोग करने के लिए खाली छोड़ें।",
-      "gatewayHostname": "गेटवे होस्टनाम",
+      "guacdProxyDesc": "इस कनेक्शन के लिए वैश्विक guacd इंस्टेंस को ओवरराइड करें। वैश्विक रूप से कॉन्फ़िगर किए गए guacd का उपयोग करने के लिए खाली छोड़ दें।",
+      "guacdAdminOnly": "केवल एडमिन ही किसी होस्ट के लिए guacd सर्वर बदल सकते हैं।",
+      "guacdSaveHostFirst": "पहले होस्ट को सेव करें, फिर यहाँ इसका guacd सर्वर सेट करें।",
+      "guacdSave": "guacd सर्वर सेव करें",
+      "guacdSaved": "guacd सर्वर सेव हो गया",
+      "guacdSaveFailed": "guacd सर्वर सेव करने में विफल",
+      "gatewayHostname": "गेटवे होस्टनेम",
       "gatewayPort": "गेटवे पोर्ट",
       "gatewayUsername": "गेटवे उपयोगकर्ता नाम",
       "gatewayPassword": "गेटवे पासवर्ड",
       "gatewayDomain": "गेटवे डोमेन",
       "remoteAppProgram": "RemoteApp प्रोग्राम",
-      "workingDirectory": "कार्यशील निर्देशिका",
-      "arguments": "तर्क",
-      "normalizeLineEndings": "लाइन अंत सामान्यीकृत करें",
+      "workingDirectory": "वर्किंग डायरेक्टरी",
+      "arguments": "आर्ग्यूमेंट्स",
+      "normalizeLineEndings": "लाइन एंडिंग्स सामान्य करें",
       "macAddress": "MAC पता",
-      "broadcastAddress": "प्रसारण पता",
+      "broadcastAddress": "ब्रॉडकास्ट पता",
       "udpPort": "UDP पोर्ट",
-      "waitTimeS": "प्रतीक्षा समय (s)",
+      "waitTimeS": "प्रतीक्षा समय (सेकंड)",
       "driveName": "ड्राइव का नाम",
-      "drivePath": "ड्राइव पथ",
-      "ignoreCertificate": "प्रमाणपत्र अनदेखा करें",
-      "ignoreCertificateDesc": "स्व-हस्ताक्षरित प्रमाणपत्र वाले होस्ट से कनेक्शन की अनुमति दें",
-      "forceLossless": "दोषरहित बाध्य करें",
-      "forceLosslessDesc": "दोषरहित छवि एन्कोडिंग बाध्य करें (उच्च गुणवत्ता, अधिक बैंडविड्थ)",
+      "ignoreCertificate": "सर्टिफिकेट नज़रअंदाज़ करें",
+      "ignoreCertificateDesc": "सेल्फ-साइनड सर्टिफिकेट वाले होस्ट से कनेक्शन की अनुमति दें",
+      "forceLossless": "लॉसलेस ज़बरदस्ती करें",
+      "forceLosslessDesc": "लॉसलेस इमेज एन्कोडिंग ज़बरदस्ती करें (उच्च गुणवत्ता, अधिक बैंडविड्थ)",
       "disableAudio": "ऑडियो अक्षम करें",
-      "disableAudioDesc": "दूरस्थ सत्र से सभी ऑडियो म्यूट करें",
+      "disableAudioDesc": "रिमोट सेशन से सभी ऑडियो म्यूट करें",
       "enableAudioInput": "ऑडियो इनपुट सक्षम करें (माइक्रोफ़ोन)",
-      "enableAudioInputDesc": "स्थानीय माइक्रोफ़ोन को दूरस्थ सत्र में अग्रेषित करें",
+      "enableAudioInputDesc": "स्थानीय माइक्रोफ़ोन को रिमोट सेशन में फॉरवर्ड करें",
       "wallpaper": "वॉलपेपर",
       "wallpaperDesc": "डेस्कटॉप वॉलपेपर दिखाएं (अक्षम करने से प्रदर्शन बेहतर होता है)",
       "theming": "थीमिंग",
-      "themingDesc": "दृश्य थीम और शैलियाँ सक्षम करें",
+      "themingDesc": "दृश्य थीम और शैलियों को सक्षम करें",
       "fontSmoothing": "फ़ॉन्ट स्मूथिंग",
       "fontSmoothingDesc": "ClearType फ़ॉन्ट रेंडरिंग सक्षम करें",
       "fullWindowDrag": "पूर्ण विंडो ड्रैग",
       "fullWindowDragDesc": "ड्रैग करते समय विंडो सामग्री दिखाएं",
       "desktopComposition": "डेस्कटॉप कंपोज़िशन",
       "desktopCompositionDesc": "Aero ग्लास प्रभाव सक्षम करें",
-      "menuAnimations": "मेन्यू एनिमेशन",
-      "menuAnimationsDesc": "मेन्यू फेड और स्लाइड एनिमेशन सक्षम करें",
+      "menuAnimations": "मेनू एनिमेशन",
+      "menuAnimationsDesc": "मेनू फेड और स्लाइड एनिमेशन सक्षम करें",
       "disableBitmapCaching": "बिटमैप कैशिंग अक्षम करें",
-      "disableBitmapCachingDesc": "बिटमैप कैश बंद करें (गड़बड़ियों में मदद कर सकता है)",
-      "disableOffscreenCaching": "ऑफस्क्रीन कैशिंग अक्षम करें",
-      "disableOffscreenCachingDesc": "ऑफस्क्रीन कैश बंद करें",
+      "disableBitmapCachingDesc": "बिटमैप कैश बंद करें (ग्लिच में मदद कर सकता है)",
+      "disableOffscreenCaching": "ऑफ़स्क्रीन कैशिंग अक्षम करें",
+      "disableOffscreenCachingDesc": "ऑफ़स्क्रीन कैश बंद करें",
       "disableGlyphCaching": "ग्लिफ़ कैशिंग अक्षम करें",
       "disableGlyphCachingDesc": "ग्लिफ़ कैश बंद करें",
       "enableGfx": "GFX सक्षम करें",
       "enableGfxDesc": "RemoteFX ग्राफ़िक्स पाइपलाइन का उपयोग करें",
       "enablePrinting": "प्रिंटिंग सक्षम करें",
-      "enablePrintingDesc": "स्थानीय प्रिंटर को दूरस्थ सत्र में पुनर्निर्देशित करें",
-      "enableDriveRedirection": "ड्राइव पुनर्निर्देशन सक्षम करें",
-      "enableDriveRedirectionDesc": "स्थानीय फ़ोल्डर को दूरस्थ सत्र में ड्राइव के रूप में मैप करें",
-      "createDrivePath": "ड्राइव पथ बनाएँ",
-      "createDrivePathDesc": "यदि फ़ोल्डर मौजूद न हो तो स्वचालित रूप से बनाएँ",
+      "enablePrintingDesc": "स्थानीय प्रिंटर को रिमोट सेशन में रीडायरेक्ट करें",
+      "enableDriveRedirection": "ड्राइव रीडायरेक्शन सक्षम करें",
+      "enableDriveRedirectionDesc": "स्थानीय फ़ोल्डर को रिमोट सेशन में ड्राइव के रूप में मैप करें",
       "disableDownload": "डाउनलोड अक्षम करें",
-      "disableDownloadDesc": "रिमोट सत्र से फ़ाइलें डाउनलोड करना रोकें",
+      "disableDownloadDesc": "रिमोट सेशन से फ़ाइलों को डाउनलोड करने से रोकें",
       "disableUpload": "अपलोड अक्षम करें",
-      "disableUploadDesc": "रिमोट सत्र पर फ़ाइलें अपलोड करना रोकें",
+      "disableUploadDesc": "रिमोट सेशन में फ़ाइलों को अपलोड करने से रोकें",
       "enableTouch": "टच सक्षम करें",
-      "enableTouchDesc": "टच इनपुट अग्रेषण सक्षम करें",
-      "consoleSession": "कंसोल सत्र",
-      "consoleSessionDesc": "नए सत्र के बजाय कंसोल (सत्र 0) से कनेक्ट करें",
+      "enableTouchDesc": "टच इनपुट फॉरवर्डिंग सक्षम करें",
+      "consoleSession": "कंसोल सेशन",
+      "consoleSessionDesc": "नए सेशन के बजाय कंसोल (सेशन 0) से कनेक्ट करें",
       "sendWolPacket": "WOL पैकेट भेजें",
       "sendWolPacketDesc": "कनेक्ट करने से पहले इस होस्ट को जगाने के लिए मैजिक पैकेट भेजें",
       "disableCopy": "कॉपी अक्षम करें",
-      "disableCopyDesc": "रिमोट सत्र से टेक्स्ट कॉपी करना रोकें",
+      "disableCopyDesc": "रिमोट सेशन से टेक्स्ट कॉपी करने से रोकें",
       "disablePaste": "पेस्ट अक्षम करें",
-      "disablePasteDesc": "रिमोट सत्र में टेक्स्ट पेस्ट करना रोकें",
-      "createPathIfMissing": "यदि पथ मौजूद न हो तो बनाएँ",
-      "createPathIfMissingDesc": "रिकॉर्डिंग निर्देशिका स्वचालित रूप से बनाएँ",
-      "excludeOutput": "आउटपुट बहिष्कृत करें",
+      "disablePasteDesc": "रिमोट सेशन में टेक्स्ट पेस्ट करने से रोकें",
+      "excludeOutput": "आउटपुट बाहर रखें",
       "excludeOutputDesc": "स्क्रीन आउटपुट रिकॉर्ड न करें (केवल मेटाडेटा)",
-      "excludeMouse": "माउस बहिष्कृत करें",
-      "excludeMouseDesc": "माउस गतिविधियाँ रिकॉर्ड न करें",
-      "includeKeystrokes": "कीस्ट्रोक्स शामिल करें",
-      "includeKeystrokesDesc": "स्क्रीन आउटपुट के अतिरिक्त कच्चे कीस्ट्रोक्स रिकॉर्ड करें",
+      "excludeMouse": "माउस बाहर रखें",
+      "excludeMouseDesc": "माउस की गतिविधियों को रिकॉर्ड न करें",
+      "includeKeystrokes": "कीस्ट्रोक शामिल करें",
+      "includeKeystrokesDesc": "स्क्रीन आउटपुट के अतिरिक्त कच्चे कीस्ट्रोक रिकॉर्ड करें",
       "vncPort": "VNC पोर्ट",
       "vncPassword": "VNC पासवर्ड",
       "vncUsernameOptional": "उपयोगकर्ता नाम (वैकल्पिक)",
-      "vncLeaveBlank": "यदि आवश्यक न हो तो खाली छोड़ें",
+      "vncLeaveBlank": "यदि आवश्यक न हो तो खाली छोड़ दें",
       "cursorMode": "कर्सर मोड",
-      "swapRedBlue": "लाल/नीला अदल-बदल करें",
-      "swapRedBlueDesc": "लाल और नीले रंग चैनलों को अदल-बदल करें (कुछ रंग समस्याओं को ठीक करता है)",
+      "swapRedBlue": "लाल/नीला बदलें",
+      "swapRedBlueDesc": "लाल और नीले रंग के चैनल बदलें (कुछ रंग समस्याओं को ठीक करता है)",
       "readOnly": "केवल-पठनीय",
-      "readOnlyDesc": "बिना कोई इनपुट भेजे रिमोट स्क्रीन देखें",
-      "telnetPort": "टेलनेट पोर्ट",
+      "readOnlyDesc": "कोई इनपुट भेजे बिना दूरस्थ स्क्रीन देखें",
+      "telnetPort": "Telnet पोर्ट",
       "terminalType": "टर्मिनल प्रकार",
-      "fontName": "फ़ॉन्ट नाम",
-      "fontSize": "फ़ॉन्ट आकार",
+      "fontName": "फ़ॉन्ट का नाम",
+      "fontSize": "फ़ॉन्ट का आकार",
       "colorScheme": "रंग योजना",
       "backspaceKey": "बैकस्पेस कुंजी",
       "colorDepth": "रंग गहराई",
-      "resizeMethod": "रीसाइज़ विधि",
-      "driveNamePlaceholder": "टर्मिक्स ड्राइव",
+      "resizeMethod": "आकार बदलने की विधि",
+      "driveNamePlaceholder": "Termix ड्राइव",
       "options": {
-        "any": "Any",
-        "auto": "Auto",
-        "nlaExtended": "NLA Extended",
-        "color8": "8-bit",
-        "color16": "16-bit",
-        "color24": "24-bit",
-        "color32": "32-bit",
-        "displayUpdate": "Display Update",
-        "reconnect": "Reconnect",
-        "preserve": "Preserve",
+        "any": "कोई भी",
+        "auto": "स्वचालित",
+        "nlaExtended": "NLA विस्तारित",
+        "color8": "8-बिट",
+        "color16": "16-बिट",
+        "color24": "24-बिट",
+        "color32": "32-बिट",
+        "displayUpdate": "डिस्प्ले अपडेट",
+        "reconnect": "पुनः कनेक्ट करें",
+        "preserve": "बनाए रखें",
         "unix": "Unix (LF)",
         "windows": "Windows (CRLF)",
-        "local": "Local",
-        "remote": "Remote",
-        "failsafe": "failsafe",
-        "blackOnWhite": "Black on White",
-        "whiteOnBlack": "White on Black",
-        "grayOnBlack": "Gray on Black",
-        "greenOnBlack": "Green on Black"
+        "local": "स्थानीय",
+        "remote": "दूरस्थ",
+        "failsafe": "फ़ेलसेफ़",
+        "blackOnWhite": "सफ़ेद पर काला",
+        "whiteOnBlack": "काले पर सफ़ेद",
+        "grayOnBlack": "काले पर भूरा",
+        "greenOnBlack": "काले पर हरा"
       }
     },
-    "remoteDesktop": "दूरस्थ डेस्कटॉप",
+    "remoteDesktop": "रिमोट डेस्कटॉप",
     "tabRdp": "RDP",
     "tabVnc": "VNC",
     "tabTelnet": "Telnet",
     "virtualNetwork": "वर्चुअल नेटवर्क",
-    "unencryptedShell": "अनएन्क्रिप्टेड शेल",
+    "unencryptedShell": "असंरक्षित शेल",
     "remoteDesktopNotes": "नोट्स",
-    "userDefaultsNote": "जिन सेटिंग्स को आप अपरिवर्तित छोड़ते हैं, वे आपके होस्ट की डिफ़ॉल्ट सेटिंग्स का पालन करती हैं।",
-    "connectionOriginNote": "डेस्कटॉप ऐप पर, RDP, VNC और Telnet रिमोट सर्वर का उपयोग करते हैं, जब तक कि होस्ट को \"यह डिवाइस\" पर सेट न किया गया हो। इसके लिए एक GUACD प्रॉक्सी की आवश्यकता होती है जिस तक यह मशीन पहुंच सके। इसे रिमोट डेस्कटॉप सेटिंग्स में या GUACD प्रॉक्सी के अंतर्गत प्रति होस्ट सेट करें।",
+    "userDefaultsNote": "जो सेटिंग्स आप अपरिवर्तित छोड़ते हैं, वे आपके होस्ट डिफ़ॉल्ट्स का पालन करती हैं।",
+    "connectionOriginNote": "डेस्कटॉप ऐप पर, RDP, VNC और Telnet दूरस्थ सर्वर का उपयोग करते हैं जब तक कि होस्ट को 'इस डिवाइस' पर सेट न किया गया हो, जिसके लिए इस मशीन द्वारा पहुँच योग्य guacd की आवश्यकता होती है। रिमोट डेस्कटॉप सेटिंग्स में एक सेट करें, या guacd प्रॉक्सी के तहत प्रति होस्ट।",
     "docsLink": "दस्तावेज़ देखें",
-    "connectionOriginGuacamoleNote": "RDP, VNC और Telnet रिमोट सर्वर का उपयोग करते हैं, जब तक कि आप \"यह डिवाइस\" का चयन न करें, जिसके लिए एक guacd की आवश्यकता होती है जिस तक यह मशीन पहुंच सके। इसे guacd URL सेटिंग में या guacd प्रॉक्सी के अंतर्गत प्रति होस्ट सेट करें।"
+    "connectionOriginGuacamoleNote": "RDP, VNC और Telnet दूरस्थ सर्वर का उपयोग करते हैं जब तक आप \"इस डिवाइस\" का चयन न करें, जिसके लिए इस मशीन द्वारा पहुँच योग्य guacd की आवश्यकता होती है। guacd URL सेटिंग में एक सेट करें, या guacd प्रॉक्सी के तहत प्रति होस्ट।"
   },
   "onboarding": {
-    "feature_desktop": "दूरवर्ती डेस्कटॉप",
-    "feature_desktop_desc": "RDP, VNC और Telnet सेशन को SSH की तरह ही एक टैब में खोलें।"
+    "guacdTitle": "रिमोट डेस्कटॉप सेट करें",
+    "guacdIntro": "रिमोट डेस्कटॉप के लिए Termix के पास guacd चलाने की आवश्यकता होती है। जाँच करें कि यह जवाब दे रहा है, या Termix को उसकी ओर इशारा करें।",
+    "guacdChecking": "guacd की तलाश में",
+    "guacdConnected": "guacd {{address}} पर चल रहा है",
+    "guacdMissing": "guacd {{address}} पर जवाब नहीं दे रहा है",
+    "guacdMissingDesc": "आप आगे बढ़ सकते हैं और बाद में इसे सेट कर सकते हैं। जब तक यह जवाब न दे, रिमोट डेस्कटॉप सत्र कनेक्ट नहीं होंगे।",
+    "guacdCheckFailed": "guacd की जाँच नहीं कर सका",
+    "guacdComposeTitle": "इसे अपने डॉकर कंपोज़ फ़ाइल में जोड़ें",
+    "guacdSaveAndCheck": "सहेजें और जाँच करें",
+    "guacdEnvNote": "यदि सर्वर पर GUACD_URL, GUACD_HOST या GUACD_PORT सेट है, तो यह इस पर प्राथमिकता रखता है।"
   },
   "settings": {
     "user": {
       "colorDepth": {
         "label": "रंग गहराई",
-        "description": "इसका उपयोग उन आरडीपी होस्ट के लिए किया जाता है जो इसे डिफ़ॉल्ट सेटिंग पर छोड़ देते हैं।"
+        "description": "उन RDP होस्ट के लिए उपयोग किया जाता है जो इसे अपने डिफ़ॉल्ट पर छोड़ देते हैं।"
       },
       "resizeMethod": {
-        "label": "रीसाइज़ विधि",
-        "description": "रिमोट स्क्रीन विंडो के आकार का अनुसरण कैसे करती है।"
+        "label": "आकार बदलने की विधि",
+        "description": "दूरस्थ स्क्रीन विंडो के आकार का अनुसरण कैसे करती है।"
       },
       "resizeDisplayUpdate": "डिस्प्ले अपडेट",
       "resizeReconnect": "पुनः कनेक्ट करें",
-      "inherit": "इनहेरिट",
+      "inherit": "विरासत में लें",
       "on": "चालू",
       "off": "बंद",
       "forceLossless": {
-        "label": "दोषरहित बाध्य करें",
-        "description": "दोषरहित छवि एन्कोडिंग बाध्य करें (उच्च गुणवत्ता, अधिक बैंडविड्थ)"
+        "label": "लॉसलेस ज़बरदस्ती करें",
+        "description": "लॉसलेस इमेज एन्कोडिंग ज़बरदस्ती करें (उच्च गुणवत्ता, अधिक बैंडविड्थ)"
       },
       "enableWallpaper": {
         "label": "वॉलपेपर",
-        "description": "डेस्कटॉप वॉलपेपर दिखाएं (अक्षम करने से प्रदर्शन बेहतर होता है)"
+        "description": "डेस्कटॉप वॉलपेपर दिखाएं (बंद करने से प्रदर्शन में सुधार होता है)"
       },
       "enableFontSmoothing": {
         "label": "फ़ॉन्ट स्मूथिंग",
@@ -288,19 +291,19 @@
       },
       "enablePrinting": {
         "label": "प्रिंटिंग सक्षम करें",
-        "description": "स्थानीय प्रिंटर को दूरस्थ सत्र में पुनर्निर्देशित करें"
+        "description": "स्थानीय प्रिंटर को दूरस्थ सत्र में रीडायरेक्ट करें"
       },
       "enableDrive": {
-        "label": "ड्राइव पुनर्निर्देशन सक्षम करें",
+        "label": "ड्राइव रीडायरेक्शन सक्षम करें",
         "description": "स्थानीय फ़ोल्डर को दूरस्थ सत्र में ड्राइव के रूप में मैप करें"
       },
       "disableCopy": {
         "label": "कॉपी अक्षम करें",
-        "description": "रिमोट सत्र से टेक्स्ट कॉपी करना रोकें"
+        "description": "दूरस्थ सत्र से पाठ कॉपी करने से रोकें"
       },
       "disablePaste": {
         "label": "पेस्ट अक्षम करें",
-        "description": "रिमोट सत्र में टेक्स्ट पेस्ट करना रोकें"
+        "description": "दूरस्थ सत्र में पाठ पेस्ट करने से रोकें"
       },
       "colorDepth16": "16-बिट",
       "colorDepth24": "24-बिट",
@@ -313,8 +316,14 @@
       },
       "guacdUrl": {
         "label": "guacd URL",
-        "description": "जहां guacd होस्ट:पोर्ट के रूप में सुनता है। GUACD_URL, GUACD_HOST और GUACD_PORT पर्यावरण चर इसे ओवरराइड करते हैं।",
-        "placeholder": "गुआकडी:4822"
+        "description": "जहां guacd सुनता है, host:port के रूप में। GUACD_URL, GUACD_HOST और GUACD_PORT पर्यावरण चर इस पर अधिरोधित करते हैं।",
+        "placeholder": "guacd:4822"
+      },
+      "hostGuacd": {
+        "label": "प्रति-होस्ट guacd पते"
+      },
+      "hostGuacdMigrated": {
+        "label": "प्रति-होस्ट guacd पते स्थानांतरित"
       }
     },
     "host": {
@@ -328,46 +337,46 @@
         "label": "Telnet"
       },
       "rdpPort": {
-        "label": "आरडीपी पोर्ट"
+        "label": "RDP पोर्ट"
       },
       "vncPort": {
-        "label": "वीएनसी पोर्ट"
+        "label": "VNC पोर्ट"
       },
       "telnetPort": {
-        "label": "टेलनेट पोर्ट"
+        "label": "Telnet पोर्ट"
       },
       "rdpSecurity": {
-        "label": "आरडीपी सुरक्षा मोड"
+        "label": "RDP सुरक्षा मोड"
       },
       "rdpIgnoreCert": {
-        "label": "प्रमाणपत्र त्रुटियों को अनदेखा करें"
+        "label": "सर्टिफिकेट त्रुटियों को नज़रअंदाज़ करें"
       },
       "guacamoleConfig": {
-        "label": "गुआकडी सेटिंग्स"
+        "label": "guacd सेटिंग्स"
       },
       "enableToolbar": {
         "label": "रिमोट डेस्कटॉप टूलबार",
-        "description": "RDP, VNC और Telnet सत्रों में टूलबार दिखाएँ।"
+        "description": "RDP, VNC और Telnet सत्रों में टूलबार दिखाएं।"
       },
-      "displayGroup": "प्रदर्शन",
-      "displayDefaultsTab": "दूरस्थ डेस्कटॉप"
+      "displayGroup": "डिस्प्ले",
+      "displayDefaultsTab": "रिमोट डेस्कटॉप"
     }
   },
   "palette": {
-    "connectRdp": "आरडीपी से जुड़ें",
-    "connectVnc": "VNC से कनेक्ट करें",
-    "connectTelnet": "टेलनेट के माध्यम से कनेक्ट करें"
+    "connectRdp": "RDP के साथ कनेक्ट करें",
+    "connectVnc": "VNC के साथ कनेक्ट करें",
+    "connectTelnet": "Telnet के साथ कनेक्ट करें"
   },
   "permissions": {
     "sessions": {
-      "title": "रिमोट डेस्कटॉप सेशन साझा करें",
-      "description": "सेशन शेयरिंग और कोलैब रूम को इस उपयोगकर्ता के RDP, VNC और Telnet सेशन दूसरों को दिखाने की अनुमति दें।"
+      "title": "रिमोट डेस्कटॉप सत्र साझा करें",
+      "description": "सत्र साझाकरण और सहयोग कक्षों को इस उपयोगकर्ता के RDP, VNC और Telnet सत्रों को अन्य लोगों को दिखाने दें।"
     }
   },
   "errors": {
-    "remoteServerRequired": "रिमोट सर्वर आवश्यक है। इस कनेक्शन प्रकार का उपयोग करने के लिए सेटिंग्स में जाकर रिमोट सर्वर कनेक्ट करें।"
+    "remoteServerRequired": "रिमोट सर्वर आवश्यक है। इस कनेक्शन प्रकार का उपयोग करने के लिए सेटिंग्स में एक रिमोट सर्वर कनेक्ट करें।"
   },
   "plugin": {
-    "name": "Remote Desktop"
+    "name": "रिमोट डेस्कटॉप"
   }
 }

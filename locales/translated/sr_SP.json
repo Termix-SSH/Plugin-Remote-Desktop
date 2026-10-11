@@ -1,373 +1,382 @@
 {
   "remoteDesktop": {
     "connecting": "Повезивање са {{type}} сесијом...",
-    "checkingGuacd": "Провера услуге удаљене радне површине...",
-    "requestingToken": "Захтева се {{type}} токен за повезивање...",
+    "checkingGuacd": "Провера услуге удаљеног радног стола...",
+    "requestingToken": "Захтевање {{type}} токена за повезивање...",
     "openingSession": "Отварање {{type}} сесије...",
-    "negotiating": "Преговарање {{type}} руковање...",
-    "sessionReady": "{{type}} сесија спремна",
+    "negotiating": "Погодовање {{type}} рукопоља...",
+    "sessionReady": "{{type}} сесија је спремна",
     "connectionError": "Грешка у повезивању",
-    "connectionFailed": "Повезивање није успело",
-    "failedToConnect": "Није успело добијање токена за повезивање",
-    "hostNotFound": "Хост није пронађен",
+    "failedToConnect": "Неуспешно добијање токена за повезивање",
+    "hostNotFound": "Домаћин није пронађен",
     "noHostSelected": "Није изабран домаћин",
-    "reconnect": "Поново се повежите",
-    "retry": "Покушај поново",
-    "guacdUnavailable": "Услуга удаљеног рачунара (guacd) није доступна. Молимо вас да се уверите да је guacd покренут, доступан и правилно конфигурисан у администраторским подешавањима.",
+    "guacdUnavailable": "Услуга удаљеног радног стола (guacd) није доступна. Проверите да ли guacd ради, да је доступан и правилно конфигурисан у администраторским подешавањима.",
     "credentialPromptTitle": "Унесите RDP акредитиве",
-    "credentialPromptDescription": "Овај хост је подешен да тражи акредитиве при повезивању. Они се користе само за ову сесију и не чувају се.",
-    "connect": "Повежи се",
-    "ctrlAltDel": "Ctrl+Alt+Del",
+    "credentialPromptDescription": "Овај домаћин је подешен да тражи акредитиве при повезивању. Користиће се само за ову сесију и неће се сачувати.",
+    "connect": "Повезивање",
     "files": {
-      "title": "Датотеке на Диску",
-      "parent": "Надређени директоријум",
+      "title": "Датотеке погонa",
+      "parent": "Родитељски директоријум",
       "refresh": "Освежи",
       "empty": "Ова фасцикла је празна",
-      "listFailed": "Није успело читање ове фасцикле",
+      "listFailed": "Неуспешно читање ове фасцикле",
       "download": "Преузми",
-      "downloadFailed": "Преузимање није успело {{name}}",
+      "downloadFailed": "Неуспешно преузимање {{name}}",
       "upload": "Отпреми датотеке",
       "uploading": "Отпремање {{name}}...",
       "uploaded": "Отпремљено {{name}}",
-      "uploadFailed": "Није успело отпремање {{name}}",
-      "uploadDisabled": "Отпремања су онемогућена за ову везу",
-      "driveUnavailable": "Омогућите преусмеравање RDP диска пре отпремања датотека",
-      "driveNotWritable": "guacd не може да пише у фасциклу диска. Проверите GUACD_DRIVE_PATH (или путању диска хоста) и његове дозволе.",
-      "dropToUpload": "Отпустите датотеке да бисте их отпремили"
+      "uploadFailed": "Неуспешно отпремање {{name}}",
+      "uploadDisabled": "Отпремање је онемогућено за ову везу",
+      "driveUnavailable": "Омогућите пренос погонa за RDP пре отпремања датотека",
+      "driveNotWritable": "guacd не може да пише у фасциклу погонa. Проверите GUACD_DRIVE_PATH и његова овлашћења.",
+      "dropToUpload": "Испустите датотеке за отпремање"
     },
     "toolbar": {
       "ctrlAltDel": "Ctrl+Alt+Del",
       "winL": "Win+L (Закључавање екрана)",
       "winKey": "Windows тастер",
-      "superL": "Супер+Л (Закључани екран)",
-      "superKey": "Супер кључ",
-      "super": "Супер",
-      "cmdL": "Cmd+L (Закључани екран)",
-      "cmdKey": "Командни тастер",
-      "cmd": "Команда",
+      "superL": "Super+L (Закључавање екрана)",
+      "superKey": "Super тастер",
+      "super": "Super",
+      "cmdL": "Cmd+L (Закључавање екрана)",
+      "cmdKey": "Command тастер",
+      "cmd": "Cmd",
       "ctrl": "Ctrl",
-      "alt": "Алтернативно",
-      "shift": "Померање",
-      "win": "Победа",
-      "stickyActive": "{{key}} (закључано - кликните да бисте отпустили)",
-      "stickyInactive": "{{key}} (кликните да бисте закључали)",
-      "esc": "Бег",
-      "tab": "Таб",
-      "home": "Дом",
-      "end": "Крај",
-      "pageUp": "Страница нагоре",
-      "pageDown": "Страница надоле",
-      "arrowUp": "Стрелица нагоре",
-      "arrowDown": "Стрелица надоле",
+      "alt": "Alt",
+      "shift": "Shift",
+      "win": "Win",
+      "stickyActive": "{{key}} (закључано - кликните за откључавање)",
+      "stickyInactive": "{{key}} (кликните за закључавање)",
+      "esc": "Escape",
+      "tab": "Tab",
+      "home": "Home",
+      "end": "End",
+      "pageUp": "Page Up",
+      "pageDown": "Page Down",
+      "arrowUp": "Стрелица горе",
+      "arrowDown": "Стрелица доле",
       "arrowLeft": "Стрелица лево",
       "arrowRight": "Стрелица десно",
-      "fnToggle": "Функцијски тастери",
-      "reconnect": "Поновно повезивање сесије",
-      "collapse": "Савиј траку са алаткама",
+      "fnToggle": "Функционални тастери",
+      "collapse": "Скупи траку са алаткама",
       "expand": "Прошири траку са алаткама",
-      "dragHandle": "Превуците да бисте променили положај",
-      "hide": "Сакриј за ову сесију. Да бисте га трајно онемогућили, отворите Подешавања хоста → Опште → Трака са алаткама за повезивање.",
+      "dragHandle": "Превуците за померање",
+      "hide": "Сакриј за ову сесију. Да бисте је трајно онемогућили, отворите Подешавања домаћина → Опште → Трака са алаткама за повезивање.",
       "zoomIn": "Увећај",
       "zoomOut": "Умањи",
-      "resetZoom": "Ресетуј зумирање",
+      "resetZoom": "Ресетуј зум",
       "fitToScreen": "Прилагоди екрану",
-      "switchToTrackpad": "Пребаците се у режим додирне табле (превуците да бисте померили курсор, додирните да бисте кликнули)",
-      "switchToTouch": "Пребаците се на режим додира (додирните директно место где желите да кликнете)"
+      "switchToTrackpad": "Пређи на режим тачпада (превуци за померање курсора, тапни за клик)",
+      "switchToTouch": "Пређи на додирни режим (тапни директно где желите да кликнете)"
     },
-    "disabled": "Удаљена радна површина је искључена. Администратор је може укључити у подешавањима."
+    "disabled": "Ремот десктоп је искључен. Администратор га може укључити у Подешавањима."
   },
   "hosts": {
-    "nativeRdpOpened": "Отворено у Windows удаљеној радној површини",
-    "nativeRdpFailed": "Није успело отварање Windows удаљене радне површине",
-    "openNativeRdp": "Отвори у Windows удаљеној радној површини",
+    "nativeRdpOpened": "Отворено у Windows Remote Desktop",
+    "nativeRdpFailed": "Неуспешно отварање Windows Remote Desktop",
+    "openNativeRdp": "Отвори у Windows Remote Desktop",
     "guac": {
       "toolbar": "Трака са алаткама",
       "connection": "Веза",
       "authentication": "Аутентификација",
-      "storedCredential": "Сачувани акредитив",
-      "authMethod": "Метода овлашћења",
+      "storedCredential": "Сачувани подаци за пријаву",
+      "authMethod": "Метод аутентификације",
       "authTypeDirect": "Директно",
-      "authTypeCredential": "Акредитив",
-      "authTypeNone": "Ниједан",
-      "authTypeNoneDesc": "Акредитиви се не чувају. Сваки пут када се повежете, биће вам затражено корисничко име и лозинка; они се не чувају.",
-      "selectCredential": "Изаберите акредитив...",
+      "authTypeCredential": "Подаци за пријаву",
+      "authTypeNone": "Ништа",
+      "authTypeNoneDesc": "Подаци за пријаву нису сачувани. При свакој вези бићете питани за корисничко име и лозинку; они се не чувају.",
+      "selectCredential": "Изаберите податке за пријаву...",
       "connectionSettings": "Подешавања везе",
-      "displaySettings": "Подешавања екрана",
+      "displaySettings": "Подешавања приказа",
       "audioSettings": "Подешавања звука",
-      "rdpPerformance": "Перформансе РДП-а",
-      "deviceRedirection": "Преусмеравање уређаја",
+      "rdpPerformance": "RDP перформансе",
+      "deviceRedirection": "Редиректовање уређаја",
       "session": "Сесија",
-      "gateway": "Капија",
-      "remoteApp": "Удаљена апликација",
-      "clipboard": "Међуспремник",
+      "gateway": "Гатевеј",
+      "remoteApp": "RemoteApp",
+      "clipboard": "Клипборд",
       "sessionRecording": "Снимање сесије",
       "wakeOnLan": "Wake-on-LAN",
       "vncSettings": "VNC подешавања",
       "terminalSettings": "Подешавања терминала",
-      "rdpPort": "РДП порт",
+      "rdpPort": "RDP порт",
       "username": "Корисничко име",
       "password": "Лозинка",
-      "passwordSaved": "Лозинка сачувана, унесите текст да бисте је променили",
+      "passwordSaved": "Лозинка је сачувана, укуцајте за промену",
       "domain": "Домен",
-      "securityMode": "Безбедносни режим",
+      "securityMode": "Режим безбедности",
       "width": "Ширина",
       "height": "Висина",
       "dpi": "DPI",
-      "clientName": "Име клијента",
+      "clientName": "Назив клијента",
       "initialProgram": "Почетни програм",
       "serverLayout": "Распоред сервера",
       "timezone": "Временска зона",
-      "loadBalanceInfo": "Информације о балансу оптерећења / колачић",
-      "loadBalanceInfoDesc": "Колачић RD Connection Broker-а за балансирање оптерећења RDS фарме (нпр. tsv://MS Terminal Services Plugin.1.CollectionName)",
+      "loadBalanceInfo": "Информације о балансирању оптерећења / Колачић",
+      "loadBalanceInfoDesc": "RD Connection Broker колачић за балансирање оптерећења RDS фарма (нпр. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd прокси",
       "guacdHostname": "guacd хост",
-      "guacdHostnamePlaceholder": "Глобално подразумевано",
-      "guacdPort": "ГУАЦД порт",
-      "guacdProxyDesc": "Замените глобалну инстанцу guacd-а за ову везу. Оставите празно да бисте користили глобално конфигурисани guacd.",
-      "gatewayHostname": "Име хоста мрежног пролаза",
-      "gatewayPort": "Порт за пролаз",
-      "gatewayUsername": "Корисничко име на гејтвеју",
-      "gatewayPassword": "Лозинка за пролаз",
-      "gatewayDomain": "Домен капије",
-      "remoteAppProgram": "Програм RemoteApp",
+      "guacdHostnamePlaceholder": "Глобална подразумевана вредност",
+      "guacdPort": "guacd порт",
+      "guacdProxyDesc": "Прекопишите глобалну guacd инстанцу за ову везу. Оставите празно да бисте користили глобално конфигурисану guacd.",
+      "guacdAdminOnly": "Само администратори могу променити guacd сервер за хост.",
+      "guacdSaveHostFirst": "Прво сачувајте хост, па онда подесите његов guacd сервер овде.",
+      "guacdSave": "Сачувај guacd сервер",
+      "guacdSaved": "guacd сервер је сачуван",
+      "guacdSaveFailed": "Неуспешно чување guacd сервера",
+      "gatewayHostname": "Назив гатевеј хоста",
+      "gatewayPort": "Гатевеј порт",
+      "gatewayUsername": "Гатевеј корисничко име",
+      "gatewayPassword": "Лозинка за врата",
+      "gatewayDomain": "Домен врата",
+      "remoteAppProgram": "RemoteApp програм",
       "workingDirectory": "Радни директоријум",
       "arguments": "Аргументи",
-      "normalizeLineEndings": "Нормализуј завршетке линија",
+      "normalizeLineEndings": "Нормализуј крајеве линија",
       "macAddress": "MAC адреса",
-      "broadcastAddress": "Адреса за емитовање",
+      "broadcastAddress": "Broadcast адреса",
       "udpPort": "UDP порт",
-      "waitTimeS": "Време чекања (s)",
+      "waitTimeS": "Време чекања (с)",
       "driveName": "Назив диска",
-      "drivePath": "Путања диска",
-      "ignoreCertificate": "Игнориши сертификат",
-      "ignoreCertificateDesc": "Дозволи везе са хостовима са самопотписаним сертификатима",
-      "forceLossless": "Присилно без губитака",
-      "forceLosslessDesc": "Присилно кодирање слике без губитака (виши квалитет, већи пропусни опсег)",
+      "ignoreCertificate": "Занемари сертификат",
+      "ignoreCertificateDesc": "Дозволи везе са хостовима који имају само-потписане сертификате",
+      "forceLossless": "Присили без губитака",
+      "forceLosslessDesc": "Присили кодирање слика без губитака (већи квалитет, више пропусног опсега)",
       "disableAudio": "Онемогући звук",
-      "disableAudioDesc": "Искључите сав звук из удаљене сесије",
+      "disableAudioDesc": "Искључи све звукове из удаљене сесије",
       "enableAudioInput": "Омогући аудио улаз (микрофон)",
-      "enableAudioInputDesc": "Прослеђивање локалног микрофона на удаљену сесију",
+      "enableAudioInputDesc": "Упути локални микрофон ка удаљеној сесији",
       "wallpaper": "Позадина",
-      "wallpaperDesc": "Прикажи позадину радне површине (онемогућавање побољшава перформансе)",
-      "theming": "Темирање",
+      "wallpaperDesc": "Прикажи позадину радне површине (искључивање побољшава перформансе)",
+      "theming": "Теме",
       "themingDesc": "Омогући визуелне теме и стилове",
-      "fontSmoothing": "Изглађивање фонта",
-      "fontSmoothingDesc": "Омогући приказивање ClearType фонта",
-      "fullWindowDrag": "Превлачење преко целог прозора",
-      "fullWindowDragDesc": "Приказ садржаја прозора током превлачења",
-      "desktopComposition": "Композиција на радној површини",
-      "desktopCompositionDesc": "Омогући ефекте Aero Glass-а",
+      "fontSmoothing": "Заглађивање фонта",
+      "fontSmoothingDesc": "Омогући ClearType рендеринг фонта",
+      "fullWindowDrag": "Пун пренос прозора",
+      "fullWindowDragDesc": "Прикажи садржај прозора током превлачења",
+      "desktopComposition": "Композиција радне површине",
+      "desktopCompositionDesc": "Омогући Aero стаклене ефекте",
       "menuAnimations": "Анимације менија",
-      "menuAnimationsDesc": "Омогући анимације постепеног постепеног померања менија и слајдова",
+      "menuAnimationsDesc": "Омогући анимације блеђења и клизања менија",
       "disableBitmapCaching": "Онемогући кеширање битмапа",
-      "disableBitmapCachingDesc": "Искључите кеш битмапа (може помоћи код грешака)",
+      "disableBitmapCachingDesc": "Искључи кеширање битмапа (може помоћи против грешака)",
       "disableOffscreenCaching": "Онемогући кеширање ван екрана",
-      "disableOffscreenCachingDesc": "Искључите кеш меморију ван екрана",
-      "disableGlyphCaching": "Онемогући кеширање глифова",
-      "disableGlyphCachingDesc": "Искључите кеш глифова",
-      "enableGfx": "Омогући графичке ефекте",
-      "enableGfxDesc": "Користите графички цевовод RemoteFX",
+      "disableOffscreenCachingDesc": "Искључи кеширање ван екрана",
+      "disableGlyphCaching": "Онемогући кеширање глифа",
+      "disableGlyphCachingDesc": "Искључи кеширање глифа",
+      "enableGfx": "Омогући GFX",
+      "enableGfxDesc": "Користи RemoteFX графички цевовод",
       "enablePrinting": "Омогући штампање",
-      "enablePrintingDesc": "Преусмерите локалне штампаче на удаљену сесију",
-      "enableDriveRedirection": "Омогући преусмеравање диска",
-      "enableDriveRedirectionDesc": "Мапирајте локалну фасциклу као диск у удаљеној сесији",
-      "createDrivePath": "Креирај путању диска",
-      "createDrivePathDesc": "Аутоматски креирај фасциклу ако не постоји",
+      "enablePrintingDesc": "Упути локалне штампаче ка удаљеној сесији",
+      "enableDriveRedirection": "Омогући пренос диска",
+      "enableDriveRedirectionDesc": "Мапирај локални фолдер као диск у удаљеној сесији",
       "disableDownload": "Онемогући преузимање",
-      "disableDownloadDesc": "Спречите преузимање датотека са удаљене сесије",
-      "disableUpload": "Онемогући отпремање",
-      "disableUploadDesc": "Спречите отпремање датотека на удаљену сесију",
+      "disableDownloadDesc": "Спречи преузимање фајлова из удаљене сесије",
+      "disableUpload": "Онемогући слање",
+      "disableUploadDesc": "Спречи слање фајлова ка удаљеној сесији",
       "enableTouch": "Омогући додир",
-      "enableTouchDesc": "Омогући преусмеравање уноса додиром",
-      "consoleSession": "Конзолна сесија",
-      "consoleSessionDesc": "Повежите се са конзолом (сесија 0) уместо нове сесије",
+      "enableTouchDesc": "Омогући пренос додирног уноса",
+      "consoleSession": "Конзолска сесија",
+      "consoleSessionDesc": "Повези се на конзолу (сесија 0) уместо на нову сесију",
       "sendWolPacket": "Пошаљи WOL пакет",
-      "sendWolPacketDesc": "Пошаљите магични пакет да пробудите овај хост пре повезивања",
+      "sendWolPacketDesc": "Пошаљи магични пакет да буди овај хост пре повезивања",
       "disableCopy": "Онемогући копирање",
-      "disableCopyDesc": "Спречите копирање текста из удаљене сесије",
+      "disableCopyDesc": "Спречи копирање текста из удаљене сесије",
       "disablePaste": "Онемогући лепљење",
-      "disablePasteDesc": "Спречите лепљење текста у удаљену сесију",
-      "createPathIfMissing": "Креирај путању ако недостаје",
-      "createPathIfMissingDesc": "Аутоматски креирајте директоријум за снимање",
+      "disablePasteDesc": "Спречи лепљење текста у удаљену сесију",
       "excludeOutput": "Искључи излаз",
-      "excludeOutputDesc": "Не снимај излаз екрана (само метаподаци)",
+      "excludeOutputDesc": "Не снимати излаз екрана (само метаподаци)",
       "excludeMouse": "Искључи миш",
-      "excludeMouseDesc": "Не снимај покрете миша",
-      "includeKeystrokes": "Укључи притиске на тастатури",
-      "includeKeystrokesDesc": "Снимање сирових притиска тастера поред излаза на екран",
+      "excludeMouseDesc": "Не бележи покрете миша",
+      "includeKeystrokes": "Укључи притиске тастера",
+      "includeKeystrokesDesc": "Бележи сирове притиске тастера поред излаза са екрана",
       "vncPort": "VNC порт",
       "vncPassword": "VNC лозинка",
       "vncUsernameOptional": "Корисничко име (опционо)",
       "vncLeaveBlank": "Оставите празно ако није потребно",
       "cursorMode": "Режим курсора",
-      "swapRedBlue": "Замена црвене/плаве",
-      "swapRedBlueDesc": "Замена црвених и плавих канала боја (решава неке проблеме са бојама)",
+      "swapRedBlue": "Замени црвену и плаву",
+      "swapRedBlueDesc": "Замени црвени и плави канал боје (поправља неке проблеме са бојама)",
       "readOnly": "Само за читање",
-      "readOnlyDesc": "Погледајте удаљени екран без слања било каквог уноса",
-      "telnetPort": "Телнет порт",
+      "readOnlyDesc": "Прикажите удаљени екран без слања било каквог уноса",
+      "telnetPort": "Telnet порт",
       "terminalType": "Тип терминала",
       "fontName": "Назив фонта",
       "fontSize": "Величина фонта",
       "colorScheme": "Шема боја",
-      "backspaceKey": "Тастер Backspace",
+      "backspaceKey": "Backspace тастер",
       "colorDepth": "Дубина боје",
-      "resizeMethod": "Метод промене величине",
-      "driveNamePlaceholder": "Термикс Драјв",
+      "resizeMethod": "Метода промене величине",
+      "driveNamePlaceholder": "Termix диск",
       "options": {
-        "any": "Any",
-        "auto": "Auto",
+        "any": "Било који",
+        "auto": "Аутоматски",
         "nlaExtended": "NLA Extended",
-        "color8": "8-bit",
-        "color16": "16-bit",
-        "color24": "24-bit",
-        "color32": "32-bit",
-        "displayUpdate": "Display Update",
-        "reconnect": "Reconnect",
-        "preserve": "Preserve",
+        "color8": "8-бит",
+        "color16": "16-бит",
+        "color24": "24-бит",
+        "color32": "32-бит",
+        "displayUpdate": "Ажурирање приказа",
+        "reconnect": "Поново повези",
+        "preserve": "Зачувај",
         "unix": "Unix (LF)",
         "windows": "Windows (CRLF)",
-        "local": "Local",
-        "remote": "Remote",
+        "local": "Локално",
+        "remote": "Удаљено",
         "failsafe": "failsafe",
-        "blackOnWhite": "Black on White",
-        "whiteOnBlack": "White on Black",
-        "grayOnBlack": "Gray on Black",
-        "greenOnBlack": "Green on Black"
+        "blackOnWhite": "Црно на белом",
+        "whiteOnBlack": "Бело на црном",
+        "grayOnBlack": "Сиво на црном",
+        "greenOnBlack": "Зелено на црном"
       }
     },
     "remoteDesktop": "Удаљена радна површина",
-    "tabRdp": "РДП",
+    "tabRdp": "RDP",
     "tabVnc": "VNC",
-    "tabTelnet": "Телнет",
+    "tabTelnet": "Telnet",
     "virtualNetwork": "Виртуелна мрежа",
-    "unencryptedShell": "Нешифрована љуска",
-    "remoteDesktopNotes": "Белешке",
-    "userDefaultsNote": "Подешавања која оставите непромењена прате подразумеване вредности вашег хоста.",
-    "connectionOriginNote": "У десктоп апликацији, RDP, VNC и Telnet користе удаљени сервер осим ако хост није подешен на „Овај уређај“, чему је потребан guacd који ова машина може да досегне. Подесите га у подешавањима удаљене радне површине или по хосту под guacd прокси.",
-    "docsLink": "Прикажи документе",
-    "connectionOriginGuacamoleNote": "RDP, VNC и Telnet користе удаљени сервер осим ако не изаберете „Овај уређај“, за шта је потребан guacd који ова машина може да досегне. Подесите га у подешавању guacd URL-а или по хосту под guacd прокси."
+    "unencryptedShell": "Нешифрован shell",
+    "remoteDesktopNotes": "Напомене",
+    "userDefaultsNote": "Подешавања која оставите непромењена прате подразумевана подешавања вашег хоста.",
+    "connectionOriginNote": "У десктоп апликацији, RDP, VNC и Telnet користе удаљени сервер осим ако хост није подешен на Овај уређај, што захтева guacd који овај уређај може да достигне. Подесите један у подешавањима Удаљене радне површине, или по хосту под guacd Proxy.",
+    "docsLink": "Погледај документацију",
+    "connectionOriginGuacamoleNote": "RDP, VNC и Telnet користе удаљени сервер осим ако не изаберете „Овај уређај“, што захтева guacd који овај уређај може да достигне. Подесите један у подешавању guacd URL, или по хосту под guacd Proxy."
   },
   "onboarding": {
-    "feature_desktop": "Удаљена радна површина",
-    "feature_desktop_desc": "Отворите RDP, VNC и Telnet сесије у картици, исто као и SSH."
+    "guacdTitle": "Подесите удаљену радну површину",
+    "guacdIntro": "Удаљена радна површина захтева guacd који ради поред Termix. Проверите да ли одговара, или усмерите Termix на њега.",
+    "guacdChecking": "Тражим guacd",
+    "guacdConnected": "guacd ради на {{address}}",
+    "guacdMissing": "guacd не одговара на {{address}}",
+    "guacdMissingDesc": "Можете наставити и подесити га касније. Сесије удаљене радне површине се неће повезати док не одговори.",
+    "guacdCheckFailed": "Није могуће проверити guacd",
+    "guacdComposeTitle": "Додајте га у вашу docker compose датотеку",
+    "guacdSaveAndCheck": "Сачувај и провери",
+    "guacdEnvNote": "Ако су GUACD_URL, GUACD_HOST или GUACD_PORT подешени на серверу, они имају предност над овим."
   },
   "settings": {
     "user": {
       "colorDepth": {
         "label": "Дубина боје",
-        "description": "Користи се за RDP хостове који га остављају на подразумеваним подешавањима."
+        "description": "Користи се за RDP хостове који остављају подразумевану вредност."
       },
       "resizeMethod": {
-        "label": "Метод промене величине",
+        "label": "Метода промене величине",
         "description": "Како удаљени екран прати величину прозора."
       },
-      "resizeDisplayUpdate": "Ажурирање екрана",
-      "resizeReconnect": "Поново се повежите",
-      "inherit": "Наследи",
+      "resizeDisplayUpdate": "Ажурирање приказа",
+      "resizeReconnect": "Повезивање",
+      "inherit": "Наслеђуј",
       "on": "Укључено",
       "off": "Искључено",
       "forceLossless": {
         "label": "Присилно без губитака",
-        "description": "Присилно кодирање слике без губитака (виши квалитет, већи пропусни опсег)"
+        "description": "Присили кодирање слика без губитака (већи квалитет, више пропусног опсега)"
       },
       "enableWallpaper": {
         "label": "Позадина",
-        "description": "Прикажи позадину радне површине (онемогућавање побољшава перформансе)"
+        "description": "Прикажи позадину радне површине (искључивање побољшава перформансе)"
       },
       "enableFontSmoothing": {
-        "label": "Изглађивање фонта",
-        "description": "Омогући приказивање ClearType фонта"
+        "label": "Израђивање фонта",
+        "description": "Омогући ClearType рендеринг фонта"
       },
       "enableDesktopComposition": {
-        "label": "Композиција на радној површини",
-        "description": "Омогући ефекте Aero Glass-а"
+        "label": "Композиција радне површине",
+        "description": "Омогући Aero стаклене ефекте"
       },
       "disableAudio": {
-        "label": "Онемогући звук",
-        "description": "Искључите сав звук из удаљене сесије"
+        "label": "Искључи звук",
+        "description": "Утишај св звук из удаљене сесије"
       },
       "enablePrinting": {
         "label": "Омогући штампање",
-        "description": "Преусмерите локалне штампаче на удаљену сесију"
+        "description": "Усмери локачне штампаче ка удаљеној сесији"
       },
       "enableDrive": {
-        "label": "Омогући преусмеравање диска",
-        "description": "Мапирајте локалну фасциклу као диск у удаљеној сесији"
+        "label": "Омогући усмеравање диска",
+        "description": "Мапирај локални фолдер као диск у удаљеној сесији"
       },
       "disableCopy": {
         "label": "Онемогући копирање",
-        "description": "Спречите копирање текста из удаљене сесије"
+        "description": "Спречи копирање текста из удаљене сесије"
       },
       "disablePaste": {
         "label": "Онемогући лепљење",
-        "description": "Спречите лепљење текста у удаљену сесију"
+        "description": "Спречи лепљење текста у удаљену сесију"
       },
-      "colorDepth16": "16-битни",
-      "colorDepth24": "24-битни",
-      "colorDepth32": "32-битни"
+      "colorDepth16": "16-бит",
+      "colorDepth24": "24-бит",
+      "colorDepth32": "32-бит"
     },
     "admin": {
       "enabled": {
         "label": "Омогући удаљену радну површину",
-        "description": "Дозволите RDP, VNC и Telnet везе путем guacd-а."
+        "description": "Дозволи RDP, VNC и Telnet везе кроз guacd."
       },
       "guacdUrl": {
-        "label": "URL адреса guacd-а",
-        "description": "Где guacd слуша, као host:port. Променљиве окружења GUACD_URL, GUACD_HOST и GUACD_PORT ово поништавају.",
-        "placeholder": "гуацд:4822"
+        "label": "guacd URL",
+        "description": "Где guacd слуша, као host:port. GUACD_URL, GUACD_HOST и GUACD_PORT променљиве окружења прекописују ово.",
+        "placeholder": "guacd:4822"
+      },
+      "hostGuacd": {
+        "label": "guacd адресе по хосту"
+      },
+      "hostGuacdMigrated": {
+        "label": "guacd адресе по хосту су премештене"
       }
     },
     "host": {
       "enableRdp": {
-        "label": "РДП"
+        "label": "RDP"
       },
       "enableVnc": {
         "label": "VNC"
       },
       "enableTelnet": {
-        "label": "Телнет"
+        "label": "Telnet"
       },
       "rdpPort": {
-        "label": "РДП порт"
+        "label": "RDP порт"
       },
       "vncPort": {
         "label": "VNC порт"
       },
       "telnetPort": {
-        "label": "Телнет порт"
+        "label": "Telnet порт"
       },
       "rdpSecurity": {
         "label": "RDP безбедносни режим"
       },
       "rdpIgnoreCert": {
-        "label": "Игноришите грешке сертификата"
+        "label": "Занемари грешке сертификата"
       },
       "guacamoleConfig": {
-        "label": "подешавања GUACD-а"
+        "label": "guacd подешавања"
       },
       "enableToolbar": {
-        "label": "Трака са алаткама за удаљену радну површину",
-        "description": "Прикажи траку са алаткама у RDP, VNC и Telnet сесијама."
+        "label": "Алатна трака удаљене радне површине",
+        "description": "Прикажи алатну траку у RDP, VNC и Telnet сесијама."
       },
       "displayGroup": "Приказ",
       "displayDefaultsTab": "Удаљена радна површина"
     }
   },
   "palette": {
-    "connectRdp": "Повежите се са RDP-ом",
-    "connectVnc": "Повежите се са VNC-ом",
-    "connectTelnet": "Повежите се са Телнетом"
+    "connectRdp": "Повезивање преко RDP",
+    "connectVnc": "Повезивање преко VNC",
+    "connectTelnet": "Повезивање преко Telnet"
   },
   "permissions": {
     "sessions": {
-      "title": "Делите сесије удаљене радне површине",
-      "description": "Дозволите дељењу сесија и собама за сарадњу да приказују RDP, VNC и Telnet сесије овог корисника другима."
+      "title": "Дели сесије удаљене радне површине",
+      "description": "Дозволи да дељење сесија и собе за сарадњу прикажу RDP, VNC и Telnet сесије овог корисника другима."
     }
   },
   "errors": {
-    "remoteServerRequired": "Потребан је удаљени сервер. Повежите се са удаљеним сервером у Подешавањима да бисте користили овај тип везе."
+    "remoteServerRequired": "Потребан је удаљени сервер. Повежите удаљени сервер у Подешавањима да бисте користили овај тип везе."
   },
   "plugin": {
-    "name": "Remote Desktop"
+    "name": "Удаљена радна површина"
   }
 }
