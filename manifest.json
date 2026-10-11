@@ -82,11 +82,7 @@
       "service": "sessions.live",
       "version": "1.0.0",
       "permission": "remote-desktop.sessions",
-      "names": [
-        "rdp",
-        "vnc",
-        "telnet"
-      ]
+      "names": ["rdp", "vnc", "telnet"]
     }
   ],
   "requires": [
@@ -107,36 +103,25 @@
         "id": "rdp",
         "titleKey": "hosts.tabRdp",
         "icon": "Monitor",
-        "openFrom": [
-          "host-context-menu",
-          "palette"
-        ]
+        "openFrom": ["host-context-menu", "palette"]
       },
       {
         "id": "vnc",
         "titleKey": "hosts.tabVnc",
         "icon": "MousePointerClick",
-        "openFrom": [
-          "host-context-menu",
-          "palette"
-        ]
+        "openFrom": ["host-context-menu", "palette"]
       },
       {
         "id": "telnet",
         "titleKey": "hosts.tabTelnet",
         "icon": "Terminal",
-        "openFrom": [
-          "host-context-menu",
-          "palette"
-        ]
+        "openFrom": ["host-context-menu", "palette"]
       }
     ],
     "actionSlots": [
       {
         "id": "remote-desktop.toolbar",
-        "accepts": [
-          "button"
-        ]
+        "accepts": ["button"]
       }
     ],
     "protocols": [
@@ -148,24 +133,17 @@
           }
         ],
         "defaultPort": 3389,
-        "hostLoginFallback": [
-          "username",
-          "password"
-        ]
+        "hostLoginFallback": ["username", "password"]
       },
       {
         "id": "vnc",
         "defaultPort": 5900,
-        "hostLoginFallback": [
-          "password"
-        ]
+        "hostLoginFallback": ["password"]
       },
       {
         "id": "telnet",
         "defaultPort": 23,
-        "hostLoginFallback": [
-          "password"
-        ]
+        "hostLoginFallback": ["password"]
       }
     ],
     "guest": true,
@@ -174,10 +152,7 @@
         "name": "sessions",
         "titleKey": "permissions.sessions.title",
         "descriptionKey": "permissions.sessions.description",
-        "defaultRoles": [
-          "admin",
-          "user"
-        ]
+        "defaultRoles": ["admin", "user"]
       }
     ],
     "settings": {
@@ -290,9 +265,7 @@
             "default": {},
             "hidden": true,
             "shareRead": "edit",
-            "secretKeys": [
-              "gateway-password"
-            ],
+            "secretKeys": ["gateway-password"],
             "defaultable": false
           },
           {
@@ -563,15 +536,8 @@
         ]
       }
     },
-    "uses": [
-      "session.remoteDisplay",
-      "wakeOnLan.macAddress"
-    ]
+    "uses": ["session.remoteDisplay", "wakeOnLan.macAddress"]
   },
   "locales": "locales",
-  "platforms": [
-    "linux",
-    "win32",
-    "darwin"
-  ]
+  "platforms": ["linux", "win32", "darwin"]
 }
