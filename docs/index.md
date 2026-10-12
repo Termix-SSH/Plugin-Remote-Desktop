@@ -45,7 +45,7 @@ RDP has settings for color depth, how the screen follows the window size, lossle
 
 ## Jump hosts
 
-A remote desktop host can sit behind SSH jump hosts. Termix opens a tunnel through them for guacd. When guacd runs in its own container, set `GUACD_TUNNEL_HOST` to the address guacd uses to reach Termix (the Termix container's name in Compose).
+A remote desktop host can sit behind SSH jump hosts. Termix opens a tunnel through them for guacd. When guacd runs in its own container, set `GUACD_TUNNEL_HOST` to the address guacd uses to reach Termix (the Termix container's name in Compose). In Kubernetes it defaults to the pod IP, since the Service only forwards its own port.
 
 ## Recording
 

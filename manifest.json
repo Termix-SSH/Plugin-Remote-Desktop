@@ -1,7 +1,7 @@
 {
   "id": "remote-desktop",
   "name": "Remote Desktop",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "RDP, VNC and Telnet sessions in your browser, with clipboard, file transfer, sharing and recording.",
   "author": {
     "name": "Termix"
@@ -36,7 +36,7 @@
     },
     {
       "name": "GUACD_TUNNEL_HOST",
-      "description": "Address guacd uses to reach Termix for hosts behind jump hosts. In Compose, the Termix container name.",
+      "description": "Address guacd uses to reach Termix for hosts behind jump hosts and VNC without a username. In Compose, the Termix container name. In Kubernetes it defaults to the pod IP.",
       "default": "termix"
     },
     {
