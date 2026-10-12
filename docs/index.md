@@ -72,6 +72,6 @@ With [Session Sharing](/plugins/session-sharing) on, you can share a live sessio
 
 ## Troubleshooting
 
-- **"Could not connect to guacd".** Check `GUACD_HOST` points at guacd and both are on the same Docker network.
-- **RDP fails right away.** Try a different RDP security mode, or turn on Ignore certificate errors for a self-signed certificate.
-- **Recordings are empty or missing.** The two recording paths don't point at the same folder.
+- "Could not connect to guacd": Check `GUACD_HOST` points at guacd and both are on the same Docker network.
+- RDP fails right away: Try a different RDP security mode, or turn on Ignore certificate errors for a self-signed certificate.
+- Recordings are empty or missing: The two recording paths don't point at the same folder.
