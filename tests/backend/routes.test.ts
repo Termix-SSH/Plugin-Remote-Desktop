@@ -261,6 +261,31 @@ describe("POST /connect-host/:hostId", () => {
   });
 });
 
+describe("without session recording", () => {
+  it("connects when the recording service is gone", async () => {
+    server = await start({
+      protocolTargets: { "7:rdp": target() },
+      services: {
+        "recordings.writer": {
+          enabledFor: async () => {
+            throw new Error(
+              'Service "recordings.writer" is no longer provided',
+            );
+          },
+          createFinished: async () => ({ id: 1 }),
+        },
+      },
+    });
+    await server.mock.ctx.settings.setHost(7, "enableRdp", true);
+    const response = await server.request("POST", "/connect-host/7", {
+      protocol: "rdp",
+    });
+    expect(response.status).toBe(200);
+    const token = tokens.decryptToken(response.body.token);
+    expect(token?.recording).toBeUndefined();
+  });
+});
+
 describe("the rest of the routes", () => {
   it("mints a quick connect token with the caller's defaults", async () => {
     server = await start();

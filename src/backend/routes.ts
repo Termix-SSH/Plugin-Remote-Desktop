@@ -417,7 +417,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         const recordingEnabled =
           protocol !== "vnc" &&
           !!recordings &&
-          (await recordings.enabledFor(hostId));
+          (await recordings.enabledFor(hostId).catch(() => false));
         const recordingName = `${crypto.randomUUID()}.guac`;
         const guacdRecordingPath =
           process.env.GUACD_RECORDING_PATH ||

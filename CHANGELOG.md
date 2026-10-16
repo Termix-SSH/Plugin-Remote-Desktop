@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.3
+
+### Fixed
+
+- Saved RDP hosts failed with "Failed to generate connection token" when the Session Recording plugin was turned off
+
 ## 1.0.2
 
 ### Fixed

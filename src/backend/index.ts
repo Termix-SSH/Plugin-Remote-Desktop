@@ -31,6 +31,8 @@ export async function activate(ctx: PluginContext) {
 
   // Optional: without session-recording nothing is recorded.
   const recordings = (): RecordingsWriter | null => {
+    // A handle to a disabled provider still has its methods, but they throw.
+    if (!ctx.services.providers("recordings.writer").includes("")) return null;
     const service =
       ctx.services.get<Partial<RecordingsWriter>>("recordings.writer");
     return typeof service.createFinished === "function" &&
