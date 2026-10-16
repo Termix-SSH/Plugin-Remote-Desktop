@@ -377,6 +377,7 @@
     "remoteServerRequired": "需要远程服务器。请在设置中连接远程服务器以使用此连接类型。"
   },
   "plugin": {
-    "name": "远程桌面"
+    "name": "远程桌面",
+    "description": "在浏览器中进行 RDP、VNC 和 Telnet 会话，支持剪贴板、文件传输、共享和录制。"
   }
 }
