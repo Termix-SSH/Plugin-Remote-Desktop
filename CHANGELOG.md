@@ -5,6 +5,7 @@
 ### Fixed
 
 - Saved RDP hosts failed with "Failed to generate connection token" when the Session Recording plugin was turned off
+- RDP sessions on some touch screens in Chrome kept resizing as a scrollbar showed and hid
 
 ## 1.0.2
 

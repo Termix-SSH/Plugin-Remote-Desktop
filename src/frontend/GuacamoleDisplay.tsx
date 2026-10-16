@@ -27,7 +27,10 @@ import {
   isPasteShortcut,
   pasteTextToRemote,
 } from "./guacamole-clipboard.ts";
-import { getGuacamoleDisplaySize } from "./guacamole-display-size.ts";
+import {
+  getGuacamoleDisplaySize,
+  isSmallChange,
+} from "./guacamole-display-size.ts";
 import { bindPointerInput } from "./guacamole-pointer.ts";
 import {
   getFileDropDisposition,
@@ -135,6 +138,9 @@ export const GuacamoleDisplay = forwardRef<
   const fitScaleRef = useRef<number>(1);
   const zoomRef = useRef<number>(1);
   const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastSentSizeRef = useRef<{ width: number; height: number } | null>(
+    null,
+  );
   const hasKeyboardFocusRef = useRef(false);
   const windowFocusedRef = useRef(
     typeof document === "undefined" ? true : document.hasFocus(),
@@ -609,6 +615,7 @@ export const GuacamoleDisplay = forwardRef<
               window.devicePixelRatio,
               connectionConfig.dpi,
             );
+            lastSentSizeRef.current = size;
             client.sendSize(size.width, size.height);
           }
           rescaleDisplay(false);
@@ -801,7 +808,12 @@ export const GuacamoleDisplay = forwardRef<
                 window.devicePixelRatio,
                 connectionConfig.dpi,
               );
-              clientRef.current.sendSize(size.width, size.height);
+              // A scrollbar coming and going changes the size by a few
+              // pixels; resending it makes RDP resize again, in a loop.
+              if (!isSmallChange(lastSentSizeRef.current, size)) {
+                lastSentSizeRef.current = size;
+                clientRef.current.sendSize(size.width, size.height);
+              }
             }
             rescaleDisplay(true);
           }
