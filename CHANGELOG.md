@@ -22,6 +22,7 @@
 - Revoking a share disconnects the viewers who joined through it
 - RDP hosts behind an RD Gateway use the external guacd when one is set up
 - guacd Proxy is marked optional, and host settings that only work with an external guacd say so
+- The plugin name and description show in your language
 
 ### Fixed
 
