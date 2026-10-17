@@ -57,4 +57,21 @@ describe("buildGuacamoleWebSocketBaseUrl", () => {
       }),
     ).toBe(`wss://termix.example.com/termix${ROUTE}`);
   });
+
+  it("follows the port the desktop app picked for its backend", () => {
+    const win = globalThis as { electronAPI?: unknown };
+    win.electronAPI = { backendPort: 41234 };
+    try {
+      expect(
+        buildGuacamoleWebSocketBaseUrl({
+          isElectronApp: true,
+          isEmbeddedApp: true,
+          basePath: "",
+          location: httpsLocation,
+        }),
+      ).toBe(`ws://127.0.0.1:41234${ROUTE}`);
+    } finally {
+      delete win.electronAPI;
+    }
+  });
 });

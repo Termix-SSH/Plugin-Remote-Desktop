@@ -32,6 +32,7 @@
 - The failsafe keyboard layout was sent under its translated name in other languages
 - Remote desktop never connected under npm run dev, since the display socket skipped the dev server's proxy
 - A tab could open two connections at once and get stuck on connecting
+- Remote desktop on the desktop app follows its local server when it moves off port 30001
 
 ## 1.0.2
 

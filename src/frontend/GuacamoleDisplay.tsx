@@ -11,7 +11,10 @@ import Guacamole from "guacamole-common-js";
 import { Upload } from "lucide-react";
 import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 import { getGuacamoleToken, remoteByDefault } from "./guacamole-api";
-import { buildGuacamoleWebSocketBaseUrl } from "./guacamole-websocket-url.ts";
+import {
+  buildGuacamoleWebSocketBaseUrl,
+  localBackendPort,
+} from "./guacamole-websocket-url.ts";
 import {
   buildOriginWsUrl,
   getBasePath,
@@ -308,7 +311,7 @@ export const GuacamoleDisplay = forwardRef<
           // connection token in the query, not a session.
           const target = await buildOriginWsUrl({
             origin,
-            localPort: 30001,
+            localPort: localBackendPort(),
             localPath: "/plugin-ws/remote-desktop/display",
             remotePath: "/plugin-ws/remote-desktop/display",
             includeJwt: false,
