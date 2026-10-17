@@ -821,7 +821,9 @@ export const GuacamoleDisplay = forwardRef<
         if (clientRef.current && containerRef.current) {
           const rect = containerRef.current.getBoundingClientRect();
           if (rect.width > 0 && rect.height > 0) {
-            if (!hasConfiguredSize) {
+            // A size sent while guacd is still dialing a VNC server crashes
+            // its VNC client. The connected handler sends the first size.
+            if (!hasConfiguredSize && !isConnectingRef.current) {
               const size = getGuacamoleDisplaySize(
                 rect.width,
                 rect.height,
