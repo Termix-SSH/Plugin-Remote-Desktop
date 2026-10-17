@@ -28,7 +28,7 @@
       "uploadFailed": "Failed to upload {{name}}",
       "uploadDisabled": "Uploads are disabled for this connection",
       "driveUnavailable": "Enable RDP drive redirection before uploading files",
-      "driveNotWritable": "guacd cannot write to the drive folder. Check GUACD_DRIVE_PATH and its permissions.",
+      "driveNotWritable": "Termix cannot write to the drive folder. Check RDP_DRIVE_PATH, or GUACD_DRIVE_PATH with an external guacd, and its permissions.",
       "dropToUpload": "Drop files to upload"
     },
     "toolbar": {
@@ -370,7 +370,7 @@
         "label": "Ignore certificate errors"
       },
       "guacamoleConfig": {
-        "label": "guacd settings"
+        "label": "Connection settings"
       },
       "enableToolbar": {
         "label": "Remote desktop toolbar",
