@@ -3,38 +3,42 @@ import { fireEvent, render } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { GuacamoleToolbar } from "../../src/frontend/GuacamoleToolbar.js";
 import type { GuacamoleDisplayHandle } from "../../src/frontend/GuacamoleDisplay.js";
+import { DEFAULT_TOOLBAR_SETTINGS } from "../../src/frontend/toolbar-settings.js";
 
 vi.mock("react-i18next", async (importOriginal) => ({
   ...(await importOriginal<typeof import("react-i18next")>()),
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
-describe("GuacamoleToolbar Windows key", () => {
-  it("sends Super_L for Win shortcuts and the sticky modifier", () => {
-    const sendKey = vi.fn();
-    const displayRef = {
-      current: {
-        disconnect: vi.fn(),
-        isConnected: () => true,
-        sendKey,
-        sendMouse: vi.fn(),
-        setClipboard: vi.fn(),
-        getFilesystem: () => null,
-        uploadFile: async () => {},
-        zoomIn: vi.fn(() => 1.25),
-        zoomOut: vi.fn(() => 0.75),
-        resetZoom: vi.fn(() => 1),
-      } satisfies GuacamoleDisplayHandle,
-    } as React.RefObject<GuacamoleDisplayHandle>;
-    const { getByText } = render(
-      <GuacamoleToolbar
-        displayRef={displayRef}
-        protocol="rdp"
-        metaKeyFamily="win"
-      />,
+function display(overrides: Partial<GuacamoleDisplayHandle> = {}) {
+  return {
+    current: {
+      disconnect: vi.fn(),
+      isConnected: () => true,
+      sendKey: vi.fn(),
+      sendMouse: vi.fn(),
+      setClipboard: vi.fn(),
+      getFilesystem: () => null,
+      uploadFile: async () => {},
+      zoomIn: vi.fn(() => 1.25),
+      zoomOut: vi.fn(() => 0.75),
+      resetZoom: vi.fn(() => 1),
+      ...overrides,
+    } satisfies GuacamoleDisplayHandle,
+  } as React.RefObject<GuacamoleDisplayHandle>;
+}
+
+describe("GuacamoleToolbar", () => {
+  it("sends system key shortcuts and Ctrl+Alt+Del", () => {
+    const ref = display();
+    const sendKey = ref.current!.sendKey as ReturnType<typeof vi.fn>;
+    const { getByRole } = render(
+      <GuacamoleToolbar displayRef={ref} protocol="rdp" metaKeyFamily="win" />,
     );
 
-    fireEvent.click(getByText("Win+L"));
+    fireEvent.click(
+      getByRole("button", { name: "remoteDesktop.toolbar.winL" }),
+    );
     expect(sendKey.mock.calls).toEqual([
       [0xffeb, true],
       [0x006c, true],
@@ -43,110 +47,142 @@ describe("GuacamoleToolbar Windows key", () => {
     ]);
 
     sendKey.mockClear();
-    fireEvent.click(getByText("Win"));
+    fireEvent.click(
+      getByRole("button", { name: "remoteDesktop.toolbar.winKey" }),
+    );
     expect(sendKey.mock.calls).toEqual([
       [0xffeb, true],
       [0xffeb, false],
     ]);
 
     sendKey.mockClear();
-    fireEvent.click(getByText("remoteDesktop.toolbar.win"));
-    expect(sendKey).toHaveBeenCalledWith(0xffeb, true);
-  });
-
-  it.each(["vnc", "rdp"] as const)(
-    "exposes working zoom controls for %s",
-    (protocol) => {
-      const zoomIn = vi.fn(() => 1.25);
-      const zoomOut = vi.fn(() => 0.75);
-      const resetZoom = vi.fn(() => 1);
-      const displayRef = {
-        current: {
-          disconnect: vi.fn(),
-          isConnected: () => true,
-          sendKey: vi.fn(),
-          sendMouse: vi.fn(),
-          setClipboard: vi.fn(),
-          getFilesystem: () => null,
-          uploadFile: async () => {},
-          zoomIn,
-          zoomOut,
-          resetZoom,
-        } satisfies GuacamoleDisplayHandle,
-      } as React.RefObject<GuacamoleDisplayHandle>;
-      const { getByLabelText, getByText } = render(
-        <GuacamoleToolbar
-          displayRef={displayRef}
-          protocol={protocol}
-          zoom={1.25}
-        />,
-      );
-
-      fireEvent.click(getByLabelText("remoteDesktop.toolbar.zoomOut"));
-      fireEvent.click(getByLabelText("remoteDesktop.toolbar.zoomIn"));
-      fireEvent.click(getByText("125%"));
-      expect(zoomOut).toHaveBeenCalledOnce();
-      expect(zoomIn).toHaveBeenCalledOnce();
-      expect(resetZoom).toHaveBeenCalledOnce();
-    },
-  );
-
-  it("offers an explicit session-only hide action", () => {
-    const onHide = vi.fn();
-    const displayRef = {
-      current: {
-        disconnect: vi.fn(),
-        isConnected: () => true,
-        sendKey: vi.fn(),
-        sendMouse: vi.fn(),
-        setClipboard: vi.fn(),
-        getFilesystem: () => null,
-        uploadFile: vi.fn(),
-        zoomIn: vi.fn(() => 1.25),
-        zoomOut: vi.fn(() => 0.75),
-        resetZoom: vi.fn(() => 1),
-      } satisfies GuacamoleDisplayHandle,
-    } as React.RefObject<GuacamoleDisplayHandle>;
-
-    const { getByLabelText } = render(
-      <GuacamoleToolbar
-        displayRef={displayRef}
-        protocol="rdp"
-        onHide={onHide}
-      />,
+    fireEvent.click(
+      getByRole("button", { name: "remoteDesktop.toolbar.ctrlAltDel" }),
     );
-
-    fireEvent.click(getByLabelText("remoteDesktop.toolbar.hide"));
-    expect(onHide).toHaveBeenCalledOnce();
+    expect(sendKey.mock.calls.map((call) => call[0])).toEqual([
+      0xffe3, 0xffe9, 0xffff, 0xffff, 0xffe9, 0xffe3,
+    ]);
   });
 
-  it("labels the VNC meta key Super instead of Windows", () => {
-    const displayRef = {
-      current: {
-        disconnect: vi.fn(),
-        isConnected: () => true,
-        sendKey: vi.fn(),
-        sendMouse: vi.fn(),
-        setClipboard: vi.fn(),
-        getFilesystem: () => null,
-        uploadFile: vi.fn(),
-        zoomIn: vi.fn(() => 1.25),
-        zoomOut: vi.fn(() => 0.75),
-        resetZoom: vi.fn(() => 1),
-      } satisfies GuacamoleDisplayHandle,
-    } as React.RefObject<GuacamoleDisplayHandle>;
+  it("latches a modifier until the next key, once each", () => {
+    const ref = display();
+    const sendKey = ref.current!.sendKey as ReturnType<typeof vi.fn>;
+    const { getAllByRole, getByRole } = render(
+      <GuacamoleToolbar displayRef={ref} protocol="rdp" metaKeyFamily="win" />,
+    );
+    const ctrl = getAllByRole("button", {
+      name: "remoteDesktop.toolbar.stickyInactive",
+    })[0];
+    fireEvent.click(ctrl);
+    expect(sendKey.mock.calls).toEqual([[0xffe3, true]]);
+    expect(ctrl.getAttribute("aria-pressed")).toBe("true");
 
-    const { getByText, queryByText } = render(
+    sendKey.mockClear();
+    fireEvent.click(getByRole("button", { name: "remoteDesktop.toolbar.esc" }));
+    expect(sendKey.mock.calls).toEqual([
+      [0xff1b, true],
+      [0xff1b, false],
+      [0xffe3, false],
+    ]);
+    expect(ctrl.getAttribute("aria-pressed")).toBe("false");
+  });
+
+  it.each(["vnc", "rdp"] as const)("has working zoom for %s", (protocol) => {
+    const ref = display();
+    const { getByRole } = render(
+      <GuacamoleToolbar displayRef={ref} protocol={protocol} zoom={1.25} />,
+    );
+    fireEvent.click(
+      getByRole("button", { name: "remoteDesktop.toolbar.zoomOut" }),
+    );
+    fireEvent.click(
+      getByRole("button", { name: "remoteDesktop.toolbar.zoomIn" }),
+    );
+    fireEvent.click(
+      getByRole("button", { name: "remoteDesktop.toolbar.resetZoom" }),
+    );
+    expect(ref.current!.zoomOut).toHaveBeenCalledOnce();
+    expect(ref.current!.zoomIn).toHaveBeenCalledOnce();
+    expect(ref.current!.resetZoom).toHaveBeenCalledOnce();
+  });
+
+  it("labels the VNC system key Super", () => {
+    const { getByRole, queryByRole } = render(
       <GuacamoleToolbar
-        displayRef={displayRef}
+        displayRef={display()}
         protocol="vnc"
         metaKeyFamily="super"
       />,
     );
+    expect(
+      getByRole("button", { name: "remoteDesktop.toolbar.superL" }).textContent,
+    ).toBe("Super+L");
+    expect(
+      queryByRole("button", { name: "remoteDesktop.toolbar.winL" }),
+    ).toBeNull();
+  });
 
-    expect(getByText("Super+L")).toBeTruthy();
-    expect(getByText("Super")).toBeTruthy();
-    expect(queryByText("Win+L")).toBeNull();
-    expect(queryByText("Win")).toBeNull();
+  it("leaves desktop keys out of Telnet", () => {
+    const { queryByRole, getByRole } = render(
+      <GuacamoleToolbar displayRef={display()} protocol="telnet" />,
+    );
+    expect(
+      queryByRole("button", { name: "remoteDesktop.toolbar.ctrlAltDel" }),
+    ).toBeNull();
+    expect(
+      getByRole("button", { name: "remoteDesktop.toolbar.tab" }),
+    ).toBeTruthy();
+  });
+
+  it("follows the host's position, order and hidden buttons", () => {
+    const { getByRole, queryByRole } = render(
+      <GuacamoleToolbar
+        displayRef={display()}
+        protocol="rdp"
+        settings={{
+          ...DEFAULT_TOOLBAR_SETTINGS,
+          position: "bottom",
+          buttons: { order: ["tab", "esc"], hidden: ["zoom"] },
+        }}
+      />,
+    );
+    const toolbar = getByRole("toolbar");
+    expect(toolbar.getAttribute("data-position")).toBe("bottom");
+    expect(
+      queryByRole("button", { name: "remoteDesktop.toolbar.zoomIn" }),
+    ).toBeNull();
+    const names = Array.from(
+      toolbar.querySelectorAll("[data-toolbar-buttons] > button"),
+    ).map((button) => button.getAttribute("aria-label"));
+    expect(names.slice(0, 2)).toEqual([
+      "remoteDesktop.toolbar.tab",
+      "remoteDesktop.toolbar.esc",
+    ]);
+  });
+
+  it("shows the file browser button only with a drive", () => {
+    const onToggle = vi.fn();
+    const { getByRole, rerender, queryByRole } = render(
+      <GuacamoleToolbar
+        displayRef={display()}
+        protocol="rdp"
+        onToggleFileBrowser={onToggle}
+      />,
+    );
+    expect(
+      queryByRole("button", { name: "remoteDesktop.toolbar.items.files" }),
+    ).toBeNull();
+    rerender(
+      <GuacamoleToolbar
+        displayRef={display()}
+        protocol="rdp"
+        hasFilesystem
+        onToggleFileBrowser={onToggle}
+      />,
+    );
+    fireEvent.click(
+      getByRole("button", { name: "remoteDesktop.toolbar.items.files" }),
+    );
+    expect(onToggle).toHaveBeenCalledOnce();
   });
 });

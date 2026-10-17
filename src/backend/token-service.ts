@@ -47,6 +47,8 @@ export interface GuacamoleToken {
   connection: GuacamoleConnectionSettings;
   recording?: GuacamoleRecordingMetadata;
   termixMeta?: TermixGuacMeta;
+  /** Who minted it, when no termixMeta says so (Quick Connect). */
+  userId?: string;
   /** When the token stops opening displays, in ms since the epoch. */
   exp?: number;
 }
@@ -61,6 +63,9 @@ export interface GuacamoleRecordingMetadata {
   guacdPath?: string;
   startedAt: string;
 }
+
+/** The session share a join came through, so revoking it can kick the viewer. */
+export const SHARE_ID_SETTING = "termix-share-id";
 
 const CIPHER = "aes-256-cbc";
 const KEY_LENGTH = 32;
@@ -243,6 +248,7 @@ export class GuacamoleTokenService {
     } = {},
     recording?: GuacamoleRecordingMetadata,
     termixMeta?: TermixGuacMeta,
+    owner?: { userId: string },
   ): string {
     const { guacdHost, guacdPort, ...settingsOptions } = options;
     const token: GuacamoleToken = {
@@ -262,6 +268,7 @@ export class GuacamoleTokenService {
       },
       recording,
       termixMeta,
+      ...(owner && !termixMeta ? { userId: owner.userId } : {}),
     };
     return this.encryptToken(token);
   }
@@ -276,6 +283,7 @@ export class GuacamoleTokenService {
     } = {},
     recording?: GuacamoleRecordingMetadata,
     termixMeta?: TermixGuacMeta,
+    owner?: { userId: string },
   ): string {
     const { guacdHost, guacdPort, ...settingsOptions } = options;
     const token: GuacamoleToken = {
@@ -293,6 +301,7 @@ export class GuacamoleTokenService {
       },
       recording,
       termixMeta,
+      ...(owner && !termixMeta ? { userId: owner.userId } : {}),
     };
     return this.encryptToken(token);
   }
@@ -307,6 +316,7 @@ export class GuacamoleTokenService {
     } = {},
     recording?: GuacamoleRecordingMetadata,
     termixMeta?: TermixGuacMeta,
+    owner?: { userId: string },
   ): string {
     const { guacdHost, guacdPort, ...settingsOptions } = options;
     const token: GuacamoleToken = {
@@ -324,18 +334,24 @@ export class GuacamoleTokenService {
       },
       recording,
       termixMeta,
+      ...(owner && !termixMeta ? { userId: owner.userId } : {}),
     };
     return this.encryptToken(token);
   }
 
   // join tokens never carry recording params - only the primary connection's
   // token should write recording-path/recording-name to guacd.
-  createJoinToken(guacamoleConnectionId: string, readOnly: boolean): string {
+  createJoinToken(
+    guacamoleConnectionId: string,
+    readOnly: boolean,
+    shareId?: string,
+  ): string {
     const token: GuacamoleToken = {
       connection: {
         join: guacamoleConnectionId,
         readOnly,
-        settings: {},
+        // In settings, since guacamole-lite keeps only those for a join.
+        settings: shareId ? { [SHARE_ID_SETTING]: shareId } : {},
       },
     };
     return this.encryptToken(token);

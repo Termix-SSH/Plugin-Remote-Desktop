@@ -3,8 +3,12 @@ import { GuacamoleTokenService } from "./token-service.js";
 import { RemoteSessions } from "./sessions.js";
 import {
   createGuacamoleServer,
+  persistRecording,
+  recordingsDir,
   type RecordingsWriter,
 } from "./guacamole-server.js";
+import { BuiltinEngine, resolveEngineMode } from "./engine/index.js";
+import { createDisplayGateway } from "./display-gateway.js";
 import { resolveGuacdOptions } from "./guacd-config.js";
 import { registerRoutes } from "./routes.js";
 import { createLiveSessions } from "./live-sessions.js";
@@ -28,6 +32,12 @@ export async function activate(ctx: PluginContext) {
   const guacd = () => resolveGuacdOptions(guacdUrl || undefined);
   const enabled = async () =>
     (await ctx.settings.get<boolean>("enabled")) !== false;
+  // Built in unless the admin setting or REMOTE_DESKTOP_ENGINE says guacd.
+  let useGuacd = await ctx.settings.get<boolean>("useGuacd");
+  const engineMode = () => resolveEngineMode(useGuacd);
+  ctx.settings.onChange("useGuacd", (value) => {
+    useGuacd = value === true;
+  });
 
   // Optional: without session-recording nothing is recorded.
   const recordings = (): RecordingsWriter | null => {
@@ -55,16 +65,32 @@ export async function activate(ctx: PluginContext) {
     console.log = consoleLog;
   });
 
+  const asUser = <T>(userId: string, fn: () => Promise<T>) =>
+    ctx.asUser(userId, fn);
+  const engine = new BuiltinEngine({
+    log,
+    sessions,
+    recordingsDir: () => recordingsDir(),
+    onRecording: ({ recording }) =>
+      persistRecording({ log, recordings, asUser }, recording),
+    onOpen: (hostId) => ctx.hosts.trackSession(hostId),
+  });
+  ctx.disposables.add(() => engine.close());
+
   const server = createGuacamoleServer({
     log,
     tokens,
     sessions,
     guacd,
     recordings,
-    asUser: (userId, fn) => ctx.asUser(userId, fn),
+    asUser,
     onOpen: (hostId) => ctx.hosts.trackSession(hostId),
   });
   ctx.disposables.add(() => server.close());
+  const endSession = (id: string) =>
+    engine.endSession(id) || server.endSession(id);
+  const disconnectShare = (id: string, shareId: string) =>
+    engine.disconnectShare(id, shareId) + server.disconnectShare(id, shareId);
 
   ctx.settings.onChange("guacdUrl", (value) => {
     guacdUrl = typeof value === "string" ? value : "";
@@ -86,17 +112,31 @@ export async function activate(ctx: PluginContext) {
     guacd,
     enabled,
     recordings,
+    engineMode,
+    guacdConfigured: () =>
+      !!(
+        process.env.GUACD_URL ||
+        process.env.GUACD_HOST ||
+        process.env.GUACD_PORT ||
+        guacdUrl
+      ),
   });
 
-  // guacamole-lite owns its own WebSocketServer, so it takes the raw upgrade.
+  // Both engines own their WebSocketServer, so they take the raw upgrade.
   // Public because a display authenticates with the encrypted, single-use
   // token minted by an authenticated route, not with a session JWT.
+  const gateway = createDisplayGateway({
+    tokens,
+    mode: engineMode,
+    builtin: engine,
+    guacd: server,
+  });
   ctx.ws.upgrade(
     "/display",
     (request, socket, head) =>
-      server.handleUpgrade(
-        request as Parameters<typeof server.handleUpgrade>[0],
-        socket as Parameters<typeof server.handleUpgrade>[1],
+      gateway(
+        request as Parameters<typeof gateway>[0],
+        socket as Parameters<typeof gateway>[1],
         head as Buffer,
       ),
     { public: true },
@@ -108,7 +148,8 @@ export async function activate(ctx: PluginContext) {
       createLiveSessions(protocol, {
         sessions,
         tokens,
-        endSession: server.endSession,
+        endSession,
+        disconnectShare,
       }),
       { name: protocol },
     );

@@ -585,7 +585,18 @@ export function HostEditorRdpTab({
               <option>ja-jp-qwerty</option>
               <option>pt-br-qwerty</option>
               <option>es-es-qwerty</option>
-              <option>{t("hosts.guac.options.failsafe")}</option>
+              <option>es-latam-qwerty</option>
+              <option>pt-pt-qwerty</option>
+              <option>fr-ch-qwertz</option>
+              <option>da-dk-qwerty</option>
+              <option>no-no-qwerty</option>
+              <option>pl-pl-qwerty</option>
+              <option>hu-hu-qwertz</option>
+              <option>ro-ro-qwerty</option>
+              <option>tr-tr-qwerty</option>
+              <option value="failsafe">
+                {t("hosts.guac.options.failsafe")}
+              </option>
             </Select2>
           </div>
           <div className="flex flex-col gap-1.5">
@@ -606,6 +617,9 @@ export function HostEditorRdpTab({
         icon={<Network className="size-3.5" />}
       >
         <div className="flex flex-col gap-4 py-3">
+          <p className="text-xs text-muted-foreground">
+            {t("hosts.guac.gatewayNote")}
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
               <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
@@ -1130,7 +1144,18 @@ export function HostEditorVncTab({
               <option>ja-jp-qwerty</option>
               <option>pt-br-qwerty</option>
               <option>es-es-qwerty</option>
-              <option>{t("hosts.guac.options.failsafe")}</option>
+              <option>es-latam-qwerty</option>
+              <option>pt-pt-qwerty</option>
+              <option>fr-ch-qwertz</option>
+              <option>da-dk-qwerty</option>
+              <option>no-no-qwerty</option>
+              <option>pl-pl-qwerty</option>
+              <option>hu-hu-qwertz</option>
+              <option>ro-ro-qwerty</option>
+              <option>tr-tr-qwerty</option>
+              <option value="failsafe">
+                {t("hosts.guac.options.failsafe")}
+              </option>
             </Select2>
           </div>
           <SettingRow
@@ -1504,6 +1529,9 @@ export function HostEditorTelnetTab({
               value={form.guacamoleConfig["font-name"] ?? ""}
               onChange={(e) => setGuacField("font-name", e.target.value)}
             />
+            <p className="text-xs text-muted-foreground">
+              {t("hosts.guac.fontNameDesc")}
+            </p>
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">

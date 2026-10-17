@@ -14,3 +14,6 @@ termix-plugin-signing.key
 .claude/
 .DS_Store
 Thumbs.db
+
+# Rust build output; the built module in src/backend/engine/wasm is committed
+native/engine/target

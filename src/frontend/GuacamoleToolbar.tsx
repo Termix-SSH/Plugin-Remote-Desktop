@@ -1,66 +1,81 @@
 import React, {
-  useState,
-  useRef,
   useCallback,
   useLayoutEffect,
-  useEffect,
+  useMemo,
+  useRef,
+  useState,
 } from "react";
 import {
-  GripVertical,
-  Monitor,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   ChevronUp,
-  ChevronDown,
-  ChevronsLeftRight,
-  FolderOpen,
-  Touchpad,
+  MoreHorizontal,
   MousePointer,
+  Scan,
+  Touchpad,
   ZoomIn,
   ZoomOut,
-  Scan,
-  X,
 } from "lucide-react";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+  cn,
 } from "@termix-ssh/plugin-sdk/ui";
+import { invokeAction, useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 import type {
   GuacamoleDisplayHandle,
   GuacamoleTouchMode,
 } from "./GuacamoleDisplay.tsx";
-import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
-import { ActionSlot } from "@termix-ssh/plugin-sdk/ui";
-import { cn } from "@termix-ssh/plugin-sdk/ui";
 import {
   detectRuntimeMetaKeyFamily,
   metaKeyLabels,
   type MetaKeyFamily,
 } from "./guacamole-meta-key.ts";
+import {
+  ARROW_KEYS,
+  FUNCTION_KEYS,
+  KEYSYM,
+  NAV_KEYS,
+  REMOTE_DESKTOP_TOOLBAR_SLOT,
+  useToolbarItems,
+  type ToolbarItemInfo,
+} from "./toolbar-items.ts";
+import {
+  DEFAULT_TOOLBAR_SETTINGS,
+  countFittingButtons,
+  visibleButtons,
+  type ToolbarSettings,
+} from "./toolbar-settings.ts";
+
+export { REMOTE_DESKTOP_TOOLBAR_SLOT };
 
 interface GuacamoleToolbarProps {
   displayRef: React.RefObject<GuacamoleDisplayHandle>;
   protocol: "rdp" | "vnc" | "telnet";
+  settings?: ToolbarSettings;
   touchMode?: GuacamoleTouchMode | null;
   hasFilesystem?: boolean;
   fileBrowserOpen?: boolean;
   onToggleFileBrowser?: () => void;
   onTouchModeChange?: (mode: GuacamoleTouchMode) => void;
   zoom?: number;
-  onHide?: () => void;
   metaKeyFamily?: MetaKeyFamily;
   /** Handed to "remote-desktop.toolbar" actions (the share button). */
   slotContext?: RemoteDesktopToolbarContext;
 }
 
-export const REMOTE_DESKTOP_TOOLBAR_SLOT = "remote-desktop.toolbar";
-
 /** What a "remote-desktop.toolbar" action is invoked with. */
 interface RemoteDesktopToolbarContext {
   hostId: number;
-  /** guacd's connection id, once the session is up. */
+  /** The engine's connection id, once the session is up. */
   sessionId: string | null;
   protocol: "rdp" | "vnc" | "telnet";
   tabInstanceId?: string;
@@ -68,93 +83,45 @@ interface RemoteDesktopToolbarContext {
   origin?: "local" | "remote";
 }
 
-const MODIFIER_KEYSYMS = {
-  ctrl: 0xffe3,
-  alt: 0xffe9,
-  shift: 0xffe1,
-  win: 0xffeb,
-} as const;
+const BUTTON =
+  "inline-flex h-7 shrink-0 items-center justify-center gap-1.5 px-2 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-40 data-[state=open]:bg-muted data-[state=open]:text-foreground";
+const ICON_BUTTON = cn(BUTTON, "w-7 px-0");
+const LATCHED = "bg-primary/15 text-primary hover:bg-primary/20";
 
-const FKEY_KEYSYMS = Array.from({ length: 12 }, (_, i) => 0xffbe + i);
+const MODIFIERS = [
+  { id: "ctrl", key: KEYSYM.ctrl, labelKey: "remoteDesktop.toolbar.ctrl" },
+  { id: "alt", key: KEYSYM.alt, labelKey: "remoteDesktop.toolbar.alt" },
+  { id: "shift", key: KEYSYM.shift, labelKey: "remoteDesktop.toolbar.shift" },
+  { id: "meta", key: KEYSYM.meta, labelKey: "" },
+] as const;
 
-const BTN_BASE =
-  "flex items-center justify-center gap-1 h-7 px-2 text-[10px] font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors rounded-sm whitespace-nowrap select-none";
+const ARROW_ICONS = {
+  up: ChevronUp,
+  left: ChevronLeft,
+  down: ChevronDown,
+  right: ChevronRight,
+};
 
-const BTN_ICON =
-  "flex items-center justify-center size-7 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors rounded-sm select-none";
-
-const SEP = "w-px h-5 bg-border mx-0.5 shrink-0";
-
-function TipBtn({
-  tooltip,
-  onClick,
-  className,
-  children,
-}: {
-  tooltip: string;
-  onClick: () => void;
-  className?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <button
-          type="button"
-          aria-label={tooltip}
-          onClick={onClick}
-          className={cn(BTN_BASE, className)}
-        >
-          {children}
-        </button>
-      </TooltipTrigger>
-      <TooltipContent side="bottom" sideOffset={6}>
-        {tooltip}
-      </TooltipContent>
-    </Tooltip>
-  );
+interface MenuEntry {
+  key: string;
+  label: string;
+  icon?: React.ComponentType<{ className?: string }>;
+  checked?: boolean;
+  children?: MenuEntry[];
+  run?: () => void;
 }
 
-function TipIconBtn({
-  tooltip,
-  onClick,
-  className,
-  children,
-}: {
-  tooltip: string;
-  onClick: () => void;
-  className?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <button
-          type="button"
-          aria-label={tooltip}
-          onClick={onClick}
-          className={cn(BTN_ICON, className)}
-        >
-          {children}
-        </button>
-      </TooltipTrigger>
-      <TooltipContent side="bottom" sideOffset={6}>
-        {tooltip}
-      </TooltipContent>
-    </Tooltip>
-  );
-}
-
+/** A strip docked to the top or bottom edge of the session. */
 export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
   displayRef,
   protocol,
+  settings = DEFAULT_TOOLBAR_SETTINGS,
   touchMode,
   hasFilesystem = false,
   fileBrowserOpen = false,
   onToggleFileBrowser,
   onTouchModeChange,
   zoom = 1,
-  onHide,
   metaKeyFamily,
   slotContext,
 }) => {
@@ -162,472 +129,545 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
   const meta = metaKeyLabels(
     metaKeyFamily ?? detectRuntimeMetaKeyFamily(protocol),
   );
-  const [position, setPosition] = useState({ x: 0, y: 12 });
-  const [collapsed, setCollapsed] = useState(false);
-  const [showFKeys, setShowFKeys] = useState(false);
-  const [stickyKeys, setStickyKeys] = useState<Record<number, boolean>>({
-    [MODIFIER_KEYSYMS.ctrl]: false,
-    [MODIFIER_KEYSYMS.alt]: false,
-    [MODIFIER_KEYSYMS.shift]: false,
-    [MODIFIER_KEYSYMS.win]: false,
-  });
+  const catalog = useToolbarItems(slotContext ? { ...slotContext } : undefined);
 
-  const toolbarRef = useRef<HTMLDivElement>(null);
-  const isDraggingRef = useRef(false);
-  const dragOriginRef = useRef({ mouseX: 0, mouseY: 0, posX: 0, posY: 0 });
-  const [isDragging, setIsDragging] = useState(false);
-
-  useLayoutEffect(() => {
-    const el = toolbarRef.current;
-    if (!el) return;
-    const parent = el.offsetParent as HTMLElement | null;
-    if (!parent) return;
-    const parentW = parent.clientWidth;
-    const toolbarW = el.offsetWidth;
-    setPosition((p) => ({ ...p, x: Math.max(0, (parentW - toolbarW) / 2) }));
-  }, [collapsed]);
-
-  useEffect(() => {
-    if (!isDragging) return;
-
-    const onMove = (e: MouseEvent) => {
-      if (!isDraggingRef.current) return;
-      const parent = toolbarRef.current?.offsetParent as HTMLElement | null;
-      const parentW = parent?.clientWidth ?? Infinity;
-      const parentH = parent?.clientHeight ?? Infinity;
-      const toolbarW = toolbarRef.current?.offsetWidth ?? 0;
-      const toolbarH = toolbarRef.current?.offsetHeight ?? 0;
-
-      const dx = e.clientX - dragOriginRef.current.mouseX;
-      const dy = e.clientY - dragOriginRef.current.mouseY;
-      setPosition({
-        x: Math.max(
-          0,
-          Math.min(dragOriginRef.current.posX + dx, parentW - toolbarW),
-        ),
-        y: Math.max(
-          0,
-          Math.min(dragOriginRef.current.posY + dy, parentH - toolbarH),
-        ),
-      });
-    };
-
-    const onUp = () => {
-      isDraggingRef.current = false;
-      setIsDragging(false);
-      document.body.style.userSelect = "";
-    };
-
-    document.addEventListener("mousemove", onMove);
-    document.addEventListener("mouseup", onUp);
-    return () => {
-      document.removeEventListener("mousemove", onMove);
-      document.removeEventListener("mouseup", onUp);
-    };
-  }, [isDragging]);
-
-  const startDrag = useCallback(
-    (e: React.MouseEvent) => {
-      e.preventDefault();
-      isDraggingRef.current = true;
-      dragOriginRef.current = {
-        mouseX: e.clientX,
-        mouseY: e.clientY,
-        posX: position.x,
-        posY: position.y,
-      };
-      document.body.style.userSelect = "none";
-      setIsDragging(true);
-    },
-    [position],
-  );
-
-  const releaseStickyKeys = useCallback(() => {
-    const display = displayRef.current;
-    if (!display) return;
-    setStickyKeys((prev) => {
-      const next = { ...prev };
-      for (const [ksStr, active] of Object.entries(prev)) {
-        if (active) {
-          display.sendKey(Number(ksStr), false);
-          next[Number(ksStr)] = false;
+  const items = useMemo(
+    () =>
+      visibleButtons(catalog, settings.buttons).filter((item) => {
+        if (item.protocols && !item.protocols.includes(protocol)) return false;
+        if (item.id === "files") return hasFilesystem && !!onToggleFileBrowser;
+        if (item.id === "touchMode") {
+          return touchMode != null && !!onTouchModeChange;
         }
-      }
-      return next;
-    });
-  }, [displayRef]);
-
-  const sendCombo = useCallback(
-    (...keysyms: number[]) => {
-      const display = displayRef.current;
-      if (!display) return;
-      for (const k of keysyms) display.sendKey(k, true);
-      for (const k of [...keysyms].reverse()) display.sendKey(k, false);
-      releaseStickyKeys();
-    },
-    [displayRef, releaseStickyKeys],
+        return true;
+      }),
+    [
+      catalog,
+      settings.buttons,
+      protocol,
+      hasFilesystem,
+      onToggleFileBrowser,
+      touchMode,
+      onTouchModeChange,
+    ],
   );
 
-  const toggleStickyKey = useCallback(
-    (keysym: number) => {
-      const display = displayRef.current;
-      if (!display) return;
-      setStickyKeys((prev) => {
-        const isActive = prev[keysym];
-        display.sendKey(keysym, !isActive);
-        return { ...prev, [keysym]: !isActive };
-      });
-    },
+  // Latched modifiers: the ref is what has been sent, the state redraws.
+  const latchedRef = useRef(new Set<number>());
+  const [latched, setLatched] = useState<ReadonlySet<number>>(new Set());
+
+  const sendKey = useCallback(
+    (key: number, pressed: boolean) =>
+      displayRef.current?.sendKey(key, pressed),
     [displayRef],
   );
 
-  const isRdpVnc = protocol === "rdp" || protocol === "vnc";
+  const releaseLatched = useCallback(() => {
+    for (const key of latchedRef.current) sendKey(key, false);
+    latchedRef.current.clear();
+    setLatched(new Set());
+  }, [sendKey]);
 
-  const containerStyle: React.CSSProperties = {
-    position: "absolute",
-    left: position.x,
-    top: position.y,
-    zIndex: 20,
+  const sendCombo = useCallback(
+    (...keys: number[]) => {
+      for (const key of keys) sendKey(key, true);
+      for (const key of [...keys].reverse()) sendKey(key, false);
+      releaseLatched();
+    },
+    [sendKey, releaseLatched],
+  );
+
+  const toggleLatch = useCallback(
+    (key: number) => {
+      const set = latchedRef.current;
+      const down = !set.has(key);
+      if (down) set.add(key);
+      else set.delete(key);
+      sendKey(key, down);
+      setLatched(new Set(set));
+    },
+    [sendKey],
+  );
+
+  const modifierLabel = (labelKey: string) =>
+    labelKey ? t(labelKey) : t(meta.stickyKey);
+
+  // fit is how many items stay on the strip, null for all of them.
+  const rootRef = useRef<HTMLDivElement>(null);
+  const rowRef = useRef<HTMLDivElement>(null);
+  const labeledRef = useRef<HTMLDivElement>(null);
+  const iconRef = useRef<HTMLDivElement>(null);
+  const [layout, setLayout] = useState<{
+    labeled: boolean;
+    fit: number | null;
+  }>(() => ({ labeled: settings.labels === "labeled", fit: null }));
+
+  useLayoutEffect(() => {
+    const row = rowRef.current;
+    if (!row) return;
+    let frame: number | null = null;
+    const measure = () => {
+      frame = null;
+      const available = row.getBoundingClientRect().width;
+      if (available <= 0) return;
+      const widths = (measured: HTMLDivElement | null) =>
+        Array.from(measured?.children ?? []).map(
+          (child) => child.getBoundingClientRect().width,
+        );
+      const labeled = widths(labeledRef.current);
+      const icons = widths(iconRef.current);
+      // The last measured child is the overflow trigger.
+      const overflowWidth = icons.pop() ?? 0;
+      labeled.pop();
+      const labeledTotal = labeled.reduce((sum, width) => sum + width, 0);
+      const fit = countFittingButtons(icons, available, overflowWidth);
+      const next =
+        settings.labels === "labeled" && labeledTotal <= available
+          ? { labeled: true, fit: null }
+          : { labeled: false, fit: fit >= icons.length ? null : fit };
+      setLayout((current) =>
+        current.labeled === next.labeled && current.fit === next.fit
+          ? current
+          : next,
+      );
+    };
+    const schedule = () => {
+      if (frame == null) frame = window.requestAnimationFrame(measure);
+    };
+    measure();
+    const observer =
+      typeof ResizeObserver === "undefined"
+        ? null
+        : new ResizeObserver(schedule);
+    observer?.observe(row);
+    return () => {
+      if (frame != null) window.cancelAnimationFrame(frame);
+      observer?.disconnect();
+    };
+  }, [items, settings.labels, t, zoom, latched, meta.short]);
+
+  const menuSide = settings.position === "top" ? "bottom" : "top";
+
+  const iconButton = (
+    key: string,
+    title: string,
+    Icon: React.ComponentType<{ className?: string }>,
+    onClick: () => void,
+    active = false,
+  ) => (
+    <button
+      key={key}
+      type="button"
+      className={cn(ICON_BUTTON, active && LATCHED)}
+      aria-label={title}
+      title={title}
+      onClick={onClick}
+    >
+      <Icon className="size-3.5" />
+    </button>
+  );
+
+  const textButton = (
+    key: string,
+    title: string,
+    label: React.ReactNode,
+    onClick: () => void,
+    options: {
+      icon?: React.ComponentType<{ className?: string }>;
+      active?: boolean;
+      pressed?: boolean;
+    } = {},
+  ) => (
+    <button
+      key={key}
+      type="button"
+      className={cn(BUTTON, options.active && LATCHED)}
+      aria-label={title}
+      aria-pressed={options.pressed}
+      title={title}
+      onClick={onClick}
+    >
+      {options.icon && <options.icon className="size-3.5 shrink-0" />}
+      {label != null && <span>{label}</span>}
+    </button>
+  );
+
+  const runAction = (item: ToolbarItemInfo) => {
+    if (item.source.kind === "action") {
+      void invokeAction(item.source.contribution.actionId, slotContext);
+    }
   };
 
-  return (
-    <TooltipProvider delayDuration={500}>
-      <div
-        ref={toolbarRef}
-        style={containerStyle}
-        onMouseDown={(e) => e.preventDefault()}
-      >
-        {collapsed ? (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <div className="flex items-center bg-background/85 backdrop-blur-sm border border-border shadow-lg rounded-sm overflow-hidden">
-                <button
-                  type="button"
-                  onMouseDown={startDrag}
-                  className="flex items-center justify-center size-7 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-grab active:cursor-grabbing"
-                >
-                  <GripVertical className="size-3" />
-                </button>
-                <div className="w-px h-4 bg-border" />
-                <button
-                  type="button"
-                  onClick={() => setCollapsed(false)}
-                  className="flex items-center justify-center size-7 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                >
-                  <Monitor className="size-3.5" />
-                </button>
-              </div>
-            </TooltipTrigger>
-            <TooltipContent side="bottom" sideOffset={6}>
-              {t("remoteDesktop.toolbar.expand")}
-            </TooltipContent>
-          </Tooltip>
-        ) : (
-          <div className="flex items-center bg-background/85 backdrop-blur-sm border border-border shadow-lg rounded-sm px-0.5 py-0.5 gap-0">
-            {/* Drag handle */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  onMouseDown={startDrag}
-                  className="flex items-center justify-center h-7 px-1 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors rounded-sm cursor-grab active:cursor-grabbing"
-                >
-                  <GripVertical className="size-3.5" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" sideOffset={6}>
-                {t("remoteDesktop.toolbar.dragHandle")}
-              </TooltipContent>
-            </Tooltip>
-
-            {/* Touch mode toggle, touch devices only */}
-            {touchMode != null && onTouchModeChange && (
-              <>
-                <div className={SEP} />
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        onTouchModeChange(
-                          touchMode === "touchscreen"
-                            ? "touchpad"
-                            : "touchscreen",
-                        )
-                      }
-                      className={cn(BTN_ICON)}
-                    >
-                      {touchMode === "touchscreen" ? (
-                        <MousePointer className="size-3.5" />
-                      ) : (
-                        <Touchpad className="size-3.5" />
-                      )}
-                    </button>
-                  </TooltipTrigger>
-                  <TooltipContent side="bottom" sideOffset={6}>
-                    {touchMode === "touchscreen"
-                      ? t("remoteDesktop.toolbar.switchToTrackpad")
-                      : t("remoteDesktop.toolbar.switchToTouch")}
-                  </TooltipContent>
-                </Tooltip>
-              </>
+  /** One item as it sits on the strip. */
+  const renderItem = (item: ToolbarItemInfo, labeled: boolean) => {
+    const title = t(item.titleKey);
+    switch (item.id) {
+      case "files":
+        return textButton(
+          item.id,
+          title,
+          labeled ? title : null,
+          () => onToggleFileBrowser?.(),
+          { icon: item.icon, active: fileBrowserOpen },
+        );
+      case "touchMode": {
+        const touch = touchMode === "touchscreen";
+        const label = touch
+          ? t("remoteDesktop.toolbar.switchToTrackpad")
+          : t("remoteDesktop.toolbar.switchToTouch");
+        return iconButton(item.id, label, touch ? MousePointer : Touchpad, () =>
+          onTouchModeChange?.(touch ? "touchpad" : "touchscreen"),
+        );
+      }
+      case "zoom":
+        return (
+          <span key={item.id} className="flex items-center">
+            {iconButton(
+              "out",
+              t("remoteDesktop.toolbar.zoomOut"),
+              ZoomOut,
+              () => displayRef.current?.zoomOut(),
             )}
-
-            {/* Drive files, only once guacd reports a redirected filesystem */}
-            {hasFilesystem && onToggleFileBrowser && (
-              <>
-                <div className={SEP} />
-                <TipIconBtn
-                  tooltip={t("remoteDesktop.files.title")}
-                  onClick={onToggleFileBrowser}
-                  className={cn(fileBrowserOpen && "bg-muted text-foreground")}
-                >
-                  <FolderOpen className="size-3.5" />
-                </TipIconBtn>
-              </>
+            <button
+              type="button"
+              className={cn(BUTTON, "min-w-12 px-1 tabular-nums")}
+              aria-label={t("remoteDesktop.toolbar.resetZoom")}
+              title={t("remoteDesktop.toolbar.resetZoom")}
+              onClick={() => displayRef.current?.resetZoom()}
+            >
+              {Math.round(zoom * 100)}%
+            </button>
+            {iconButton("in", t("remoteDesktop.toolbar.zoomIn"), ZoomIn, () =>
+              displayRef.current?.zoomIn(),
             )}
-
-            {isRdpVnc && (
-              <>
-                <div className={SEP} />
-                <TipIconBtn
-                  tooltip={t("remoteDesktop.toolbar.zoomOut")}
-                  onClick={() => displayRef.current?.zoomOut()}
-                >
-                  <ZoomOut className="size-3.5" />
-                </TipIconBtn>
-                <TipBtn
-                  tooltip={t("remoteDesktop.toolbar.resetZoom")}
-                  onClick={() => displayRef.current?.resetZoom()}
-                  className="min-w-12 tabular-nums"
-                >
-                  {Math.round(zoom * 100)}%
-                </TipBtn>
-                <TipIconBtn
-                  tooltip={t("remoteDesktop.toolbar.zoomIn")}
-                  onClick={() => displayRef.current?.zoomIn()}
-                >
-                  <ZoomIn className="size-3.5" />
-                </TipIconBtn>
-                <TipIconBtn
-                  tooltip={t("remoteDesktop.toolbar.fitToScreen")}
-                  onClick={() => displayRef.current?.resetZoom()}
-                >
-                  <Scan className="size-3.5" />
-                </TipIconBtn>
-              </>
+            {iconButton(
+              "fit",
+              t("remoteDesktop.toolbar.fitToScreen"),
+              Scan,
+              () => displayRef.current?.resetZoom(),
             )}
-
-            {/* System combos, RDP/VNC only */}
-            {isRdpVnc && (
-              <>
-                <div className={SEP} />
-                <TipBtn
-                  tooltip={t("remoteDesktop.toolbar.ctrlAltDel")}
-                  onClick={() => sendCombo(0xffe3, 0xffe9, 0xffff)}
-                >
-                  CAD
-                </TipBtn>
-                <TipBtn
-                  tooltip={t(meta.lockTooltip)}
-                  onClick={() => sendCombo(MODIFIER_KEYSYMS.win, 0x006c)}
-                >
-                  {meta.lock}
-                </TipBtn>
-                <TipBtn
-                  tooltip={t(meta.keyTooltip)}
-                  onClick={() => sendCombo(MODIFIER_KEYSYMS.win)}
-                >
-                  {meta.short}
-                </TipBtn>
-              </>
-            )}
-
-            {/* Sticky modifiers, RDP/VNC only */}
-            {isRdpVnc && (
-              <>
-                <div className={SEP} />
-                {(
-                  [
-                    [
-                      "ctrl",
-                      MODIFIER_KEYSYMS.ctrl,
-                      t("remoteDesktop.toolbar.ctrl"),
-                    ],
-                    [
-                      "alt",
-                      MODIFIER_KEYSYMS.alt,
-                      t("remoteDesktop.toolbar.alt"),
-                    ],
-                    [
-                      "shift",
-                      MODIFIER_KEYSYMS.shift,
-                      t("remoteDesktop.toolbar.shift"),
-                    ],
-                    ["win", MODIFIER_KEYSYMS.win, t(meta.stickyKey)],
-                  ] as [string, number, string][]
-                ).map(([key, ks, label]) => (
-                  <Tooltip key={key}>
-                    <TooltipTrigger asChild>
-                      <button
-                        type="button"
-                        onClick={() => toggleStickyKey(ks)}
-                        className={cn(
-                          BTN_BASE,
-                          stickyKeys[ks] &&
-                            "bg-primary/15 text-primary border border-primary/30",
-                        )}
-                      >
-                        {label}
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent side="bottom" sideOffset={6}>
-                      {stickyKeys[ks]
-                        ? t("remoteDesktop.toolbar.stickyActive", {
-                            key: label,
-                          })
-                        : t("remoteDesktop.toolbar.stickyInactive", {
-                            key: label,
-                          })}
-                    </TooltipContent>
-                  </Tooltip>
-                ))}
-              </>
-            )}
-
-            {/* Function key toggle */}
-            <div className={SEP} />
-            <TipBtn
-              tooltip={t("remoteDesktop.toolbar.fnToggle")}
-              onClick={() => setShowFKeys((v) => !v)}
-              className={cn(
-                showFKeys &&
-                  "bg-primary/15 text-primary border border-primary/30",
-              )}
-            >
-              Fn
-            </TipBtn>
-
-            {/* F1-F12 row */}
-            {showFKeys &&
-              FKEY_KEYSYMS.map((ks, i) => (
-                <TipBtn
-                  key={ks}
-                  tooltip={`F${i + 1}`}
-                  onClick={() => sendCombo(ks)}
-                >
-                  F{i + 1}
-                </TipBtn>
-              ))}
-
-            {/* Navigation */}
-            <div className={SEP} />
-            <TipBtn
-              tooltip={t("remoteDesktop.toolbar.esc")}
-              onClick={() => sendCombo(0xff1b)}
-            >
-              Esc
-            </TipBtn>
-            <TipBtn
-              tooltip={t("remoteDesktop.toolbar.tab")}
-              onClick={() => sendCombo(0xff09)}
-            >
-              Tab
-            </TipBtn>
-            <TipBtn
-              tooltip={t("remoteDesktop.toolbar.home")}
-              onClick={() => sendCombo(0xff50)}
-            >
-              Home
-            </TipBtn>
-            <TipBtn
-              tooltip={t("remoteDesktop.toolbar.end")}
-              onClick={() => sendCombo(0xff57)}
-            >
-              End
-            </TipBtn>
-            <TipBtn
-              tooltip={t("remoteDesktop.toolbar.pageUp")}
-              onClick={() => sendCombo(0xff55)}
-            >
-              PgUp
-            </TipBtn>
-            <TipBtn
-              tooltip={t("remoteDesktop.toolbar.pageDown")}
-              onClick={() => sendCombo(0xff56)}
-            >
-              PgDn
-            </TipBtn>
-
-            {/* Arrow cluster */}
-            <div className="flex flex-col ml-0.5">
-              <div className="flex justify-center">
-                <TipIconBtn
-                  tooltip={t("remoteDesktop.toolbar.arrowUp")}
-                  onClick={() => sendCombo(0xff52)}
-                >
-                  <ChevronUp className="size-3" />
-                </TipIconBtn>
-              </div>
-              <div className="flex">
-                <TipIconBtn
-                  tooltip={t("remoteDesktop.toolbar.arrowLeft")}
-                  onClick={() => sendCombo(0xff51)}
-                >
-                  <ChevronLeft className="size-3" />
-                </TipIconBtn>
-                <TipIconBtn
-                  tooltip={t("remoteDesktop.toolbar.arrowDown")}
-                  onClick={() => sendCombo(0xff54)}
-                >
-                  <ChevronDown className="size-3" />
-                </TipIconBtn>
-                <TipIconBtn
-                  tooltip={t("remoteDesktop.toolbar.arrowRight")}
-                  onClick={() => sendCombo(0xff53)}
-                >
-                  <ChevronRight className="size-3" />
-                </TipIconBtn>
-              </div>
-            </div>
-
-            {slotContext && (
-              <ActionSlot
-                slotId={REMOTE_DESKTOP_TOOLBAR_SLOT}
-                className={cn(BTN_ICON)}
-                hideLabels
-                when={{ ...slotContext }}
-                context={() => [slotContext]}
-              />
-            )}
-
-            {/* Collapse */}
-            <div className="w-px h-5 bg-border mx-0.5 shrink-0" />
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  type="button"
-                  onClick={() => setCollapsed(true)}
-                  className={cn(BTN_ICON)}
-                >
-                  <ChevronsLeftRight className="size-3.5" />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" sideOffset={6}>
-                {t("remoteDesktop.toolbar.collapse")}
-              </TooltipContent>
-            </Tooltip>
-            {onHide && (
-              <TipIconBtn
-                tooltip={t("remoteDesktop.toolbar.hide")}
-                onClick={onHide}
+          </span>
+        );
+      case "ctrlAltDel":
+        return textButton(
+          item.id,
+          title,
+          labeled ? "Ctrl+Alt+Del" : null,
+          () => sendCombo(KEYSYM.ctrl, KEYSYM.alt, KEYSYM.delete),
+          { icon: item.icon },
+        );
+      case "lock":
+        return textButton(
+          item.id,
+          t(meta.lockTooltip),
+          labeled ? meta.lock : null,
+          () => sendCombo(KEYSYM.meta, KEYSYM.l),
+          { icon: item.icon },
+        );
+      case "metaKey":
+        return textButton(item.id, t(meta.keyTooltip), meta.short, () =>
+          sendCombo(KEYSYM.meta),
+        );
+      case "modifiers":
+        return (
+          <span key={item.id} className="flex items-center">
+            {MODIFIERS.map((modifier) => {
+              const label = modifierLabel(modifier.labelKey);
+              const on = latched.has(modifier.key);
+              return textButton(
+                modifier.id,
+                on
+                  ? t("remoteDesktop.toolbar.stickyActive", { key: label })
+                  : t("remoteDesktop.toolbar.stickyInactive", { key: label }),
+                label,
+                () => toggleLatch(modifier.key),
+                { active: on, pressed: on },
+              );
+            })}
+          </span>
+        );
+      case "functionKeys":
+        return (
+          <DropdownMenu key={item.id}>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                className={BUTTON}
+                aria-label={title}
+                title={title}
               >
-                <X className="size-3.5" />
-              </TipIconBtn>
+                Fn
+                <ChevronDown className="size-3" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side={menuSide} align="start">
+              {FUNCTION_KEYS.map((fn) => (
+                <DropdownMenuItem
+                  key={fn.cap}
+                  onSelect={() => sendCombo(fn.key)}
+                >
+                  {fn.cap}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      case "arrows":
+        return (
+          <span key={item.id} className="flex items-center">
+            {ARROW_KEYS.map((arrow) =>
+              iconButton(
+                arrow.dir,
+                t(arrow.titleKey),
+                ARROW_ICONS[arrow.dir],
+                () => sendCombo(arrow.key),
+              ),
             )}
-          </div>
+          </span>
+        );
+      default: {
+        const nav = NAV_KEYS.find((key) => key.id === item.id);
+        if (nav) {
+          return textButton(item.id, title, nav.cap, () =>
+            sendCombo(...nav.keys),
+          );
+        }
+        return textButton(
+          item.id,
+          title,
+          labeled || !item.icon ? title : null,
+          () => runAction(item),
+          { icon: item.icon },
+        );
+      }
+    }
+  };
+
+  /** The same item as entries of the overflow menu. */
+  const menuEntries = (item: ToolbarItemInfo): MenuEntry[] => {
+    const title = t(item.titleKey);
+    switch (item.id) {
+      case "files":
+        return [
+          {
+            key: item.id,
+            label: title,
+            icon: item.icon,
+            checked: fileBrowserOpen,
+            run: () => onToggleFileBrowser?.(),
+          },
+        ];
+      case "touchMode": {
+        const touch = touchMode === "touchscreen";
+        return [
+          {
+            key: item.id,
+            label: touch
+              ? t("remoteDesktop.toolbar.switchToTrackpad")
+              : t("remoteDesktop.toolbar.switchToTouch"),
+            icon: touch ? MousePointer : Touchpad,
+            run: () => onTouchModeChange?.(touch ? "touchpad" : "touchscreen"),
+          },
+        ];
+      }
+      case "zoom":
+        return [
+          {
+            key: "zoomIn",
+            label: t("remoteDesktop.toolbar.zoomIn"),
+            icon: ZoomIn,
+            run: () => displayRef.current?.zoomIn(),
+          },
+          {
+            key: "zoomOut",
+            label: t("remoteDesktop.toolbar.zoomOut"),
+            icon: ZoomOut,
+            run: () => displayRef.current?.zoomOut(),
+          },
+          {
+            key: "zoomReset",
+            label: `${t("remoteDesktop.toolbar.resetZoom")} | ${Math.round(zoom * 100)}%`,
+            icon: Scan,
+            run: () => displayRef.current?.resetZoom(),
+          },
+        ];
+      case "ctrlAltDel":
+        return [
+          {
+            key: item.id,
+            label: title,
+            icon: item.icon,
+            run: () => sendCombo(KEYSYM.ctrl, KEYSYM.alt, KEYSYM.delete),
+          },
+        ];
+      case "lock":
+        return [
+          {
+            key: item.id,
+            label: t(meta.lockTooltip),
+            icon: item.icon,
+            run: () => sendCombo(KEYSYM.meta, KEYSYM.l),
+          },
+        ];
+      case "metaKey":
+        return [
+          {
+            key: item.id,
+            label: t(meta.keyTooltip),
+            run: () => sendCombo(KEYSYM.meta),
+          },
+        ];
+      case "modifiers":
+        return MODIFIERS.map((modifier) => ({
+          key: modifier.id,
+          label: modifierLabel(modifier.labelKey),
+          checked: latched.has(modifier.key),
+          run: () => toggleLatch(modifier.key),
+        }));
+      case "functionKeys":
+        return [
+          {
+            key: item.id,
+            label: title,
+            children: FUNCTION_KEYS.map((fn) => ({
+              key: fn.cap,
+              label: fn.cap,
+              run: () => sendCombo(fn.key),
+            })),
+          },
+        ];
+      case "arrows":
+        return ARROW_KEYS.map((arrow) => ({
+          key: arrow.dir,
+          label: t(arrow.titleKey),
+          icon: ARROW_ICONS[arrow.dir],
+          run: () => sendCombo(arrow.key),
+        }));
+      default: {
+        const nav = NAV_KEYS.find((key) => key.id === item.id);
+        if (nav) {
+          return [
+            { key: item.id, label: title, run: () => sendCombo(...nav.keys) },
+          ];
+        }
+        return [
+          {
+            key: item.id,
+            label: title,
+            icon: item.icon,
+            run: () => runAction(item),
+          },
+        ];
+      }
+    }
+  };
+
+  const renderEntry = (entry: MenuEntry): React.ReactNode => {
+    if (entry.children) {
+      return (
+        <DropdownMenuSub key={entry.key}>
+          <DropdownMenuSubTrigger>{entry.label}</DropdownMenuSubTrigger>
+          <DropdownMenuSubContent>
+            {entry.children.map(renderEntry)}
+          </DropdownMenuSubContent>
+        </DropdownMenuSub>
+      );
+    }
+    if (entry.checked !== undefined) {
+      return (
+        <DropdownMenuCheckboxItem
+          key={entry.key}
+          checked={entry.checked}
+          onSelect={(event) => {
+            event.preventDefault();
+            entry.run?.();
+          }}
+        >
+          {entry.label}
+        </DropdownMenuCheckboxItem>
+      );
+    }
+    return (
+      <DropdownMenuItem key={entry.key} onSelect={() => entry.run?.()}>
+        {entry.icon && <entry.icon className="size-3.5" />}
+        {entry.label}
+      </DropdownMenuItem>
+    );
+  };
+
+  const fit = layout.fit ?? items.length;
+  const shown = items.slice(0, fit);
+  const overflow = items.slice(fit);
+
+  const measureRow = (labeled: boolean, ref: React.Ref<HTMLDivElement>) => (
+    <div
+      ref={ref}
+      data-toolbar-measure={labeled ? "labeled" : "icons"}
+      aria-hidden="true"
+      // Measured only: never clickable, never in the tab order.
+      inert
+      className="pointer-events-none invisible absolute left-0 top-0 flex whitespace-nowrap"
+    >
+      {items.map((item) => (
+        <span key={item.id} className="flex items-center">
+          {renderItem(item, labeled)}
+        </span>
+      ))}
+      <span className={ICON_BUTTON}>
+        <MoreHorizontal className="size-3.5" />
+      </span>
+    </div>
+  );
+
+  return (
+    <div
+      ref={rootRef}
+      data-remote-toolbar
+      data-position={settings.position}
+      role="toolbar"
+      aria-label={t("remoteDesktop.toolbar.label")}
+      // Clicks must not move focus off the session's keyboard.
+      onMouseDown={(event) => event.preventDefault()}
+      className={cn(
+        "relative z-20 flex h-8 w-full shrink-0 items-center border-border bg-sidebar px-1",
+        settings.position === "top" ? "border-b" : "border-t",
+      )}
+    >
+      <div
+        ref={rowRef}
+        data-toolbar-buttons
+        className="relative flex min-w-0 flex-1 items-center gap-0.5 overflow-hidden"
+      >
+        {measureRow(true, labeledRef)}
+        {measureRow(false, iconRef)}
+        {shown.map((item) => (
+          <React.Fragment key={item.id}>
+            {renderItem(item, layout.labeled)}
+          </React.Fragment>
+        ))}
+        {overflow.length > 0 && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button
+                type="button"
+                className={ICON_BUTTON}
+                aria-label={t("remoteDesktop.toolbar.more")}
+                title={t("remoteDesktop.toolbar.more")}
+              >
+                <MoreHorizontal className="size-3.5" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent side={menuSide} align="end">
+              {overflow.map((item, index) => (
+                <React.Fragment key={item.id}>
+                  {index > 0 && <DropdownMenuSeparator />}
+                  {menuEntries(item).map(renderEntry)}
+                </React.Fragment>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         )}
       </div>
-    </TooltipProvider>
+    </div>
   );
 };

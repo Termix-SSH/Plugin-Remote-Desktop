@@ -3,6 +3,12 @@ import type {
   HostProtocolAuthForm,
 } from "@termix-ssh/plugin-sdk/frontend";
 import { PLUGIN_ID, remoteOptions, type Protocol } from "./host-remote";
+import {
+  readToolbarValues,
+  type ToolbarButtonLayout,
+  type ToolbarLabels,
+  type ToolbarPosition,
+} from "./toolbar-settings";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -21,6 +27,9 @@ export interface RemoteDesktopForm {
   telnetPort: number;
   guacamoleConfig: Record<string, any>;
   enableToolbar: boolean;
+  toolbarPosition: ToolbarPosition;
+  toolbarLabels: ToolbarLabels;
+  toolbarButtons: ToolbarButtonLayout;
   rdpAuthType: "direct" | "credential" | "none";
   rdpCredentialId: string;
   rdpUser: string;
@@ -48,6 +57,9 @@ const SETTING_FOR_FIELD: Partial<Record<keyof RemoteDesktopForm, string>> = {
   security: "rdpSecurity",
   ignoreCert: "rdpIgnoreCert",
   enableToolbar: "enableToolbar",
+  toolbarPosition: "toolbarPosition",
+  toolbarLabels: "toolbarLabels",
+  toolbarButtons: "toolbarButtons",
 };
 
 type LoginPart = "authType" | "credentialId" | "username" | "password";
@@ -125,6 +137,7 @@ export function remoteDesktopForm(props: HostEditorSectionProps): {
   const bag = props.form?.pluginSettings as PluginSettingsBag | undefined;
   const logins = props.form?.protocolAuth as LoginBag | undefined;
   const options = remoteOptions(bag?.[PLUGIN_ID]);
+  const toolbar = readToolbarValues(bag?.[PLUGIN_ID] ?? {});
   const rdp = loginOf(logins, "rdp");
   const vnc = loginOf(logins, "vnc");
   const telnet = loginOf(logins, "telnet");
@@ -136,6 +149,9 @@ export function remoteDesktopForm(props: HostEditorSectionProps): {
     ignoreCert: options.rdpIgnoreCert,
     guacamoleConfig: options.guacamoleConfig as Record<string, any>,
     enableToolbar: options.enableToolbar,
+    toolbarPosition: toolbar.position,
+    toolbarLabels: toolbar.labels,
+    toolbarButtons: toolbar.buttons,
     domain: rdp.fields.domain ?? "",
     rdpAuthType: rdp.authType,
     rdpCredentialId: rdp.credentialId,

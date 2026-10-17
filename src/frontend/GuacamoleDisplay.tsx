@@ -10,11 +10,12 @@ import {
 import Guacamole from "guacamole-common-js";
 import { Upload } from "lucide-react";
 import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
-import { getGuacamoleToken } from "./guacamole-api";
+import { getGuacamoleToken, remoteByDefault } from "./guacamole-api";
 import { buildGuacamoleWebSocketBaseUrl } from "./guacamole-websocket-url.ts";
 import {
   buildOriginWsUrl,
   getBasePath,
+  pluginWsUrl,
   isElectron,
   resolveConnectionOrigin,
   type ConnectionOrigin,
@@ -148,6 +149,9 @@ export const GuacamoleDisplay = forwardRef<
   const hasInitiatedRef = useRef(false);
   const isMountedRef = useRef(false);
   const isConnectingRef = useRef(false);
+  // Bumped on unmount, so a connect still awaiting from an earlier mount
+  // (React remounts in dev) stops instead of opening a second client.
+  const connectGenerationRef = useRef(0);
   const [isReady, setIsReady] = useState(false);
   const [hasError, setHasError] = useState(false);
   // RDP's guacd backend (FreeRDP) can report the Guacamole-level CONNECTED
@@ -258,7 +262,7 @@ export const GuacamoleDisplay = forwardRef<
         // session, so both steps have to agree on the origin.
         const origin = await resolveConnectionOrigin(
           { connectionOrigin: connectionConfig.connectionOrigin },
-          { defaultRemote: true },
+          { defaultRemote: await remoteByDefault() },
         );
 
         if (connectionConfig.token) {
@@ -315,12 +319,16 @@ export const GuacamoleDisplay = forwardRef<
           }
           wsBase = target.url;
         } else {
-          wsBase = buildGuacamoleWebSocketBaseUrl({
-            isElectronApp: false,
-            isEmbeddedApp: false,
-            basePath: getBasePath(),
-            location: window.location,
-          });
+          // Core knows the right address, including Vite's dev proxy.
+          const target = await pluginWsUrl("remote-desktop", "/display");
+          wsBase =
+            target?.url ??
+            buildGuacamoleWebSocketBaseUrl({
+              isElectronApp: false,
+              isEmbeddedApp: false,
+              basePath: getBasePath(),
+              location: window.location,
+            });
         }
 
         const params = new URLSearchParams({
@@ -429,6 +437,9 @@ export const GuacamoleDisplay = forwardRef<
   const connect = useCallback(async () => {
     if (isConnectingRef.current) return;
     isConnectingRef.current = true;
+    const generation = ++connectGenerationRef.current;
+    const stale = () =>
+      !isMountedRef.current || generation !== connectGenerationRef.current;
     setIsReady(false);
     setHasError(false);
     readyGateRef.current?.cancel();
@@ -437,8 +448,10 @@ export const GuacamoleDisplay = forwardRef<
     // Let layout settle before measuring without depending on animation frames,
     // which may be throttled while Electron windows or tabs are inactive.
     await new Promise<void>((resolve) => setTimeout(resolve, 0));
-    if (!isMountedRef.current) {
-      isConnectingRef.current = false;
+    if (stale()) {
+      if (generation === connectGenerationRef.current) {
+        isConnectingRef.current = false;
+      }
       return;
     }
 
@@ -459,8 +472,10 @@ export const GuacamoleDisplay = forwardRef<
       attempt++
     ) {
       await new Promise<void>((resolve) => setTimeout(resolve, 25));
-      if (!isMountedRef.current) {
-        isConnectingRef.current = false;
+      if (stale()) {
+        if (generation === connectGenerationRef.current) {
+          isConnectingRef.current = false;
+        }
         return;
       }
       ({ width: containerWidth, height: containerHeight } = measureContainer());
@@ -475,8 +490,10 @@ export const GuacamoleDisplay = forwardRef<
       containerWidth,
       containerHeight,
     );
-    if (!isMountedRef.current) {
-      isConnectingRef.current = false;
+    if (stale()) {
+      if (generation === connectGenerationRef.current) {
+        isConnectingRef.current = false;
+      }
       return;
     }
     if (!wsConnection) {
@@ -783,6 +800,7 @@ export const GuacamoleDisplay = forwardRef<
       isMountedRef.current = false;
       hasInitiatedRef.current = false;
       isConnectingRef.current = false;
+      connectGenerationRef.current++;
       if (resizeTimeoutRef.current) {
         clearTimeout(resizeTimeoutRef.current);
       }
@@ -812,7 +830,11 @@ export const GuacamoleDisplay = forwardRef<
               // pixels; resending it makes RDP resize again, in a loop.
               if (!isSmallChange(lastSentSizeRef.current, size)) {
                 lastSentSizeRef.current = size;
-                clientRef.current.sendSize(size.width, size.height);
+                try {
+                  clientRef.current.sendSize(size.width, size.height);
+                } catch {
+                  // The tunnel closed; the next connect sends the size.
+                }
               }
             }
             rescaleDisplay(true);

@@ -1,0 +1,11 @@
+Termix Remote Desktop plugin
+Copyright Termix contributors. Licensed under the Apache License 2.0.
+
+The built-in remote desktop engine includes third-party software:
+
+- IronRDP (https://github.com/Devolutions/IronRDP), MIT or Apache-2.0,
+  and its Rust dependencies, compiled into src/backend/engine/wasm.
+- xterm.js headless (https://github.com/xtermjs/xterm.js), MIT.
+- opentype.js (https://github.com/opentypejs/opentype.js), MIT.
+- DejaVu Sans Mono fonts, see src/backend/engine/worker/telnet/fonts/LICENSE-DejaVu.txt.
+- guacamole-common-js and guacamole-lite, Apache-2.0 and MIT.

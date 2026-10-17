@@ -18,7 +18,7 @@
 
 ## Overview
 
-Remote Desktop opens RDP, VNC and Telnet sessions in a tab, just like an SSH terminal.
+Remote Desktop opens RDP, VNC and Telnet sessions in a tab, just like an SSH terminal. It speaks those protocols itself, so there is no guacd or anything else to install. An external guacd is still supported.
 
 Read the [docs](https://docs.termix.site/plugins/remote-desktop) to set it up and use it.
 
@@ -26,9 +26,9 @@ Read the [docs](https://docs.termix.site/plugins/remote-desktop) to set it up an
 
 ## Features
 
-- RDP, VNC and Telnet from any browser
+- RDP, VNC and Telnet from any browser, with nothing else to install
 - Tabs and split screen like any other session
-- Clipboard sync and file transfer through RDP drives
+- Clipboard sync, audio, printing and file transfer through RDP drives
 - Jump host support
 - Session sharing and recording
 - Open a host in the native Windows Remote Desktop client from the desktop app

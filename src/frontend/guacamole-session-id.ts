@@ -29,3 +29,22 @@ export function watchGuacamoleConnectionId(
     clearTimeout(timer);
   };
 }
+
+/** The session id once the server has it, or null after `attempts` tries. */
+export async function waitForGuacamoleConnectionId(
+  connectId: string,
+  origin: ConnectionOrigin,
+  attempts = 20,
+  delayMs = 500,
+): Promise<string | null> {
+  for (let i = 0; i < attempts; i++) {
+    try {
+      const id = await getGuacamoleConnectionId(connectId, origin);
+      if (id) return id;
+    } catch {
+      // Keep trying until the attempts run out.
+    }
+    await new Promise((resolve) => setTimeout(resolve, delayMs));
+  }
+  return null;
+}

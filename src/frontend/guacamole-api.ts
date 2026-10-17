@@ -239,6 +239,8 @@ export async function getGuacamoleTokenFromHost(
 
 export interface RemoteDesktopStatus {
   enabled: boolean;
+  /** Missing on servers from before the built-in engine, which all use guacd. */
+  engine?: "builtin" | "guacd";
   /** host and port are where the server dials guacd, after env overrides. */
   guacd: { status: string; host?: string; port?: number };
 }
@@ -308,4 +310,18 @@ export async function openNativeRdp(request: {
     error?: string;
   }>("/native-rdp", request);
   return response.data;
+}
+
+let localEngine: Promise<boolean> | null = null;
+
+/**
+ * Whether a host left on Default should run on the linked server. With the
+ * built-in engine this device can run the session itself, like SSH; with
+ * guacd it can't unless the user runs one, so the server does it.
+ */
+export function remoteByDefault(): Promise<boolean> {
+  localEngine ??= getGuacdStatus("local", { probe: false })
+    .then((status) => status.engine !== "builtin")
+    .catch(() => true);
+  return localEngine;
 }

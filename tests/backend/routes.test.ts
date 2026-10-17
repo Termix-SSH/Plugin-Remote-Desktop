@@ -1,7 +1,7 @@
 import http from "node:http";
 import net, { type AddressInfo } from "node:net";
 import express, { type Router } from "express";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   createMockCtx,
   type MockPluginContext,
@@ -57,6 +57,7 @@ interface Server {
 let server: Server | null = null;
 
 afterEach(async () => {
+  delete process.env.REMOTE_DESKTOP_ENGINE;
   await server?.close();
   server = null;
 });
@@ -440,6 +441,7 @@ describe("saved host guacd status", () => {
   });
 
   it("keeps the global port for a host-only override and global config when absent", async () => {
+    process.env.REMOTE_DESKTOP_ENGINE = "guacd";
     server = await start({ protocolTargets: { "7:rdp": target() } });
     await server.mock.ctx.settings.setHost(7, "enableRdp", true);
     const global = await server.request("GET", "/status?probe=0");
@@ -582,6 +584,124 @@ describe("per-host guacd address", () => {
     await migrateGuacdHosts(ctx);
     expect(await ctx.settings.get("hostGuacd")).toEqual({
       "7": { hostname: "old-guacd", port: 4900 },
+    });
+  });
+});
+
+describe("built-in engine", () => {
+  it("reports a connected guacd so older clients still connect", async () => {
+    server = await start();
+    const status = await server.request("GET", "/status");
+    expect(status.body).toMatchObject({
+      enabled: true,
+      engine: "builtin",
+      guacd: { status: "connected" },
+    });
+  });
+
+  it("reports guacd when REMOTE_DESKTOP_ENGINE says so", async () => {
+    process.env.REMOTE_DESKTOP_ENGINE = "guacd";
+    server = await start();
+    const status = await server.request("GET", "/status?probe=0");
+    expect(status.body.engine).toBe("guacd");
+    expect(status.body.guacd.status).toBe("disconnected");
+  });
+
+  it("returns the session id up front for a saved host", async () => {
+    server = await start({ protocolTargets: { "7:rdp": target() } });
+    await server.mock.ctx.settings.setHost(7, "enableRdp", true);
+    const response = await server.request("POST", "/connect-host/7", {
+      protocol: "rdp",
+    });
+    expect(response.body.guacamoleConnectionId).toBe(
+      `$${response.body.termixConnectId}`,
+    );
+  });
+
+  it("keeps a host with its own guacd on guacd", async () => {
+    server = await start({ protocolTargets: { "7:rdp": target() } });
+    await server.mock.ctx.settings.setHost(7, "enableRdp", true);
+    await server.request("PUT", "/guacd-host/7", { hostname: "guacd.lan" });
+    const status = await server.request(
+      "GET",
+      "/status?probe=0&hostId=7&protocol=rdp",
+    );
+    expect(status.body.engine).toBe("guacd");
+    const response = await server.request("POST", "/connect-host/7", {
+      protocol: "rdp",
+    });
+    expect(response.body.guacamoleConnectionId).toBeNull();
+  });
+
+  it("tunnels jump hosts on loopback, where the engine dials", async () => {
+    const forward = vi.fn(
+      async (_hop: number, target: { bindHost?: string }) => ({
+        bindHost: target.bindHost ?? "",
+        bindPort: 4444,
+        close: async () => {},
+      }),
+    );
+    const jumped = target();
+    jumped.host.jumpHosts = [{ hostId: 3 }] as never;
+    server = await start({
+      protocolTargets: { "7:rdp": jumped },
+      services: { "tunnels.access": { forward } },
+    });
+    await server.mock.ctx.settings.setHost(7, "enableRdp", true);
+    const response = await server.request("POST", "/connect-host/7", {
+      protocol: "rdp",
+    });
+    expect(forward.mock.calls[0][1]).toMatchObject({
+      targetHost: "10.0.0.7",
+      targetPort: 3389,
+      bindHost: "127.0.0.1",
+    });
+    expect(
+      tokens.decryptToken(response.body.token)?.connection.settings,
+    ).toMatchObject({ hostname: "127.0.0.1", port: 4444 });
+  });
+
+  it("sends RD Gateway hosts to a configured guacd", async () => {
+    process.env.GUACD_HOST = "guacd.lan";
+    try {
+      server = await start({ protocolTargets: { "7:rdp": target() } });
+      await server.mock.ctx.settings.setHost(7, "enableRdp", true);
+      await server.mock.ctx.settings.setHost(7, "guacamoleConfig", {
+        "gateway-hostname": "gw.example.com",
+      });
+      const response = await server.request("POST", "/connect-host/7", {
+        protocol: "rdp",
+      });
+      expect(
+        tokens.decryptToken(response.body.token)?.connection.guacdHost,
+      ).toBe("guacd.lan");
+      expect(response.body.guacamoleConnectionId).toBeNull();
+    } finally {
+      delete process.env.GUACD_HOST;
+    }
+  });
+
+  it("records VNC sessions", async () => {
+    const createFinished = vi.fn();
+    server = await start({
+      protocolTargets: { "7:vnc": target({ username: "" }) },
+      services: {
+        "recordings.writer": {
+          enabledFor: async () => true,
+          createFinished,
+        },
+      },
+    });
+    await server.mock.ctx.settings.setHost(7, "enableVnc", true);
+    const response = await server.request("POST", "/connect-host/7", {
+      protocol: "vnc",
+    });
+    const token = tokens.decryptToken(response.body.token);
+    expect(token?.recording).toMatchObject({ protocol: "vnc" });
+    // No macOS banner proxy: the engine dials the host itself.
+    expect(token?.connection.settings).toMatchObject({
+      hostname: "10.0.0.7",
+      port: 5900,
     });
   });
 });
