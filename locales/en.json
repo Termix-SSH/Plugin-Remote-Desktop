@@ -73,13 +73,17 @@
         "lock": "Lock screen",
         "metaKey": "System key",
         "modifiers": "Sticky modifier keys",
-        "arrows": "Arrow keys"
+        "arrows": "Arrow keys",
+        "forceQuit": "Force Quit",
+        "macLock": "Lock screen",
+        "spotlight": "Spotlight"
       },
       "hints": {
         "files": "Shows once the RDP drive is on",
         "touchMode": "Only on touch screens",
         "modifiers": "Ctrl, Alt, Shift and the system key stay held until the next key"
-      }
+      },
+      "option": "Option"
     },
     "disabled": "Remote Desktop is turned off. An admin can turn it on in Settings."
   },

@@ -47,6 +47,7 @@ import {
   REMOTE_DESKTOP_TOOLBAR_SLOT,
   useToolbarItems,
   type ToolbarItemInfo,
+  type ToolbarProtocol,
 } from "./toolbar-items.ts";
 import {
   DEFAULT_TOOLBAR_SETTINGS,
@@ -59,7 +60,7 @@ export { REMOTE_DESKTOP_TOOLBAR_SLOT };
 
 interface GuacamoleToolbarProps {
   displayRef: React.RefObject<GuacamoleDisplayHandle>;
-  protocol: "rdp" | "vnc" | "telnet";
+  protocol: ToolbarProtocol;
   settings?: ToolbarSettings;
   touchMode?: GuacamoleTouchMode | null;
   hasFilesystem?: boolean;
@@ -189,8 +190,13 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
     [sendKey],
   );
 
-  const modifierLabel = (labelKey: string) =>
-    labelKey ? t(labelKey) : t(meta.stickyKey);
+  // A Mac calls the Alt key Option.
+  const modifierLabel = (labelKey: string) => {
+    if (!labelKey) return t(meta.stickyKey);
+    return protocol === "ard" && labelKey === "remoteDesktop.toolbar.alt"
+      ? t("remoteDesktop.toolbar.option")
+      : t(labelKey);
+  };
 
   // fit is how many items stay on the strip, null for all of them.
   const rootRef = useRef<HTMLDivElement>(null);
@@ -364,6 +370,30 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
           () => sendCombo(KEYSYM.meta, KEYSYM.l),
           { icon: item.icon },
         );
+      case "forceQuit":
+        return textButton(
+          item.id,
+          title,
+          labeled ? title : null,
+          () => sendCombo(KEYSYM.meta, KEYSYM.alt, KEYSYM.escape),
+          { icon: item.icon },
+        );
+      case "macLock":
+        return textButton(
+          item.id,
+          title,
+          labeled ? title : null,
+          () => sendCombo(KEYSYM.ctrl, KEYSYM.meta, KEYSYM.q),
+          { icon: item.icon },
+        );
+      case "spotlight":
+        return textButton(
+          item.id,
+          title,
+          labeled ? title : null,
+          () => sendCombo(KEYSYM.meta, KEYSYM.space),
+          { icon: item.icon },
+        );
       case "metaKey":
         return textButton(item.id, t(meta.keyTooltip), meta.short, () =>
           sendCombo(KEYSYM.meta),
@@ -507,6 +537,33 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
             label: t(meta.lockTooltip),
             icon: item.icon,
             run: () => sendCombo(KEYSYM.meta, KEYSYM.l),
+          },
+        ];
+      case "forceQuit":
+        return [
+          {
+            key: item.id,
+            label: title,
+            icon: item.icon,
+            run: () => sendCombo(KEYSYM.meta, KEYSYM.alt, KEYSYM.escape),
+          },
+        ];
+      case "macLock":
+        return [
+          {
+            key: item.id,
+            label: title,
+            icon: item.icon,
+            run: () => sendCombo(KEYSYM.ctrl, KEYSYM.meta, KEYSYM.q),
+          },
+        ];
+      case "spotlight":
+        return [
+          {
+            key: item.id,
+            label: title,
+            icon: item.icon,
+            run: () => sendCombo(KEYSYM.meta, KEYSYM.space),
           },
         ];
       case "metaKey":

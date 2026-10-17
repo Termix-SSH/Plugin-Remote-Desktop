@@ -577,7 +577,7 @@ const GuacamoleAppInner = React.forwardRef<
       {showToolbar && (
         <GuacamoleToolbar
           displayRef={displayRef}
-          protocol={resolvedProtocol === "ard" ? "vnc" : resolvedProtocol}
+          protocol={resolvedProtocol}
           touchMode={touchMode}
           hasFilesystem={filesystem !== null}
           fileBrowserOpen={fileBrowserOpen}
