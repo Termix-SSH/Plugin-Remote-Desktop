@@ -377,6 +377,7 @@
     "remoteServerRequired": "需要遠端伺服器。請在設定中連線遠端伺服器以使用此連線類型。"
   },
   "plugin": {
-    "name": "遠端桌面"
+    "name": "遠端桌面",
+    "description": "在瀏覽器中進行 RDP、VNC 和 Telnet 工作階段，支援剪貼簿、檔案傳輸、共享和錄製。"
   }
 }
