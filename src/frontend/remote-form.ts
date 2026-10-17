@@ -13,7 +13,7 @@ import {
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /**
- * The host editor fields the RDP, VNC and Telnet tabs edit. The logins are
+ * The host editor fields the RDP, VNC, ARD and Telnet tabs edit. The logins are
  * core's, under form.protocolAuth (this plugin declares the protocols in its
  * manifest); the options (ports, security, guacd settings) are this plugin's
  * host settings. Both are presented here under the names the tabs use.
@@ -24,6 +24,7 @@ export interface RemoteDesktopForm {
   ignoreCert: boolean;
   rdpPort: number;
   vncPort: number;
+  ardPort: number;
   telnetPort: number;
   guacamoleConfig: Record<string, any>;
   enableToolbar: boolean;
@@ -38,6 +39,10 @@ export interface RemoteDesktopForm {
   vncCredentialId: string;
   vncUser: string;
   vncPassword: string;
+  ardAuthType: "direct" | "credential";
+  ardCredentialId: string;
+  ardUser: string;
+  ardPassword: string;
   telnetAuthType: "direct" | "credential";
   telnetCredentialId: string;
   telnetUser: string;
@@ -53,6 +58,7 @@ export type RemoteFormSetField = <K extends keyof RemoteDesktopForm>(
 const SETTING_FOR_FIELD: Partial<Record<keyof RemoteDesktopForm, string>> = {
   rdpPort: "rdpPort",
   vncPort: "vncPort",
+  ardPort: "ardPort",
   telnetPort: "telnetPort",
   security: "rdpSecurity",
   ignoreCert: "rdpIgnoreCert",
@@ -77,6 +83,10 @@ const LOGIN_FOR_FIELD: Partial<
   vncCredentialId: ["vnc", "credentialId"],
   vncUser: ["vnc", "username"],
   vncPassword: ["vnc", "password"],
+  ardAuthType: ["ard", "authType"],
+  ardCredentialId: ["ard", "credentialId"],
+  ardUser: ["ard", "username"],
+  ardPassword: ["ard", "password"],
   telnetAuthType: ["telnet", "authType"],
   telnetCredentialId: ["telnet", "credentialId"],
   telnetUser: ["telnet", "username"],
@@ -140,10 +150,12 @@ export function remoteDesktopForm(props: HostEditorSectionProps): {
   const toolbar = readToolbarValues(bag?.[PLUGIN_ID] ?? {});
   const rdp = loginOf(logins, "rdp");
   const vnc = loginOf(logins, "vnc");
+  const ard = loginOf(logins, "ard");
   const telnet = loginOf(logins, "telnet");
   const form: RemoteDesktopForm = {
     rdpPort: options.rdpPort,
     vncPort: options.vncPort,
+    ardPort: options.ardPort,
     telnetPort: options.telnetPort,
     security: options.rdpSecurity,
     ignoreCert: options.rdpIgnoreCert,
@@ -161,6 +173,10 @@ export function remoteDesktopForm(props: HostEditorSectionProps): {
     vncCredentialId: vnc.credentialId,
     vncUser: vnc.username,
     vncPassword: vnc.password,
+    ardAuthType: ard.authType === "credential" ? "credential" : "direct",
+    ardCredentialId: ard.credentialId,
+    ardUser: ard.username,
+    ardPassword: ard.password,
     telnetAuthType: telnet.authType === "credential" ? "credential" : "direct",
     telnetCredentialId: telnet.credentialId,
     telnetUser: telnet.username,

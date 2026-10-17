@@ -29,6 +29,7 @@ import { guacStateToStage } from "./guacamole-state.ts";
 import {
   createPasteCatcher,
   isPasteShortcut,
+  pasteModifierFor,
   pasteTextToRemote,
 } from "./guacamole-clipboard.ts";
 import {
@@ -46,8 +47,9 @@ import {
 } from "./guacamole-filesystem.ts";
 import { clampGuacamoleZoom, stepGuacamoleZoom } from "./guacamole-zoom.ts";
 import { createRdpReadyGate } from "./guacamole-ready.ts";
+import { remoteKeysym } from "./guacamole-meta-key.ts";
 
-type GuacamoleConnectionType = "rdp" | "vnc" | "telnet";
+type GuacamoleConnectionType = "rdp" | "vnc" | "ard" | "telnet";
 
 interface GuacamoleConnectionConfig {
   token?: string;
@@ -146,6 +148,11 @@ export const GuacamoleDisplay = forwardRef<
     null,
   );
   const hasKeyboardFocusRef = useRef(false);
+  const sessionProtocolRef = useRef(
+    connectionConfig.protocol ?? connectionConfig.type,
+  );
+  sessionProtocolRef.current =
+    connectionConfig.protocol ?? connectionConfig.type;
   const windowFocusedRef = useRef(
     typeof document === "undefined" ? true : document.hasFocus(),
   );
@@ -389,12 +396,18 @@ export const GuacamoleDisplay = forwardRef<
         document.activeElement === activeDisplay;
 
       if (!hasKeyboardFocusRef.current && !stillFocused) return;
-      clientRef.current.sendKeyEvent(1, keysym);
+      clientRef.current.sendKeyEvent(
+        1,
+        remoteKeysym(sessionProtocolRef.current, keysym),
+      );
     };
 
     keyboard.onkeyup = (keysym: number) => {
       // Focus loss must still release keys already sent to the remote host.
-      clientRef.current?.sendKeyEvent(0, keysym);
+      clientRef.current?.sendKeyEvent(
+        0,
+        remoteKeysym(sessionProtocolRef.current, keysym),
+      );
     };
   }, [isVisible]);
 
@@ -513,7 +526,13 @@ export const GuacamoleDisplay = forwardRef<
     displayElementRef.current = displayElement;
 
     const pasteCatcher = createPasteCatcher(displayElement, (text) => {
-      if (clientRef.current === client) pasteTextToRemote(client, text);
+      if (clientRef.current === client) {
+        pasteTextToRemote(
+          client,
+          text,
+          pasteModifierFor(sessionProtocolRef.current),
+        );
+      }
     });
 
     if (displayRef.current) {
@@ -548,7 +567,11 @@ export const GuacamoleDisplay = forwardRef<
 
         event.preventDefault();
         event.stopImmediatePropagation();
-        pasteTextToRemote(client, text);
+        pasteTextToRemote(
+          client,
+          text,
+          pasteModifierFor(sessionProtocolRef.current),
+        );
       },
       true,
     );
@@ -862,7 +885,8 @@ export const GuacamoleDisplay = forwardRef<
   useEffect(() => {
     const container = containerRef.current;
     const protocol = connectionConfig.protocol ?? connectionConfig.type;
-    if (!container || !isReady || protocol !== "vnc") return;
+    if (!container || !isReady || (protocol !== "vnc" && protocol !== "ard"))
+      return;
 
     let pinchDistance = 0;
     let pinchZoom = zoomRef.current;

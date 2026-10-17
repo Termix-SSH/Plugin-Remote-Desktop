@@ -42,7 +42,7 @@ function apiError(error: unknown, action: string): Error {
 }
 
 export interface GuacamoleTokenRequest {
-  protocol: "rdp" | "vnc" | "telnet";
+  protocol: "rdp" | "vnc" | "ard" | "telnet";
   hostname: string;
   port?: number;
   username?: string;
@@ -195,7 +195,7 @@ export async function getGuacamoleToken(
 export async function getGuacamoleTokenFromHost(
   hostId: number,
   origin: ConnectionOrigin,
-  protocol?: "rdp" | "vnc" | "telnet",
+  protocol?: "rdp" | "vnc" | "ard" | "telnet",
   promptedCredentials?: {
     username?: string;
     password?: string;
@@ -251,7 +251,7 @@ export async function getGuacdStatus(
   options: {
     probe?: boolean;
     hostId?: number;
-    protocol?: "rdp" | "vnc" | "telnet";
+    protocol?: "rdp" | "vnc" | "ard" | "telnet";
     syncId?: string | null;
   } = {},
 ): Promise<RemoteDesktopStatus> {

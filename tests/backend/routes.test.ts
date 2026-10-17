@@ -201,6 +201,55 @@ describe("POST /connect-host/:hostId", () => {
     expect(settings).toMatchObject({ username: "bob", password: "pw" });
   });
 
+  it("sends an ARD host to guacd as vnc and keeps ard in the session meta", async () => {
+    server = await start({
+      protocolTargets: { "7:ard": target({ username: "mac" }) },
+    });
+    await server.mock.ctx.settings.setHost(7, "enableArd", true);
+    await server.mock.ctx.settings.setHost(7, "ardPort", 5901);
+
+    const response = await server.request("POST", "/connect-host/7", {
+      protocol: "ard",
+    });
+    expect(response.status).toBe(200);
+    const token = tokens.decryptToken(response.body.token);
+    expect(token?.connection.type).toBe("vnc");
+    expect(token?.connection.settings).toMatchObject({
+      hostname: "10.0.0.7",
+      port: 5901,
+      username: "mac",
+      password: "secret",
+    });
+    expect(token?.termixMeta?.protocol).toBe("ard");
+    expect(token?.recording).toBeUndefined();
+  });
+
+  it("refuses ARD while the host has it switched off", async () => {
+    server = await start({ protocolTargets: { "7:ard": target() } });
+    const response = await server.request("POST", "/connect-host/7", {
+      protocol: "ard",
+    });
+    expect(response.status).toBe(400);
+  });
+
+  it("mints an ARD quick-connect token as a vnc connection", async () => {
+    server = await start();
+    const response = await server.request("POST", "/token", {
+      type: "ard",
+      hostname: "10.0.0.9",
+      username: "mac",
+      password: "pw",
+    });
+    expect(response.status).toBe(200);
+    const token = tokens.decryptToken(response.body.token);
+    expect(token?.connection.type).toBe("vnc");
+    expect(token?.connection.settings).toMatchObject({
+      hostname: "10.0.0.9",
+      port: 5900,
+      username: "mac",
+    });
+  });
+
   it("refuses a protocol the host has switched off", async () => {
     server = await start({ protocolTargets: { "7:vnc": target() } });
     const response = await server.request("POST", "/connect-host/7", {
@@ -393,10 +442,11 @@ describe("activate", () => {
     expect(server.mock.checked).toContain("credentials:read");
   });
 
-  it("provides sessions.live for rdp, vnc and telnet", async () => {
+  it("provides sessions.live for rdp, vnc, ard and telnet", async () => {
     server = await start();
     expect([...server.mock.services.keys()].sort()).toEqual(
       expect.arrayContaining([
+        "sessions.live#ard",
         "sessions.live#rdp",
         "sessions.live#telnet",
         "sessions.live#vnc",

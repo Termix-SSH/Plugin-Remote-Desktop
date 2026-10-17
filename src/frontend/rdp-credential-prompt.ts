@@ -5,7 +5,7 @@ export function needsRdpCredentialPrompt({
   rdpAuthType,
   authOverrides,
 }: {
-  protocol: "rdp" | "vnc" | "telnet";
+  protocol: "rdp" | "vnc" | "ard" | "telnet";
   rdpAuthType?: string;
   authOverrides?: RemoteHostLogin["authOverrides"];
 }): boolean {

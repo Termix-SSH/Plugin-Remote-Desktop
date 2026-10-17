@@ -1,13 +1,13 @@
-Remote Desktop opens RDP, VNC and Telnet sessions in your browser, in tabs and split screen like any other session. It has clipboard sync, file transfer through an RDP drive, audio, printing, jump hosts, sharing and recording.
+Remote Desktop opens RDP, VNC, Apple Remote Desktop and Telnet sessions in your browser, in tabs and split screen like any other session. It has clipboard sync, file transfer through an RDP drive, audio, printing, jump hosts, sharing and recording.
 
 It works out of the box. Termix speaks RDP, VNC and Telnet itself, so there is nothing else to install or run, on Docker, bare metal or the desktop app.
 
 ## Add a host
 
 1. Open a host in Manage, or make a new one.
-2. In General, turn on RDP, VNC or Telnet. A host can have SSH and these at once.
+2. In General, turn on RDP, VNC, Apple Remote Desktop or Telnet. A host can have SSH and these at once.
 3. Open the protocol's section. Fill in the port, username and password, and for RDP the domain and security mode.
-4. Save, then pick RDP, VNC or Telnet from the host's menu.
+4. Save, then pick RDP, VNC, Apple Remote Desktop or Telnet from the host's menu.
 
 The login is stored encrypted, like SSH logins, and can be [shared](/guide/sharing) with the host.
 
@@ -99,3 +99,12 @@ These only apply to an external guacd:
 - Wrong characters when typing: Set the keyboard layout to the one the remote machine uses.
 - "Could not connect to guacd": Only with an external guacd. Check `GUACD_HOST` points at guacd and both are on the same Docker network.
 - Recordings are empty with an external guacd: The two recording paths don't point at the same folder.
+
+## Apple Remote Desktop
+
+Apple Remote Desktop (ARD) is a Mac's Screen Sharing. It is its own host type, but it connects as VNC. Turn on Apple Remote Desktop in General and open its tab.
+
+- Enter the macOS account name and password. With a username, Termix signs in with Apple's own login, which is the one Screen Sharing uses.
+- Leave the username blank only for a Mac that has a VNC-only password. With an external guacd, Termix then connects through a small compatibility proxy.
+- The port is 5900 unless you changed it.
+- Recording works as it does for VNC.

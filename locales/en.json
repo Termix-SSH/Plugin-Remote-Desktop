@@ -73,13 +73,17 @@
         "lock": "Lock screen",
         "metaKey": "System key",
         "modifiers": "Sticky modifier keys",
-        "arrows": "Arrow keys"
+        "arrows": "Arrow keys",
+        "forceQuit": "Force Quit",
+        "macLock": "Lock screen",
+        "spotlight": "Spotlight"
       },
       "hints": {
         "files": "Shows once the RDP drive is on",
         "touchMode": "Only on touch screens",
         "modifiers": "Ctrl, Alt, Shift and the system key stay held until the next key"
-      }
+      },
+      "option": "Option"
     },
     "disabled": "Remote Desktop is turned off. An admin can turn it on in Settings."
   },
@@ -242,7 +246,12 @@
         "whiteOnBlack": "White on Black",
         "grayOnBlack": "Gray on Black",
         "greenOnBlack": "Green on Black"
-      }
+      },
+      "ardSettings": "Apple Remote Desktop Settings",
+      "ardPort": "ARD Port",
+      "ardPassword": "macOS Password",
+      "ardUsername": "macOS Username",
+      "ardLeaveBlank": "Leave blank for a VNC-only password"
     },
     "remoteDesktop": "Remote Desktop",
     "tabRdp": "RDP",
@@ -254,7 +263,9 @@
     "userDefaultsNote": "Settings you leave unchanged follow your host defaults.",
     "connectionOriginNote": "On the desktop app, RDP, VNC and Telnet run on this device when the host is left on Default, like SSH. Pick Remote server to run them on the server instead.",
     "docsLink": "View docs",
-    "connectionOriginGuacamoleNote": "RDP, VNC and Telnet run on this device by default, like SSH. Pick Remote server to run them on the server instead."
+    "connectionOriginGuacamoleNote": "RDP, VNC and Telnet run on this device by default, like SSH. Pick Remote server to run them on the server instead.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Mac Screen Sharing"
   },
   "onboarding": {
     "guacdTitle": "Set up remote desktop",
@@ -374,7 +385,7 @@
       },
       "enableToolbar": {
         "label": "Remote desktop toolbar",
-        "description": "Show the toolbar in RDP, VNC and Telnet sessions."
+        "description": "Show the toolbar in RDP, VNC, ARD and Telnet sessions."
       },
       "displayGroup": "Display",
       "displayDefaultsTab": "Remote Desktop",
@@ -396,13 +407,20 @@
         "reset": "Reset",
         "moveUp": "Move up",
         "moveDown": "Move down"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "ARD port"
       }
     }
   },
   "palette": {
     "connectRdp": "Connect with RDP",
     "connectVnc": "Connect with VNC",
-    "connectTelnet": "Connect with Telnet"
+    "connectTelnet": "Connect with Telnet",
+    "connectArd": "Connect with Apple Remote Desktop"
   },
   "permissions": {
     "sessions": {

@@ -4,7 +4,10 @@ import {
   FolderOpen,
   Keyboard,
   Lock,
+  LockKeyhole,
   MousePointer,
+  OctagonX,
+  ScanSearch,
   Search,
   ToggleLeft,
 } from "lucide-react";
@@ -17,7 +20,7 @@ export const REMOTE_DESKTOP_TOOLBAR_SLOT = "remote-desktop.toolbar";
 
 type Icon = ComponentType<{ className?: string }>;
 
-export type ToolbarProtocol = "rdp" | "vnc" | "telnet";
+export type ToolbarProtocol = "rdp" | "vnc" | "ard" | "telnet";
 
 /** Keys a single press sends: pressed in order, released in reverse. */
 export interface KeyButton {
@@ -35,6 +38,9 @@ export const KEYSYM = {
   meta: 0xffeb,
   delete: 0xffff,
   l: 0x006c,
+  escape: 0xff1b,
+  space: 0x0020,
+  q: 0x0071,
 } as const;
 
 export const NAV_KEYS: KeyButton[] = [
@@ -102,7 +108,9 @@ export interface ToolbarItemInfo {
   source: ToolbarItemSource;
 }
 
-const DESKTOP: ToolbarProtocol[] = ["rdp", "vnc"];
+const DESKTOP: ToolbarProtocol[] = ["rdp", "vnc", "ard"];
+/** A Mac has its own system shortcuts instead of Ctrl+Alt+Del and Win+L. */
+const NOT_MAC: ToolbarProtocol[] = ["rdp", "vnc"];
 
 /** The toolbar's own buttons, in their default order. */
 export const BUILTIN_ITEMS: ToolbarItemInfo[] = [
@@ -132,14 +140,35 @@ export const BUILTIN_ITEMS: ToolbarItemInfo[] = [
     id: "ctrlAltDel",
     titleKey: "remoteDesktop.toolbar.ctrlAltDel",
     icon: Keyboard,
-    protocols: DESKTOP,
+    protocols: NOT_MAC,
     source: { kind: "builtin" },
   },
   {
     id: "lock",
     titleKey: "remoteDesktop.toolbar.items.lock",
     icon: Lock,
-    protocols: DESKTOP,
+    protocols: NOT_MAC,
+    source: { kind: "builtin" },
+  },
+  {
+    id: "forceQuit",
+    titleKey: "remoteDesktop.toolbar.items.forceQuit",
+    icon: OctagonX,
+    protocols: ["ard"],
+    source: { kind: "builtin" },
+  },
+  {
+    id: "macLock",
+    titleKey: "remoteDesktop.toolbar.items.macLock",
+    icon: LockKeyhole,
+    protocols: ["ard"],
+    source: { kind: "builtin" },
+  },
+  {
+    id: "spotlight",
+    titleKey: "remoteDesktop.toolbar.items.spotlight",
+    icon: ScanSearch,
+    protocols: ["ard"],
     source: { kind: "builtin" },
   },
   {

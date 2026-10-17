@@ -173,7 +173,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *             properties:
    *               type:
    *                 type: string
-   *                 enum: [rdp, vnc, telnet]
+   *                 enum: [rdp, vnc, ard, telnet]
    *               hostname:
    *                 type: string
    *               port:
@@ -209,7 +209,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         }
         if (!isRemoteProtocol(type)) {
           return res.status(400).json({
-            error: "Invalid connection type. Must be rdp, vnc, or telnet",
+            error: "Invalid connection type. Must be rdp, vnc, ard, or telnet",
           });
         }
         const options: Record<string, unknown> = {};
@@ -259,6 +259,16 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
             undefined,
             owner,
           );
+        } else if (type === "ard") {
+          token = tokens.createArdToken(
+            host,
+            user || undefined,
+            pass,
+            { port: targetPort, ...options },
+            undefined,
+            undefined,
+            owner,
+          );
         } else {
           token = tokens.createTelnetToken(
             host,
@@ -286,7 +296,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    * /plugin-api/remote-desktop/connect-host/{hostId}:
    *   post:
    *     summary: Mint a connection token for a saved host
-   *     description: Resolves the host's RDP, VNC or Telnet login for the caller (a shared recipient gets only what was shared with them), opens a jump tunnel when the host has jump hosts, and returns an encrypted guacamole-lite token.
+   *     description: Resolves the host's RDP, VNC, ARD or Telnet login for the caller (a shared recipient gets only what was shared with them), opens a jump tunnel when the host has jump hosts, and returns an encrypted guacamole-lite token.
    *     tags:
    *       - Remote Desktop
    *     security:
@@ -305,7 +315,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *             properties:
    *               protocol:
    *                 type: string
-   *                 enum: [rdp, vnc, telnet]
+   *                 enum: [rdp, vnc, ard, telnet]
    *               promptedUsername:
    *                 type: string
    *               promptedPassword:
@@ -343,7 +353,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         const requested = body.protocol;
         const protocol: RemoteProtocol | undefined = isRemoteProtocol(requested)
           ? requested
-          : (["rdp", "vnc", "telnet"] as const).find(
+          : (["rdp", "vnc", "ard", "telnet"] as const).find(
               (candidate) => settings[ENABLE_KEY[candidate]],
             );
         if (!protocol) {
@@ -412,7 +422,8 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         const viaGuacd = hostUsesGuacd(deps.engineMode(), guacdOverrides);
         // The built-in engine speaks Apple's login itself; only guacd needs
         // the macOS banner proxy.
-        const needsVncProxy = viaGuacd && protocol === "vnc" && !username;
+        const needsVncProxy =
+          viaGuacd && (protocol === "vnc" || protocol === "ard") && !username;
 
         // The built-in engine dials from this process, so loopback is enough.
         const endpoint =
@@ -464,7 +475,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         const recordings = deps.recordings();
         // guacd never recorded VNC here; the built-in engine does.
         const recordingEnabled =
-          (protocol !== "vnc" || !viaGuacd) &&
+          ((protocol !== "vnc" && protocol !== "ard") || !viaGuacd) &&
           !!recordings &&
           (await recordings.enabledFor(hostId).catch(() => false));
         const recordingName = `${crypto.randomUUID()}.guac`;
@@ -520,6 +531,15 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
           );
         } else if (protocol === "vnc") {
           token = tokens.createVncToken(
+            hostname,
+            username || undefined,
+            password,
+            { port, ...guacConfig, ...guacdOverrides },
+            recording,
+            termixMeta,
+          );
+        } else if (protocol === "ard") {
+          token = tokens.createArdToken(
             hostname,
             username || undefined,
             password,
@@ -715,7 +735,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *         name: protocol
    *         schema:
    *           type: string
-   *           enum: [rdp, vnc, telnet]
+   *           enum: [rdp, vnc, ard, telnet]
    *     responses:
    *       200:
    *         description: The status.

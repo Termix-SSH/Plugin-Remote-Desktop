@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import {
   createPasteCatcher,
   isPasteShortcut,
+  pasteModifierFor,
   pasteTextToRemote,
   type GuacamoleClipboardClient,
 } from "../../src/frontend/guacamole-clipboard.js";
@@ -60,6 +61,27 @@ describe("Guacamole clipboard paste", () => {
       "key:0:118",
       "key:0:65507",
     ]);
+  });
+});
+
+describe("paste modifier", () => {
+  it("pastes with Command on a Mac and Ctrl everywhere else", () => {
+    expect(pasteModifierFor("ard")).toBe(0xffeb);
+    for (const protocol of ["rdp", "vnc", "telnet", undefined]) {
+      expect(pasteModifierFor(protocol)).toBe(0xffe3);
+    }
+  });
+
+  it("sends the chosen modifier around V", () => {
+    const keys: string[] = [];
+    const client: GuacamoleClipboardClient = {
+      createClipboardStream: () => ({ sendBlob: () => {}, sendEnd: () => {} }),
+      sendKeyEvent: (pressed, keysym) => keys.push(`${pressed}:${keysym}`),
+    };
+
+    pasteTextToRemote(client, "from the browser", pasteModifierFor("ard"));
+
+    expect(keys).toEqual(["1:65515", "1:118", "0:118", "0:65515"]);
   });
 });
 

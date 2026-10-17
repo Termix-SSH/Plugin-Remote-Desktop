@@ -3,6 +3,7 @@ import ts from "typescript";
 import Guacamole from "guacamole-common-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import displaySource from "../../src/frontend/GuacamoleDisplay.tsx?raw";
+import { remoteKeysym } from "../../src/frontend/guacamole-meta-key.js";
 
 // Exercise the display's actual focus callback with Guacamole's real keyboard.
 const source = ts.createSourceFile(
@@ -29,7 +30,7 @@ if (!callback) throw new Error("Missing refreshKeyboardHandlers callback");
 const runRefresh = new Function(
   "state",
   ts.transpileModule(
-    `const { keyboardRef, clientRef, displayElementRef, isVisible, windowFocusedRef, hasKeyboardFocusRef } = state;
+    `const { keyboardRef, clientRef, displayElementRef, isVisible, windowFocusedRef, hasKeyboardFocusRef, sessionProtocolRef, remoteKeysym } = state;
     (${callback})();`,
     { compilerOptions: { target: ts.ScriptTarget.ES2022 } },
   ).outputText,
@@ -62,6 +63,8 @@ describe("remote keyboard focus loss", () => {
         isVisible: true,
         windowFocusedRef: { current: true },
         hasKeyboardFocusRef: { current: true },
+        sessionProtocolRef: { current: "vnc" },
+        remoteKeysym,
       };
       const refresh = () => runRefresh(state);
       refresh();
@@ -103,4 +106,46 @@ describe("remote keyboard focus loss", () => {
       ]);
     },
   );
+});
+
+describe("remote keyboard on a Mac", () => {
+  it("sends the browser's Meta key as Super on ARD only", () => {
+    for (const [protocol, sent] of [
+      ["ard", 0xffeb],
+      ["vnc", 0xffe7],
+    ] as const) {
+      const display = document.createElement("div");
+      display.tabIndex = 0;
+      document.body.append(display);
+      display.focus();
+      vi.spyOn(document, "visibilityState", "get").mockReturnValue("visible");
+      const keyboard = new Guacamole.Keyboard(display) as Guacamole.Keyboard & {
+        press(keysym: number): boolean;
+        release(keysym: number): void;
+      };
+      const sendKeyEvent = vi.fn();
+      runRefresh({
+        keyboardRef: { current: keyboard },
+        clientRef: { current: { sendKeyEvent } },
+        displayElementRef: { current: display },
+        isVisible: true,
+        windowFocusedRef: { current: true },
+        hasKeyboardFocusRef: { current: true },
+        sessionProtocolRef: { current: protocol },
+        remoteKeysym,
+      });
+
+      keyboard.press(0xffe7); // the browser's Meta key
+      keyboard.press(0x63); // c
+      keyboard.release(0x63);
+      keyboard.release(0xffe7);
+
+      expect(sendKeyEvent.mock.calls).toEqual([
+        [1, sent],
+        [1, 0x63],
+        [0, 0x63],
+        [0, sent],
+      ]);
+    }
+  });
 });

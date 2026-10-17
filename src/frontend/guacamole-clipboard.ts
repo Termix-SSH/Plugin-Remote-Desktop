@@ -1,6 +1,7 @@
 import Guacamole from "guacamole-common-js";
 
 const CONTROL_LEFT_KEYSYM = 0xffe3;
+const SUPER_LEFT_KEYSYM = 0xffeb;
 const V_KEYSYM = 0x76;
 
 interface ClipboardOutputStream {
@@ -23,19 +24,25 @@ export function isPasteShortcut(
   );
 }
 
+/** The key that pastes: Command on a Mac, Ctrl everywhere else. */
+export function pasteModifierFor(protocol: string | undefined): number {
+  return protocol === "ard" ? SUPER_LEFT_KEYSYM : CONTROL_LEFT_KEYSYM;
+}
+
 export function pasteTextToRemote(
   client: GuacamoleClipboardClient,
   text: string,
+  modifier: number = CONTROL_LEFT_KEYSYM,
 ): void {
   const stream = client.createClipboardStream("text/plain");
   const writer = new Guacamole.StringWriter(stream);
   writer.sendText(text);
   writer.sendEnd();
 
-  client.sendKeyEvent(1, CONTROL_LEFT_KEYSYM);
+  client.sendKeyEvent(1, modifier);
   client.sendKeyEvent(1, V_KEYSYM);
   client.sendKeyEvent(0, V_KEYSYM);
-  client.sendKeyEvent(0, CONTROL_LEFT_KEYSYM);
+  client.sendKeyEvent(0, modifier);
 }
 
 /**

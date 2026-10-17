@@ -186,3 +186,91 @@ describe("GuacamoleToolbar", () => {
     expect(onToggle).toHaveBeenCalledOnce();
   });
 });
+
+describe("GuacamoleToolbar on a Mac", () => {
+  it("swaps Ctrl+Alt+Del and Win+L for the Apple controls on ARD", () => {
+    const { queryByRole } = render(
+      <GuacamoleToolbar displayRef={display()} protocol="ard" />,
+    );
+    for (const name of ["forceQuit", "macLock", "spotlight"]) {
+      expect(
+        queryByRole("button", { name: `remoteDesktop.toolbar.items.${name}` }),
+      ).not.toBeNull();
+    }
+    expect(
+      queryByRole("button", { name: "remoteDesktop.toolbar.ctrlAltDel" }),
+    ).toBeNull();
+    expect(
+      queryByRole("button", { name: "remoteDesktop.toolbar.cmdL" }),
+    ).toBeNull();
+  });
+
+  it("keeps the Apple controls off RDP and VNC", () => {
+    for (const protocol of ["rdp", "vnc"] as const) {
+      const { queryByRole, unmount } = render(
+        <GuacamoleToolbar displayRef={display()} protocol={protocol} />,
+      );
+      for (const name of ["forceQuit", "macLock", "spotlight"]) {
+        expect(
+          queryByRole("button", {
+            name: `remoteDesktop.toolbar.items.${name}`,
+          }),
+        ).toBeNull();
+      }
+      expect(
+        queryByRole("button", { name: "remoteDesktop.toolbar.ctrlAltDel" }),
+      ).not.toBeNull();
+      unmount();
+    }
+  });
+
+  it("sends the Mac shortcuts", () => {
+    const ref = display();
+    const sendKey = ref.current!.sendKey as ReturnType<typeof vi.fn>;
+    const { getByRole } = render(
+      <GuacamoleToolbar displayRef={ref} protocol="ard" />,
+    );
+    const press = (name: string) => {
+      sendKey.mockClear();
+      fireEvent.click(
+        getByRole("button", { name: `remoteDesktop.toolbar.items.${name}` }),
+      );
+      return sendKey.mock.calls.map((call) => [call[0], call[1]]);
+    };
+
+    // Cmd+Option+Esc: pressed in order, released in reverse.
+    expect(press("forceQuit")).toEqual([
+      [0xffeb, true],
+      [0xffe9, true],
+      [0xff1b, true],
+      [0xff1b, false],
+      [0xffe9, false],
+      [0xffeb, false],
+    ]);
+    expect(press("macLock").map((call) => call[0])).toEqual([
+      0xffe3, 0xffeb, 0x0071, 0x0071, 0xffeb, 0xffe3,
+    ]);
+    expect(press("spotlight").map((call) => call[0])).toEqual([
+      0xffeb, 0x0020, 0x0020, 0xffeb,
+    ]);
+  });
+
+  it("calls Alt Option on ARD only", () => {
+    const ard = render(
+      <GuacamoleToolbar displayRef={display()} protocol="ard" />,
+    );
+    expect(
+      ard.queryAllByText("remoteDesktop.toolbar.option").length,
+    ).toBeGreaterThan(0);
+    expect(ard.queryAllByText("remoteDesktop.toolbar.alt")).toHaveLength(0);
+    ard.unmount();
+
+    const vnc = render(
+      <GuacamoleToolbar displayRef={display()} protocol="vnc" />,
+    );
+    expect(
+      vnc.queryAllByText("remoteDesktop.toolbar.alt").length,
+    ).toBeGreaterThan(0);
+    expect(vnc.queryAllByText("remoteDesktop.toolbar.option")).toHaveLength(0);
+  });
+});
