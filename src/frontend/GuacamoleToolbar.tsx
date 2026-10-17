@@ -77,7 +77,7 @@ interface RemoteDesktopToolbarContext {
   hostId: number;
   /** The engine's connection id, once the session is up. */
   sessionId: string | null;
-  protocol: "rdp" | "vnc" | "telnet";
+  protocol: "rdp" | "vnc" | "ard" | "telnet";
   tabInstanceId?: string;
   /** The backend the session runs on. */
   origin?: "local" | "remote";

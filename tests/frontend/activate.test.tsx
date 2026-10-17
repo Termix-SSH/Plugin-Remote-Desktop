@@ -52,7 +52,7 @@ describe(`${manifest.id} activate`, () => {
     expect(app.registered.actions()).toEqual([]);
   });
 
-  it("adds RDP, VNC and Telnet as host protocols while turned on", async () => {
+  it("adds RDP, VNC, ARD and Telnet as host protocols while turned on", async () => {
     rendered = await renderWithApp(plugin, {
       manifest,
       locales,
@@ -60,13 +60,14 @@ describe(`${manifest.id} activate`, () => {
     });
     await vi.waitFor(() =>
       expect(rendered!.registered.hostProtocols().sort()).toEqual([
+        "ard",
         "rdp",
         "telnet",
         "vnc",
       ]),
     );
     expect(rendered.registered.hostActions().map((a) => a.id)).toEqual(
-      expect.arrayContaining(["rdp", "vnc", "telnet"]),
+      expect.arrayContaining(["rdp", "vnc", "ard", "telnet"]),
     );
   });
 

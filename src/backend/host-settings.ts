@@ -1,15 +1,17 @@
 import type { PluginContext } from "@termix-ssh/plugin-sdk/backend";
 
-export type RemoteProtocol = "rdp" | "vnc" | "telnet";
+export type RemoteProtocol = "rdp" | "vnc" | "ard" | "telnet";
 
 const PLUGIN_ID = "remote-desktop";
 
 export interface RemoteDesktopHostSettings {
   enableRdp: boolean;
   enableVnc: boolean;
+  enableArd: boolean;
   enableTelnet: boolean;
   rdpPort: number;
   vncPort: number;
+  ardPort: number;
   telnetPort: number;
   rdpSecurity: string;
   rdpIgnoreCert: boolean;
@@ -20,19 +22,32 @@ export interface RemoteDesktopHostSettings {
 export const ENABLE_KEY: Record<
   RemoteProtocol,
   keyof RemoteDesktopHostSettings
-> = { rdp: "enableRdp", vnc: "enableVnc", telnet: "enableTelnet" };
+> = {
+  rdp: "enableRdp",
+  vnc: "enableVnc",
+  ard: "enableArd",
+  telnet: "enableTelnet",
+};
 
 export const PORT_KEY: Record<RemoteProtocol, keyof RemoteDesktopHostSettings> =
-  { rdp: "rdpPort", vnc: "vncPort", telnet: "telnetPort" };
+  {
+    rdp: "rdpPort",
+    vnc: "vncPort",
+    ard: "ardPort",
+    telnet: "telnetPort",
+  };
 
 export const DEFAULT_PORT: Record<RemoteProtocol, number> = {
   rdp: 3389,
   vnc: 5900,
+  ard: 5900,
   telnet: 23,
 };
 
 export function isRemoteProtocol(value: unknown): value is RemoteProtocol {
-  return value === "rdp" || value === "vnc" || value === "telnet";
+  return (
+    value === "rdp" || value === "vnc" || value === "ard" || value === "telnet"
+  );
 }
 
 function asPort(value: unknown): number | undefined {
@@ -74,9 +89,11 @@ export async function readHostSettings(
   return {
     enableRdp: values.enableRdp === true,
     enableVnc: values.enableVnc === true,
+    enableArd: values.enableArd === true,
     enableTelnet: values.enableTelnet === true,
     rdpPort: asPort(values.rdpPort) ?? DEFAULT_PORT.rdp,
     vncPort: asPort(values.vncPort) ?? DEFAULT_PORT.vnc,
+    ardPort: asPort(values.ardPort) ?? DEFAULT_PORT.ard,
     telnetPort: asPort(values.telnetPort) ?? DEFAULT_PORT.telnet,
     rdpSecurity:
       typeof values.rdpSecurity === "string" ? values.rdpSecurity : "",
@@ -110,7 +127,7 @@ export function normalizeImportedHost(
           : undefined;
 
   const out: Record<string, unknown> = {};
-  for (const protocol of ["rdp", "vnc", "telnet"] as const) {
+  for (const protocol of ["rdp", "vnc", "ard", "telnet"] as const) {
     const key = ENABLE_KEY[protocol];
     const flag = asBool(pick(key));
     if (flag !== undefined) out[key] = flag;
@@ -118,7 +135,7 @@ export function normalizeImportedHost(
     if (port !== undefined) out[PORT_KEY[protocol]] = port;
   }
 
-  const anyFlag = ["enableRdp", "enableVnc", "enableTelnet"].some(
+  const anyFlag = ["enableRdp", "enableVnc", "enableArd", "enableTelnet"].some(
     (key) => out[key] === true,
   );
   if (!anyFlag && isRemoteProtocol(raw.connectionType)) {
@@ -154,7 +171,7 @@ export function hostPayloadLegacy(
   const logins = asObject(host.protocolAuth);
   if (!logins) return null;
   const out: Record<string, unknown> = {};
-  for (const protocol of ["rdp", "vnc", "telnet"] as const) {
+  for (const protocol of ["rdp", "vnc", "ard", "telnet"] as const) {
     const login = asObject(logins[protocol]);
     if (!login) continue;
     out[`${protocol}AuthType`] = login.authType;

@@ -7,15 +7,17 @@ import type { GuacamoleConfig } from "./guacamole-config";
 
 export const PLUGIN_ID = "remote-desktop";
 
-export type Protocol = "rdp" | "vnc" | "telnet";
+export type Protocol = "rdp" | "vnc" | "ard" | "telnet";
 
 /** This plugin's host settings, as they arrive on host.pluginSettings. */
 export interface RemoteHostOptions {
   enableRdp: boolean;
   enableVnc: boolean;
+  enableArd: boolean;
   enableTelnet: boolean;
   rdpPort: number;
   vncPort: number;
+  ardPort: number;
   telnetPort: number;
   rdpSecurity: string;
   rdpIgnoreCert: boolean;
@@ -26,18 +28,21 @@ export interface RemoteHostOptions {
 export const ENABLE_KEY = {
   rdp: "enableRdp",
   vnc: "enableVnc",
+  ard: "enableArd",
   telnet: "enableTelnet",
 } as const satisfies Record<Protocol, keyof RemoteHostOptions>;
 
 export const PORT_KEY = {
   rdp: "rdpPort",
   vnc: "vncPort",
+  ard: "ardPort",
   telnet: "telnetPort",
 } as const satisfies Record<Protocol, keyof RemoteHostOptions>;
 
 export const DEFAULT_PORT: Record<Protocol, number> = {
   rdp: 3389,
   vnc: 5900,
+  ard: 5900,
   telnet: 23,
 };
 
@@ -96,9 +101,11 @@ export function remoteOptions(
   return {
     enableRdp: values.enableRdp === true,
     enableVnc: values.enableVnc === true,
+    enableArd: values.enableArd === true,
     enableTelnet: values.enableTelnet === true,
     rdpPort: port(values.rdpPort, DEFAULT_PORT.rdp),
     vncPort: port(values.vncPort, DEFAULT_PORT.vnc),
+    ardPort: port(values.ardPort, DEFAULT_PORT.ard),
     telnetPort: port(values.telnetPort, DEFAULT_PORT.telnet),
     rdpSecurity:
       typeof values.rdpSecurity === "string" ? values.rdpSecurity : "",

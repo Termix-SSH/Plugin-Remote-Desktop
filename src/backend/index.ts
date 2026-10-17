@@ -142,7 +142,7 @@ export async function activate(ctx: PluginContext) {
     { public: true },
   );
 
-  for (const protocol of ["rdp", "vnc", "telnet"] as const) {
+  for (const protocol of ["rdp", "vnc", "ard", "telnet"] as const) {
     ctx.services.provide(
       "sessions.live",
       createLiveSessions(protocol, {
@@ -162,7 +162,7 @@ export async function activate(ctx: PluginContext) {
   ctx.registry.provide("remote-desktop.hostPayloadLegacy", hostPayloadLegacy);
 
   // Core's status dot pings these hosts on the protocol's own port.
-  for (const protocol of ["rdp", "vnc", "telnet"] as const) {
+  for (const protocol of ["rdp", "vnc", "ard", "telnet"] as const) {
     ctx.hosts.status.registerPort(protocol, async (hostId) => {
       const settings = await readHostSettings(ctx, hostId);
       return settings[PORT_KEY[protocol]] as number;

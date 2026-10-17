@@ -47,7 +47,7 @@ import {
 import { clampGuacamoleZoom, stepGuacamoleZoom } from "./guacamole-zoom.ts";
 import { createRdpReadyGate } from "./guacamole-ready.ts";
 
-type GuacamoleConnectionType = "rdp" | "vnc" | "telnet";
+type GuacamoleConnectionType = "rdp" | "vnc" | "ard" | "telnet";
 
 interface GuacamoleConnectionConfig {
   token?: string;
@@ -862,7 +862,8 @@ export const GuacamoleDisplay = forwardRef<
   useEffect(() => {
     const container = containerRef.current;
     const protocol = connectionConfig.protocol ?? connectionConfig.type;
-    if (!container || !isReady || protocol !== "vnc") return;
+    if (!container || !isReady || (protocol !== "vnc" && protocol !== "ard"))
+      return;
 
     let pinchDistance = 0;
     let pinchZoom = zoomRef.current;

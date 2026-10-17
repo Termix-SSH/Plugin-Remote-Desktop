@@ -39,6 +39,16 @@ describe("guacamole toolbar meta key labels", () => {
     ).toBe("win");
   });
 
+  it("labels ARD with Cmd whatever the browser runs on", () => {
+    expect(
+      detectMetaKeyFamily("ard", {
+        platform: "Win32",
+        userAgent: "Windows NT 10.0",
+        userAgentDataPlatform: "Windows",
+      }),
+    ).toBe("cmd");
+  });
+
   it("exposes Super/Cmd button copy for non-Windows VNC sessions", () => {
     expect(metaKeyLabels("super").short).toBe("Super");
     expect(metaKeyLabels("super").lock).toBe("Super+L");

@@ -15,7 +15,7 @@ export interface MetaKeyLabels {
  * Windows key is wrong, and the local device is the only OS we can see.
  */
 export function detectMetaKeyFamily(
-  protocol: "rdp" | "vnc" | "telnet",
+  protocol: "rdp" | "vnc" | "ard" | "telnet",
   env: {
     platform?: string;
     userAgent?: string;
@@ -23,6 +23,8 @@ export function detectMetaKeyFamily(
   } = {},
 ): MetaKeyFamily {
   if (protocol === "rdp") return "win";
+  // An ARD host is always a Mac, whatever the browser runs on.
+  if (protocol === "ard") return "cmd";
 
   const uaPlatform = env.userAgentDataPlatform ?? "";
   const platform = env.platform ?? "";
@@ -35,7 +37,7 @@ export function detectMetaKeyFamily(
 }
 
 export function detectRuntimeMetaKeyFamily(
-  protocol: "rdp" | "vnc" | "telnet",
+  protocol: "rdp" | "vnc" | "ard" | "telnet",
 ): MetaKeyFamily {
   if (typeof navigator === "undefined") {
     return detectMetaKeyFamily(protocol);
