@@ -82,3 +82,24 @@ export function metaKeyLabels(family: MetaKeyFamily): MetaKeyLabels {
     lockTooltip: "remoteDesktop.toolbar.winL",
   };
 }
+
+const META_LEFT = 0xffe7;
+const META_RIGHT = 0xffe8;
+const SUPER_LEFT = 0xffeb;
+const SUPER_RIGHT = 0xffec;
+
+/**
+ * The key code to send for a key the browser pressed. guacamole-common-js
+ * reports the browser's Meta key (Command on a Mac, Windows on a PC) as
+ * Meta_L, which a Mac ignores as a modifier: Cmd+C arrives as a plain c. A Mac
+ * reads Super_L as Command, so an ARD session sends that instead.
+ */
+export function remoteKeysym(
+  protocol: "rdp" | "vnc" | "ard" | "telnet" | undefined,
+  keysym: number,
+): number {
+  if (protocol !== "ard") return keysym;
+  if (keysym === META_LEFT) return SUPER_LEFT;
+  if (keysym === META_RIGHT) return SUPER_RIGHT;
+  return keysym;
+}

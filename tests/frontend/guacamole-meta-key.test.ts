@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   detectMetaKeyFamily,
   metaKeyLabels,
+  remoteKeysym,
 } from "../../src/frontend/guacamole-meta-key.js";
 
 describe("guacamole toolbar meta key labels", () => {
@@ -54,5 +55,21 @@ describe("guacamole toolbar meta key labels", () => {
     expect(metaKeyLabels("super").lock).toBe("Super+L");
     expect(metaKeyLabels("cmd").short).toBe("Cmd");
     expect(metaKeyLabels("cmd").lock).toBe("Cmd+L");
+  });
+});
+
+describe("remoteKeysym", () => {
+  it("sends a Mac the Super key where the browser pressed Meta", () => {
+    expect(remoteKeysym("ard", 0xffe7)).toBe(0xffeb);
+    expect(remoteKeysym("ard", 0xffe8)).toBe(0xffec);
+    expect(remoteKeysym("ard", 0x63)).toBe(0x63);
+    expect(remoteKeysym("ard", 0xffe9)).toBe(0xffe9);
+  });
+
+  it("leaves every other protocol alone", () => {
+    for (const protocol of ["rdp", "vnc", "telnet", undefined] as const) {
+      expect(remoteKeysym(protocol, 0xffe7)).toBe(0xffe7);
+      expect(remoteKeysym(protocol, 0xffe8)).toBe(0xffe8);
+    }
   });
 });
