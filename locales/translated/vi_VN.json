@@ -10,7 +10,7 @@
     "failedToConnect": "Không thể lấy mã thông báo kết nối",
     "hostNotFound": "Không tìm thấy máy chủ",
     "noHostSelected": "Chưa chọn máy chủ",
-    "guacdUnavailable": "Dịch vụ máy tính từ xa (guacd) không khả dụng. Vui lòng đảm bảo guacd đang chạy, có thể truy cập và được cấu hình đúng trong cài đặt quản trị.",
+    "guacdUnavailable": "Dịch vụ guacd bên ngoài không phản hồi. Vui lòng kiểm tra xem nó có đang chạy không, hoặc tắt tùy chọn \"Sử dụng guacd bên ngoài\" trong cài đặt Màn hình từ xa.",
     "credentialPromptTitle": "Nhập thông tin đăng nhập RDP",
     "credentialPromptDescription": "Máy chủ này được đặt để yêu cầu thông tin đăng nhập khi kết nối. Chúng chỉ được dùng cho phiên này và không được lưu lại.",
     "connect": "Kết nối",
@@ -28,7 +28,7 @@
       "uploadFailed": "Không thể tải lên {{name}}",
       "uploadDisabled": "Chức năng tải lên bị vô hiệu hóa cho kết nối này",
       "driveUnavailable": "Bật chuyển hướng ổ đĩa RDP trước khi tải lên tệp",
-      "driveNotWritable": "guacd không thể ghi vào thư mục ổ đĩa. Kiểm tra GUACD_DRIVE_PATH và quyền của nó.",
+      "driveNotWritable": "Termix không thể ghi vào thư mục ổ đĩa. Vui lòng kiểm tra biến RDP_DRIVE_PATH (hoặc GUACD_DRIVE_PATH nếu dùng guacd bên ngoài) và các quyền truy cập liên quan.",
       "dropToUpload": "Thả tệp để tải lên"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Mũi tên trái",
       "arrowRight": "Mũi tên phải",
       "fnToggle": "Phím chức năng",
-      "collapse": "Thu gọn thanh công cụ",
-      "expand": "Mở rộng thanh công cụ",
-      "dragHandle": "Kéo để di chuyển vị trí",
-      "hide": "Ẩn trong phiên này. Để tắt vĩnh viễn, hãy mở Cài đặt máy chủ → Chung → Thanh công cụ kết nối.",
       "zoomIn": "Phóng to",
       "zoomOut": "Thu nhỏ",
       "resetZoom": "Đặt lại mức phóng to/thu nhỏ",
       "fitToScreen": "Vừa màn hình",
       "switchToTrackpad": "Chuyển sang chế độ touchpad (kéo để di chuyển con trỏ, chạm để nhấp)",
-      "switchToTouch": "Chuyển sang chế độ cảm ứng (chạm trực tiếp vào nơi bạn muốn nhấp)"
+      "switchToTouch": "Chuyển sang chế độ cảm ứng (chạm trực tiếp vào nơi bạn muốn nhấp)",
+      "label": "Thanh công cụ màn hình từ xa",
+      "more": "Thêm",
+      "items": {
+        "files": "Tệp tin",
+        "touchMode": "Chế độ cảm ứng",
+        "zoom": "Thu phóng",
+        "lock": "Khóa màn hình",
+        "metaKey": "Phím hệ thống",
+        "modifiers": "Phím sửa đổi dính",
+        "arrows": "Phím mũi tên",
+        "forceQuit": "Buộc thoát",
+        "macLock": "Khóa màn hình",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "Hiển thị khi ổ RDP đã bật",
+        "touchMode": "Chỉ trên màn hình cảm ứng",
+        "modifiers": "Ctrl, Alt, Shift và phím hệ thống sẽ được giữ nguyên cho đến khi nhấn phím tiếp theo"
+      },
+      "option": "Tùy chọn"
     },
     "disabled": "Màn hình từ xa đang bị tắt. Quản trị viên có thể bật tính năng này trong Cài đặt."
   },
@@ -114,11 +130,11 @@
       "timezone": "Múi giờ",
       "loadBalanceInfo": "Thông tin cân bằng tải / Cookie",
       "loadBalanceInfoDesc": "Cookie của RD Connection Broker để cân bằng tải cho cụm RDS (ví dụ: tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "Proxy guacd",
+      "guacdProxy": "Máy chủ trung gian guacd (tùy chọn)",
       "guacdHostname": "Máy chủ guacd",
       "guacdHostnamePlaceholder": "Mặc định toàn cục",
       "guacdPort": "Cổng guacd",
-      "guacdProxyDesc": "Ghi đè phiên bản guacd toàn cục cho kết nối này. Để trống để sử dụng guacd được cấu hình toàn cục.",
+      "guacdProxyDesc": "Termix sẽ tự kết nối đến máy chủ này. Chỉ đặt máy chủ guacd nếu bạn muốn máy chủ này đi qua guacd riêng của bạn. Để trống để sử dụng cài đặt toàn cục.",
       "guacdAdminOnly": "Chỉ quản trị viên mới có thể thay đổi máy chủ guacd cho một host.",
       "guacdSaveHostFirst": "Hãy lưu host trước, sau đó thiết lập máy chủ guacd của nó ở đây.",
       "guacdSave": "Lưu máy chủ guacd",
@@ -129,6 +145,7 @@
       "gatewayUsername": "Tên người dùng cổng kết nối",
       "gatewayPassword": "Mật khẩu Gateway",
       "gatewayDomain": "Tên miền Gateway",
+      "gatewayNote": "RD Gateway yêu cầu một guacd bên ngoài. Các host có gateway sẽ kết nối đến nó khi được cấu hình, trong cài đặt Remote Desktop hoặc dưới mục guacd Proxy.",
       "remoteAppProgram": "Chương trình RemoteApp",
       "workingDirectory": "Thư mục làm việc",
       "arguments": "Tham số",
@@ -145,7 +162,7 @@
       "disableAudio": "Tắt âm thanh",
       "disableAudioDesc": "Tắt tất cả âm thanh từ phiên làm việc từ xa",
       "enableAudioInput": "Bật đầu vào âm thanh (Micro)",
-      "enableAudioInputDesc": "Chuyển tiếp micro cục bộ đến phiên làm việc từ xa",
+      "enableAudioInputDesc": "Chuyển tiếp micro cục bộ đến phiên làm việc từ xa | Chỉ hoạt động với guacd bên ngoài",
       "wallpaper": "Hình nền",
       "wallpaperDesc": "Hiển thị hình nền máy tính (tắt để cải thiện hiệu năng)",
       "theming": "Giao diện chủ đề",
@@ -159,13 +176,13 @@
       "menuAnimations": "Hoạt ảnh menu",
       "menuAnimationsDesc": "Bật hoạt ảnh mờ và trượt của menu",
       "disableBitmapCaching": "Tắt bộ nhớ đệm Bitmap",
-      "disableBitmapCachingDesc": "Tắt bộ nhớ đệm bitmap (có thể giúp khắc phục lỗi hiển thị)",
+      "disableBitmapCachingDesc": "Tắt bộ nhớ đệm bitmap (có thể giúp giảm lỗi hiển thị) | Chỉ hoạt động với guacd bên ngoài",
       "disableOffscreenCaching": "Tắt bộ nhớ đệm ngoài màn hình",
-      "disableOffscreenCachingDesc": "Tắt bộ nhớ đệm ngoài màn hình",
+      "disableOffscreenCachingDesc": "Tắt bộ nhớ đệm ngoài màn hình | Chỉ hoạt động với guacd bên ngoài",
       "disableGlyphCaching": "Tắt bộ nhớ đệm Glyph",
-      "disableGlyphCachingDesc": "Tắt bộ nhớ đệm glyph",
+      "disableGlyphCachingDesc": "Tắt bộ nhớ đệm glyph | Chỉ hoạt động với guacd bên ngoài",
       "enableGfx": "Bật GFX",
-      "enableGfxDesc": "Sử dụng đường ống đồ họa RemoteFX",
+      "enableGfxDesc": "Sử dụng đường ống đồ họa RemoteFX | Chỉ hoạt động với guacd bên ngoài",
       "enablePrinting": "Bật in ấn",
       "enablePrintingDesc": "Chuyển tiếp máy in cục bộ đến phiên làm việc từ xa",
       "enableDriveRedirection": "Bật chuyển tiếp ổ đĩa",
@@ -175,7 +192,7 @@
       "disableUpload": "Tắt tải lên",
       "disableUploadDesc": "Ngăn chặn tải tệp lên phiên làm việc từ xa",
       "enableTouch": "Bật cảm ứng",
-      "enableTouchDesc": "Bật chuyển tiếp đầu vào cảm ứng",
+      "enableTouchDesc": "Bật chuyển tiếp đầu vào cảm ứng | Chỉ hoạt động với guacd bên ngoài",
       "consoleSession": "Phiên Console",
       "consoleSessionDesc": "Kết nối đến console (phiên 0) thay vì tạo phiên mới",
       "sendWolPacket": "Gửi gói WOL",
@@ -202,6 +219,7 @@
       "telnetPort": "Cổng Telnet",
       "terminalType": "Loại thiết bị đầu cuối",
       "fontName": "Tên phông chữ",
+      "fontNameDesc": "Chỉ hoạt động với guacd bên ngoài. Engine tích hợp sử dụng phông chữ monospace riêng của nó.",
       "fontSize": "Cỡ chữ",
       "colorScheme": "Bảng màu",
       "backspaceKey": "Phím Backspace",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "Trắng trên Đen",
         "grayOnBlack": "Xám trên Đen",
         "greenOnBlack": "Xanh lá trên Đen"
-      }
+      },
+      "ardSettings": "Cài đặt Apple Remote Desktop",
+      "ardPort": "Cổng ARD",
+      "ardPassword": "Mật khẩu macOS",
+      "ardUsername": "Tên người dùng macOS",
+      "ardLeaveBlank": "Để trống nếu chỉ dùng mật khẩu VNC"
     },
     "remoteDesktop": "Màn hình từ xa",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "Shell không mã hóa",
     "remoteDesktopNotes": "Ghi chú",
     "userDefaultsNote": "Các cài đặt bạn để nguyên sẽ theo mặc định của máy chủ.",
-    "connectionOriginNote": "Trên ứng dụng máy tính để bàn, RDP, VNC và Telnet sử dụng máy chủ từ xa trừ khi máy chủ được đặt thành Thiết bị này, điều này yêu cầu một guacd mà máy này có thể truy cập. Đặt một cái trong cài đặt Màn hình từ xa, hoặc cho từng máy chủ dưới mục Proxy guacd.",
+    "connectionOriginNote": "Trên ứng dụng máy tính để bàn, RDP, VNC và Telnet sẽ chạy trên thiết bị này khi máy chủ để ở chế độ Mặc định, giống như SSH. Chọn Máy chủ từ xa để chạy chúng trên máy chủ thay thế.",
     "docsLink": "Xem tài liệu",
-    "connectionOriginGuacamoleNote": "RDP, VNC và Telnet sử dụng máy chủ từ xa trừ khi bạn chọn \"Thiết bị này\", điều này yêu cầu một guacd mà máy này có thể truy cập. Đặt một cái trong cài đặt URL guacd, hoặc cho từng máy chủ dưới mục Proxy guacd."
+    "connectionOriginGuacamoleNote": "RDP, VNC và Telnet mặc định chạy trên thiết bị này, giống như SSH. Chọn Máy chủ từ xa để chạy chúng trên máy chủ thay thế.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Chia sẻ màn hình Mac"
   },
   "onboarding": {
     "guacdTitle": "Cài đặt màn hình từ xa",
-    "guacdIntro": "Màn hình từ xa cần guacd chạy cùng với Termix. Kiểm tra xem nó có phản hồi không, hoặc chỉ Termix đến nó.",
+    "guacdIntro": "Màn hình từ xa được cấu hình để sử dụng guacd của riêng bạn. Hãy kiểm tra xem nó có phản hồi không, hoặc chỉ Termix đến nó.",
     "guacdChecking": "Đang tìm guacd",
     "guacdConnected": "guacd đang chạy tại {{address}}",
     "guacdMissing": "guacd không phản hồi tại {{address}}",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "Bật máy tính từ xa",
-        "description": "Cho phép kết nối RDP, VNC và Telnet thông qua guacd."
+        "description": "Cho phép kết nối RDP, VNC và Telnet."
+      },
+      "useGuacd": {
+        "label": "Sử dụng guacd bên ngoài",
+        "description": "Termix tự chạy RDP, VNC và Telnet. Bật tùy chọn này để chuyển chúng đến guacd của bạn. REMOTE_DESKTOP_ENGINE sẽ ghi đè cài đặt này."
       },
       "guacdUrl": {
         "label": "URL của guacd",
@@ -352,20 +381,46 @@
         "label": "Bỏ qua lỗi chứng chỉ"
       },
       "guacamoleConfig": {
-        "label": "Cài đặt guacd"
+        "label": "Cài đặt kết nối"
       },
       "enableToolbar": {
         "label": "Thanh công cụ máy tính từ xa",
-        "description": "Hiển thị thanh công cụ trong các phiên RDP, VNC và Telnet."
+        "description": "Hiển thị thanh công cụ trong các phiên RDP, VNC, ARD và Telnet."
       },
       "displayGroup": "Hiển thị",
-      "displayDefaultsTab": "Máy tính từ xa"
+      "displayDefaultsTab": "Máy tính từ xa",
+      "toolbarPosition": {
+        "label": "Vị trí thanh công cụ",
+        "description": "Hiển thị thanh công cụ phía trên hoặc phía dưới phiên làm việc.",
+        "top": "Trên cùng",
+        "bottom": "Dưới cùng"
+      },
+      "toolbarLabels": {
+        "label": "Nhãn thanh công cụ",
+        "description": "Hiển thị tên bên cạnh biểu tượng, hoặc chỉ hiển thị biểu tượng. Tên sẽ tự động ẩn khi không còn đủ không gian.",
+        "labeled": "Biểu tượng và tên",
+        "icons": "Chỉ biểu tượng"
+      },
+      "toolbarButtons": {
+        "label": "Nút thanh công cụ",
+        "description": "Chọn nút hiển thị và thứ tự của chúng. Các nút không vừa sẽ nằm trong menu Thêm.",
+        "reset": "Đặt lại",
+        "moveUp": "Di chuyển lên",
+        "moveDown": "Di chuyển xuống"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "Cổng ARD"
+      }
     }
   },
   "palette": {
     "connectRdp": "Kết nối với RDP",
     "connectVnc": "Kết nối với VNC",
-    "connectTelnet": "Kết nối với Telnet"
+    "connectTelnet": "Kết nối với Telnet",
+    "connectArd": "Kết nối với Apple Remote Desktop"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "Yêu cầu máy chủ từ xa. Kết nối máy chủ từ xa trong Cài đặt để sử dụng loại kết nối này."
   },
   "plugin": {
-    "name": "Máy tính từ xa"
+    "name": "Máy tính từ xa",
+    "description": "Phiên RDP, VNC và Telnet trong trình duyệt của bạn, hỗ trợ clipboard, chuyển tệp, chia sẻ và ghi lại."
   }
 }

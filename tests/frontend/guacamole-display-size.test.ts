@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   getGuacamoleDisplaySize,
+  isSmallChange,
   readConfiguredDimension,
 } from "../../src/frontend/guacamole-display-size";
 
@@ -69,5 +70,26 @@ describe("readConfiguredDimension", () => {
     expect(readConfiguredDimension("auto")).toBeUndefined();
     expect(readConfiguredDimension("0")).toBeUndefined();
     expect(readConfiguredDimension("-1080")).toBeUndefined();
+  });
+});
+
+describe("isSmallChange", () => {
+  const size = (width: number, height: number, pixelRatio = 1) => ({
+    width,
+    height,
+    pixelRatio,
+  });
+
+  it("sends the first size", () => {
+    expect(isSmallChange(null, size(1000, 800))).toBe(false);
+  });
+
+  it("ignores a scrollbar's worth of change", () => {
+    expect(isSmallChange(size(1000, 800), size(983, 800))).toBe(true);
+    expect(isSmallChange(size(2000, 1600), size(1966, 1600, 2))).toBe(true);
+  });
+
+  it("sends a real resize", () => {
+    expect(isSmallChange(size(1000, 800), size(1200, 800))).toBe(false);
   });
 });

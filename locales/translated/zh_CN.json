@@ -10,7 +10,7 @@
     "failedToConnect": "获取连接令牌失败",
     "hostNotFound": "未找到主机",
     "noHostSelected": "未选择主机",
-    "guacdUnavailable": "远程桌面服务 (guacd) 不可用。请确保 guacd 正在运行且可访问，并在管理设置中正确配置。",
+    "guacdUnavailable": "外部 guacd 无响应。请检查其是否正在运行，或在远程桌面设置中关闭“使用外部 guacd”。",
     "credentialPromptTitle": "输入 RDP 凭据",
     "credentialPromptDescription": "此主机设置为在连接时提示输入凭据。这些凭据仅用于本次会话，不会保存。",
     "connect": "连接",
@@ -28,7 +28,7 @@
       "uploadFailed": "上传 {{name}} 失败",
       "uploadDisabled": "此连接已禁用上传",
       "driveUnavailable": "上传文件前请启用 RDP 驱动器重定向",
-      "driveNotWritable": "guacd 无法写入驱动器文件夹。请检查 GUACD_DRIVE_PATH 及其权限。",
+      "driveNotWritable": "Termix 无法写入驱动器文件夹。请检查 RDP_DRIVE_PATH，若使用外部 guacd 则检查 GUACD_DRIVE_PATH 及其权限。",
       "dropToUpload": "拖放文件以上传"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "向左箭头",
       "arrowRight": "向右箭头",
       "fnToggle": "功能键",
-      "collapse": "折叠工具栏",
-      "expand": "展开工具栏",
-      "dragHandle": "拖拽以重新定位",
-      "hide": "隐藏本次会话。若要永久禁用，请打开主机设置 → 常规 → 连接工具栏。",
       "zoomIn": "放大",
       "zoomOut": "缩小",
       "resetZoom": "重置缩放",
       "fitToScreen": "适应屏幕",
       "switchToTrackpad": "切换到触控板模式（拖动移动光标，轻点单击）",
-      "switchToTouch": "切换到触摸模式（直接轻点要点击的位置）"
+      "switchToTouch": "切换到触摸模式（直接轻点要点击的位置）",
+      "label": "远程桌面工具栏",
+      "more": "更多",
+      "items": {
+        "files": "文件",
+        "touchMode": "触摸模式",
+        "zoom": "缩放",
+        "lock": "锁定屏幕",
+        "metaKey": "系统键",
+        "modifiers": "粘滞修饰键",
+        "arrows": "方向键",
+        "forceQuit": "强制退出",
+        "macLock": "锁定屏幕",
+        "spotlight": "聚焦搜索"
+      },
+      "hints": {
+        "files": "启用 RDP 驱动器后显示",
+        "touchMode": "仅限触摸屏",
+        "modifiers": "Ctrl、Alt、Shift 和系统键将保持按下状态，直到按下下一个键"
+      },
+      "option": "Option"
     },
     "disabled": "远程桌面已关闭。管理员可以在设置中将其开启。"
   },
@@ -114,11 +130,11 @@
       "timezone": "时区",
       "loadBalanceInfo": "负载均衡信息 / Cookie",
       "loadBalanceInfoDesc": "用于 RDS 农场负载均衡的 RD 连接代理 cookie（例如 tsv://MS Terminal Services Plugin.1.CollectionName）",
-      "guacdProxy": "guacd 代理",
+      "guacdProxy": "guacd 代理（可选）",
       "guacdHostname": "guacd 主机",
       "guacdHostnamePlaceholder": "全局默认值",
       "guacdPort": "guacd 端口",
-      "guacdProxyDesc": "为此连接覆盖全局 guacd 实例。留空则使用全局配置的 guacd。",
+      "guacdProxyDesc": "Termix 将直接连接到此主机。仅当此主机应通过您自己的 guacd 连接时才设置 guacd 服务器。留空以使用全局设置。",
       "guacdAdminOnly": "只有管理员可以更改主机的 guacd 服务器。",
       "guacdSaveHostFirst": "请先保存主机，然后在此处设置其 guacd 服务器。",
       "guacdSave": "保存 guacd 服务器",
@@ -129,6 +145,7 @@
       "gatewayUsername": "网关用户名",
       "gatewayPassword": "网关密码",
       "gatewayDomain": "网关域",
+      "gatewayNote": "RD 网关需要外部 guacd。配置了网关的主机将在远程桌面设置或 guacd 代理中设置网关时通过该网关连接。",
       "remoteAppProgram": "RemoteApp 程序",
       "workingDirectory": "工作目录",
       "arguments": "参数",
@@ -145,7 +162,7 @@
       "disableAudio": "禁用音频",
       "disableAudioDesc": "静音远程会话中的所有音频",
       "enableAudioInput": "启用音频输入（麦克风）",
-      "enableAudioInputDesc": "将本地麦克风转发到远程会话",
+      "enableAudioInputDesc": "将本地麦克风转发到远程会话 | 仅限外部 guacd",
       "wallpaper": "壁纸",
       "wallpaperDesc": "显示桌面壁纸（禁用可提高性能）",
       "theming": "主题",
@@ -159,13 +176,13 @@
       "menuAnimations": "菜单动画",
       "menuAnimationsDesc": "启用菜单淡入淡出和滑动动画",
       "disableBitmapCaching": "禁用位图缓存",
-      "disableBitmapCachingDesc": "关闭位图缓存（可能有助于解决显示异常）",
+      "disableBitmapCachingDesc": "关闭位图缓存（可能有助于解决显示问题） | 仅限外部 guacd",
       "disableOffscreenCaching": "禁用离屏缓存",
-      "disableOffscreenCachingDesc": "关闭离屏缓存",
+      "disableOffscreenCachingDesc": "关闭离屏缓存 | 仅限外部 guacd",
       "disableGlyphCaching": "禁用字形缓存",
-      "disableGlyphCachingDesc": "关闭字形缓存",
+      "disableGlyphCachingDesc": "关闭字形缓存 | 仅限外部 guacd",
       "enableGfx": "启用 GFX",
-      "enableGfxDesc": "使用 RemoteFX 图形管道",
+      "enableGfxDesc": "使用 RemoteFX 图形管道 | 仅限外部 guacd",
       "enablePrinting": "启用打印",
       "enablePrintingDesc": "将本地打印机重定向到远程会话",
       "enableDriveRedirection": "启用驱动器重定向",
@@ -175,7 +192,7 @@
       "disableUpload": "禁用上传",
       "disableUploadDesc": "禁止向远程会话上传文件",
       "enableTouch": "启用触摸",
-      "enableTouchDesc": "启用触摸输入转发",
+      "enableTouchDesc": "启用触摸输入转发 | 仅限外部 guacd",
       "consoleSession": "控制台会话",
       "consoleSessionDesc": "连接到控制台（会话 0）而不是新建会话",
       "sendWolPacket": "发送 WOL 数据包",
@@ -202,6 +219,7 @@
       "telnetPort": "Telnet 端口",
       "terminalType": "终端类型",
       "fontName": "字体名称",
+      "fontNameDesc": "仅限外部 guacd。内置引擎使用其自身的等宽字体。",
       "fontSize": "字体大小",
       "colorScheme": "配色方案",
       "backspaceKey": "退格键",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "黑底白字",
         "grayOnBlack": "黑底灰字",
         "greenOnBlack": "黑底绿字"
-      }
+      },
+      "ardSettings": "Apple Remote Desktop 设置",
+      "ardPort": "ARD 端口",
+      "ardPassword": "macOS 密码",
+      "ardUsername": "macOS 用户名",
+      "ardLeaveBlank": "留空以仅使用 VNC 密码"
     },
     "remoteDesktop": "远程桌面",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "未加密的 Shell",
     "remoteDesktopNotes": "备注",
     "userDefaultsNote": "未更改的设置将遵循主机的默认值。",
-    "connectionOriginNote": "在桌面应用中，RDP、VNC 和 Telnet 默认使用远程服务器，除非主机设置为“此设备”，这需要一台该机器可达的 guacd。请在远程桌面设置中配置，或在每个主机的 guacd 代理下单独设置。",
+    "connectionOriginNote": "在桌面应用中，当主机保留为“默认”时，RDP、VNC 和 Telnet 会在此设备上运行，就像 SSH 一样。选择“远程服务器”以在服务器上运行它们。",
     "docsLink": "查看文档",
-    "connectionOriginGuacamoleNote": "RDP、VNC 和 Telnet 默认使用远程服务器，除非选择“此设备”，这需要一台该机器可达的 guacd。请在 guacd URL 设置中配置，或在每个主机的 guacd 代理下单独设置。"
+    "connectionOriginGuacamoleNote": "RDP、VNC 和 Telnet 默认在此设备上运行，就像 SSH 一样。选择“远程服务器”以在服务器上运行它们。",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Mac 屏幕共享"
   },
   "onboarding": {
     "guacdTitle": "设置远程桌面",
-    "guacdIntro": "远程桌面需要在 Termix 旁边运行 guacd。请检查它是否响应，或指向 Termix。",
+    "guacdIntro": "远程桌面设置为使用您自己的 guacd。请检查其是否响应，或为 Termix 指定其地址。",
     "guacdChecking": "正在查找 guacd",
     "guacdConnected": "guacd 正在 {{address}} 运行",
     "guacdMissing": "guacd 未在 {{address}} 响应",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "启用远程桌面",
-        "description": "允许通过 guacd 建立 RDP、VNC 和 Telnet 连接。"
+        "description": "允许 RDP、VNC 和 Telnet 连接。"
+      },
+      "useGuacd": {
+        "label": "使用外部 guacd",
+        "description": "Termix 自行运行 RDP、VNC 和 Telnet。开启此项以将它们发送到您自己的 guacd。REMOTE_DESKTOP_ENGINE 环境变量会覆盖此设置。"
       },
       "guacdUrl": {
         "label": "guacd URL",
@@ -352,20 +381,46 @@
         "label": "忽略证书错误"
       },
       "guacamoleConfig": {
-        "label": "guacd 设置"
+        "label": "连接设置"
       },
       "enableToolbar": {
         "label": "远程桌面工具栏",
-        "description": "在 RDP、VNC 和 Telnet 会话中显示工具栏。"
+        "description": "在 RDP、VNC、ARD 和 Telnet 会话中显示工具栏。"
       },
       "displayGroup": "显示",
-      "displayDefaultsTab": "远程桌面"
+      "displayDefaultsTab": "远程桌面",
+      "toolbarPosition": {
+        "label": "工具栏位置",
+        "description": "在会话上方或下方显示工具栏。",
+        "top": "顶部",
+        "bottom": "底部"
+      },
+      "toolbarLabels": {
+        "label": "工具栏标签",
+        "description": "在图标旁边显示名称，或仅显示图标。空间不足时名称会自动隐藏。",
+        "labeled": "图标和名称",
+        "icons": "仅图标"
+      },
+      "toolbarButtons": {
+        "label": "工具栏按钮",
+        "description": "选择显示哪些按钮及其顺序。无法容纳的按钮将移至“更多”菜单。",
+        "reset": "重置",
+        "moveUp": "上移",
+        "moveDown": "下移"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "ARD 端口"
+      }
     }
   },
   "palette": {
     "connectRdp": "使用 RDP 连接",
     "connectVnc": "使用 VNC 连接",
-    "connectTelnet": "使用 Telnet 连接"
+    "connectTelnet": "使用 Telnet 连接",
+    "connectArd": "使用 Apple Remote Desktop 连接"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "需要远程服务器。请在设置中连接远程服务器以使用此连接类型。"
   },
   "plugin": {
-    "name": "远程桌面"
+    "name": "远程桌面",
+    "description": "在浏览器中进行 RDP、VNC 和 Telnet 会话，支持剪贴板、文件传输、共享和录制。"
   }
 }

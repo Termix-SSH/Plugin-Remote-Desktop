@@ -10,11 +10,15 @@ import {
 import Guacamole from "guacamole-common-js";
 import { Upload } from "lucide-react";
 import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
-import { getGuacamoleToken } from "./guacamole-api";
-import { buildGuacamoleWebSocketBaseUrl } from "./guacamole-websocket-url.ts";
+import { getGuacamoleToken, remoteByDefault } from "./guacamole-api";
+import {
+  buildGuacamoleWebSocketBaseUrl,
+  localBackendPort,
+} from "./guacamole-websocket-url.ts";
 import {
   buildOriginWsUrl,
   getBasePath,
+  pluginWsUrl,
   isElectron,
   resolveConnectionOrigin,
   type ConnectionOrigin,
@@ -25,9 +29,13 @@ import { guacStateToStage } from "./guacamole-state.ts";
 import {
   createPasteCatcher,
   isPasteShortcut,
+  pasteModifierFor,
   pasteTextToRemote,
 } from "./guacamole-clipboard.ts";
-import { getGuacamoleDisplaySize } from "./guacamole-display-size.ts";
+import {
+  getGuacamoleDisplaySize,
+  isSmallChange,
+} from "./guacamole-display-size.ts";
 import { bindPointerInput } from "./guacamole-pointer.ts";
 import {
   getFileDropDisposition,
@@ -39,8 +47,9 @@ import {
 } from "./guacamole-filesystem.ts";
 import { clampGuacamoleZoom, stepGuacamoleZoom } from "./guacamole-zoom.ts";
 import { createRdpReadyGate } from "./guacamole-ready.ts";
+import { remoteKeysym } from "./guacamole-meta-key.ts";
 
-type GuacamoleConnectionType = "rdp" | "vnc" | "telnet";
+type GuacamoleConnectionType = "rdp" | "vnc" | "ard" | "telnet";
 
 interface GuacamoleConnectionConfig {
   token?: string;
@@ -135,13 +144,24 @@ export const GuacamoleDisplay = forwardRef<
   const fitScaleRef = useRef<number>(1);
   const zoomRef = useRef<number>(1);
   const resizeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastSentSizeRef = useRef<{ width: number; height: number } | null>(
+    null,
+  );
   const hasKeyboardFocusRef = useRef(false);
+  const sessionProtocolRef = useRef(
+    connectionConfig.protocol ?? connectionConfig.type,
+  );
+  sessionProtocolRef.current =
+    connectionConfig.protocol ?? connectionConfig.type;
   const windowFocusedRef = useRef(
     typeof document === "undefined" ? true : document.hasFocus(),
   );
   const hasInitiatedRef = useRef(false);
   const isMountedRef = useRef(false);
   const isConnectingRef = useRef(false);
+  // Bumped on unmount, so a connect still awaiting from an earlier mount
+  // (React remounts in dev) stops instead of opening a second client.
+  const connectGenerationRef = useRef(0);
   const [isReady, setIsReady] = useState(false);
   const [hasError, setHasError] = useState(false);
   // RDP's guacd backend (FreeRDP) can report the Guacamole-level CONNECTED
@@ -252,7 +272,7 @@ export const GuacamoleDisplay = forwardRef<
         // session, so both steps have to agree on the origin.
         const origin = await resolveConnectionOrigin(
           { connectionOrigin: connectionConfig.connectionOrigin },
-          { defaultRemote: true },
+          { defaultRemote: await remoteByDefault() },
         );
 
         if (connectionConfig.token) {
@@ -298,7 +318,7 @@ export const GuacamoleDisplay = forwardRef<
           // connection token in the query, not a session.
           const target = await buildOriginWsUrl({
             origin,
-            localPort: 30001,
+            localPort: localBackendPort(),
             localPath: "/plugin-ws/remote-desktop/display",
             remotePath: "/plugin-ws/remote-desktop/display",
             includeJwt: false,
@@ -309,12 +329,16 @@ export const GuacamoleDisplay = forwardRef<
           }
           wsBase = target.url;
         } else {
-          wsBase = buildGuacamoleWebSocketBaseUrl({
-            isElectronApp: false,
-            isEmbeddedApp: false,
-            basePath: getBasePath(),
-            location: window.location,
-          });
+          // Core knows the right address, including Vite's dev proxy.
+          const target = await pluginWsUrl("remote-desktop", "/display");
+          wsBase =
+            target?.url ??
+            buildGuacamoleWebSocketBaseUrl({
+              isElectronApp: false,
+              isEmbeddedApp: false,
+              basePath: getBasePath(),
+              location: window.location,
+            });
         }
 
         const params = new URLSearchParams({
@@ -372,12 +396,18 @@ export const GuacamoleDisplay = forwardRef<
         document.activeElement === activeDisplay;
 
       if (!hasKeyboardFocusRef.current && !stillFocused) return;
-      clientRef.current.sendKeyEvent(1, keysym);
+      clientRef.current.sendKeyEvent(
+        1,
+        remoteKeysym(sessionProtocolRef.current, keysym),
+      );
     };
 
     keyboard.onkeyup = (keysym: number) => {
       // Focus loss must still release keys already sent to the remote host.
-      clientRef.current?.sendKeyEvent(0, keysym);
+      clientRef.current?.sendKeyEvent(
+        0,
+        remoteKeysym(sessionProtocolRef.current, keysym),
+      );
     };
   }, [isVisible]);
 
@@ -423,6 +453,9 @@ export const GuacamoleDisplay = forwardRef<
   const connect = useCallback(async () => {
     if (isConnectingRef.current) return;
     isConnectingRef.current = true;
+    const generation = ++connectGenerationRef.current;
+    const stale = () =>
+      !isMountedRef.current || generation !== connectGenerationRef.current;
     setIsReady(false);
     setHasError(false);
     readyGateRef.current?.cancel();
@@ -431,8 +464,10 @@ export const GuacamoleDisplay = forwardRef<
     // Let layout settle before measuring without depending on animation frames,
     // which may be throttled while Electron windows or tabs are inactive.
     await new Promise<void>((resolve) => setTimeout(resolve, 0));
-    if (!isMountedRef.current) {
-      isConnectingRef.current = false;
+    if (stale()) {
+      if (generation === connectGenerationRef.current) {
+        isConnectingRef.current = false;
+      }
       return;
     }
 
@@ -453,8 +488,10 @@ export const GuacamoleDisplay = forwardRef<
       attempt++
     ) {
       await new Promise<void>((resolve) => setTimeout(resolve, 25));
-      if (!isMountedRef.current) {
-        isConnectingRef.current = false;
+      if (stale()) {
+        if (generation === connectGenerationRef.current) {
+          isConnectingRef.current = false;
+        }
         return;
       }
       ({ width: containerWidth, height: containerHeight } = measureContainer());
@@ -469,8 +506,10 @@ export const GuacamoleDisplay = forwardRef<
       containerWidth,
       containerHeight,
     );
-    if (!isMountedRef.current) {
-      isConnectingRef.current = false;
+    if (stale()) {
+      if (generation === connectGenerationRef.current) {
+        isConnectingRef.current = false;
+      }
       return;
     }
     if (!wsConnection) {
@@ -487,7 +526,13 @@ export const GuacamoleDisplay = forwardRef<
     displayElementRef.current = displayElement;
 
     const pasteCatcher = createPasteCatcher(displayElement, (text) => {
-      if (clientRef.current === client) pasteTextToRemote(client, text);
+      if (clientRef.current === client) {
+        pasteTextToRemote(
+          client,
+          text,
+          pasteModifierFor(sessionProtocolRef.current),
+        );
+      }
     });
 
     if (displayRef.current) {
@@ -522,7 +567,11 @@ export const GuacamoleDisplay = forwardRef<
 
         event.preventDefault();
         event.stopImmediatePropagation();
-        pasteTextToRemote(client, text);
+        pasteTextToRemote(
+          client,
+          text,
+          pasteModifierFor(sessionProtocolRef.current),
+        );
       },
       true,
     );
@@ -609,6 +658,7 @@ export const GuacamoleDisplay = forwardRef<
               window.devicePixelRatio,
               connectionConfig.dpi,
             );
+            lastSentSizeRef.current = size;
             client.sendSize(size.width, size.height);
           }
           rescaleDisplay(false);
@@ -776,6 +826,7 @@ export const GuacamoleDisplay = forwardRef<
       isMountedRef.current = false;
       hasInitiatedRef.current = false;
       isConnectingRef.current = false;
+      connectGenerationRef.current++;
       if (resizeTimeoutRef.current) {
         clearTimeout(resizeTimeoutRef.current);
       }
@@ -793,7 +844,9 @@ export const GuacamoleDisplay = forwardRef<
         if (clientRef.current && containerRef.current) {
           const rect = containerRef.current.getBoundingClientRect();
           if (rect.width > 0 && rect.height > 0) {
-            if (!hasConfiguredSize) {
+            // A size sent while guacd is still dialing a VNC server crashes
+            // its VNC client. The connected handler sends the first size.
+            if (!hasConfiguredSize && !isConnectingRef.current) {
               const size = getGuacamoleDisplaySize(
                 rect.width,
                 rect.height,
@@ -801,7 +854,16 @@ export const GuacamoleDisplay = forwardRef<
                 window.devicePixelRatio,
                 connectionConfig.dpi,
               );
-              clientRef.current.sendSize(size.width, size.height);
+              // A scrollbar coming and going changes the size by a few
+              // pixels; resending it makes RDP resize again, in a loop.
+              if (!isSmallChange(lastSentSizeRef.current, size)) {
+                lastSentSizeRef.current = size;
+                try {
+                  clientRef.current.sendSize(size.width, size.height);
+                } catch {
+                  // The tunnel closed; the next connect sends the size.
+                }
+              }
             }
             rescaleDisplay(true);
           }
@@ -825,7 +887,8 @@ export const GuacamoleDisplay = forwardRef<
   useEffect(() => {
     const container = containerRef.current;
     const protocol = connectionConfig.protocol ?? connectionConfig.type;
-    if (!container || !isReady || protocol !== "vnc") return;
+    if (!container || !isReady || (protocol !== "vnc" && protocol !== "ard"))
+      return;
 
     let pinchDistance = 0;
     let pinchZoom = zoomRef.current;

@@ -10,7 +10,7 @@
     "failedToConnect": "فشل في الحصول على رمز الاتصال",
     "hostNotFound": "لم يتم العثور على المضيف",
     "noHostSelected": "لم يتم تحديد مضيف",
-    "guacdUnavailable": "خدمة سطح المكتب عن بُعد (guacd) غير متاحة. يرجى التأكد من تشغيل guacd وإمكانية الوصول إليه وتكوينه بشكل صحيح في إعدادات المسؤول.",
+    "guacdUnavailable": "الخادم الخارجي guacd لا يستجيب. تأكد من أنه قيد التشغيل، أو عطّل خيار \"استخدام guacd خارجي\" في إعدادات سطح المكتب عن بُعد.",
     "credentialPromptTitle": "أدخل بيانات اعتماد RDP",
     "credentialPromptDescription": "هذا المضيف مضبوط على طلب بيانات الاعتماد عند الاتصال. تُستخدم لهذه الجلسة فقط ولا يتم حفظها.",
     "connect": "اتصال",
@@ -28,7 +28,7 @@
       "uploadFailed": "فشل في رفع {{name}}",
       "uploadDisabled": "تم تعطيل الرفع لهذا الاتصال",
       "driveUnavailable": "فعّل إعادة توجيه محرك أقراص RDP قبل رفع الملفات",
-      "driveNotWritable": "لا يمكن لـ guacd الكتابة في مجلد محرك الأقراص. تحقق من GUACD_DRIVE_PATH وصلاحياته.",
+      "driveNotWritable": "لا يمكن لـ Termix الكتابة في مجلد محرك الأقراص. تحقق من RDP_DRIVE_PATH، أو GUACD_DRIVE_PATH مع guacd خارجي، والصلاحيات الخاصة به.",
       "dropToUpload": "أفلت الملفات للرفع"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "السهم لليسار",
       "arrowRight": "السهم لليمين",
       "fnToggle": "مفاتيح الوظائف",
-      "collapse": "طي شريط الأدوات",
-      "expand": "توسيع شريط الأدوات",
-      "dragHandle": "اسحب لإعادة التموضع",
-      "hide": "إخفاء لهذه الجلسة. لتعطيله بشكل دائم، افتح إعدادات المضيف → عام → شريط أدوات الاتصال.",
       "zoomIn": "تكبير",
       "zoomOut": "تصغير",
       "resetZoom": "إعادة تعيين التكبير",
       "fitToScreen": "ملاءمة للشاشة",
       "switchToTrackpad": "التبديل إلى وضع لوحة المسح (اسحب لتحريك المؤشر، انقر للنقر)",
-      "switchToTouch": "التبديل إلى وضع اللمس (انقر مباشرة حيث تريد النقر)"
+      "switchToTouch": "التبديل إلى وضع اللمس (انقر مباشرة حيث تريد النقر)",
+      "label": "شريط أدوات سطح المكتب عن بُعد",
+      "more": "المزيد",
+      "items": {
+        "files": "الملفات",
+        "touchMode": "وضع اللمس",
+        "zoom": "تكبير",
+        "lock": "قفل الشاشة",
+        "metaKey": "مفتاح النظام",
+        "modifiers": "مفاتيح التعديل اللاصقة",
+        "arrows": "مفاتيح الأسهم",
+        "forceQuit": "إنهاء إجباري",
+        "macLock": "قفل الشاشة",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "يظهر بمجرد تفعيل محرك أقراص RDP",
+        "touchMode": "على شاشات اللمس فقط",
+        "modifiers": "تبقى مفاتيح Ctrl و Alt و Shift ومفتاح النظام مضغوطة حتى الضغط على المفتاح التالي"
+      },
+      "option": "Option"
     },
     "disabled": "سطح المكتب البعيد معطل. يمكن للمسؤول تفعيله في الإعدادات."
   },
@@ -114,11 +130,11 @@
       "timezone": "المنطقة الزمنية",
       "loadBalanceInfo": "معلومات موازنة الحمل / الكوكي",
       "loadBalanceInfoDesc": "كوكي وسيط اتصال RD لموازنة تحميل مزرعة RDS (مثال: tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "وكيل guacd",
+      "guacdProxy": "وكيل guacd (اختياري)",
       "guacdHostname": "مضيف guacd",
       "guacdHostnamePlaceholder": "الافتراضي العام",
       "guacdPort": "منفذ guacd",
-      "guacdProxyDesc": "تجاوز مثيل guacd العالمي لهذا الاتصال. اتركه فارغًا لاستخدام guacd المُعد عالميًا.",
+      "guacdProxyDesc": "يتصل Termix بهذا المضيف مباشرة. اضبط خادم guacd فقط إذا كان يجب على هذا المضيف المرور عبر خادم guacd الخاص بك بدلاً من ذلك. اتركه فارغًا لاستخدام الإعداد العام.",
       "guacdAdminOnly": "يمكن للمسؤولين فقط تغيير خادم guacd للمضيف.",
       "guacdSaveHostFirst": "احفظ المضيف أولاً، ثم اضبط خادم guacd الخاص به هنا.",
       "guacdSave": "حفظ خادم guacd",
@@ -129,6 +145,7 @@
       "gatewayUsername": "اسم مستخدم البوابة",
       "gatewayPassword": "كلمة مرور البوابة",
       "gatewayDomain": "نطاق البوابة",
+      "gatewayNote": "يتطلب بوابة RD خادم guacd خارجي. تنتقل المضيفات التي تحتوي على بوابة إلى هذه البوابة عند إعدادها، إما في إعدادات سطح المكتب عن بُعد أو تحت وكيل guacd.",
       "remoteAppProgram": "برنامج RemoteApp",
       "workingDirectory": "المجلد الحالي",
       "arguments": "الوسائط",
@@ -145,7 +162,7 @@
       "disableAudio": "تعطيل الصوت",
       "disableAudioDesc": "كتم جميع الأصوات من الجلسة البعيدة",
       "enableAudioInput": "تفعيل إدخال الصوت (الميكروفون)",
-      "enableAudioInputDesc": "توجيه الميكروفون المحلي إلى الجلسة البعيدة",
+      "enableAudioInputDesc": "توجيه الميكروفون المحلي إلى الجلسة عن بُعد | مع guacd خارجي فقط",
       "wallpaper": "خلفية سطح المكتب",
       "wallpaperDesc": "إظهار خلفية سطح المكتب (تعطيلها يحسن الأداء)",
       "theming": "المظاهر",
@@ -159,13 +176,13 @@
       "menuAnimations": "حركات القوائم",
       "menuAnimationsDesc": "تفعيل حركات التلاشي والانزلاق للقوائم",
       "disableBitmapCaching": "تعطيل تخزين الصور المؤقت",
-      "disableBitmapCachingDesc": "إيقاف ذاكرة التخزين المؤقت للصور (قد يساعد في حل المشاكل البصرية)",
+      "disableBitmapCachingDesc": "تعطيل ذاكرة التخزين المؤقت للصور النقطية (قد يساعد في حل المشكلات البصرية) | مع guacd خارجي فقط",
       "disableOffscreenCaching": "تعطيل التخزين المؤقت خارج الشاشة",
-      "disableOffscreenCachingDesc": "إيقاف ذاكرة التخزين المؤقت خارج الشاشة",
+      "disableOffscreenCachingDesc": "تعطيل ذاكرة التخزين المؤقت خارج الشاشة | مع guacd خارجي فقط",
       "disableGlyphCaching": "تعطيل تخزين الرموز المؤقت",
-      "disableGlyphCachingDesc": "إيقاف ذاكرة التخزين المؤقت للرموز",
+      "disableGlyphCachingDesc": "تعطيل ذاكرة التخزين المؤقت للرموز | مع guacd خارجي فقط",
       "enableGfx": "تفعيل GFX",
-      "enableGfxDesc": "استخدام خط أنابيب الرسومات RemoteFX",
+      "enableGfxDesc": "استخدام خط أنابيب الرسومات RemoteFX | مع guacd خارجي فقط",
       "enablePrinting": "تفعيل الطباعة",
       "enablePrintingDesc": "توجيه الطابعات المحلية إلى الجلسة البعيدة",
       "enableDriveRedirection": "تفعيل إعادة توجيه الأقراص",
@@ -175,7 +192,7 @@
       "disableUpload": "تعطيل الرفع",
       "disableUploadDesc": "منع رفع الملفات إلى الجلسة البعيدة",
       "enableTouch": "تفعيل اللمس",
-      "enableTouchDesc": "تفعيل توجيه مدخلات اللمس",
+      "enableTouchDesc": "تفعيل توجيه مدخلات اللمس | مع guacd خارجي فقط",
       "consoleSession": "جلسة وحدة التحكم",
       "consoleSessionDesc": "الاتصال بوحددة التحكم (الجلسة 0) بدلاً من إنشاء جلسة جديدة",
       "sendWolPacket": "إرسال حزمة WOL",
@@ -202,6 +219,7 @@
       "telnetPort": "منفذ Telnet",
       "terminalType": "نوع الطرفية",
       "fontName": "اسم الخط",
+      "fontNameDesc": "مع guacd خارجي فقط. يستخدم المحرك المدمج خطه الخاص غير المتناسب.",
       "fontSize": "حجم الخط",
       "colorScheme": "مخطط الألوان",
       "backspaceKey": "مفتاح المسح الخلفي",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "أبيض على أسود",
         "grayOnBlack": "رمادي على أسود",
         "greenOnBlack": "أخضر على أسود"
-      }
+      },
+      "ardSettings": "إعدادات Apple Remote Desktop",
+      "ardPort": "منفذ ARD",
+      "ardPassword": "كلمة مرور macOS",
+      "ardUsername": "اسم مستخدم macOS",
+      "ardLeaveBlank": "اتركه فارغًا لاستخدام كلمة مرور VNC فقط"
     },
     "remoteDesktop": "سطح المكتب البعيد",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "غلاف غير مشفر",
     "remoteDesktopNotes": "ملاحظات",
     "userDefaultsNote": "الإعدادات التي تتركها دون تغيير تتبع الإعدادات الافتراضية للمضيف.",
-    "connectionOriginNote": "في تطبيق سطح المكتب، تستخدم RDP وVNC وTelnet الخادم البعيد ما لم يتم تعيين المضيف على هذا الجهاز، والذي يحتاج إلى guacd يمكن لهذا الجهاز الوصول إليه. قم بتعيين واحد في إعدادات سطح المكتب البعيد، أو لكل مضيف تحت guacd Proxy.",
+    "connectionOriginNote": "في تطبيق سطح المكتب، تعمل اتصالات RDP و VNC و Telnet على هذا الجهاز عندما يكون المضيف مضبوطًا على \"افتراضي\"، مثل SSH. اختر \"خادم عن بُعد\" لتشغيلها على الخادم بدلاً من ذلك.",
     "docsLink": "عرض الوثائق",
-    "connectionOriginGuacamoleNote": "تستخدم RDP وVNC وTelnet الخادم البعيد ما لم تختار \"هذا الجهاز\"، والذي يحتاج إلى guacd يمكن لهذا الجهاز الوصول إليه. قم بتعيين واحد في إعداد عنوان URL الخاص بـ guacd، أو لكل مضيف تحت guacd Proxy."
+    "connectionOriginGuacamoleNote": "تعمل اتصالات RDP و VNC و Telnet على هذا الجهاز افتراضيًا، مثل SSH. اختر \"خادم عن بُعد\" لتشغيلها على الخادم بدلاً من ذلك.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "مشاركة شاشة Mac"
   },
   "onboarding": {
     "guacdTitle": "إعداد سطح المكتب البعيد",
-    "guacdIntro": "يتطلب سطح المكتب البعيد تشغيل guacd بجانب Termix. تحقق من أنه يستجيب، أو وجه Termix إليه.",
+    "guacdIntro": "تم ضبط سطح المكتب عن بُعد لاستخدام guacd الخاص بك. تأكد من أنه يستجيب، أو وجه Termix إليه.",
     "guacdChecking": "البحث عن guacd",
     "guacdConnected": "guacd يعمل على {{address}}",
     "guacdMissing": "guacd لا يستجيب على {{address}}",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "تفعيل سطح المكتب البعيد",
-        "description": "السماح باتصالات RDP وVNC وTelnet عبر guacd."
+        "description": "السماح باتصالات RDP و VNC و Telnet."
+      },
+      "useGuacd": {
+        "label": "استخدام guacd خارجي",
+        "description": "يقوم Termix بتشغيل اتصالات RDP و VNC و Telnet بنفسه. فعّل هذا الخيار لإرسالها إلى guacd الخاص بك بدلاً من ذلك. يتجاوز REMOTE_DESKTOP_ENGINE هذا الإعداد."
       },
       "guacdUrl": {
         "label": "رابط guacd",
@@ -352,20 +381,46 @@
         "label": "تجاهل أخطاء الشهادات"
       },
       "guacamoleConfig": {
-        "label": "إعدادات guacd"
+        "label": "إعدادات الاتصال"
       },
       "enableToolbar": {
         "label": "شريط أدوات سطح المكتب البعيد",
-        "description": "إظهار شريط الأدوات في جلسات RDP وVNC وTelnet."
+        "description": "إظهار شريط الأدوات في جلسات RDP و VNC و ARD و Telnet."
       },
       "displayGroup": "العرض",
-      "displayDefaultsTab": "سطح المكتب البعيد"
+      "displayDefaultsTab": "سطح المكتب البعيد",
+      "toolbarPosition": {
+        "label": "موقع شريط الأدوات",
+        "description": "إظهار شريط الأدوات فوق أو أسفل الجلسة.",
+        "top": "أعلى",
+        "bottom": "أسفل"
+      },
+      "toolbarLabels": {
+        "label": "تسميات شريط الأدوات",
+        "description": "إظهار الأسماء بجانب الأيقونات، أو الأيقونات فقط. تختفي الأسماء تلقائيًا عند نفاد المساحة.",
+        "labeled": "أيقونات وأسماء",
+        "icons": "أيقونات فقط"
+      },
+      "toolbarButtons": {
+        "label": "أزرار شريط الأدوات",
+        "description": "اختر الأزرار المراد إظهارها وترتيبها. تذهب الأزرار التي لا تتسع إلى قائمة \"المزيد\".",
+        "reset": "إعادة تعيين",
+        "moveUp": "تحريك لأعلى",
+        "moveDown": "تحريك لأسفل"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "منفذ ARD"
+      }
     }
   },
   "palette": {
     "connectRdp": "الاتصال عبر RDP",
     "connectVnc": "الاتصال عبر VNC",
-    "connectTelnet": "الاتصال عبر Telnet"
+    "connectTelnet": "الاتصال عبر Telnet",
+    "connectArd": "الاتصال عبر Apple Remote Desktop"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "الخادم البعيد مطلوب. قم بتوصيل خادم بعيد في الإعدادات لاستخدام هذا النوع من الاتصال."
   },
   "plugin": {
-    "name": "سطح المكتب البعيد"
+    "name": "سطح المكتب البعيد",
+    "description": "جلسات RDP و VNC و Telnet في متصفحك، مع دعم الحافظة، ونقل الملفات، والمشاركة، والتسجيل."
   }
 }

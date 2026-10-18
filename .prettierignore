@@ -6,3 +6,7 @@ package-lock.json
 
 locales/translated
 migrations/snapshot.json
+
+# Rust build output and the generated WASM glue
+native/engine/target
+src/backend/engine/wasm

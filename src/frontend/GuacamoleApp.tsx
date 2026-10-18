@@ -13,7 +13,11 @@ import {
   type GuacamoleDisplayHandle,
   type GuacamoleTouchMode,
 } from "./GuacamoleDisplay.tsx";
-import { getGuacamoleTokenFromHost, getGuacdStatus } from "./guacamole-api";
+import {
+  getGuacamoleTokenFromHost,
+  getGuacdStatus,
+  remoteByDefault,
+} from "./guacamole-api";
 import { readConfiguredDimension } from "./guacamole-display-size.ts";
 import { getGuacamoleToken } from "./guacamole-api";
 import {
@@ -38,12 +42,18 @@ import {
 import type { GuacamoleConfig } from "./guacamole-config";
 import {
   errorMessage,
+  PLUGIN_ID,
   hostRemoteOptions,
   type Protocol,
   rdpDomain,
   type RemoteHostLogin,
 } from "./host-remote";
 import { GuacamoleToolbar } from "./GuacamoleToolbar.tsx";
+import {
+  DEFAULT_TOOLBAR_SETTINGS,
+  readToolbarValues,
+  type ToolbarSettings,
+} from "./toolbar-settings.ts";
 import { GuacamoleFileBrowser } from "./GuacamoleFileBrowser.tsx";
 import { describeUploadError } from "./guacamole-filesystem.ts";
 import { canUploadToRdpDrive } from "./guacamole-file-drop.ts";
@@ -52,7 +62,7 @@ import { needsRdpCredentialPrompt } from "./rdp-credential-prompt";
 interface GuacamoleAppProps {
   hostId?: string;
   tabId?: string;
-  protocol?: "rdp" | "vnc" | "telnet";
+  protocol?: "rdp" | "vnc" | "ard" | "telnet";
   isVisible?: boolean;
   /** A quick-connect host: never saved, so the token is minted from its fields. */
   quickConnectHost?: GuacamoleQuickHost;
@@ -73,6 +83,7 @@ export interface GuacamoleHostConfig {
   syncId?: string | null;
   connectionOrigin?: "local" | "remote" | null;
   showToolbar?: boolean;
+  toolbar?: ToolbarSettings;
   port?: number;
   username?: string;
   password?: string;
@@ -90,7 +101,13 @@ function savedHostConfig(
     ip: host.ip ?? "",
     connectionType:
       protocol ??
-      (options.enableRdp ? "rdp" : options.enableVnc ? "vnc" : "telnet"),
+      (options.enableRdp
+        ? "rdp"
+        : options.enableVnc
+          ? "vnc"
+          : options.enableArd
+            ? "ard"
+            : "telnet"),
     domain: rdpDomain(host),
     guacamoleConfig: options.guacamoleConfig,
     rdpAuthType: host.protocolAuth?.rdp?.authType,
@@ -98,6 +115,9 @@ function savedHostConfig(
     syncId: host.syncId,
     connectionOrigin: host.connectionOrigin,
     showToolbar: options.enableToolbar,
+    toolbar: readToolbarValues(
+      (host.pluginSettings?.[PLUGIN_ID] ?? {}) as Record<string, unknown>,
+    ),
   };
 }
 
@@ -169,7 +189,7 @@ interface GuacamoleAppInnerProps {
   hostConfig: GuacamoleHostConfig;
   hostName: string;
   tabId?: string;
-  protocol?: "rdp" | "vnc" | "telnet";
+  protocol?: "rdp" | "vnc" | "ard" | "telnet";
   isVisible: boolean;
 }
 
@@ -211,7 +231,6 @@ const GuacamoleAppInner = React.forwardRef<
   const [displayZoom, setDisplayZoom] = useState(1);
   const [filesystem, setFilesystem] = useState<Guacamole.Object | null>(null);
   const [fileBrowserOpen, setFileBrowserOpen] = useState(false);
-  const [toolbarHidden, setToolbarHidden] = useState(false);
   const [pendingUploads, setPendingUploads] = useState<File[]>([]);
 
   const guacConfig = hostConfig.guacamoleConfig ?? {};
@@ -263,7 +282,7 @@ const GuacamoleAppInner = React.forwardRef<
 
   const resolvedProtocolForConnect = (protocol ??
     hostConfig.connectionType ??
-    "rdp") as "rdp" | "vnc" | "telnet";
+    "rdp") as "rdp" | "vnc" | "ard" | "telnet";
   const needsCredentialPrompt = needsRdpCredentialPrompt({
     protocol: resolvedProtocolForConnect,
     rdpAuthType: hostConfig.rdpAuthType,
@@ -289,7 +308,19 @@ const GuacamoleAppInner = React.forwardRef<
     reconnect: () => reconnectRef.current(),
   }));
 
-  const fetchToken = useCallback(async (): Promise<void> => {
+  // Bumped by every token fetch and on unmount, so an older fetch still
+  // awaiting stops instead of logging and minting a second token.
+  const tokenRunRef = useRef(0);
+  useEffect(
+    () => () => {
+      tokenRunRef.current++;
+    },
+    [],
+  );
+
+  const fetchToken = useCallback(async (): Promise<boolean> => {
+    const run = ++tokenRunRef.current;
+    const stale = () => run !== tokenRunRef.current;
     setToken(null);
     setIsDisplayReady(false);
     setSessionLookup(null);
@@ -304,13 +335,14 @@ const GuacamoleAppInner = React.forwardRef<
     if (isElectron()) {
       resolvedOrigin = await resolveConnectionOrigin(
         { connectionOrigin: hostConfig.connectionOrigin },
-        { defaultRemote: true },
+        { defaultRemote: await remoteByDefault() },
       );
       if (resolvedOrigin === "remote") {
         if (!(await linkedServerUrl())) {
           throw new Error(t("errors.remoteServerRequired"));
         }
       }
+      if (stale()) return false;
     }
 
     addLog({
@@ -323,6 +355,7 @@ const GuacamoleAppInner = React.forwardRef<
       protocol: resolvedProtocolForConnect,
       syncId: hostConfig.syncId,
     });
+    if (stale()) return false;
     if (status.enabled === false) {
       throw new Error(t("remoteDesktop.disabled"));
     }
@@ -363,6 +396,7 @@ const GuacamoleAppInner = React.forwardRef<
             hostConfig.syncId,
             tabId,
           );
+    if (stale()) return false;
     if (result) {
       setSessionLookup(
         result.termixConnectId
@@ -370,13 +404,13 @@ const GuacamoleAppInner = React.forwardRef<
           : null,
       );
       setToken(result.token);
-      setGuacamoleConnectionId(result.guacamoleConnectionId ?? null);
       if (hostId !== 0) {
         logActivity(resolvedProtocolForConnect, hostId, hostName).catch(
           () => {},
         );
       }
     }
+    return true;
   }, [
     hostId,
     hostName,
@@ -391,10 +425,11 @@ const GuacamoleAppInner = React.forwardRef<
 
   const tokenRetry = useConnectionRetry({
     connect: async () => {
+      const run = tokenRunRef.current + 1;
       try {
-        await fetchToken();
-        tokenRetryRef.current.markConnected();
+        if (await fetchToken()) tokenRetryRef.current.markConnected();
       } catch (err: unknown) {
+        if (run !== tokenRunRef.current) return;
         const message = errorMessage(err, t("remoteDesktop.failedToConnect"));
         setError(message || t("remoteDesktop.failedToConnect"));
         addLog({ type: "error", stage: "error", message });
@@ -552,88 +587,11 @@ const GuacamoleAppInner = React.forwardRef<
   const configuredWidth = readConfiguredDimension(guacConfig.width);
   const configuredHeight = readConfiguredDimension(guacConfig.height);
 
-  return (
-    <div className="relative w-full h-full">
-      {(!isDisplayReady || connectionError) && (
-        <ConnectionScreen
-          status={connectionError ? "disconnected" : "connecting"}
-          message={t("remoteDesktop.connecting", {
-            type: resolvedProtocol.toUpperCase(),
-          })}
-          detail={hostDetail}
-          errorDetail={connectionError}
-          onManualRetry={handleReconnect}
-          className="z-50"
-        />
-      )}
-      <GuacamoleDisplay
-        key={token}
-        ref={displayRef}
-        connectionConfig={{
-          token,
-          protocol: resolvedProtocol,
-          type: resolvedProtocol,
-          connectionOrigin: hostConfig.connectionOrigin,
-          width: configuredWidth,
-          height: configuredHeight,
-          dpi: configuredDpi,
-        }}
-        isVisible={isVisible}
-        touchMode={touchMode}
-        allowUpload={canUploadToRdpDrive(
-          allowUpload,
-          guacConfig.enableDrive === true,
-          filesystem !== null,
-        )}
-        onConnect={() => setIsDisplayReady(true)}
-        onError={(err) => {
-          setConnectionError(err);
-          addLog({ type: "error", stage: "error", message: err });
-        }}
-        onStageChange={(stage) => {
-          const type = resolvedProtocol.toUpperCase();
-          switch (stage) {
-            case "guac_connecting":
-              addLog({
-                type: "info",
-                stage,
-                message: t("remoteDesktop.openingSession", { type }),
-              });
-              break;
-            case "guac_handshake":
-              addLog({
-                type: "info",
-                stage,
-                message: t("remoteDesktop.negotiating", { type }),
-              });
-              break;
-            case "guac_ready":
-              addLog({
-                type: "success",
-                stage,
-                message: t("remoteDesktop.sessionReady", { type }),
-              });
-              break;
-            default:
-              break;
-          }
-        }}
-        onZoomChange={setDisplayZoom}
-        onFilesystem={setFilesystem}
-        onDropFiles={handleDropFiles}
-        onDropUnavailable={handleDropUnavailable}
-      />
-      {filesystem && fileBrowserOpen && (
-        <GuacamoleFileBrowser
-          filesystem={filesystem}
-          allowUpload={allowUpload}
-          allowDownload={allowDownload}
-          pendingUploads={pendingUploads}
-          onPendingUploadsHandled={() => setPendingUploads([])}
-          onClose={() => setFileBrowserOpen(false)}
-        />
-      )}
-      {hostConfig.showToolbar !== false && !toolbarHidden && (
+  const toolbarSettings = hostConfig.toolbar ?? DEFAULT_TOOLBAR_SETTINGS;
+  const showToolbar = hostConfig.showToolbar !== false;
+  const toolbar = (
+    <>
+      {showToolbar && (
         <GuacamoleToolbar
           displayRef={displayRef}
           protocol={resolvedProtocol}
@@ -643,7 +601,7 @@ const GuacamoleAppInner = React.forwardRef<
           onToggleFileBrowser={() => setFileBrowserOpen((open) => !open)}
           onTouchModeChange={handleTouchModeChange}
           zoom={displayZoom}
-          onHide={() => setToolbarHidden(true)}
+          settings={toolbarSettings}
           slotContext={
             typeof hostId === "number"
               ? {
@@ -658,6 +616,94 @@ const GuacamoleAppInner = React.forwardRef<
           }
         />
       )}
+    </>
+  );
+
+  return (
+    <div className="flex h-full w-full flex-col">
+      {toolbarSettings.position === "top" && toolbar}
+      <div className="relative min-h-0 w-full flex-1">
+        {(!isDisplayReady || connectionError) && (
+          <ConnectionScreen
+            status={connectionError ? "disconnected" : "connecting"}
+            message={t("remoteDesktop.connecting", {
+              type: resolvedProtocol.toUpperCase(),
+            })}
+            detail={hostDetail}
+            errorDetail={connectionError}
+            onManualRetry={handleReconnect}
+            className="z-50"
+          />
+        )}
+        <GuacamoleDisplay
+          key={token}
+          ref={displayRef}
+          connectionConfig={{
+            token,
+            protocol: resolvedProtocol,
+            type: resolvedProtocol,
+            connectionOrigin: hostConfig.connectionOrigin,
+            width: configuredWidth,
+            height: configuredHeight,
+            dpi: configuredDpi,
+          }}
+          isVisible={isVisible}
+          touchMode={touchMode}
+          allowUpload={canUploadToRdpDrive(
+            allowUpload,
+            guacConfig.enableDrive === true,
+            filesystem !== null,
+          )}
+          onConnect={() => setIsDisplayReady(true)}
+          onError={(err) => {
+            setConnectionError(err);
+            addLog({ type: "error", stage: "error", message: err });
+          }}
+          onStageChange={(stage) => {
+            const type = resolvedProtocol.toUpperCase();
+            switch (stage) {
+              case "guac_connecting":
+                addLog({
+                  type: "info",
+                  stage,
+                  message: t("remoteDesktop.openingSession", { type }),
+                });
+                break;
+              case "guac_handshake":
+                addLog({
+                  type: "info",
+                  stage,
+                  message: t("remoteDesktop.negotiating", { type }),
+                });
+                break;
+              case "guac_ready":
+                addLog({
+                  type: "success",
+                  stage,
+                  message: t("remoteDesktop.sessionReady", { type }),
+                });
+                break;
+              default:
+                break;
+            }
+          }}
+          onZoomChange={setDisplayZoom}
+          onFilesystem={setFilesystem}
+          onDropFiles={handleDropFiles}
+          onDropUnavailable={handleDropUnavailable}
+        />
+        {filesystem && fileBrowserOpen && (
+          <GuacamoleFileBrowser
+            filesystem={filesystem}
+            allowUpload={allowUpload}
+            allowDownload={allowDownload}
+            pendingUploads={pendingUploads}
+            onPendingUploadsHandled={() => setPendingUploads([])}
+            onClose={() => setFileBrowserOpen(false)}
+          />
+        )}
+      </div>
+      {toolbarSettings.position === "bottom" && toolbar}
     </div>
   );
 });

@@ -10,7 +10,7 @@
     "failedToConnect": "השגת אסימון החיבור נכשלה",
     "hostNotFound": "המארח לא נמצא",
     "noHostSelected": "לא נבחר מארח",
-    "guacdUnavailable": "שירות שולחן העבודה המרוחק (guacd) אינו זמין. ודא ש-guacd פועל, נגיש ומוגדר כראוי בהגדרות המנהל.",
+    "guacdUnavailable": "השירות החיצוני guacd לא מגיב. ודא שהוא פועל, או כבה את האפשרות \"השתמש ב-guacd חיצוני\" בהגדרות שולחן העבודה המרוחק.",
     "credentialPromptTitle": "הזן פרטי כניסה ל-RDP",
     "credentialPromptDescription": "מארח זה מוגדר לבקש פרטי כניסה בעת החיבור. הם משמשים להפעלה זו בלבד ואינם נשמרים.",
     "connect": "חיבור",
@@ -28,7 +28,7 @@
       "uploadFailed": "העלאת {{name}} נכשלה",
       "uploadDisabled": "העלאות מושבתות לחיבור זה",
       "driveUnavailable": "הפעל הפניית כונן RDP לפני העלאת קבצים",
-      "driveNotWritable": "guacd אינו יכול לכתוב לתיקיית הכונן. בדוק את GUACD_DRIVE_PATH ואת הרשאותיו.",
+      "driveNotWritable": "ל-Termix אין הרשאות כתיבה לתיקיית הכונן. בדוק את RDP_DRIVE_PATH, או GUACD_DRIVE_PATH אם משתמשים ב-guacd חיצוני, ואת הרשאות התיקייה.",
       "dropToUpload": "גרור קבצים לכאן להעלאה"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "חץ לשמאל",
       "arrowRight": "חץ לימין",
       "fnToggle": "מקשי פונקציה",
-      "collapse": "כווץ סרגל כלים",
-      "expand": "הרחב סרגל כלים",
-      "dragHandle": "גרור להזזה",
-      "hide": "הסתר להפעלה זו. כדי להשבית לצמיתות, פתח הגדרות מארח → כללי → סרגל כלים לחיבור.",
       "zoomIn": "התקרב",
       "zoomOut": "התקרב",
       "resetZoom": "אפס התקשרות",
       "fitToScreen": "התאם למסך",
       "switchToTrackpad": "עבור למצב מגש (גרור להזזת הסמן, הקש ללחיצה)",
-      "switchToTouch": "עבור למצב מגע (הקש ישירות במקום שבו ברצונך ללחוץ)"
+      "switchToTouch": "עבור למצב מגע (הקש ישירות במקום שבו ברצונך ללחוץ)",
+      "label": "סרגל הכלים של שולחן העבודה המרוחק",
+      "more": "עוד",
+      "items": {
+        "files": "קבצים",
+        "touchMode": "מצב מגע",
+        "zoom": "התקרבות",
+        "lock": "נעילת מסך",
+        "metaKey": "מקש מערכת",
+        "modifiers": "מקשי שינוי דביקים",
+        "arrows": "מקשי חיצים",
+        "forceQuit": "סגירה כפויה",
+        "macLock": "נעילת מסך",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "מוצג לאחר הפעלת כונן RDP",
+        "touchMode": "רק במסכי מגע",
+        "modifiers": "מקשי Ctrl, Alt, Shift ומקש המערכת נשארים לחוצים עד להקשת המקש הבא"
+      },
+      "option": "Option"
     },
     "disabled": "שולחן עבודה מרוחק כבוי. מנהל מערכת יכול להפעיל אותו בהגדרות."
   },
@@ -114,11 +130,11 @@
       "timezone": "אזור זמן",
       "loadBalanceInfo": "מידע איזון עומסים / עוגיה",
       "loadBalanceInfoDesc": "עוגיית RD Connection Broker לאיזון עומסים בחוות RDS (למשל tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "פרוקסי guacd",
+      "guacdProxy": "פרוקסי guacd (אופציונלי)",
       "guacdHostname": "מארח guacd",
       "guacdHostnamePlaceholder": "ברירת מחדל גלובלית",
       "guacdPort": "פורט guacd",
-      "guacdProxyDesc": "עקוף את מופע guacd הגלובלי עבור חיבור זה. השאר ריק כדי להשתמש ב-guacd שהוגדר גלובלית.",
+      "guacdProxyDesc": "Termix מתחבר לארח זה ישירות. הגדר שרת guacd רק אם ברצונך שהארח יעבור דרך שרת guacd שלך. השאר ריק כדי להשתמש בהגלובלית.",
       "guacdAdminOnly": "רק למנהלי מערכת מותר לשנות את שרת guacd עבור מארח.",
       "guacdSaveHostFirst": "שמור את המארח תחילה, ואז הגדר את שרת guacd שלו כאן.",
       "guacdSave": "שמור שרת guacd",
@@ -129,6 +145,7 @@
       "gatewayUsername": "שם משתמש שער",
       "gatewayPassword": "סיסמת שער",
       "gatewayDomain": "דומיין שער",
+      "gatewayNote": "RD Gateway דורש guacd חיצוני. מארחים עם שער יפנו אליו כאשר הוא מוגדר, בהגדרות שולחן העבודה המרוחק או תחת guacd Proxy.",
       "remoteAppProgram": "תוכנית RemoteApp",
       "workingDirectory": "ספריית עבודה",
       "arguments": "ארגומנטים",
@@ -145,7 +162,7 @@
       "disableAudio": "השבתת שמע",
       "disableAudioDesc": "השתקת כל השמע מההפעלה המרוחקת",
       "enableAudioInput": "הפעלת קלט שמע (מיקרופון)",
-      "enableAudioInputDesc": "העברת המיקרופון המקומי להפעלה המרוחקת",
+      "enableAudioInputDesc": "העברת מיקרופון מקומי לשיחה המרוחקת | רק עם guacd חיצוני",
       "wallpaper": "רקע שולחן עבודה",
       "wallpaperDesc": "הצגת רקע שולחן העבודה (השבתה משפרת ביצועים)",
       "theming": "עיצוב",
@@ -159,13 +176,13 @@
       "menuAnimations": "אנימציות תפריט",
       "menuAnimationsDesc": "הפעלת אנימציות דהייה והחלקה לתפריטים",
       "disableBitmapCaching": "השבתת מטמון מפות סיביות",
-      "disableBitmapCachingDesc": "כיבוי מטמון מפות סיביות (עשוי לעזור עם תקלות תצוגה)",
+      "disableBitmapCachingDesc": "כיבוי מטמון בייטמפ (עשוי לעזור עם תקלות) | רק עם guacd חיצוני",
       "disableOffscreenCaching": "השבתת מטמון מחוץ למסך",
-      "disableOffscreenCachingDesc": "כיבוי מטמון מחוץ למסך",
+      "disableOffscreenCachingDesc": "כיבוי מטמון מחוץ למסך | רק עם guacd חיצוני",
       "disableGlyphCaching": "השבתת מטמון גליפים",
-      "disableGlyphCachingDesc": "כיבוי מטמון גליפים",
+      "disableGlyphCachingDesc": "כיבוי מטמון גליפים | רק עם guacd חיצוני",
       "enableGfx": "הפעלת GFX",
-      "enableGfxDesc": "שימוש בצינור גרפי RemoteFX",
+      "enableGfxDesc": "שימוש בצינור גרפיקה RemoteFX | רק עם guacd חיצוני",
       "enablePrinting": "הפעלת הדפסה",
       "enablePrintingDesc": "הפניית מדפסות מקומיות להפעלה המרוחקת",
       "enableDriveRedirection": "הפעלת הפניית כוננים",
@@ -175,7 +192,7 @@
       "disableUpload": "השבתת העלאה",
       "disableUploadDesc": "מניעת העלאת קבצים להפעלה המרוחקת",
       "enableTouch": "הפעלת מגע",
-      "enableTouchDesc": "הפעלת הפניית קלט מגע",
+      "enableTouchDesc": "הפעלת העברת קלט מגע | רק עם guacd חיצוני",
       "consoleSession": "הפעלת קונסולה",
       "consoleSessionDesc": "חיבור לקונסולה (הפעלה 0) במקום הפעלה חדשה",
       "sendWolPacket": "שליחת חבילת WOL",
@@ -202,6 +219,7 @@
       "telnetPort": "פורט Telnet",
       "terminalType": "סוג מסוף",
       "fontName": "שם גופן",
+      "fontNameDesc": "רק עם guacd חיצוני. המנוע המובנה משתמש בפונט מונוספייס משלו.",
       "fontSize": "גודל גופן",
       "colorScheme": "סכמת צבעים",
       "backspaceKey": "מקש מחיקה",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "לבן על שחור",
         "grayOnBlack": "אפור על שחור",
         "greenOnBlack": "ירוק על שחור"
-      }
+      },
+      "ardSettings": "הגדרות Apple Remote Desktop",
+      "ardPort": "פורט ARD",
+      "ardPassword": "סיסמת macOS",
+      "ardUsername": "שם משתמש ב-macOS",
+      "ardLeaveBlank": "השאר ריק אם תרצה להשתמש רק בסיסמת VNC"
     },
     "remoteDesktop": "שולחן עבודה מרוחק",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "מעטפת לא מוצפנת",
     "remoteDesktopNotes": "הערות",
     "userDefaultsNote": "הגדרות שאתה משאיר ללא שינוי עוקבות אחר ברירות המחדל של המארח.",
-    "connectionOriginNote": "באפליקציית שולחן העבודה, RDP, VNC ו-Telnet משתמשים בשרת הרחוק אלא אם המארח מוגדר כ\"התקן זה\", הדורש guacd שהמכונה הזו יכולה להגיע אליו. הגדר אחד בהגדרות שולחן העבודה המרוחק, או לכל מארח תחת guacd Proxy.",
+    "connectionOriginNote": "באפליקציה לשולחן העבודה, חיבורי RDP, VNC ו-Telnet מופעלים על המכשיר הזה כאשר מוגדר ברירת מחדל, כמו SSH. בחר שרת מרוחק כדי להפעיל אותם על השרת במקום.",
     "docsLink": "צפה בתיעוד",
-    "connectionOriginGuacamoleNote": "RDP, VNC ו-Telnet משתמשים בשרת הרחוק אלא אם תבחר \"התקן זה\", הדורש guacd שהמכונה הזו יכולה להגיע אליו. הגדר אחד בהגדרת כתובת ה-URL של guacd, או לכל מארח תחת guacd Proxy."
+    "connectionOriginGuacamoleNote": "חיבורי RDP, VNC ו-Telnet מופעלים על המכשיר הזה כברירת מחדל, כמו SSH. בחר שרת מרוחק כדי להפעיל אותם על השרת במקום.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "שיתוף מסך ב-Mac"
   },
   "onboarding": {
     "guacdTitle": "הגדר שולחן עבודה מרוחק",
-    "guacdIntro": "שולחן עבודה מרוחק דורש guacd הפועל לצד Termix. וודא שהוא מגיב, או כוון את Termix אליו.",
+    "guacdIntro": "שולחן העבודה המרוחק מוגדר להשתמש ב-guacd שלך. וודא שהוא מגיב, או ציין ל-Termix היכן הוא ממוקם.",
     "guacdChecking": "מחפש guacd",
     "guacdConnected": "guacd פועל ב-{{address}}",
     "guacdMissing": "guacd לא מגיב ב-{{address}}",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "הפעל שולחן עבודה רחוק",
-        "description": "אפשר חיבורי RDP, VNC ו-Telnet דרך guacd."
+        "description": "אפשר חיבורי RDP, VNC ו-Telnet."
+      },
+      "useGuacd": {
+        "label": "השתמש ב-guacd חיצוני",
+        "description": "Termix מפעיל RDP, VNC ו-Telnet בעצמו. הפעל אפשרות זו כדי להעביר אותם ל-guacd שלך במקום. הגדרת REMOTE_DESKTOP_ENGINE עוקפת הגדרה זו."
       },
       "guacdUrl": {
         "label": "כתובת URL של guacd",
@@ -352,20 +381,46 @@
         "label": "התעלם משגיאות תעודה"
       },
       "guacamoleConfig": {
-        "label": "הגדרות guacd"
+        "label": "הגדרות חיבור"
       },
       "enableToolbar": {
         "label": "סרגל כלים של שולחן עבודה רחוק",
-        "description": "הצג את סרגל הכלים בהפעלות RDP, VNC ו-Telnet."
+        "description": "הצג את סרגל הכלים בהפעלות RDP, VNC, ARD ו-Telnet."
       },
       "displayGroup": "תצוגה",
-      "displayDefaultsTab": "שולחן עבודה רחוק"
+      "displayDefaultsTab": "שולחן עבודה רחוק",
+      "toolbarPosition": {
+        "label": "מיקום סרגל הכלים",
+        "description": "הצג את סרגל הכלים מעל או מתחת להפעלה.",
+        "top": "למעלה",
+        "bottom": "למטה"
+      },
+      "toolbarLabels": {
+        "label": "תוויות סרגל הכלים",
+        "description": "הצג שמות ליד הסמלים, או סמלים בלבד. השמות נסתרים אוטומטית כאשר אין מספיק מקום.",
+        "labeled": "סמלים ושמות",
+        "icons": "סמלים בלבד"
+      },
+      "toolbarButtons": {
+        "label": "כפתורי סרגל הכלים",
+        "description": "בחר אילו כפתורים יוצגו ובאיזה סדר. כפתורים שאינם מתאימים יופיעו בתפריט עוד.",
+        "reset": "אפס",
+        "moveUp": "הזז למעלה",
+        "moveDown": "הזז למטה"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "פורט ARD"
+      }
     }
   },
   "palette": {
     "connectRdp": "התחבר באמצעות RDP",
     "connectVnc": "התחבר באמצעות VNC",
-    "connectTelnet": "התחבר באמצעות Telnet"
+    "connectTelnet": "התחבר באמצעות Telnet",
+    "connectArd": "התחבר באמצעות Apple Remote Desktop"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "נדרש שרת רחוק. חבר שרת רחוק בהגדרות כדי להשתמש בסוג חיבור זה."
   },
   "plugin": {
-    "name": "שולחן עבודה רחוק"
+    "name": "שולחן עבודה רחוק",
+    "description": "הפעלות RDP, VNC ו-Telnet בדפדפן שלך, עם לוח גזירים, העברת קבצים, שיתוף והקלטה."
   }
 }

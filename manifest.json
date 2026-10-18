@@ -1,8 +1,8 @@
 {
   "id": "remote-desktop",
   "name": "Remote Desktop",
-  "version": "1.0.2",
-  "description": "RDP, VNC and Telnet sessions in your browser, with clipboard, file transfer, sharing and recording.",
+  "version": "1.1.0",
+  "description": "RDP, VNC, Apple Remote Desktop and Telnet sessions in your browser, with clipboard, file transfer, sharing and recording.",
   "author": {
     "name": "Termix"
   },
@@ -13,45 +13,55 @@
   "category": "Terminal",
   "icon": "Monitor",
   "features": [
-    "RDP, VNC and Telnet from any browser",
+    "RDP, VNC, Apple Remote Desktop and Telnet from any browser, with nothing else to install",
     "Tabs and split screen like any other session",
-    "Clipboard sync and file transfer through RDP drives",
+    "Clipboard sync, audio, printing and file transfer through RDP drives",
     "Jump host support",
     "Session sharing and recording",
     "Open a host in the native Windows Remote Desktop client from the desktop app"
   ],
   "env": [
     {
+      "name": "REMOTE_DESKTOP_ENGINE",
+      "description": "builtin runs RDP, VNC and Telnet inside Termix. guacd sends them to an external guacd instead. Overrides the Use external guacd setting.",
+      "default": "builtin"
+    },
+    {
+      "name": "RDP_DRIVE_PATH",
+      "description": "Folder the built-in engine keeps RDP drive files in. Each user gets a folder under it.",
+      "default": "/app/data/rdp-drive"
+    },
+    {
       "name": "GUACD_HOST",
-      "description": "Host guacd listens on. Overrides the guacd URL setting.",
+      "description": "Host an external guacd listens on. Only used with Use external guacd. Overrides the guacd URL setting.",
       "default": "localhost"
     },
     {
       "name": "GUACD_PORT",
-      "description": "Port guacd listens on.",
+      "description": "Port an external guacd listens on.",
       "default": "4822"
     },
     {
       "name": "GUACD_URL",
-      "description": "guacd as host:port, in place of GUACD_HOST and GUACD_PORT."
+      "description": "An external guacd as host:port, in place of GUACD_HOST and GUACD_PORT."
     },
     {
       "name": "GUACD_TUNNEL_HOST",
-      "description": "Address guacd uses to reach Termix for hosts behind jump hosts and VNC without a username. In Compose, the Termix container name. In Kubernetes it defaults to the pod IP.",
+      "description": "Address an external guacd uses to reach Termix for hosts behind jump hosts and VNC without a username. In Compose, the Termix container name. In Kubernetes it defaults to the pod IP.",
       "default": "termix"
     },
     {
       "name": "GUACD_RECORDING_PATH",
-      "description": "Folder guacd writes recordings to, as guacd sees it."
+      "description": "Folder an external guacd writes recordings to, as guacd sees it."
     },
     {
       "name": "GUACD_RECORDING_BACKEND_PATH",
-      "description": "The same folder as Termix sees it.",
+      "description": "Folder Termix keeps remote desktop recordings in. With an external guacd, the same folder as Termix sees it.",
       "default": "/app/data/session_recordings/guacamole"
     },
     {
       "name": "GUACD_DRIVE_PATH",
-      "description": "Folder guacd keeps RDP drive files in. Each user gets a folder under it.",
+      "description": "Folder an external guacd keeps RDP drive files in. Each user gets a folder under it.",
       "default": "/drive"
     },
     {
@@ -83,7 +93,7 @@
       "service": "sessions.live",
       "version": "1.0.0",
       "permission": "remote-desktop.sessions",
-      "names": ["rdp", "vnc", "telnet"]
+      "names": ["rdp", "vnc", "ard", "telnet"]
     }
   ],
   "requires": [
@@ -110,6 +120,12 @@
         "id": "vnc",
         "titleKey": "hosts.tabVnc",
         "icon": "MousePointerClick",
+        "openFrom": ["host-context-menu", "palette"]
+      },
+      {
+        "id": "ard",
+        "titleKey": "hosts.tabArd",
+        "icon": "ScreenShare",
         "openFrom": ["host-context-menu", "palette"]
       },
       {
@@ -142,6 +158,11 @@
         "hostLoginFallback": ["password"]
       },
       {
+        "id": "ard",
+        "defaultPort": 5900,
+        "hostLoginFallback": ["username", "password"]
+      },
+      {
         "id": "telnet",
         "defaultPort": 23,
         "hostLoginFallback": ["password"]
@@ -166,12 +187,20 @@
           "default": true
         },
         {
+          "key": "useGuacd",
+          "type": "boolean",
+          "labelKey": "settings.admin.useGuacd.label",
+          "descriptionKey": "settings.admin.useGuacd.description",
+          "requires": "enabled",
+          "default": false
+        },
+        {
           "key": "guacdUrl",
           "type": "string",
           "labelKey": "settings.admin.guacdUrl.label",
           "descriptionKey": "settings.admin.guacdUrl.description",
           "placeholderKey": "settings.admin.guacdUrl.placeholder",
-          "requires": "enabled",
+          "requires": "useGuacd",
           "default": ""
         },
         {
@@ -208,6 +237,14 @@
             "defaultable": false
           },
           {
+            "key": "enableArd",
+            "type": "boolean",
+            "labelKey": "settings.host.enableArd.label",
+            "default": false,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
             "key": "enableTelnet",
             "type": "boolean",
             "labelKey": "settings.host.enableTelnet.label",
@@ -229,6 +266,16 @@
             "key": "vncPort",
             "type": "number",
             "labelKey": "settings.host.vncPort.label",
+            "min": 1,
+            "max": 65535,
+            "default": 5900,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "ardPort",
+            "type": "number",
+            "labelKey": "settings.host.ardPort.label",
             "min": 1,
             "max": 65535,
             "default": 5900,
@@ -275,6 +322,46 @@
             "labelKey": "settings.host.enableToolbar.label",
             "descriptionKey": "settings.host.enableToolbar.description",
             "default": true,
+            "hidden": true
+          },
+          {
+            "key": "toolbarPosition",
+            "type": "select",
+            "labelKey": "settings.host.toolbarPosition.label",
+            "hidden": true,
+            "default": "top",
+            "options": [
+              {
+                "value": "top",
+                "labelKey": "settings.host.toolbarPosition.top"
+              },
+              {
+                "value": "bottom",
+                "labelKey": "settings.host.toolbarPosition.bottom"
+              }
+            ]
+          },
+          {
+            "key": "toolbarLabels",
+            "type": "select",
+            "labelKey": "settings.host.toolbarLabels.label",
+            "hidden": true,
+            "default": "labeled",
+            "options": [
+              {
+                "value": "labeled",
+                "labelKey": "settings.host.toolbarLabels.labeled"
+              },
+              {
+                "value": "icons",
+                "labelKey": "settings.host.toolbarLabels.icons"
+              }
+            ]
+          },
+          {
+            "key": "toolbarButtons",
+            "type": "json",
+            "labelKey": "settings.host.toolbarButtons.label",
             "hidden": true
           },
           {

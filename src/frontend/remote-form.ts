@@ -3,11 +3,17 @@ import type {
   HostProtocolAuthForm,
 } from "@termix-ssh/plugin-sdk/frontend";
 import { PLUGIN_ID, remoteOptions, type Protocol } from "./host-remote";
+import {
+  readToolbarValues,
+  type ToolbarButtonLayout,
+  type ToolbarLabels,
+  type ToolbarPosition,
+} from "./toolbar-settings";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /**
- * The host editor fields the RDP, VNC and Telnet tabs edit. The logins are
+ * The host editor fields the RDP, VNC, ARD and Telnet tabs edit. The logins are
  * core's, under form.protocolAuth (this plugin declares the protocols in its
  * manifest); the options (ports, security, guacd settings) are this plugin's
  * host settings. Both are presented here under the names the tabs use.
@@ -18,9 +24,13 @@ export interface RemoteDesktopForm {
   ignoreCert: boolean;
   rdpPort: number;
   vncPort: number;
+  ardPort: number;
   telnetPort: number;
   guacamoleConfig: Record<string, any>;
   enableToolbar: boolean;
+  toolbarPosition: ToolbarPosition;
+  toolbarLabels: ToolbarLabels;
+  toolbarButtons: ToolbarButtonLayout;
   rdpAuthType: "direct" | "credential" | "none";
   rdpCredentialId: string;
   rdpUser: string;
@@ -29,6 +39,10 @@ export interface RemoteDesktopForm {
   vncCredentialId: string;
   vncUser: string;
   vncPassword: string;
+  ardAuthType: "direct" | "credential";
+  ardCredentialId: string;
+  ardUser: string;
+  ardPassword: string;
   telnetAuthType: "direct" | "credential";
   telnetCredentialId: string;
   telnetUser: string;
@@ -44,10 +58,14 @@ export type RemoteFormSetField = <K extends keyof RemoteDesktopForm>(
 const SETTING_FOR_FIELD: Partial<Record<keyof RemoteDesktopForm, string>> = {
   rdpPort: "rdpPort",
   vncPort: "vncPort",
+  ardPort: "ardPort",
   telnetPort: "telnetPort",
   security: "rdpSecurity",
   ignoreCert: "rdpIgnoreCert",
   enableToolbar: "enableToolbar",
+  toolbarPosition: "toolbarPosition",
+  toolbarLabels: "toolbarLabels",
+  toolbarButtons: "toolbarButtons",
 };
 
 type LoginPart = "authType" | "credentialId" | "username" | "password";
@@ -65,6 +83,10 @@ const LOGIN_FOR_FIELD: Partial<
   vncCredentialId: ["vnc", "credentialId"],
   vncUser: ["vnc", "username"],
   vncPassword: ["vnc", "password"],
+  ardAuthType: ["ard", "authType"],
+  ardCredentialId: ["ard", "credentialId"],
+  ardUser: ["ard", "username"],
+  ardPassword: ["ard", "password"],
   telnetAuthType: ["telnet", "authType"],
   telnetCredentialId: ["telnet", "credentialId"],
   telnetUser: ["telnet", "username"],
@@ -125,17 +147,23 @@ export function remoteDesktopForm(props: HostEditorSectionProps): {
   const bag = props.form?.pluginSettings as PluginSettingsBag | undefined;
   const logins = props.form?.protocolAuth as LoginBag | undefined;
   const options = remoteOptions(bag?.[PLUGIN_ID]);
+  const toolbar = readToolbarValues(bag?.[PLUGIN_ID] ?? {});
   const rdp = loginOf(logins, "rdp");
   const vnc = loginOf(logins, "vnc");
+  const ard = loginOf(logins, "ard");
   const telnet = loginOf(logins, "telnet");
   const form: RemoteDesktopForm = {
     rdpPort: options.rdpPort,
     vncPort: options.vncPort,
+    ardPort: options.ardPort,
     telnetPort: options.telnetPort,
     security: options.rdpSecurity,
     ignoreCert: options.rdpIgnoreCert,
     guacamoleConfig: options.guacamoleConfig as Record<string, any>,
     enableToolbar: options.enableToolbar,
+    toolbarPosition: toolbar.position,
+    toolbarLabels: toolbar.labels,
+    toolbarButtons: toolbar.buttons,
     domain: rdp.fields.domain ?? "",
     rdpAuthType: rdp.authType,
     rdpCredentialId: rdp.credentialId,
@@ -145,6 +173,10 @@ export function remoteDesktopForm(props: HostEditorSectionProps): {
     vncCredentialId: vnc.credentialId,
     vncUser: vnc.username,
     vncPassword: vnc.password,
+    ardAuthType: ard.authType === "credential" ? "credential" : "direct",
+    ardCredentialId: ard.credentialId,
+    ardUser: ard.username,
+    ardPassword: ard.password,
     telnetAuthType: telnet.authType === "credential" ? "credential" : "direct",
     telnetCredentialId: telnet.credentialId,
     telnetUser: telnet.username,

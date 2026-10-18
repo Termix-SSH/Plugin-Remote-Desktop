@@ -585,7 +585,18 @@ export function HostEditorRdpTab({
               <option>ja-jp-qwerty</option>
               <option>pt-br-qwerty</option>
               <option>es-es-qwerty</option>
-              <option>{t("hosts.guac.options.failsafe")}</option>
+              <option>es-latam-qwerty</option>
+              <option>pt-pt-qwerty</option>
+              <option>fr-ch-qwertz</option>
+              <option>da-dk-qwerty</option>
+              <option>no-no-qwerty</option>
+              <option>pl-pl-qwerty</option>
+              <option>hu-hu-qwertz</option>
+              <option>ro-ro-qwerty</option>
+              <option>tr-tr-qwerty</option>
+              <option value="failsafe">
+                {t("hosts.guac.options.failsafe")}
+              </option>
             </Select2>
           </div>
           <div className="flex flex-col gap-1.5">
@@ -606,6 +617,9 @@ export function HostEditorRdpTab({
         icon={<Network className="size-3.5" />}
       >
         <div className="flex flex-col gap-4 py-3">
+          <p className="text-xs text-muted-foreground">
+            {t("hosts.guac.gatewayNote")}
+          </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <div className="flex flex-col gap-1.5">
               <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
@@ -867,7 +881,13 @@ export function HostEditorRdpTab({
   );
 }
 
+/**
+ * VNC and Apple Remote Desktop share this tab: ARD is RFB with Apple's login,
+ * so the fields are the same under their own names, and ARD asks for the
+ * macOS account instead of an optional username.
+ */
 export function HostEditorVncTab({
+  variant = "vnc",
   form,
   setField,
   setGuacField,
@@ -875,6 +895,7 @@ export function HostEditorVncTab({
   hostId,
   credentials,
 }: {
+  variant?: "vnc" | "ard";
   form: HostEditorForm;
   setField: HostEditorSetField;
   setGuacField: GuacFieldSetter;
@@ -883,6 +904,12 @@ export function HostEditorVncTab({
   credentials?: { id: string; name: string; username: string }[];
 }) {
   const { t } = useTranslation();
+  const ard = variant === "ard";
+  const portKey = ard ? "ardPort" : "vncPort";
+  const authTypeKey = ard ? "ardAuthType" : "vncAuthType";
+  const credentialKey = ard ? "ardCredentialId" : "vncCredentialId";
+  const userKey = ard ? "ardUser" : "vncUser";
+  const passwordKey = ard ? "ardPassword" : "vncPassword";
 
   return (
     <>
@@ -894,13 +921,13 @@ export function HostEditorVncTab({
         <div className="flex flex-col gap-4 py-3">
           <div className="flex flex-col gap-1.5">
             <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.vncPort")}
+              {t(ard ? "hosts.guac.ardPort" : "hosts.guac.vncPort")}
             </label>
             <Input
               type="number"
               placeholder="5900"
-              value={form.vncPort}
-              onChange={(e) => setField("vncPort", Number(e.target.value))}
+              value={form[portKey]}
+              onChange={(e) => setField(portKey, Number(e.target.value))}
               className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
           </div>
@@ -923,9 +950,9 @@ export function HostEditorVncTab({
                   <button
                     key={m}
                     type="button"
-                    onClick={() => setField("vncAuthType", m)}
+                    onClick={() => setField(authTypeKey, m)}
                     className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-widest border transition-colors ${
-                      form.vncAuthType === m
+                      form[authTypeKey] === m
                         ? "border-accent-brand/40 bg-accent-brand/10 text-accent-brand"
                         : "border-border text-muted-foreground hover:text-foreground"
                     }`}
@@ -938,7 +965,7 @@ export function HostEditorVncTab({
               </div>
             </div>
           )}
-          {form.vncAuthType === "credential" &&
+          {form[authTypeKey] === "credential" &&
           credentials &&
           credentials.length > 0 ? (
             <div className="flex flex-col gap-1.5">
@@ -946,8 +973,8 @@ export function HostEditorVncTab({
                 {t("hosts.guac.storedCredential")}
               </label>
               <Select2
-                value={form.vncCredentialId}
-                onChange={(e) => setField("vncCredentialId", e.target.value)}
+                value={form[credentialKey]}
+                onChange={(e) => setField(credentialKey, e.target.value)}
                 className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
               >
                 <option value="">{t("hosts.guac.selectCredential")}</option>
@@ -962,35 +989,43 @@ export function HostEditorVncTab({
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                  {t("hosts.guac.vncPassword")}
+                  {t(ard ? "hosts.guac.ardPassword" : "hosts.guac.vncPassword")}
                 </label>
                 <PasswordInput
                   className="h-8 text-xs pr-8"
                   placeholder={
-                    form.vncPassword === HOST_PROTOCOL_SECRET_KEPT
+                    form[passwordKey] === HOST_PROTOCOL_SECRET_KEPT
                       ? t("hosts.guac.passwordSaved")
                       : "••••••••"
                   }
                   value={
-                    form.vncPassword === HOST_PROTOCOL_SECRET_KEPT
+                    form[passwordKey] === HOST_PROTOCOL_SECRET_KEPT
                       ? ""
-                      : form.vncPassword
+                      : form[passwordKey]
                   }
                   onFocus={() => {
-                    if (form.vncPassword === HOST_PROTOCOL_SECRET_KEPT)
-                      setField("vncPassword", "");
+                    if (form[passwordKey] === HOST_PROTOCOL_SECRET_KEPT)
+                      setField(passwordKey, "");
                   }}
-                  onChange={(e) => setField("vncPassword", e.target.value)}
+                  onChange={(e) => setField(passwordKey, e.target.value)}
                 />
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                  {t("hosts.guac.vncUsernameOptional")}
+                  {t(
+                    ard
+                      ? "hosts.guac.ardUsername"
+                      : "hosts.guac.vncUsernameOptional",
+                  )}
                 </label>
                 <Input
-                  placeholder={t("hosts.guac.vncLeaveBlank")}
-                  value={form.vncUser}
-                  onChange={(e) => setField("vncUser", e.target.value)}
+                  placeholder={t(
+                    ard
+                      ? "hosts.guac.ardLeaveBlank"
+                      : "hosts.guac.vncLeaveBlank",
+                  )}
+                  value={form[userKey]}
+                  onChange={(e) => setField(userKey, e.target.value)}
                 />
               </div>
             </div>
@@ -1091,7 +1126,7 @@ export function HostEditorVncTab({
       </SectionCard>
 
       <SectionCard
-        title={t("hosts.guac.vncSettings")}
+        title={t(ard ? "hosts.guac.ardSettings" : "hosts.guac.vncSettings")}
         icon={<Settings className="size-3.5" />}
       >
         <div className="flex flex-col gap-4 py-3">
@@ -1130,7 +1165,18 @@ export function HostEditorVncTab({
               <option>ja-jp-qwerty</option>
               <option>pt-br-qwerty</option>
               <option>es-es-qwerty</option>
-              <option>{t("hosts.guac.options.failsafe")}</option>
+              <option>es-latam-qwerty</option>
+              <option>pt-pt-qwerty</option>
+              <option>fr-ch-qwertz</option>
+              <option>da-dk-qwerty</option>
+              <option>no-no-qwerty</option>
+              <option>pl-pl-qwerty</option>
+              <option>hu-hu-qwertz</option>
+              <option>ro-ro-qwerty</option>
+              <option>tr-tr-qwerty</option>
+              <option value="failsafe">
+                {t("hosts.guac.options.failsafe")}
+              </option>
             </Select2>
           </div>
           <SettingRow
@@ -1504,6 +1550,9 @@ export function HostEditorTelnetTab({
               value={form.guacamoleConfig["font-name"] ?? ""}
               onChange={(e) => setGuacField("font-name", e.target.value)}
             />
+            <p className="text-xs text-muted-foreground">
+              {t("hosts.guac.fontNameDesc")}
+            </p>
           </div>
           <div className="flex flex-col gap-1.5">
             <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">

@@ -10,7 +10,7 @@
     "failedToConnect": "Nie udało się uzyskać tokenu połączenia",
     "hostNotFound": "Host nie znaleziony",
     "noHostSelected": "Nie wybrano hosta",
-    "guacdUnavailable": "Usługa pulpitu zdalnego (guacd) jest niedostępna. Upewnij się, że guacd jest uruchomiony, dostępny i poprawnie skonfigurowany w ustawieniach administratora.",
+    "guacdUnavailable": "Zewnętrzny guacd nie odpowiada. Sprawdź, czy działa, lub wyłącz opcję Użyj zewnętrznego guacd w ustawieniach pulpitu zdalnego.",
     "credentialPromptTitle": "Wprowadź dane logowania RDP",
     "credentialPromptDescription": "Ten host jest skonfigurowany do żądania danych logowania przy połączeniu. Są one używane tylko w tej sesji i nie są zapisywane.",
     "connect": "Połącz",
@@ -28,7 +28,7 @@
       "uploadFailed": "Nie udało się przesłać {{name}}",
       "uploadDisabled": "Przesyłanie jest wyłączone dla tego połączenia",
       "driveUnavailable": "Włącz przekierowanie dysku RDP przed przesłaniem plików",
-      "driveNotWritable": "guacd nie może zapisywać w folderze dysku. Sprawdź GUACD_DRIVE_PATH i jego uprawnienia.",
+      "driveNotWritable": "Termix nie może zapisywać w folderze dysku. Sprawdź RDP_DRIVE_PATH lub GUACD_DRIVE_PATH (przy zewnętrznym guacd) oraz uprawnienia.",
       "dropToUpload": "Upuść pliki, aby przesłać"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Strzałka w lewo",
       "arrowRight": "Strzałka w prawo",
       "fnToggle": "Klawisze funkcyjne",
-      "collapse": "Zwiń pasek narzędzi",
-      "expand": "Rozwiń pasek narzędzi",
-      "dragHandle": "Przeciągnij, aby zmienić pozycję",
-      "hide": "Ukryj w tej sesji. Aby wyłączyć go na stałe, otwórz Ustawienia hosta → Ogólne → Pasek narzędzi połączenia.",
       "zoomIn": "Powiększ",
       "zoomOut": "Pomniejsz",
       "resetZoom": "Resetuj powiększenie",
       "fitToScreen": "Dopasuj do ekranu",
       "switchToTrackpad": "Przełącz na tryb touchpada (przeciągaj, aby przesuwać kursor, stuknij, aby kliknąć)",
-      "switchToTouch": "Przełącz na tryb dotykowy (stukaj bezpośrednio w miejscu, w którym chcesz kliknąć)"
+      "switchToTouch": "Przełącz na tryb dotykowy (stukaj bezpośrednio w miejscu, w którym chcesz kliknąć)",
+      "label": "Pasek narzędzi pulpitu zdalnego",
+      "more": "Więcej",
+      "items": {
+        "files": "Pliki",
+        "touchMode": "Tryb dotykowy",
+        "zoom": "Powiększenie",
+        "lock": "Zablokuj ekran",
+        "metaKey": "Klawisz systemowy",
+        "modifiers": "Klawisze modyfikatorów z blokadą",
+        "arrows": "Klawisze strzałek",
+        "forceQuit": "Wymuś zamknięcie",
+        "macLock": "Zablokuj ekran",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "Wyświetlane po włączeniu dysku RDP",
+        "touchMode": "Tylko na ekranach dotykowych",
+        "modifiers": "Ctrl, Alt, Shift i klawisz systemowy pozostają wciśnięte do momentu naciśnięcia następnego klawisza"
+      },
+      "option": "Opcja"
     },
     "disabled": "Zdalny pulpit jest wyłączony. Administrator może go włączyć w ustawieniach."
   },
@@ -114,11 +130,11 @@
       "timezone": "Strefa czasowa",
       "loadBalanceInfo": "Informacje o równoważeniu obciążenia / Cookie",
       "loadBalanceInfoDesc": "Cookie brokera połączeń RD do równoważenia obciążenia w farmie RDS (np. tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "Proxy guacd",
+      "guacdProxy": "Proxy guacd (opcjonalnie)",
       "guacdHostname": "Host guacd",
       "guacdHostnamePlaceholder": "Domyślna wartość globalna",
       "guacdPort": "Port guacd",
-      "guacdProxyDesc": "Zastąp globalną instancję guacd dla tego połączenia. Pozostaw puste, aby użyć globalnie skonfigurowanego guacd.",
+      "guacdProxyDesc": "Termix łączy się z tym hostem bezpośrednio. Ustaw serwer guacd tylko, jeśli połączenie z tym hostem ma przechodzić przez własny serwer guacd. Pozostaw puste, aby użyć ustawienia globalnego.",
       "guacdAdminOnly": "Tylko administratorzy mogą zmienić serwer guacd dla hosta.",
       "guacdSaveHostFirst": "Najpierw zapisz hosta, a następnie ustaw jego serwer guacd tutaj.",
       "guacdSave": "Zapisz serwer guacd",
@@ -129,6 +145,7 @@
       "gatewayUsername": "Nazwa użytkownika bramy",
       "gatewayPassword": "Hasło bramki",
       "gatewayDomain": "Domena bramki",
+      "gatewayNote": "RD Gateway wymaga zewnętrznego guacd. Hosty z bramą łączą się z nią, gdy jest skonfigurowana, w ustawieniach pulpitu zdalnego lub w sekcji Proxy guacd.",
       "remoteAppProgram": "Program RemoteApp",
       "workingDirectory": "Katalog roboczy",
       "arguments": "Argumenty",
@@ -145,7 +162,7 @@
       "disableAudio": "Wyłącz dźwięk",
       "disableAudioDesc": "Wycisz cały dźwięk z zdalnej sesji",
       "enableAudioInput": "Włącz wejście audio (mikrofon)",
-      "enableAudioInputDesc": "Przekieruj lokalny mikrofon do zdalnej sesji",
+      "enableAudioInputDesc": "Przekieruj lokalny mikrofon do sesji zdalnej | Tylko z zewnętrznym guacd",
       "wallpaper": "Tapeta",
       "wallpaperDesc": "Wyświetlaj tapetę pulpitu (wyłączenie poprawia wydajność)",
       "theming": "Motywowanie",
@@ -159,13 +176,13 @@
       "menuAnimations": "Animacje menu",
       "menuAnimationsDesc": "Włącz animacje zanikania i przesuwania menu",
       "disableBitmapCaching": "Wyłącz buforowanie bitmap",
-      "disableBitmapCachingDesc": "Wyłącz bufor bitmap (może pomóc przy błędach graficznych)",
+      "disableBitmapCachingDesc": "Wyłącz pamięć podręczną bitmap (może pomóc przy błędach graficznych) | Tylko z zewnętrznym guacd",
       "disableOffscreenCaching": "Wyłącz buforowanie poza ekranem",
-      "disableOffscreenCachingDesc": "Wyłącz bufor poza ekranem",
+      "disableOffscreenCachingDesc": "Wyłącz pamięć podręczną poza ekranem | Tylko z zewnętrznym guacd",
       "disableGlyphCaching": "Wyłącz buforowanie glikfów",
-      "disableGlyphCachingDesc": "Wyłącz bufor glikfów",
+      "disableGlyphCachingDesc": "Wyłącz pamięć podręczną znaków | Tylko z zewnętrznym guacd",
       "enableGfx": "Włącz GFX",
-      "enableGfxDesc": "Użyj potoku graficznego RemoteFX",
+      "enableGfxDesc": "Użyj potoku graficznego RemoteFX | Tylko z zewnętrznym guacd",
       "enablePrinting": "Włącz drukowanie",
       "enablePrintingDesc": "Przekieruj lokalne drukarki do zdalnej sesji",
       "enableDriveRedirection": "Włącz przekierowanie dysków",
@@ -175,7 +192,7 @@
       "disableUpload": "Wyłącz przesyłanie",
       "disableUploadDesc": "Zablokuj przesyłanie plików do zdalnej sesji",
       "enableTouch": "Włącz dotyk",
-      "enableTouchDesc": "Włącz przekierowanie wejścia dotykowego",
+      "enableTouchDesc": "Włącz przekierowanie dotyku | Tylko z zewnętrznym guacd",
       "consoleSession": "Sesja konsoli",
       "consoleSessionDesc": "Połącz się z konsolą (sesja 0) zamiast tworzyć nową sesję",
       "sendWolPacket": "Wyślij pakiet WOL",
@@ -202,6 +219,7 @@
       "telnetPort": "Port Telnet",
       "terminalType": "Typ terminala",
       "fontName": "Nazwa czcionki",
+      "fontNameDesc": "Tylko z zewnętrznym guacd. Wbudowany silnik używa własnej czcionki o stałej szerokości znaków.",
       "fontSize": "Rozmiar czcionki",
       "colorScheme": "Schemat kolorów",
       "backspaceKey": "Klawisz Backspace",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "Biały na czarnym",
         "grayOnBlack": "Szary na czarnym",
         "greenOnBlack": "Zielony na czarnym"
-      }
+      },
+      "ardSettings": "Ustawienia Apple Remote Desktop",
+      "ardPort": "Port ARD",
+      "ardPassword": "Hasło macOS",
+      "ardUsername": "Nazwa użytkownika macOS",
+      "ardLeaveBlank": "Pozostaw puste, aby użyć tylko hasła VNC"
     },
     "remoteDesktop": "Zdalny pulpit",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "Nieszyfrowany powłoka",
     "remoteDesktopNotes": "Notatki",
     "userDefaultsNote": "Ustawienia, które pozostawisz bez zmian, będą zgodne z domyślnymi ustawieniami hosta.",
-    "connectionOriginNote": "W aplikacji desktopowej RDP, VNC i Telnet używają zdalnego serwera, chyba że host jest ustawiony na To urządzenie, co wymaga guacd dostępnego dla tego komputera. Ustaw go w ustawieniach Zdalnego pulpitu lub dla każdego hosta w sekcji Proxy guacd.",
+    "connectionOriginNote": "W aplikacji desktopowej RDP, VNC i Telnet działają na tym urządzeniu, gdy host jest ustawiony na Domyślny, tak jak SSH. Wybierz Zdalny serwer, aby uruchomić je na serwerze.",
     "docsLink": "Zobacz dokumentację",
-    "connectionOriginGuacamoleNote": "RDP, VNC i Telnet używają zdalnego serwera, chyba że wybierzesz „To urządzenie”, co wymaga guacd dostępnego dla tego komputera. Ustaw go w ustawieniu adresu URL guacd lub dla każdego hosta w sekcji Proxy guacd."
+    "connectionOriginGuacamoleNote": "RDP, VNC i Telnet działają domyślnie na tym urządzeniu, tak jak SSH. Wybierz Zdalny serwer, aby uruchomić je na serwerze.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Udostępnianie ekranu Mac"
   },
   "onboarding": {
     "guacdTitle": "Skonfiguruj zdalny pulpit",
-    "guacdIntro": "Zdalny pulpit wymaga uruchomionego guacd obok Termix. Sprawdź, czy odpowiada, lub wskaż Termix na niego.",
+    "guacdIntro": "Zdalny pulpit jest skonfigurowany do używania własnego guacd. Sprawdź, czy odpowiada, lub wskaż Termixowi jego adres.",
     "guacdChecking": "Szukam guacd",
     "guacdConnected": "guacd działa pod adresem {{address}}",
     "guacdMissing": "guacd nie odpowiada pod adresem {{address}}",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "Włącz pulpit zdalny",
-        "description": "Zezwól na połączenia RDP, VNC i Telnet przez guacd."
+        "description": "Zezwalaj na połączenia RDP, VNC i Telnet."
+      },
+      "useGuacd": {
+        "label": "Użyj zewnętrznego guacd",
+        "description": "Termix samodzielnie obsługuje RDP, VNC i Telnet. Włącz tę opcję, aby przekazywać te połączenia do własnego guacd. Zmienna REMOTE_DESKTOP_ENGINE nadpisuje to ustawienie."
       },
       "guacdUrl": {
         "label": "Adres URL guacd",
@@ -352,20 +381,46 @@
         "label": "Ignoruj błędy certyfikatu"
       },
       "guacamoleConfig": {
-        "label": "Ustawienia guacd"
+        "label": "Ustawienia połączenia"
       },
       "enableToolbar": {
         "label": "Pasek narzędzi pulpitu zdalnego",
-        "description": "Wyświetlaj pasek narzędzi w sesjach RDP, VNC i Telnet."
+        "description": "Wyświetlaj pasek narzędzi w sesjach RDP, VNC, ARD i Telnet."
       },
       "displayGroup": "Wyświetlanie",
-      "displayDefaultsTab": "Pulpit zdalny"
+      "displayDefaultsTab": "Pulpit zdalny",
+      "toolbarPosition": {
+        "label": "Pozycja paska narzędzi",
+        "description": "Wyświetlaj pasek narzędzi powyżej lub poniżej sesji.",
+        "top": "Góra",
+        "bottom": "Dół"
+      },
+      "toolbarLabels": {
+        "label": "Etykiety paska narzędzi",
+        "description": "Wyświetlaj nazwy obok ikon lub tylko ikony. Nazwy ukrywają się automatycznie, gdy brakuje miejsca.",
+        "labeled": "Ikony i nazwy",
+        "icons": "Tylko ikony"
+      },
+      "toolbarButtons": {
+        "label": "Przyciski paska narzędzi",
+        "description": "Wybierz, które przyciski mają być widoczne i w jakiej kolejności. Przyciski, które nie mieszczą się na pasku, trafią do menu Więcej.",
+        "reset": "Resetuj",
+        "moveUp": "Przenieś wyżej",
+        "moveDown": "Przenieś niżej"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "Port ARD"
+      }
     }
   },
   "palette": {
     "connectRdp": "Połącz przez RDP",
     "connectVnc": "Połącz przez VNC",
-    "connectTelnet": "Połącz przez Telnet"
+    "connectTelnet": "Połącz przez Telnet",
+    "connectArd": "Połącz za pomocą Apple Remote Desktop"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "Wymagany serwer zdalny. Podłącz serwer zdalny w ustawieniach, aby korzystać z tego typu połączenia."
   },
   "plugin": {
-    "name": "Pulpit zdalny"
+    "name": "Pulpit zdalny",
+    "description": "Sesje RDP, VNC i Telnet w przeglądarce, z obsługą schowka, transferem plików, udostępnianiem i nagrywaniem."
   }
 }

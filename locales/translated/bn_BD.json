@@ -10,7 +10,7 @@
     "failedToConnect": "সংযোগ টোকেন পাওয়া যায়নি",
     "hostNotFound": "হোস্ট পাওয়া যায়নি",
     "noHostSelected": "কোনো হোস্ট নির্বাচন করা হয়নি",
-    "guacdUnavailable": "রিমোট ডেস্কটপ সার্ভিস (guacd) উপলব্ধ নয়। অনুগ্রহ করে নিশ্চিত করুন যে guacd চলছে এবং এটি অ্যাডমিন সেটিংসে সঠিকভাবে কনফিগার করা আছে।",
+    "guacdUnavailable": "বাহ্যিক guacd সাড়া দিচ্ছে না। নিশ্চিত করুন যে এটি চলছে, অথবা রিমোট ডেস্কটপ সেটিংস থেকে 'Use an external guacd' বন্ধ করুন।",
     "credentialPromptTitle": "RDP ক্রেডেনশিয়াল দিন",
     "credentialPromptDescription": "এই হোস্টটি সংযোগের সময় ক্রেডেনশিয়াল চাইতে সেট করা আছে। এগুলো শুধুমাত্র এই সেশনের জন্য ব্যবহৃত হবে এবং সংরক্ষণ করা হবে না।",
     "connect": "সংযুক্ত করুন",
@@ -28,7 +28,7 @@
       "uploadFailed": "{{name}} আপলোড করা যায়নি",
       "uploadDisabled": "এই সংযোগের জন্য আপলোড নিষ্ক্রিয় করা আছে",
       "driveUnavailable": "ফাইল আপলোড করার আগে RDP ড্রাইভ রিডিরেকশন সক্রিয় করুন",
-      "driveNotWritable": "guacd ড্রাইভ ফোল্ডারে লিখতে পারছে না। GUACD_DRIVE_PATH এবং এর অনুমতিগুলো পরীক্ষা করুন।",
+      "driveNotWritable": "Termix ড্রাইভ ফোল্ডারে লিখতে পারছে না। RDP_DRIVE_PATH, বা বাহ্যিক guacd-এর ক্ষেত্রে GUACD_DRIVE_PATH এবং এর অনুমতিগুলো পরীক্ষা করুন।",
       "dropToUpload": "আপলোড করতে ফাইল ছেড়ে দিন"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Arrow Left",
       "arrowRight": "Arrow Right",
       "fnToggle": "ফাংশন কী",
-      "collapse": "টুলবার সংকুচিত করুন",
-      "expand": "টুলবার প্রসারিত করুন",
-      "dragHandle": "পুনরায় স্থাপন করতে টেনে নিন",
-      "hide": "এই সেশনের জন্য লুকান। স্থায়ীভাবে নিষ্ক্রিয় করতে, হোস্ট সেটিংস → সাধারণ → সংযোগ টুলবার খুলুন।",
       "zoomIn": "জুম ইন",
       "zoomOut": "ছোট করুন",
       "resetZoom": "জুম রিসেট করুন",
       "fitToScreen": "স্ক্রিনে ফিট করুন",
       "switchToTrackpad": "ট্র্যাকপ্যাড মোডে সুইচ করুন (কার্সর সরানোর জন্য ড্র্যাগ করুন, ক্লিক করার জন্য ট্যাপ করুন)",
-      "switchToTouch": "টাচ মোডে সুইচ করুন (ক্লিক করতে যেখানে চান সেখানে সরাসরি ট্যাপ করুন)"
+      "switchToTouch": "টাচ মোডে সুইচ করুন (ক্লিক করতে যেখানে চান সেখানে সরাসরি ট্যাপ করুন)",
+      "label": "রিমোট ডেস্কটপ টুলবার",
+      "more": "আরও",
+      "items": {
+        "files": "ফাইল",
+        "touchMode": "টাচ মোড",
+        "zoom": "জুম",
+        "lock": "লক স্ক্রিন",
+        "metaKey": "সিস্টেম কী",
+        "modifiers": "স্টিকি মডিফায়ার কী",
+        "arrows": "অ্যারো কী",
+        "forceQuit": "জোর করে বন্ধ করুন",
+        "macLock": "স্ক্রিন লক করুন",
+        "spotlight": "স্পটলাইট"
+      },
+      "hints": {
+        "files": "RDP ড্রাইভ চালু হলে একবার দেখায়",
+        "touchMode": "শুধুমাত্র টাচ স্ক্রিনে",
+        "modifiers": "Ctrl, Alt, Shift এবং সিস্টেম কী পরবর্তী কী চাপা পর্যন্ত চেপে থাকবে"
+      },
+      "option": "অপশন"
     },
     "disabled": "রিমোট ডেস্কটপ বন্ধ আছে। একজন অ্যাডমিন সেটিংস থেকে এটি চালু করতে পারেন।"
   },
@@ -114,11 +130,11 @@
       "timezone": "টাইমজোন",
       "loadBalanceInfo": "লোড ব্যালেন্স তথ্য / কুকি",
       "loadBalanceInfoDesc": "RDS ফার্ম লোড ব্যালেন্সিংয়ের জন্য RD কানেকশন ব্রোকার কুকি (যেমন: tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "guacd প্রক্সি",
+      "guacdProxy": "guacd প্রক্সি (ঐচ্ছিক)",
       "guacdHostname": "guacd হোস্ট",
       "guacdHostnamePlaceholder": "গ্লোবাল ডিফল্ট",
       "guacdPort": "guacd পোর্ট",
-      "guacdProxyDesc": "এই কানেকশনের জন্য গ্লোবাল guacd ইনস্ট্যান্স ওভাররাইড করুন। গ্লোবালি কনফিগার করা guacd ব্যবহার করতে খালি রাখুন।",
+      "guacdProxyDesc": "Termix নিজেই এই হোস্টের সাথে সংযোগ স্থাপন করে। শুধুমাত্র তখনই guacd সার্ভার সেট করুন যদি এই হোস্টটি আপনার নিজস্ব guacd এর মাধ্যমে যোগাযোগ করে। গ্লোবাল সেটিং ব্যবহার করতে খালি রাখুন।",
       "guacdAdminOnly": "শুধুমাত্র অ্যাডমিনরা হোস্টের জন্য guacd সার্ভার পরিবর্তন করতে পারেন।",
       "guacdSaveHostFirst": "প্রথমে হোস্টটি সংরক্ষণ করুন, তারপর এখানে এর guacd সার্ভার সেট করুন।",
       "guacdSave": "guacd সার্ভার সংরক্ষণ করুন",
@@ -129,6 +145,7 @@
       "gatewayUsername": "গেটওয়ে ব্যবহারকারীর নাম",
       "gatewayPassword": "গেটওয়ে পাসওয়ার্ড",
       "gatewayDomain": "গেটওয়ে ডোমেইন",
+      "gatewayNote": "RD Gateway-এর জন্য একটি বাহ্যিক guacd প্রয়োজন। যখন Remote Desktop সেটিংসে বা guacd Proxy-এর অধীনে একটি গেটওয়ে সেট আপ করা থাকে, তখন সেই গেটওয়ে সহ হোস্টগুলো সেখানে যায়।",
       "remoteAppProgram": "রিমোটঅ্যাপ প্রোগ্রাম",
       "workingDirectory": "ওয়ার্কিং ডিরেক্টরি",
       "arguments": "আর্গুমেন্ট",
@@ -145,7 +162,7 @@
       "disableAudio": "অডিও নিষ্ক্রিয় করুন",
       "disableAudioDesc": "রিমোট সেশন থেকে সমস্ত অডিও মিউট করুন",
       "enableAudioInput": "অডিও ইনপুট সক্রিয় করুন (মাইক্রোফোন)",
-      "enableAudioInputDesc": "স্থানীয় মাইক্রোফোন রিমোট সেশনে ফরওয়ার্ড করুন",
+      "enableAudioInputDesc": "স্থানীয় মাইক্রোফোন রিমোট সেশনে ফরওয়ার্ড করুন | শুধুমাত্র বাহ্যিক guacd-এর সাথে",
       "wallpaper": "ওয়ালপেপার",
       "wallpaperDesc": "ডেস্কটপ ওয়ালপেপার দেখান (নিষ্ক্রিয় করলে পারফরম্যান্স উন্নত হয়)",
       "theming": "থিমিং",
@@ -159,13 +176,13 @@
       "menuAnimations": "মেনু অ্যানিমেশন",
       "menuAnimationsDesc": "মেনু ফেড এবং স্লাইড অ্যানিমেশন সক্রিয় করুন",
       "disableBitmapCaching": "বিটম্যাপ ক্যাশিং নিষ্ক্রিয় করুন",
-      "disableBitmapCachingDesc": "বিটম্যাপ ক্যাশ বন্ধ করুন (গ্লিচ সমস্যায় সাহায্য করতে পারে)",
+      "disableBitmapCachingDesc": "বিটম্যাপ ক্যাশ বন্ধ করুন (গ্লিচ কমাতে সাহায্য করতে পারে) | শুধুমাত্র বাহ্যিক guacd-এর সাথে",
       "disableOffscreenCaching": "অফস্ক্রিন ক্যাশিং নিষ্ক্রিয় করুন",
-      "disableOffscreenCachingDesc": "অফস্ক্রিন ক্যাশ বন্ধ করুন",
+      "disableOffscreenCachingDesc": "অফস্ক্রিন ক্যাশ বন্ধ করুন | শুধুমাত্র বাহ্যিক guacd-এর সাথে",
       "disableGlyphCaching": "গ্লিফ ক্যাশিং নিষ্ক্রিয় করুন",
-      "disableGlyphCachingDesc": "গ্লিফ ক্যাশ বন্ধ করুন",
+      "disableGlyphCachingDesc": "গ্লাইফ ক্যাশ বন্ধ করুন | শুধুমাত্র বাহ্যিক guacd-এর সাথে",
       "enableGfx": "GFX সক্রিয় করুন",
-      "enableGfxDesc": "RemoteFX গ্রাফিক্স পাইপলাইন ব্যবহার করুন",
+      "enableGfxDesc": "RemoteFX গ্রাফিক্স পাইপলাইন ব্যবহার করুন | শুধুমাত্র বাহ্যিক guacd-এর সাথে",
       "enablePrinting": "প্রিন্টিং সক্রিয় করুন",
       "enablePrintingDesc": "স্থানীয় প্রিন্টার রিমোট সেশনে রিডাইরেক্ট করুন",
       "enableDriveRedirection": "ড্রাইভ রিডাইরেকশন সক্রিয় করুন",
@@ -175,7 +192,7 @@
       "disableUpload": "আপলোড নিষ্ক্রিয় করুন",
       "disableUploadDesc": "রিমোট সেশনে ফাইল আপলোড করতে বাধা দিন",
       "enableTouch": "টাচ সক্রিয় করুন",
-      "enableTouchDesc": "টাচ ইনপুট ফরওয়ার্ডিং সক্রিয় করুন",
+      "enableTouchDesc": "টাচ ইনপুট ফরওয়ার্ডিং সক্রিয় করুন | শুধুমাত্র বাহ্যিক guacd-এর সাথে",
       "consoleSession": "কনসোল সেশন",
       "consoleSessionDesc": "নতুন সেশনের পরিবর্তে কনসোলে (সেশন 0) সংযোগ করুন",
       "sendWolPacket": "WOL প্যাকেট পাঠান",
@@ -202,6 +219,7 @@
       "telnetPort": "Telnet পোর্ট",
       "terminalType": "টার্মিনাল টাইপ",
       "fontName": "ফন্টের নাম",
+      "fontNameDesc": "শুধুমাত্র বাহ্যিক guacd-এর সাথে। বিল্ট-ইন ইঞ্জিনটি তার নিজস্ব মনোস্পেস ফন্ট ব্যবহার করে।",
       "fontSize": "ফন্টের আকার",
       "colorScheme": "রঙের স্কিম",
       "backspaceKey": "ব্যাকস্পেস কী",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "কালো পটভূমিতে সাদা",
         "grayOnBlack": "কালো পটভূমিতে ধূসর",
         "greenOnBlack": "কালো পটভূমিতে সবুজ"
-      }
+      },
+      "ardSettings": "Apple Remote Desktop সেটিংস",
+      "ardPort": "ARD পোর্ট",
+      "ardPassword": "macOS পাসওয়ার্ড",
+      "ardUsername": "macOS ব্যবহারকারীর নাম",
+      "ardLeaveBlank": "শুধুমাত্র VNC পাসওয়ার্ডের জন্য খালি রাখুন"
     },
     "remoteDesktop": "রিমোট ডেস্কটপ",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "অএনক্রিপ্টেড শেল",
     "remoteDesktopNotes": "নোট",
     "userDefaultsNote": "আপনি যে সেটিংস অপরিবর্তিত রাখবেন তা আপনার হোস্টের ডিফল্ট মান অনুসরণ করবে।",
-    "connectionOriginNote": "ডেস্কটপ অ্যাপে, RDP, VNC এবং Telnet রিমোট সার্ভার ব্যবহার করে, যদি না হোস্টটি 'এই ডিভাইস' হিসেবে সেট করা থাকে, যার জন্য এই মেশিনে একটি guacd প্রয়োজন যা এটি পৌঁছাতে পারে। রিমোট ডেস্কটপ সেটিংসে একটি সেট করুন, অথবা প্রতিটি হোস্টের জন্য guacd প্রক্সির অধীনে সেট করুন।",
+    "connectionOriginNote": "ডেস্কটপ অ্যাপে, হোস্টটি ডিফল্ট অবস্থায় থাকলে SSH-এর মতো RDP, VNC এবং Telnet এই ডিভাইসে চলে। পরিবর্তে সেগুলো সার্ভারে চালানোর জন্য রিমোট সার্ভার নির্বাচন করুন।",
     "docsLink": "ডকুমেন্ট দেখুন",
-    "connectionOriginGuacamoleNote": "RDP, VNC এবং Telnet রিমোট সার্ভার ব্যবহার করে, যদি না আপনি 'এই ডিভাইস' বেছে নেন, যার জন্য এই মেশিনে একটি guacd প্রয়োজন যা এটি পৌঁছাতে পারে। guacd URL সেটিংসে একটি সেট করুন, অথবা প্রতিটি হোস্টের জন্য guacd প্রক্সির অধীনে সেট করুন।"
+    "connectionOriginGuacamoleNote": "ডিফল্টভাবে, SSH-এর মতো RDP, VNC এবং Telnet এই ডিভাইসে চলে। পরিবর্তে সেগুলো সার্ভারে চালানোর জন্য রিমোট সার্ভার নির্বাচন করুন।",
+    "tabArd": "অ্যাপল রিমোট ডেস্কটপ",
+    "appleScreenSharing": "ম্যাক স্ক্রিন শেয়ারিং"
   },
   "onboarding": {
     "guacdTitle": "রিমোট ডেস্কটপ সেটআপ করুন",
-    "guacdIntro": "রিমোট ডেস্কটপের জন্য Termix-এর পাশে guacd চালু থাকতে হবে। যাচাই করুন যে এটি সাড়া দিচ্ছে, অথবা Termix-কে এর দিকে নির্দেশ করুন।",
+    "guacdIntro": "রিমোট ডেস্কটপটি আপনার নিজস্ব guacd ব্যবহার করার জন্য সেট করা আছে। নিশ্চিত করুন যে এটি সাড়া দিচ্ছে, অথবা Termix-কে এর দিকে নির্দেশ করুন।",
     "guacdChecking": "guacd খুঁজছে",
     "guacdConnected": "guacd {{address}} এ চালু আছে",
     "guacdMissing": "guacd {{address}} এ সাড়া দিচ্ছে না",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "রিমোট ডেস্কটপ সক্রিয় করুন",
-        "description": "guacd এর মাধ্যমে RDP, VNC এবং Telnet সংযোগের অনুমতি দিন।"
+        "description": "RDP, VNC এবং Telnet সংযোগের অনুমতি দিন।"
+      },
+      "useGuacd": {
+        "label": "একটি বাহ্যিক guacd ব্যবহার করুন",
+        "description": "Termix নিজেই RDP, VNC এবং Telnet চালায়। এটি আপনার নিজস্ব guacd-এ পাঠাতে এটি চালু করুন। REMOTE_DESKTOP_ENGINE এটি বাতিল করে।"
       },
       "guacdUrl": {
         "label": "guacd URL",
@@ -352,20 +381,46 @@
         "label": "সার্টিফিকেট ত্রুটি উপেক্ষা করুন"
       },
       "guacamoleConfig": {
-        "label": "guacd সেটিংস"
+        "label": "কানেকশন সেটিংস"
       },
       "enableToolbar": {
         "label": "রিমোট ডেস্কটপ টুলবার",
-        "description": "RDP, VNC এবং Telnet সেশনে টুলবার দেখান।"
+        "description": "RDP, VNC, ARD এবং Telnet সেশনে টুলবার দেখান।"
       },
       "displayGroup": "ডিসপ্লে",
-      "displayDefaultsTab": "রিমোট ডেস্কটপ"
+      "displayDefaultsTab": "রিমোট ডেস্কটপ",
+      "toolbarPosition": {
+        "label": "টুলবারের অবস্থান",
+        "description": "সেশনের উপরে বা নিচে টুলবার দেখান।",
+        "top": "উপরে",
+        "bottom": "নিচে"
+      },
+      "toolbarLabels": {
+        "label": "টুলবার লেবেল",
+        "description": "আইকনের পাশে নাম দেখান, অথবা শুধুমাত্র আইকন। জায়গা কমলে নাম নিজেই লুকিয়ে যায়।",
+        "labeled": "আইকন এবং নাম",
+        "icons": "শুধুমাত্র আইকন"
+      },
+      "toolbarButtons": {
+        "label": "টুলবারের বোতাম",
+        "description": "কোন বোতামগুলো দেখাবে এবং কী ক্রমে দেখাবে তা নির্বাচন করুন। যেসব বোতাম জায়গা পাবে না সেগুলো 'আরও' মেনুতে যাবে।",
+        "reset": "রিসেট",
+        "moveUp": "উপরে সরান",
+        "moveDown": "নিচে সরান"
+      },
+      "enableArd": {
+        "label": "অ্যাপল রিমোট ডেস্কটপ"
+      },
+      "ardPort": {
+        "label": "ARD পোর্ট"
+      }
     }
   },
   "palette": {
     "connectRdp": "RDP দিয়ে সংযোগ করুন",
     "connectVnc": "VNC দিয়ে সংযোগ করুন",
-    "connectTelnet": "Telnet দিয়ে সংযোগ করুন"
+    "connectTelnet": "Telnet দিয়ে সংযোগ করুন",
+    "connectArd": "অ্যাপল রিমোট ডেস্কটপ দিয়ে সংযোগ করুন"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "রিমোট সার্ভার প্রয়োজন। এই সংযোগের ধরন ব্যবহার করতে সেটিংসে একটি রিমোট সার্ভার সংযোগ করুন।"
   },
   "plugin": {
-    "name": "রিমোট ডেস্কটপ"
+    "name": "রিমোট ডেস্কটপ",
+    "description": "ব্রাউজারে RDP, VNC এবং Telnet সেশন, ক্লিপবোর্ড, ফাইল ট্রান্সফার, শেয়ারিং এবং রেকর্ডিং সহ।"
   }
 }

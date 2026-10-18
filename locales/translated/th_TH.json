@@ -10,7 +10,7 @@
     "failedToConnect": "ไม่สามารถรับโทเค็นการเชื่อมต่อได้",
     "hostNotFound": "ไม่พบโฮสต์",
     "noHostSelected": "ไม่ได้เลือกโฮสต์",
-    "guacdUnavailable": "บริการเดสก์ท็อประยะไกล (guacd) ไม่พร้อมใช้งาน โปรดตรวจสอบว่า guacd กำลังทำงานและสามารถเข้าถึงได้ รวมถึงมีการกำหนดค่าอย่างถูกต้องในการตั้งค่าผู้ดูแลระบบ",
+    "guacdUnavailable": "guacd ภายนอกไม่ตอบสนอง โปรดตรวจสอบว่ากำลังทำงานอยู่ หรือปิดใช้งาน \"ใช้ guacd ภายนอก\" ในการตั้งค่าเดสก์ท็อประยะไกล",
     "credentialPromptTitle": "ป้อนข้อมูลเข้าสู่ระบบ RDP",
     "credentialPromptDescription": "โฮสต์นี้ถูกตั้งค่าให้ขอข้อมูลเข้าสู่ระบบเมื่อเชื่อมต่อ ข้อมูลเหล่านี้จะใช้เฉพาะในเซสชันนี้และไม่ถูกบันทึกไว้",
     "connect": "เชื่อมต่อ",
@@ -28,7 +28,7 @@
       "uploadFailed": "ไม่สามารถอัปโหลด {{name}} ได้",
       "uploadDisabled": "การอัปโหลดถูกปิดใช้งานสำหรับการเชื่อมต่อนี้",
       "driveUnavailable": "เปิดใช้งานการเปลี่ยนเส้นทางไดรฟ์ RDP ก่อนอัปโหลดไฟล์",
-      "driveNotWritable": "guacd ไม่สามารถเขียนไปยังโฟลเดอร์ไดรฟ์ได้ โปรดตรวจสอบ GUACD_DRIVE_PATH และสิทธิ์การเข้าถึง",
+      "driveNotWritable": "Termix ไม่สามารถเขียนไปยังโฟลเดอร์ไดรฟ์ได้ โปรดตรวจสอบ RDP_DRIVE_PATH หรือ GUACD_DRIVE_PATH (หากใช้ guacd ภายนอก) และสิทธิ์การเข้าถึง",
       "dropToUpload": "วางไฟล์เพื่ออัปโหลด"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "ลูกศรซ้าย",
       "arrowRight": "ลูกศรขวา",
       "fnToggle": "ปุ่มฟังก์ชัน",
-      "collapse": "ยุบแถบเครื่องมือ",
-      "expand": "ขยายแถบเครื่องมือ",
-      "dragHandle": "ลากเพื่อเปลี่ยนตำแหน่ง",
-      "hide": "ซ่อนสำหรับเซสชันนี้ หากต้องการปิดใช้งานอย่างถาวร ให้เปิด การตั้งค่าโฮสต์ → ทั่วไป → แถบเครื่องมือการเชื่อมต่อ",
       "zoomIn": "ซูมเข้า",
       "zoomOut": "ซูมออก",
       "resetZoom": "รีเซ็ตการซูม",
       "fitToScreen": "พอดีกับหน้าจอ",
       "switchToTrackpad": "สลับเป็นโหมดแทร็กแพด (ลากเพื่อเลื่อนเคอร์เซอร์ แตะเพื่อคลิก)",
-      "switchToTouch": "สลับเป็นโหมดสัมผัส (แตะตรงตำแหน่งที่ต้องการคลิก)"
+      "switchToTouch": "สลับเป็นโหมดสัมผัส (แตะตรงตำแหน่งที่ต้องการคลิก)",
+      "label": "แถบเครื่องมือเดสก์ท็อประยะไกล",
+      "more": "เพิ่มเติม",
+      "items": {
+        "files": "ไฟล์",
+        "touchMode": "โหมดสัมผัส",
+        "zoom": "ซูม",
+        "lock": "ล็อกหน้าจอ",
+        "metaKey": "ปุ่มระบบ",
+        "modifiers": "ปุ่มแก้ไขแบบค้าง",
+        "arrows": "ปุ่มลูกศร",
+        "forceQuit": "บังคับปิด",
+        "macLock": "ล็อกหน้าจอ",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "แสดงเมื่อเปิดไดรฟ์ RDP แล้ว",
+        "touchMode": "เฉพาะบนหน้าจอสัมผัส",
+        "modifiers": "ปุ่ม Ctrl, Alt, Shift และปุ่มระบบจะค้างไว้จนกว่าจะกดปุ่มถัดไป"
+      },
+      "option": "Option"
     },
     "disabled": "Remote Desktop ถูกปิดใช้งาน ผู้ดูแลระบบสามารถเปิดใช้งานได้ในส่วนการตั้งค่า"
   },
@@ -114,11 +130,11 @@
       "timezone": "เขตเวลา",
       "loadBalanceInfo": "ข้อมูลการปรับสมดุลโหลด / คูปอง",
       "loadBalanceInfoDesc": "คุกกี้ของ RD Connection Broker สำหรับการปรับสมดุลโหลดของฟาร์ม RDS (เช่น tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "พร็อกซี guacd",
+      "guacdProxy": "guacd Proxy (ไม่บังคับ)",
       "guacdHostname": "โฮสต์ guacd",
       "guacdHostnamePlaceholder": "ค่าเริ่มต้นทั่วโลก",
       "guacdPort": "พอร์ต guacd",
-      "guacdProxyDesc": "แทนที่อินสแตนซ์ guacd ทั่วโลกสำหรับการเชื่อมต่อนี้ เว้นว่างไว้เพื่อใช้ guacd ที่กำหนดค่าไว้ทั่วโลก",
+      "guacdProxyDesc": "Termix จะเชื่อมต่อกับโฮสต์นี้โดยตรง กำหนดเซิร์ฟเวอร์ guacd เฉพาะเมื่อต้องการให้โฮสต์นี้ผ่าน guacd ของคุณเอง ทิ้งว่างไว้เพื่อใช้การตั้งค่าทั่วโลก",
       "guacdAdminOnly": "เฉพาะผู้ดูแลระบบเท่านั้นที่สามารถเปลี่ยนเซิร์ฟเวอร์ guacd สำหรับโฮสต์ได้",
       "guacdSaveHostFirst": "บันทึกโฮสต์ก่อน จากนั้นตั้งค่าเซิร์ฟเวอร์ guacd ของมันที่นี่",
       "guacdSave": "บันทึกเซิร์ฟเวอร์ guacd",
@@ -129,6 +145,7 @@
       "gatewayUsername": "ชื่อผู้ใช้เกตเวย์",
       "gatewayPassword": "รหัสผ่านเกตเวย์",
       "gatewayDomain": "โดเมนเกตเวย์",
+      "gatewayNote": "RD Gateway ต้องการ guacd ภายนอก โฮสต์ที่มีเกตเวย์จะเชื่อมต่อกับเกตเวย์นั้นเมื่อมีการตั้งค่า ในส่วนการตั้งค่า Remote Desktop หรือภายใต้ guacd Proxy",
       "remoteAppProgram": "โปรแกรม RemoteApp",
       "workingDirectory": "ไดเรกทอรีทำงาน",
       "arguments": "อาร์กิวเมนต์",
@@ -145,7 +162,7 @@
       "disableAudio": "ปิดใช้งานเสียง",
       "disableAudioDesc": "ปิดเสียงทั้งหมดจากเซสชันระยะไกล",
       "enableAudioInput": "เปิดใช้งานอินพุตเสียง (ไมโครโฟน)",
-      "enableAudioInputDesc": "ส่งต่อไมโครโฟนท้องถิ่นไปยังเซสชันระยะไกล",
+      "enableAudioInputDesc": "ส่งต่อไมโครโฟนท้องถิ่นไปยังเซสชันระยะไกล | ใช้ได้เฉพาะกับ guacd ภายนอกเท่านั้น",
       "wallpaper": "วอลเปเปอร์",
       "wallpaperDesc": "แสดงวอลเปเปอร์เดสก์ท็อป (การปิดใช้งานจะปรับปรุงประสิทธิภาพ)",
       "theming": "ธีม",
@@ -159,13 +176,13 @@
       "menuAnimations": "แอนิเมชันเมนู",
       "menuAnimationsDesc": "เปิดใช้งานแอนิเมชันจางหายและเลื่อนของเมนู",
       "disableBitmapCaching": "ปิดใช้งานแคชบิตแมป",
-      "disableBitmapCachingDesc": "ปิดแคชบิตแมป (อาจช่วยแก้ปัญหาภาพกระพริบ)",
+      "disableBitmapCachingDesc": "ปิดใช้งานแคชบิตแมป (อาจช่วยแก้ปัญหาภาพกระพริบ) | ใช้ได้เฉพาะกับ guacd ภายนอกเท่านั้น",
       "disableOffscreenCaching": "ปิดใช้งานแคชออฟสกรีน",
-      "disableOffscreenCachingDesc": "ปิดแคชออฟสกรีน",
+      "disableOffscreenCachingDesc": "ปิดใช้งานแคชออฟสกรีน | ใช้ได้เฉพาะกับ guacd ภายนอกเท่านั้น",
       "disableGlyphCaching": "ปิดใช้งานแคชกลิฟ",
-      "disableGlyphCachingDesc": "ปิดแคชกลิฟ",
+      "disableGlyphCachingDesc": "ปิดใช้งานแคชกลิฟ | ใช้ได้เฉพาะกับ guacd ภายนอกเท่านั้น",
       "enableGfx": "เปิดใช้งาน GFX",
-      "enableGfxDesc": "ใช้ RemoteFX graphics pipeline",
+      "enableGfxDesc": "ใช้ RemoteFX graphics pipeline | ใช้ได้เฉพาะกับ guacd ภายนอกเท่านั้น",
       "enablePrinting": "เปิดใช้งานการพิมพ์",
       "enablePrintingDesc": "เปลี่ยนเส้นทางเครื่องพิมพ์ท้องถิ่นไปยังเซสชันระยะไกล",
       "enableDriveRedirection": "เปิดใช้งานการเปลี่ยนเส้นทางไดรฟ์",
@@ -175,7 +192,7 @@
       "disableUpload": "ปิดใช้งานการอัปโหลด",
       "disableUploadDesc": "ป้องกันการอัปโหลดไฟล์ไปยังเซสชันระยะไกล",
       "enableTouch": "เปิดใช้งานการสัมผัส",
-      "enableTouchDesc": "เปิดใช้งานการส่งต่ออินพุตการสัมผัส",
+      "enableTouchDesc": "เปิดใช้งานการส่งต่ออินพุตแบบสัมผัส | ใช้ได้เฉพาะกับ guacd ภายนอกเท่านั้น",
       "consoleSession": "เซสชันคอนโซล",
       "consoleSessionDesc": "เชื่อมต่อกับคอนโซล (เซสชัน 0) แทนที่จะเป็นเซสชันใหม่",
       "sendWolPacket": "ส่งแพ็กเก็ต WOL",
@@ -202,6 +219,7 @@
       "telnetPort": "พอร์ต Telnet",
       "terminalType": "ประเภทเทอร์มินัล",
       "fontName": "ชื่อฟอนต์",
+      "fontNameDesc": "ใช้ได้เฉพาะกับ guacd ภายนอกเท่านั้น เครื่องมือในตัวใช้ฟอนต์ monospace ของตัวเอง",
       "fontSize": "ขนาดฟอนต์",
       "colorScheme": "ชุดสี",
       "backspaceKey": "ปุ่ม Backspace",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "ขาวบนดำ",
         "grayOnBlack": "เทาบนดำ",
         "greenOnBlack": "เขียวบนดำ"
-      }
+      },
+      "ardSettings": "การตั้งค่า Apple Remote Desktop",
+      "ardPort": "พอร์ต ARD",
+      "ardPassword": "รหัสผ่าน macOS",
+      "ardUsername": "ชื่อผู้ใช้ macOS",
+      "ardLeaveBlank": "เว้นว่างไว้หากต้องการใช้เฉพาะรหัสผ่าน VNC"
     },
     "remoteDesktop": "เดสก์ท็อประยะไกล",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "เชลล์ที่ไม่มีการเข้ารหัส",
     "remoteDesktopNotes": "หมายเหตุ",
     "userDefaultsNote": "การตั้งค่าที่คุณไม่เปลี่ยนแปลงจะยึดตามค่าเริ่มต้นของโฮสต์",
-    "connectionOriginNote": "ในแอปเดสก์ท็อป RDP VNC และ Telnet จะใช้เซิร์ฟเวอร์ระยะไกล เว้นแต่โฮสต์จะถูกตั้งค่าเป็นอุปกรณ์นี้ ซึ่งจำเป็นต้องมี guacd ที่เครื่องนี้สามารถเข้าถึงได้ ตั้งค่าไว้ใน การตั้งค่าเดสก์ท็อประยะไกล หรือต่อโฮสต์ภายใต้ guacd Proxy",
+    "connectionOriginNote": "ในแอปเดสก์ท็อป RDP VNC และ Telnet จะทำงานบนอุปกรณ์นี้เมื่อโฮสต์ถูกตั้งค่าเป็นค่าเริ่มต้น (Default) เช่นเดียวกับ SSH เลือกเซิร์ฟเวอร์ระยะไกลหากต้องการให้ทำงานบนเซิร์ฟเวอร์แทน",
     "docsLink": "ดูเอกสาร",
-    "connectionOriginGuacamoleNote": "RDP VNC และ Telnet จะใช้เซิร์ฟเวอร์ระยะไกล เว้นแต่คุณจะเลือก \"อุปกรณ์นี้\" ซึ่งจำเป็นต้องมี guacd ที่เครื่องนี้สามารถเข้าถึงได้ ตั้งค่าไว้ใน การตั้งค่า URL guacd หรือต่อโฮสต์ภายใต้ guacd Proxy"
+    "connectionOriginGuacamoleNote": "RDP VNC และ Telnet จะทำงานบนอุปกรณ์นี้ตามค่าเริ่มต้น เช่นเดียวกับ SSH เลือกเซิร์ฟเวอร์ระยะไกลหากต้องการให้ทำงานบนเซิร์ฟเวอร์แทน",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Mac Screen Sharing"
   },
   "onboarding": {
     "guacdTitle": "ตั้งค่าเดสก์ท็อประยะไกล",
-    "guacdIntro": "เดสก์ท็อประยะไกลจำเป็นต้องมี guacd ทำงานอยู่ใกล้กับ Termix ตรวจสอบว่ามีการตอบกลับ หรือชี้ Termix ไปยัง guacd",
+    "guacdIntro": "การตั้งค่าเดสก์ท็อประยะไกลถูกกำหนดให้ใช้ guacd ของคุณ ตรวจสอบว่า guacd ตอบสนอง หรือชี้ Termix ไปยัง guacd",
     "guacdChecking": "กำลังค้นหา guacd",
     "guacdConnected": "guacd กำลังทำงานที่ {{address}}",
     "guacdMissing": "guacd ไม่ตอบกลับที่ {{address}}",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "เปิดใช้งานเดสก์ท็อประยะไกล",
-        "description": "อนุญาตการเชื่อมต่อ RDP, VNC และ Telnet ผ่าน guacd"
+        "description": "อนุญาตการเชื่อมต่อ RDP VNC และ Telnet"
+      },
+      "useGuacd": {
+        "label": "ใช้ guacd ภายนอก",
+        "description": "Termix จะจัดการ RDP, VNC และ Telnet ด้วยตัวเอง เปิดใช้งานตัวเลือกนี้เพื่อส่งการเชื่อมต่อเหล่านี้ไปยัง guacd ของคุณเองแทน ค่า REMOTE_DESKTOP_ENGINE จะแทนที่การตั้งค่านี้"
       },
       "guacdUrl": {
         "label": "URL ของ guacd",
@@ -352,20 +381,46 @@
         "label": "เพิกเฉยต่อข้อผิดพลาดของใบรับรอง"
       },
       "guacamoleConfig": {
-        "label": "การตั้งค่า guacd"
+        "label": "การตั้งค่าการเชื่อมต่อ"
       },
       "enableToolbar": {
         "label": "แถบเครื่องมือเดสก์ท็อประยะไกล",
-        "description": "แสดงแถบเครื่องมือในเซสชัน RDP, VNC และ Telnet"
+        "description": "แสดงแถบเครื่องมือในเซสชัน RDP, VNC, ARD และ Telnet"
       },
       "displayGroup": "การแสดงผล",
-      "displayDefaultsTab": "เดสก์ท็อประยะไกล"
+      "displayDefaultsTab": "เดสก์ท็อประยะไกล",
+      "toolbarPosition": {
+        "label": "ตำแหน่งแถบเครื่องมือ",
+        "description": "แสดงแถบเครื่องมือไว้ด้านบนหรือด้านล่างของเซสชัน",
+        "top": "ด้านบน",
+        "bottom": "ด้านล่าง"
+      },
+      "toolbarLabels": {
+        "label": "ป้ายชื่อแถบเครื่องมือ",
+        "description": "แสดงชื่อถัดจากไอคอน หรือแสดงเฉพาะไอคอน ชื่อจะซ่อนอัตโนมัติเมื่อพื้นที่ไม่เพียงพอ",
+        "labeled": "ไอคอนและชื่อ",
+        "icons": "ไอคอนเท่านั้น"
+      },
+      "toolbarButtons": {
+        "label": "ปุ่มในแถบเครื่องมือ",
+        "description": "เลือกปุ่มที่จะแสดงและลำดับการวาง ปุ่มที่แสดงไม่หมดจะถูกย้ายไปอยู่ในเมนูเพิ่มเติม",
+        "reset": "รีเซ็ต",
+        "moveUp": "เลื่อนขึ้น",
+        "moveDown": "เลื่อนลง"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "พอร์ต ARD"
+      }
     }
   },
   "palette": {
     "connectRdp": "เชื่อมต่อด้วย RDP",
     "connectVnc": "เชื่อมต่อด้วย VNC",
-    "connectTelnet": "เชื่อมต่อด้วย Telnet"
+    "connectTelnet": "เชื่อมต่อด้วย Telnet",
+    "connectArd": "เชื่อมต่อด้วย Apple Remote Desktop"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "จำเป็นต้องมีเซิร์ฟเวอร์ระยะไกล โปรดเชื่อมต่อเซิร์ฟเวอร์ระยะไกลในหน้าการตั้งค่าเพื่อใช้ประเภทการเชื่อมต่อนี้"
   },
   "plugin": {
-    "name": "เดสก์ท็อประยะไกล"
+    "name": "เดสก์ท็อประยะไกล",
+    "description": "เซสชัน RDP, VNC และ Telnet ในเบราว์เซอร์ พร้อมการคัดลอกข้อความ โอนย้ายไฟล์ การแชร์ และการบันทึก"
   }
 }

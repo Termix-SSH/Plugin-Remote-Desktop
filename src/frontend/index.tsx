@@ -5,6 +5,7 @@ import {
   Monitor,
   MonitorUp,
   MousePointerClick,
+  ScreenShare,
   Server,
 } from "lucide-react";
 import {
@@ -17,10 +18,8 @@ import {
   type TermixApp,
 } from "@termix-ssh/plugin-sdk/frontend";
 import {
-  FakeSwitch,
   HostFeatureFields,
   SectionCard,
-  SettingRow,
   isElectron,
 } from "@termix-ssh/plugin-sdk/ui";
 import { toast } from "sonner";
@@ -38,8 +37,10 @@ import {
   openNativeRdp,
   setRemoteDesktopApp,
 } from "./guacamole-api";
+import { waitForGuacamoleConnectionId } from "./guacamole-session-id";
 import { quickConnectGuacHost } from "./quick-connect-guac-host";
-import { REMOTE_DESKTOP_TOOLBAR_SLOT } from "./GuacamoleToolbar.tsx";
+import { REMOTE_DESKTOP_TOOLBAR_SLOT } from "./toolbar-items";
+import { HostToolbarCard } from "./HostToolbarCard";
 import {
   DEFAULT_PORT,
   ENABLE_KEY,
@@ -82,6 +83,16 @@ const PROTOCOLS: {
     icon: MousePointerClick,
     priority: 40,
     order: 110,
+    quickConnect: {},
+  },
+  {
+    id: "ard",
+    titleKey: "hosts.tabArd",
+    descriptionKey: "hosts.appleScreenSharing",
+    paletteKey: "palette.connectArd",
+    icon: ScreenShare,
+    priority: 35,
+    order: 115,
     quickConnect: {},
   },
   {
@@ -158,30 +169,6 @@ function SectionNotes() {
   );
 }
 
-function ToolbarCard({
-  form,
-  setField,
-}: Pick<ReturnType<typeof remoteDesktopForm>, "form" | "setField">) {
-  const { t } = useTranslation();
-  return (
-    <SectionCard
-      title={t("hosts.guac.toolbar")}
-      icon={<MonitorUp className="size-3.5" />}
-    >
-      <SettingRow
-        label={t("settings.host.enableToolbar.label")}
-        description={t("settings.host.enableToolbar.description")}
-        defaultKey="enableToolbar"
-      >
-        <FakeSwitch
-          checked={form.enableToolbar}
-          onChange={(value) => setField("enableToolbar", value)}
-        />
-      </SettingRow>
-    </SectionCard>
-  );
-}
-
 /**
  * The Wake-on-LAN address a host keeps, the default for a session's wake
  * packet. Null while that plugin is off.
@@ -221,7 +208,7 @@ function RdpSection(props: HostEditorSectionProps) {
         host={{ macAddress }}
         credentials={props.credentials as never}
       />
-      <ToolbarCard form={form} setField={setField} />
+      <HostToolbarCard form={form} setField={setField} />
       <SectionNotes />
     </>
   );
@@ -240,7 +227,27 @@ function VncSection(props: HostEditorSectionProps) {
         host={{ macAddress }}
         credentials={props.credentials as never}
       />
-      <ToolbarCard form={form} setField={setField} />
+      <HostToolbarCard form={form} setField={setField} />
+      <SectionNotes />
+    </>
+  );
+}
+
+function ArdSection(props: HostEditorSectionProps) {
+  const { form, setField, setGuacField } = remoteDesktopForm(props);
+  const macAddress = useWakeOnLanMac(props.host?.id);
+  return (
+    <>
+      <HostEditorVncTab
+        variant="ard"
+        form={form}
+        setField={setField}
+        setGuacField={setGuacField}
+        hostId={props.host?.id}
+        host={{ macAddress }}
+        credentials={props.credentials as never}
+      />
+      <HostToolbarCard form={form} setField={setField} />
       <SectionNotes />
     </>
   );
@@ -257,7 +264,7 @@ function TelnetSection(props: HostEditorSectionProps) {
         hostId={props.host?.id}
         credentials={props.credentials as never}
       />
-      <ToolbarCard form={form} setField={setField} />
+      <HostToolbarCard form={form} setField={setField} />
       <SectionNotes />
     </>
   );
@@ -279,7 +286,7 @@ function DisplayDefaultsSection(props: HostEditorSectionProps) {
       >
         <HostFeatureFields form={props.form} updateForm={props.updateForm} />
       </SectionCard>
-      <ToolbarCard form={form} setField={setField} />
+      <HostToolbarCard form={form} setField={setField} />
     </>
   );
 }
@@ -287,6 +294,7 @@ function DisplayDefaultsSection(props: HostEditorSectionProps) {
 const SECTIONS: Record<Protocol, ComponentType<HostEditorSectionProps>> = {
   rdp: RdpSection,
   vnc: VncSection,
+  ard: ArdSection,
   telnet: TelnetSection,
 };
 
@@ -417,12 +425,21 @@ export function activate(app: TermixApp): void {
         origin as Parameters<typeof getGuacamoleTokenFromHost>[1],
         protocol,
       );
-      return response.guacamoleConnectionId
-        ? {
-            token: response.token,
-            connectionId: response.guacamoleConnectionId,
-          }
-        : null;
+      // The built-in engine names the session up front; guacd only once
+      // it connects, so the presenter waits for it then.
+      const connectId = response.termixConnectId;
+      if (!response.guacamoleConnectionId && !connectId) return null;
+      return {
+        token: response.token,
+        connectionId: response.guacamoleConnectionId ?? null,
+        resolveConnectionId: connectId
+          ? () =>
+              waitForGuacamoleConnectionId(
+                connectId,
+                origin as Parameters<typeof getGuacamoleTokenFromHost>[1],
+              )
+          : undefined,
+      };
     },
   );
 
@@ -447,11 +464,12 @@ export function activate(app: TermixApp): void {
     disposed = true;
   });
   void getGuacdStatus("local", { probe: false })
-    .then((status) => status.enabled !== false)
-    .catch(() => true)
-    .then((enabled) => {
-      if (disposed || !enabled) return;
+    .catch(() => null)
+    .then((status) => {
+      if (disposed || status?.enabled === false) return;
       registerHostSurfaces(app);
+      // Only an external guacd needs setting up.
+      if (status?.engine === "builtin") return;
       app.registerOnboardingStep({
         id: "guacd",
         titleKey: "onboarding.guacdTitle",

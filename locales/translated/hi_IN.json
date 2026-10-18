@@ -10,7 +10,7 @@
     "failedToConnect": "कनेक्शन टोकन प्राप्त करने में विफल",
     "hostNotFound": "होस्ट नहीं मिला",
     "noHostSelected": "कोई होस्ट चयनित नहीं है",
-    "guacdUnavailable": "रिमोट डेस्कटॉप सेवा (guacd) उपलब्ध नहीं है। कृपया सुनिश्चित करें कि guacd चल रहा है, सुलभ है और एडमिन सेटिंग्स में ठीक से कॉन्फ़िगर किया गया है।",
+    "guacdUnavailable": "बाहरी guacd जवाब नहीं दे रहा है। जांचें कि यह चल रहा है, या रिमोट डेस्कटॉप सेटिंग्स में 'Use an external guacd' बंद कर दें।",
     "credentialPromptTitle": "RDP क्रेडेंशियल दर्ज करें",
     "credentialPromptDescription": "इस होस्ट को कनेक्ट होने पर क्रेडेंशियल के लिए प्रॉम्प्ट करने के लिए सेट किया गया है। इन्हें केवल इस सत्र के लिए उपयोग किया जाता है और ये सेव नहीं होते।",
     "connect": "कनेक्ट करें",
@@ -28,7 +28,7 @@
       "uploadFailed": "{{name}} अपलोड करने में विफल",
       "uploadDisabled": "इस कनेक्शन के लिए अपलोड अक्षम हैं",
       "driveUnavailable": "फ़ाइलें अपलोड करने से पहले RDP ड्राइव रीडायरेक्शन सक्षम करें",
-      "driveNotWritable": "guacd ड्राइव फ़ोल्डर में लिख नहीं सकता। GUACD_DRIVE_PATH और इसके अनुमतियों की जाँच करें।",
+      "driveNotWritable": "Termix ड्राइव फ़ोल्डर में लिख नहीं सकता। RDP_DRIVE_PATH, या बाहरी guacd के साथ GUACD_DRIVE_PATH और इसके अनुमतियों की जांच करें।",
       "dropToUpload": "अपलोड करने के लिए फ़ाइलें छोड़ें"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "बाएँ तीर",
       "arrowRight": "दाएँ तीर",
       "fnToggle": "फ़ंक्शन कुंजियाँ",
-      "collapse": "टूलबार संक्षिप्त करें",
-      "expand": "टूलबार विस्तारित करें",
-      "dragHandle": "पुनः स्थानांतरित करने के लिए खींचें",
-      "hide": "इस सत्र के लिए छिपाएं। इसे स्थायी रूप से अक्षम करने के लिए, होस्ट सेटिंग्स → सामान्य → कनेक्शन टूलबार खोलें।",
       "zoomIn": "ज़ूम इन",
       "zoomOut": "ज़ूम आउट",
       "resetZoom": "ज़ूम रीसेट करें",
       "fitToScreen": "स्क्रीन पर फिट करें",
       "switchToTrackpad": "ट्रैकपैड मोड पर स्विच करें (कर्सर को चलाने के लिए खींचें, क्लिक करने के लिए टैप करें)",
-      "switchToTouch": "टच मोड पर स्विच करें (जहाँ क्लिक करना चाहें वहाँ सीधे टैप करें)"
+      "switchToTouch": "टच मोड पर स्विच करें (जहाँ क्लिक करना चाहें वहाँ सीधे टैप करें)",
+      "label": "रिमोट डेस्कटॉप टूलबार",
+      "more": "और",
+      "items": {
+        "files": "फ़ाइलें",
+        "touchMode": "टच मोड",
+        "zoom": "ज़ूम",
+        "lock": "स्क्रीन लॉक करें",
+        "metaKey": "सिस्टम की",
+        "modifiers": "स्टिकी मॉडिफ़ायर कीज़",
+        "arrows": "Arrow keys",
+        "forceQuit": "Force Quit",
+        "macLock": "Lock screen",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "Shows once the RDP drive is on",
+        "touchMode": "Only on touch screens",
+        "modifiers": "Ctrl, Alt, Shift and the system key stay held until the next key"
+      },
+      "option": "Option"
     },
     "disabled": "रिमोट डेस्कटॉप बंद है। एक एडमिन सेटिंग्स में इसे चालू कर सकता है।"
   },
@@ -114,11 +130,11 @@
       "timezone": "समय क्षेत्र",
       "loadBalanceInfo": "लोड बैलेंस जानकारी / कुकी",
       "loadBalanceInfoDesc": "RDS फार्म लोड बैलेंसिंग के लिए RD कनेक्शन ब्रोकर कुकी (उदा. tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "guacd प्रॉक्सी",
+      "guacdProxy": "guacd Proxy (optional)",
       "guacdHostname": "guacd होस्ट",
       "guacdHostnamePlaceholder": "वैश्विक डिफ़ॉल्ट",
       "guacdPort": "guacd पोर्ट",
-      "guacdProxyDesc": "इस कनेक्शन के लिए वैश्विक guacd इंस्टेंस को ओवरराइड करें। वैश्विक रूप से कॉन्फ़िगर किए गए guacd का उपयोग करने के लिए खाली छोड़ दें।",
+      "guacdProxyDesc": "Termix connects to this host itself. Only set a guacd server if this host should go through your own guacd instead. Leave blank to use the global setting.",
       "guacdAdminOnly": "केवल एडमिन ही किसी होस्ट के लिए guacd सर्वर बदल सकते हैं।",
       "guacdSaveHostFirst": "पहले होस्ट को सेव करें, फिर यहाँ इसका guacd सर्वर सेट करें।",
       "guacdSave": "guacd सर्वर सेव करें",
@@ -129,6 +145,7 @@
       "gatewayUsername": "गेटवे उपयोगकर्ता नाम",
       "gatewayPassword": "गेटवे पासवर्ड",
       "gatewayDomain": "गेटवे डोमेन",
+      "gatewayNote": "RD Gateway के लिए बाहरी guacd की आवश्यकता होती है। जब गेटवे सेट अप किया जाता है, तो होस्ट (Remote Desktop सेटिंग्स या guacd Proxy के तहत) उस पर जाते हैं।",
       "remoteAppProgram": "RemoteApp प्रोग्राम",
       "workingDirectory": "वर्किंग डायरेक्टरी",
       "arguments": "आर्ग्यूमेंट्स",
@@ -145,7 +162,7 @@
       "disableAudio": "ऑडियो अक्षम करें",
       "disableAudioDesc": "रिमोट सेशन से सभी ऑडियो म्यूट करें",
       "enableAudioInput": "ऑडियो इनपुट सक्षम करें (माइक्रोफ़ोन)",
-      "enableAudioInputDesc": "स्थानीय माइक्रोफ़ोन को रिमोट सेशन में फॉरवर्ड करें",
+      "enableAudioInputDesc": "स्थानीय माइक्रोफ़ोन को दूरस्थ सत्र पर फॉरवर्ड करें | केवल बाहरी guacd के साथ",
       "wallpaper": "वॉलपेपर",
       "wallpaperDesc": "डेस्कटॉप वॉलपेपर दिखाएं (अक्षम करने से प्रदर्शन बेहतर होता है)",
       "theming": "थीमिंग",
@@ -159,13 +176,13 @@
       "menuAnimations": "मेनू एनिमेशन",
       "menuAnimationsDesc": "मेनू फेड और स्लाइड एनिमेशन सक्षम करें",
       "disableBitmapCaching": "बिटमैप कैशिंग अक्षम करें",
-      "disableBitmapCachingDesc": "बिटमैप कैश बंद करें (ग्लिच में मदद कर सकता है)",
+      "disableBitmapCachingDesc": "बिटमैप कैश बंद करें (ग्लिच में मदद कर सकता है) | केवल बाहरी guacd के साथ",
       "disableOffscreenCaching": "ऑफ़स्क्रीन कैशिंग अक्षम करें",
-      "disableOffscreenCachingDesc": "ऑफ़स्क्रीन कैश बंद करें",
+      "disableOffscreenCachingDesc": "ऑफस्क्रीन कैश बंद करें | केवल बाहरी guacd के साथ",
       "disableGlyphCaching": "ग्लिफ़ कैशिंग अक्षम करें",
-      "disableGlyphCachingDesc": "ग्लिफ़ कैश बंद करें",
+      "disableGlyphCachingDesc": "ग्लिफ़ कैश बंद करें | केवल बाहरी guacd के साथ",
       "enableGfx": "GFX सक्षम करें",
-      "enableGfxDesc": "RemoteFX ग्राफ़िक्स पाइपलाइन का उपयोग करें",
+      "enableGfxDesc": "RemoteFX ग्राफ़िक्स पाइपलाइन का उपयोग करें | केवल बाहरी guacd के साथ",
       "enablePrinting": "प्रिंटिंग सक्षम करें",
       "enablePrintingDesc": "स्थानीय प्रिंटर को रिमोट सेशन में रीडायरेक्ट करें",
       "enableDriveRedirection": "ड्राइव रीडायरेक्शन सक्षम करें",
@@ -175,7 +192,7 @@
       "disableUpload": "अपलोड अक्षम करें",
       "disableUploadDesc": "रिमोट सेशन में फ़ाइलों को अपलोड करने से रोकें",
       "enableTouch": "टच सक्षम करें",
-      "enableTouchDesc": "टच इनपुट फॉरवर्डिंग सक्षम करें",
+      "enableTouchDesc": "टच इनपुट फॉरवर्डिंग सक्षम करें | केवल बाहरी guacd के साथ",
       "consoleSession": "कंसोल सेशन",
       "consoleSessionDesc": "नए सेशन के बजाय कंसोल (सेशन 0) से कनेक्ट करें",
       "sendWolPacket": "WOL पैकेट भेजें",
@@ -202,6 +219,7 @@
       "telnetPort": "Telnet पोर्ट",
       "terminalType": "टर्मिनल प्रकार",
       "fontName": "फ़ॉन्ट का नाम",
+      "fontNameDesc": "केवल बाहरी guacd के साथ। बिल्ट-इन इंजन अपना स्वयं का मोनोस्पेस फ़ॉन्ट उपयोग करता है।",
       "fontSize": "फ़ॉन्ट का आकार",
       "colorScheme": "रंग योजना",
       "backspaceKey": "बैकस्पेस कुंजी",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "काले पर सफ़ेद",
         "grayOnBlack": "काले पर भूरा",
         "greenOnBlack": "काले पर हरा"
-      }
+      },
+      "ardSettings": "Apple Remote Desktop सेटिंग्स",
+      "ardPort": "ARD पोर्ट",
+      "ardPassword": "macOS पासवर्ड",
+      "ardUsername": "macOS उपयोगकर्ता नाम",
+      "ardLeaveBlank": "केवल VNC पासवर्ड के लिए खाली छोड़ें"
     },
     "remoteDesktop": "रिमोट डेस्कटॉप",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "असंरक्षित शेल",
     "remoteDesktopNotes": "नोट्स",
     "userDefaultsNote": "जो सेटिंग्स आप अपरिवर्तित छोड़ते हैं, वे आपके होस्ट डिफ़ॉल्ट्स का पालन करती हैं।",
-    "connectionOriginNote": "डेस्कटॉप ऐप पर, RDP, VNC और Telnet दूरस्थ सर्वर का उपयोग करते हैं जब तक कि होस्ट को 'इस डिवाइस' पर सेट न किया गया हो, जिसके लिए इस मशीन द्वारा पहुँच योग्य guacd की आवश्यकता होती है। रिमोट डेस्कटॉप सेटिंग्स में एक सेट करें, या guacd प्रॉक्सी के तहत प्रति होस्ट।",
+    "connectionOriginNote": "डेस्कटॉप ऐप पर, जब होस्ट को डिफ़ॉल्ट पर छोड़ा जाता है (जैसे SSH), तो RDP, VNC और Telnet इस डिवाइस पर चलते हैं। उन्हें सर्वर पर चलाने के लिए दूरस्थ सर्वर चुनें।",
     "docsLink": "दस्तावेज़ देखें",
-    "connectionOriginGuacamoleNote": "RDP, VNC और Telnet दूरस्थ सर्वर का उपयोग करते हैं जब तक आप \"इस डिवाइस\" का चयन न करें, जिसके लिए इस मशीन द्वारा पहुँच योग्य guacd की आवश्यकता होती है। guacd URL सेटिंग में एक सेट करें, या guacd प्रॉक्सी के तहत प्रति होस्ट।"
+    "connectionOriginGuacamoleNote": "RDP, VNC और Telnet डिफ़ॉल्ट रूप से इस डिवाइस पर चलते हैं, जैसे SSH। उन्हें सर्वर पर चलाने के लिए दूरस्थ सर्वर चुनें।",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Mac स्क्रीन शेयरिंग"
   },
   "onboarding": {
     "guacdTitle": "रिमोट डेस्कटॉप सेट करें",
-    "guacdIntro": "रिमोट डेस्कटॉप के लिए Termix के पास guacd चलाने की आवश्यकता होती है। जाँच करें कि यह जवाब दे रहा है, या Termix को उसकी ओर इशारा करें।",
+    "guacdIntro": "रिमोट डेस्कटॉप को आपके अपने guacd का उपयोग करने के लिए सेट किया गया है। जाँच करें कि यह प्रतिक्रिया दे रहा है, या Termix को उसकी ओर इशारा करें।",
     "guacdChecking": "guacd की तलाश में",
     "guacdConnected": "guacd {{address}} पर चल रहा है",
     "guacdMissing": "guacd {{address}} पर जवाब नहीं दे रहा है",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "रिमोट डेस्कटॉप सक्षम करें",
-        "description": "guacd के माध्यम से RDP, VNC और Telnet कनेक्शन की अनुमति दें।"
+        "description": "RDP, VNC और Telnet कनेक्शन की अनुमति दें।"
+      },
+      "useGuacd": {
+        "label": "बाहरी guacd का उपयोग करें",
+        "description": "Termix स्वयं RDP, VNC और Telnet चलाता है। इन्हें अपने स्वयं के guacd पर भेजने के लिए इसे चालू करें। REMOTE_DESKTOP_ENGINE इसका अधिग्रहण करता है।"
       },
       "guacdUrl": {
         "label": "guacd URL",
@@ -352,20 +381,46 @@
         "label": "सर्टिफिकेट त्रुटियों को नज़रअंदाज़ करें"
       },
       "guacamoleConfig": {
-        "label": "guacd सेटिंग्स"
+        "label": "कनेक्शन सेटिंग्स"
       },
       "enableToolbar": {
         "label": "रिमोट डेस्कटॉप टूलबार",
-        "description": "RDP, VNC और Telnet सत्रों में टूलबार दिखाएं।"
+        "description": "RDP, VNC, ARD और Telnet सत्रों में टूलबार दिखाएं।"
       },
       "displayGroup": "डिस्प्ले",
-      "displayDefaultsTab": "रिमोट डेस्कटॉप"
+      "displayDefaultsTab": "रिमोट डेस्कटॉप",
+      "toolbarPosition": {
+        "label": "टूलबार की स्थिति",
+        "description": "सत्र के ऊपर या नीचे टूलबार दिखाएं।",
+        "top": "ऊपर",
+        "bottom": "नीचे"
+      },
+      "toolbarLabels": {
+        "label": "टूलबार लेबल",
+        "description": "आइकनों के बगल में नाम दिखाएं, या केवल आइकन। जब जगह कम हो जाती है तो नाम अपने आप छिप जाते हैं।",
+        "labeled": "आइकन और नाम",
+        "icons": "केवल आइकन"
+      },
+      "toolbarButtons": {
+        "label": "टूलबार बटन",
+        "description": "चुनें कि कौन से बटन दिखें और किस क्रम में। जो बटन फिट नहीं होंगे, वे 'और' मेनू में जाएंगे।",
+        "reset": "रीसेट करें",
+        "moveUp": "ऊपर ले जाएं",
+        "moveDown": "नीचे ले जाएं"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "ARD पोर्ट"
+      }
     }
   },
   "palette": {
     "connectRdp": "RDP के साथ कनेक्ट करें",
     "connectVnc": "VNC के साथ कनेक्ट करें",
-    "connectTelnet": "Telnet के साथ कनेक्ट करें"
+    "connectTelnet": "Telnet के साथ कनेक्ट करें",
+    "connectArd": "Apple Remote Desktop से कनेक्ट करें"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "रिमोट सर्वर आवश्यक है। इस कनेक्शन प्रकार का उपयोग करने के लिए सेटिंग्स में एक रिमोट सर्वर कनेक्ट करें।"
   },
   "plugin": {
-    "name": "रिमोट डेस्कटॉप"
+    "name": "रिमोट डेस्कटॉप",
+    "description": "ब्राउज़र में RDP, VNC और Telnet सत्र, क्लिपबोर्ड, फ़ाइल ट्रांसफर, शेयरिंग और रिकॉर्डिंग के साथ।"
   }
 }

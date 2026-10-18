@@ -10,7 +10,7 @@
     "failedToConnect": "Gagal mendapatkan token koneksi",
     "hostNotFound": "Host tidak ditemukan",
     "noHostSelected": "Tidak ada host yang dipilih",
-    "guacdUnavailable": "Layanan desktop jarak jauh (guacd) tidak tersedia. Pastikan guacd berjalan, dapat diakses, dan dikonfigurasi dengan benar di pengaturan admin.",
+    "guacdUnavailable": "guacd eksternal tidak merespons. Pastikan ia sedang berjalan, atau matikan Gunakan guacd eksternal di Pengaturan Desktop Jarak Jauh.",
     "credentialPromptTitle": "Masukkan Kredensial RDP",
     "credentialPromptDescription": "Host ini diatur untuk meminta kredensial saat terhubung. Kredensial ini hanya digunakan untuk sesi ini dan tidak disimpan.",
     "connect": "Hubungkan",
@@ -28,7 +28,7 @@
       "uploadFailed": "Gagal mengunggah {{name}}",
       "uploadDisabled": "Unggahan dinonaktifkan untuk koneksi ini",
       "driveUnavailable": "Aktifkan pengalihan drive RDP sebelum mengunggah file",
-      "driveNotWritable": "guacd tidak dapat menulis ke folder drive. Periksa GUACD_DRIVE_PATH dan izinnya.",
+      "driveNotWritable": "Termix tidak dapat menulis ke folder drive. Periksa RDP_DRIVE_PATH, atau GUACD_DRIVE_PATH dengan guacd eksternal, serta izin aksesnya.",
       "dropToUpload": "Lepaskan file untuk mengunggah"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Panah Kiri",
       "arrowRight": "Panah Kanan",
       "fnToggle": "Tombol Fungsi",
-      "collapse": "Ciutkan bilah alat",
-      "expand": "Bentangkan bilah alat",
-      "dragHandle": "Seret untuk mengubah posisi",
-      "hide": "Sembunyikan untuk sesi ini. Untuk menonaktifkannya secara permanen, buka Pengaturan Host → Umum → Bilah Alat Koneksi.",
       "zoomIn": "Perbesar",
       "zoomOut": "Perkecil",
       "resetZoom": "Atur ulang zoom",
       "fitToScreen": "Sesuaikan dengan layar",
       "switchToTrackpad": "Beralih ke mode trackpad (seret untuk menggerakkan kursor, ketuk untuk mengklik)",
-      "switchToTouch": "Beralih ke mode sentuh (ketuk langsung di tempat yang ingin Anda klik)"
+      "switchToTouch": "Beralih ke mode sentuh (ketuk langsung di tempat yang ingin Anda klik)",
+      "label": "Bilah alat desktop jarak jauh",
+      "more": "Lainnya",
+      "items": {
+        "files": "File",
+        "touchMode": "Mode sentuh",
+        "zoom": "Zoom",
+        "lock": "Kunci layar",
+        "metaKey": "Tombol sistem",
+        "modifiers": "Tombol modifikasi lengket",
+        "arrows": "Tombol panah",
+        "forceQuit": "Paksa Keluar",
+        "macLock": "Kunci layar",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "Muncul setelah drive RDP diaktifkan",
+        "touchMode": "Hanya di layar sentuh",
+        "modifiers": "Ctrl, Alt, Shift, dan tombol sistem tetap tertahan hingga tombol berikutnya ditekan"
+      },
+      "option": "Opsi"
     },
     "disabled": "Remote Desktop dimatikan. Admin dapat mengaktifkannya di Pengaturan."
   },
@@ -114,11 +130,11 @@
       "timezone": "Zona Waktu",
       "loadBalanceInfo": "Info Penyeimbangan Beban / Cookie",
       "loadBalanceInfoDesc": "Cookie RD Connection Broker untuk penyeimbangan beban peternakan RDS (mis. tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "Proxy guacd",
+      "guacdProxy": "Proxy guacd (opsional)",
       "guacdHostname": "Host guacd",
       "guacdHostnamePlaceholder": "Default global",
       "guacdPort": "Port guacd",
-      "guacdProxyDesc": "Timpa instance guacd global untuk koneksi ini. Kosongkan untuk menggunakan guacd yang dikonfigurasi secara global.",
+      "guacdProxyDesc": "Termix terhubung ke host ini secara langsung. Hanya atur server guacd jika host ini harus melalui guacd Anda sendiri. Kosongkan untuk menggunakan pengaturan global.",
       "guacdAdminOnly": "Hanya admin yang dapat mengubah server guacd untuk host.",
       "guacdSaveHostFirst": "Simpan host terlebih dahulu, lalu atur server guacd-nya di sini.",
       "guacdSave": "Simpan server guacd",
@@ -129,6 +145,7 @@
       "gatewayUsername": "Nama Pengguna Gateway",
       "gatewayPassword": "Kata Sandi Gateway",
       "gatewayDomain": "Domain Gateway",
+      "gatewayNote": "RD Gateway memerlukan guacd eksternal. Host dengan gateway akan mengarah ke sana jika telah diatur, baik di Pengaturan Desktop Jarak Jauh maupun di bawah Proxy guacd.",
       "remoteAppProgram": "Program RemoteApp",
       "workingDirectory": "Direktori Kerja",
       "arguments": "Argumen",
@@ -145,7 +162,7 @@
       "disableAudio": "Nonaktifkan Audio",
       "disableAudioDesc": "Bisukan semua audio dari sesi jarak jauh",
       "enableAudioInput": "Aktifkan Input Audio (Mikrofon)",
-      "enableAudioInputDesc": "Teruskan mikrofon lokal ke sesi jarak jauh",
+      "enableAudioInputDesc": "Teruskan mikrofon lokal ke sesi jarak jauh | Hanya dengan guacd eksternal",
       "wallpaper": "Wallpaper",
       "wallpaperDesc": "Tampilkan wallpaper desktop (menonaktifkan meningkatkan kinerja)",
       "theming": "Tema",
@@ -159,13 +176,13 @@
       "menuAnimations": "Animasi Menu",
       "menuAnimationsDesc": "Aktifkan animasi pudar dan geser menu",
       "disableBitmapCaching": "Nonaktifkan Penyanggaan Bitmap",
-      "disableBitmapCachingDesc": "Matikan cache bitmap (dapat membantu mengatasi gangguan)",
+      "disableBitmapCachingDesc": "Matikan cache bitmap (dapat membantu mengatasi gangguan) | Hanya dengan guacd eksternal",
       "disableOffscreenCaching": "Nonaktifkan Penyanggaan Luar Layar",
-      "disableOffscreenCachingDesc": "Matikan cache luar layar",
+      "disableOffscreenCachingDesc": "Matikan cache offscreen | Hanya dengan guacd eksternal",
       "disableGlyphCaching": "Nonaktifkan Penyanggaan Glyph",
-      "disableGlyphCachingDesc": "Matikan cache glyph",
+      "disableGlyphCachingDesc": "Matikan cache glyph | Hanya dengan guacd eksternal",
       "enableGfx": "Aktifkan GFX",
-      "enableGfxDesc": "Gunakan pipeline grafis RemoteFX",
+      "enableGfxDesc": "Gunakan pipeline grafis RemoteFX | Hanya dengan guacd eksternal",
       "enablePrinting": "Aktifkan Pencetakan",
       "enablePrintingDesc": "Alihkan printer lokal ke sesi jarak jauh",
       "enableDriveRedirection": "Aktifkan Pengalihan Drive",
@@ -175,7 +192,7 @@
       "disableUpload": "Nonaktifkan Unggahan",
       "disableUploadDesc": "Cegah pengunggahan file ke sesi jarak jauh",
       "enableTouch": "Aktifkan Sentuhan",
-      "enableTouchDesc": "Aktifkan penerusan input sentuhan",
+      "enableTouchDesc": "Aktifkan penerusan input sentuh | Hanya dengan guacd eksternal",
       "consoleSession": "Sesi Konsol",
       "consoleSessionDesc": "Sambungkan ke konsol (sesi 0) alih-alih sesi baru",
       "sendWolPacket": "Kirim Paket WOL",
@@ -202,6 +219,7 @@
       "telnetPort": "Port Telnet",
       "terminalType": "Jenis Terminal",
       "fontName": "Nama Font",
+      "fontNameDesc": "Hanya dengan guacd eksternal. Mesin bawaan menggunakan font monospace miliknya sendiri.",
       "fontSize": "Ukuran Font",
       "colorScheme": "Skema Warna",
       "backspaceKey": "Tombol Backspace",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "Putih di Atas Hitam",
         "grayOnBlack": "Abu-abu di Atas Hitam",
         "greenOnBlack": "Hijau di Atas Hitam"
-      }
+      },
+      "ardSettings": "Pengaturan Apple Remote Desktop",
+      "ardPort": "Port ARD",
+      "ardPassword": "Kata Sandi macOS",
+      "ardUsername": "Nama Pengguna macOS",
+      "ardLeaveBlank": "Kosongkan untuk kata sandi VNC saja"
     },
     "remoteDesktop": "Desktop Jarak Jauh",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "Shell tidak terenkripsi",
     "remoteDesktopNotes": "Catatan",
     "userDefaultsNote": "Pengaturan yang Anda biarkan tidak berubah mengikuti pengaturan default host Anda.",
-    "connectionOriginNote": "Pada aplikasi desktop, RDP, VNC, dan Telnet menggunakan server jarak jauh kecuali host diatur ke Perangkat ini, yang memerlukan guacd yang dapat dijangkau oleh mesin ini. Atur satu di pengaturan Desktop Jarak Jauh, atau per host di bawah Proxy guacd.",
+    "connectionOriginNote": "Di aplikasi desktop, RDP, VNC, dan Telnet berjalan di perangkat ini saat host dibiarkan pada Default, seperti SSH. Pilih Server jarak jauh untuk menjalankannya di server sebagai gantinya.",
     "docsLink": "Lihat dokumentasi",
-    "connectionOriginGuacamoleNote": "RDP, VNC, dan Telnet menggunakan server jarak jauh kecuali Anda memilih \"Perangkat ini\", yang memerlukan guacd yang dapat dijangkau oleh mesin ini. Atur satu di pengaturan URL guacd, atau per host di bawah Proxy guacd."
+    "connectionOriginGuacamoleNote": "RDP, VNC, dan Telnet berjalan di perangkat ini secara default, seperti SSH. Pilih Server jarak jauh untuk menjalankannya di server sebagai gantinya.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Berbagi Layar Mac"
   },
   "onboarding": {
     "guacdTitle": "Siapkan desktop jarak jauh",
-    "guacdIntro": "Desktop jarak jauh memerlukan guacd yang berjalan di samping Termix. Periksa apakah itu merespons, atau arahkan Termix ke sana.",
+    "guacdIntro": "Desktop jarak jauh diatur untuk menggunakan guacd Anda sendiri. Pastikan ia merespons, atau arahkan Termix ke sana.",
     "guacdChecking": "Mencari guacd",
     "guacdConnected": "guacd sedang berjalan di {{address}}",
     "guacdMissing": "guacd tidak merespons di {{address}}",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "Aktifkan Remote Desktop",
-        "description": "Izinkan koneksi RDP, VNC, dan Telnet melalui guacd."
+        "description": "Izinkan koneksi RDP, VNC, dan Telnet."
+      },
+      "useGuacd": {
+        "label": "Gunakan guacd eksternal",
+        "description": "Termix menjalankan RDP, VNC, dan Telnet secara mandiri. Aktifkan ini untuk mengirimkannya ke guacd Anda sendiri sebagai gantinya. REMOTE_DESKTOP_ENGINE menimpa pengaturan ini."
       },
       "guacdUrl": {
         "label": "URL guacd",
@@ -352,20 +381,46 @@
         "label": "Abaikan kesalahan sertifikat"
       },
       "guacamoleConfig": {
-        "label": "Pengaturan guacd"
+        "label": "Pengaturan koneksi"
       },
       "enableToolbar": {
         "label": "Bilah alat remote desktop",
-        "description": "Tampilkan bilah alat di sesi RDP, VNC, dan Telnet."
+        "description": "Tampilkan bilah alat di sesi RDP, VNC, ARD, dan Telnet."
       },
       "displayGroup": "Tampilan",
-      "displayDefaultsTab": "Remote Desktop"
+      "displayDefaultsTab": "Remote Desktop",
+      "toolbarPosition": {
+        "label": "Posisi bilah alat",
+        "description": "Tampilkan bilah alat di atas atau di bawah sesi.",
+        "top": "Atas",
+        "bottom": "Bawah"
+      },
+      "toolbarLabels": {
+        "label": "Label bilah alat",
+        "description": "Tampilkan nama di samping ikon, atau hanya ikon. Nama akan tersembunyi secara otomatis saat ruang habis.",
+        "labeled": "Ikon dan nama",
+        "icons": "Hanya ikon"
+      },
+      "toolbarButtons": {
+        "label": "Tombol bilah alat",
+        "description": "Pilih tombol mana yang ditampilkan dan urutannya. Tombol yang tidak muat akan masuk ke menu Lainnya.",
+        "reset": "Atur ulang",
+        "moveUp": "Pindah ke atas",
+        "moveDown": "Pindah ke bawah"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "Port ARD"
+      }
     }
   },
   "palette": {
     "connectRdp": "Sambungkan dengan RDP",
     "connectVnc": "Sambungkan dengan VNC",
-    "connectTelnet": "Sambungkan dengan Telnet"
+    "connectTelnet": "Sambungkan dengan Telnet",
+    "connectArd": "Hubungkan dengan Apple Remote Desktop"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "Server jarak jauh diperlukan. Sambungkan server jarak jauh di Pengaturan untuk menggunakan jenis koneksi ini."
   },
   "plugin": {
-    "name": "Remote Desktop"
+    "name": "Remote Desktop",
+    "description": "Sesi RDP, VNC, dan Telnet di browser Anda, dengan papan klip, transfer file, berbagi, dan perekaman."
   }
 }

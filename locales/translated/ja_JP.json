@@ -10,7 +10,7 @@
     "failedToConnect": "接続トークンの取得に失敗しました",
     "hostNotFound": "ホストが見つかりません",
     "noHostSelected": "ホストが選択されていません",
-    "guacdUnavailable": "リモートデスクトップサービス (guacd) が利用できません。guacd が実行中でアクセス可能であり、管理者設定で適切に構成されていることを確認してください。",
+    "guacdUnavailable": "外部 guacd に応答がありません。実行中であることを確認するか、[リモートデスクトップ] 設定で「外部 guacd を使用する」をオフにしてください。",
     "credentialPromptTitle": "RDP 認証情報を入力",
     "credentialPromptDescription": "このホストは接続時に認証情報の入力を求めるように設定されています。これらはこのセッションでのみ使用され、保存されません。",
     "connect": "接続",
@@ -28,7 +28,7 @@
       "uploadFailed": "{{name}} のアップロードに失敗しました",
       "uploadDisabled": "この接続ではアップロードが無効になっています",
       "driveUnavailable": "ファイルをアップロードする前に RDP ドライブリダイレクトを有効にしてください",
-      "driveNotWritable": "guacd がドライブフォルダに書き込めません。GUACD_DRIVE_PATH とその権限を確認してください。",
+      "driveNotWritable": "Termix はドライブフォルダに書き込めません。RDP_DRIVE_PATH、または外部 guacd を使用している場合は GUACD_DRIVE_PATH とその権限を確認してください。",
       "dropToUpload": "アップロードするにはファイルをドロップ"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "左矢印",
       "arrowRight": "右矢印",
       "fnToggle": "ファンクションキー",
-      "collapse": "ツールバーを折りたたむ",
-      "expand": "ツールバーを展開",
-      "dragHandle": "ドラッグして位置を調整",
-      "hide": "このセッション中は非表示にします。恒久的に無効にするには、ホスト設定 → 一般 → 接続ツールバーを開いてください。",
       "zoomIn": "拡大",
       "zoomOut": "ズームアウト",
       "resetZoom": "ズームをリセット",
       "fitToScreen": "画面に合わせる",
       "switchToTrackpad": "トラックパッドモードに切り替え（ドラッグでカーソル移動、タップでクリック）",
-      "switchToTouch": "タッチモードに切り替え（クリックしたい場所を直接タップ）"
+      "switchToTouch": "タッチモードに切り替え（クリックしたい場所を直接タップ）",
+      "label": "リモートデスクトップツールバー",
+      "more": "もっと",
+      "items": {
+        "files": "ファイル",
+        "touchMode": "タッチモード",
+        "zoom": "ズーム",
+        "lock": "画面ロック",
+        "metaKey": "システムキー",
+        "modifiers": "スティッキー修飾キー",
+        "arrows": "矢印キー",
+        "forceQuit": "強制終了",
+        "macLock": "画面ロック",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "RDP ドライブが有効になると表示されます",
+        "touchMode": "タッチスクリーンでのみ利用可能",
+        "modifiers": "Ctrl、Alt、Shift、システムキーは、次のキーが押されるまで押し下げられた状態を維持します"
+      },
+      "option": "Option"
     },
     "disabled": "リモートデスクトップは無効化されています。管理者が設定で有効化できます。"
   },
@@ -114,11 +130,11 @@
       "timezone": "タイムゾーン",
       "loadBalanceInfo": "ロードバランシング情報 / クッキー",
       "loadBalanceInfoDesc": "RDS ファームのロードバランシング用 RD 接続ブローカークッキー（例：tsv://MS Terminal Services Plugin.1.CollectionName）",
-      "guacdProxy": "guacd プロキシ",
+      "guacdProxy": "guacd プロキシ（オプション）",
       "guacdHostname": "guacd ホスト",
       "guacdHostnamePlaceholder": "グローバルデフォルト",
       "guacdPort": "guacd ポート",
-      "guacdProxyDesc": "この接続のグローバル guacd インスタンスを上書きします。グローバルに設定された guacd を使用する場合は空白のままにしてください。",
+      "guacdProxyDesc": "Termix はこのホストに直接接続します。このホストを独自の guacd 経由で接続する必要がある場合のみ、guacd サーバーを設定してください。グローバル設定を使用する場合は空白のままにしてください。",
       "guacdAdminOnly": "ホストの guacd サーバーを変更できるのは管理者のみです。",
       "guacdSaveHostFirst": "まずホストを保存し、その後ここで guacd サーバーを設定してください。",
       "guacdSave": "guacd サーバーを保存",
@@ -129,6 +145,7 @@
       "gatewayUsername": "ゲートウェイユーザー名",
       "gatewayPassword": "ゲートウェイパスワード",
       "gatewayDomain": "ゲートウェイドメイン",
+      "gatewayNote": "RD ゲートウェイには外部 guacd が必要です。ゲートウェイが設定されている場合、ゲートウェイ付きのホストは、[リモートデスクトップ] 設定または [guacd プロキシ] で設定されたゲートウェイに接続します。",
       "remoteAppProgram": "RemoteApp プログラム",
       "workingDirectory": "作業ディレクトリ",
       "arguments": "引数",
@@ -145,7 +162,7 @@
       "disableAudio": "オーディオを無効にする",
       "disableAudioDesc": "リモートセッションからのすべてのオーディオをミュートする",
       "enableAudioInput": "オーディオ入力（マイク）を有効にする",
-      "enableAudioInputDesc": "ローカルのマイクをリモートセッションにフォワードする",
+      "enableAudioInputDesc": "ローカルのマイクをリモートセッションにフォワードします | 外部 guacd のみ",
       "wallpaper": "壁紙",
       "wallpaperDesc": "デスクトップの壁紙を表示する（無効にするとパフォーマンスが向上します）",
       "theming": "テーマ",
@@ -159,13 +176,13 @@
       "menuAnimations": "メニューアニメーション",
       "menuAnimationsDesc": "メニューのフェードとスライドアニメーションを有効にする",
       "disableBitmapCaching": "ビットマップキャッシュを無効にする",
-      "disableBitmapCachingDesc": "ビットマップキャッシュをオフにする（グリッチの解消に役立つ場合があります）",
+      "disableBitmapCachingDesc": "ビットマップキャッシュをオフにします（グリッチの解消に役立つ場合があります） | 外部 guacd のみ",
       "disableOffscreenCaching": "オフスクリーンキャッシュを無効にする",
-      "disableOffscreenCachingDesc": "オフスクリーンキャッシュをオフにする",
+      "disableOffscreenCachingDesc": "オフスクリーンキャッシュをオフにします | 外部 guacd のみ",
       "disableGlyphCaching": "グリフキャッシュを無効にする",
-      "disableGlyphCachingDesc": "グリフキャッシュをオフにする",
+      "disableGlyphCachingDesc": "グリフキャッシュをオフにします | 外部 guacd のみ",
       "enableGfx": "GFX を有効にする",
-      "enableGfxDesc": "RemoteFX グラフィックスパイプラインを使用する",
+      "enableGfxDesc": "RemoteFX グラフィックスパイプラインを使用します | 外部 guacd のみ",
       "enablePrinting": "印刷を有効にする",
       "enablePrintingDesc": "ローカルプリンタをリモートセッションにリダイレクトする",
       "enableDriveRedirection": "ドライブリダイレクトを有効にする",
@@ -175,7 +192,7 @@
       "disableUpload": "アップロードを無効にする",
       "disableUploadDesc": "リモートセッションへのファイルアップロードを防止する",
       "enableTouch": "タッチを有効にする",
-      "enableTouchDesc": "タッチ入力フォワードを有効にする",
+      "enableTouchDesc": "タッチ入力フォワーディングを有効にします | 外部 guacd のみ",
       "consoleSession": "コンソールセッション",
       "consoleSessionDesc": "新しいセッションではなく、コンソール（セッション 0）に接続する",
       "sendWolPacket": "WOL パケットを送信する",
@@ -202,6 +219,7 @@
       "telnetPort": "Telnet ポート",
       "terminalType": "ターミナルタイプ",
       "fontName": "フォント名",
+      "fontNameDesc": "外部 guacd のみ。組み込みエンジンは独自の等幅フォントを使用します。",
       "fontSize": "フォントサイズ",
       "colorScheme": "カラーテーマ",
       "backspaceKey": "Backspace キー",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "黒背景白文字",
         "grayOnBlack": "黒背景グレー文字",
         "greenOnBlack": "黒背景緑文字"
-      }
+      },
+      "ardSettings": "Apple Remote Desktop 設定",
+      "ardPort": "ARD ポート",
+      "ardPassword": "macOS パスワード",
+      "ardUsername": "macOS ユーザー名",
+      "ardLeaveBlank": "VNC 専用パスワードの場合は空白のままにしてください"
     },
     "remoteDesktop": "リモートデスクトップ",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "暗号化されていないシェル",
     "remoteDesktopNotes": "メモ",
     "userDefaultsNote": "変更しない設定は、ホストのデフォルトに従います。",
-    "connectionOriginNote": "デスクトップアプリでは、RDP、VNC、Telnet はデフォルトでリモートサーバーを使用します。ただし、ホストが「このデバイス」に設定されている場合は、このマシンからアクセス可能な guacd が必要です。リモートデスクトップの設定または各ホストの guacd プロキシで設定してください。",
+    "connectionOriginNote": "デスクトップアプリでは、ホストが [デフォルト] の場合、RDP、VNC、Telnet は SSH と同様にこのデバイス上で実行されます。代わりにサーバー上で実行するには [リモートサーバー] を選択してください。",
     "docsLink": "ドキュメントを表示",
-    "connectionOriginGuacamoleNote": "RDP、VNC、Telnet はデフォルトでリモートサーバーを使用します。ただし、「このデバイス」を選択した場合は、このマシンからアクセス可能な guacd が必要です。guacd URL の設定または各ホストの guacd プロキシで設定してください。"
+    "connectionOriginGuacamoleNote": "RDP、VNC、Telnet はデフォルトで SSH と同様にこのデバイス上で実行されます。代わりにサーバー上で実行するには [リモートサーバー] を選択してください。",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Mac スクリーン共有"
   },
   "onboarding": {
     "guacdTitle": "リモートデスクトップの設定",
-    "guacdIntro": "リモートデスクトップには、Termix と同じ場所で guacd が実行されている必要があります。応答しているか確認するか、Termix で guacd の場所を指定してください。",
+    "guacdIntro": "リモートデスクトップは独自の guacd を使用するよう設定されています。応答があることを確認するか、Termix で guacd を指定してください。",
     "guacdChecking": "guacd を検索中",
     "guacdConnected": "guacd は {{address}} で実行されています",
     "guacdMissing": "guacd は {{address}} で応答していません",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "リモートデスクトップを有効化",
-        "description": "guacd を介した RDP、VNC、Telnet 接続を許可します。"
+        "description": "RDP、VNC、Telnet 接続を許可します。"
+      },
+      "useGuacd": {
+        "label": "外部 guacd を使用する",
+        "description": "Termix は RDP、VNC、Telnet を自身で実行します。これをオンにすると、代わりに独自の guacd に送信されます。REMOTE_DESKTOP_ENGINE はこれを上書きします。"
       },
       "guacdUrl": {
         "label": "guacd URL",
@@ -352,20 +381,46 @@
         "label": "証明書エラーを無視"
       },
       "guacamoleConfig": {
-        "label": "guacd 設定"
+        "label": "接続設定"
       },
       "enableToolbar": {
         "label": "リモートデスクトップツールバー",
-        "description": "RDP、VNC、Telnet セッションでツールバーを表示します。"
+        "description": "RDP、VNC、ARD、Telnet セッションでツールバーを表示します。"
       },
       "displayGroup": "ディスプレイ",
-      "displayDefaultsTab": "リモートデスクトップ"
+      "displayDefaultsTab": "リモートデスクトップ",
+      "toolbarPosition": {
+        "label": "ツールバーの位置",
+        "description": "ツールバーをセッションの上部または下部に表示します。",
+        "top": "上部",
+        "bottom": "下部"
+      },
+      "toolbarLabels": {
+        "label": "ツールバーラベル",
+        "description": "アイコンの横に名前を表示するか、アイコンのみを表示します。スペースが不足すると名前は自動的に非表示になります。",
+        "labeled": "アイコンと名前",
+        "icons": "アイコンのみ"
+      },
+      "toolbarButtons": {
+        "label": "ツールバーボタン",
+        "description": "表示するボタンとその順序を選択します。収まらないボタンは [もっと] メニューに移動します。",
+        "reset": "リセット",
+        "moveUp": "上に移動",
+        "moveDown": "下に移動"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "ARD ポート"
+      }
     }
   },
   "palette": {
     "connectRdp": "RDP で接続",
     "connectVnc": "VNC で接続",
-    "connectTelnet": "Telnet で接続"
+    "connectTelnet": "Telnet で接続",
+    "connectArd": "Apple Remote Desktop で接続"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "リモートサーバーが必要です。この接続タイプを使用するには、設定でリモートサーバーを接続してください。"
   },
   "plugin": {
-    "name": "リモートデスクトップ"
+    "name": "リモートデスクトップ",
+    "description": "クリップボード、ファイル転送、共有、録画機能を備えたブラウザ上の RDP、VNC、Telnet セッション。"
   }
 }

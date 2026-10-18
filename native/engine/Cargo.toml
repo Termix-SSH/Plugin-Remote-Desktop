@@ -1,0 +1,64 @@
+[package]
+name = "termix-rd-engine"
+version = "1.1.0"
+edition = "2024"
+license = "Apache-2.0"
+publish = false
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+ironrdp = { git = "https://github.com/Devolutions/IronRDP", rev = "62246b364a0282bab85087f658a81fe4207b6b31", features = [
+    "connector",
+    "session",
+    "input",
+    "graphics",
+    "dvc",
+    "cliprdr",
+    "rdpdr",
+    "rdpsnd",
+    "svc",
+    "displaycontrol",
+    "pdu",
+    "vmconnect",
+] }
+ironrdp-core = { git = "https://github.com/Devolutions/IronRDP", rev = "62246b364a0282bab85087f658a81fe4207b6b31", features = ["alloc"] }
+ironrdp-pdu = { git = "https://github.com/Devolutions/IronRDP", rev = "62246b364a0282bab85087f658a81fe4207b6b31" }
+ironrdp-svc = { git = "https://github.com/Devolutions/IronRDP", rev = "62246b364a0282bab85087f658a81fe4207b6b31" }
+ironrdp-dvc = { git = "https://github.com/Devolutions/IronRDP", rev = "62246b364a0282bab85087f658a81fe4207b6b31" }
+ironrdp-cliprdr = { git = "https://github.com/Devolutions/IronRDP", rev = "62246b364a0282bab85087f658a81fe4207b6b31" }
+ironrdp-rdpdr = { git = "https://github.com/Devolutions/IronRDP", rev = "62246b364a0282bab85087f658a81fe4207b6b31" }
+ironrdp-rdpsnd = { git = "https://github.com/Devolutions/IronRDP", rev = "62246b364a0282bab85087f658a81fe4207b6b31" }
+ironrdp-displaycontrol = { git = "https://github.com/Devolutions/IronRDP", rev = "62246b364a0282bab85087f658a81fe4207b6b31" }
+ironrdp-graphics = { git = "https://github.com/Devolutions/IronRDP", rev = "62246b364a0282bab85087f658a81fe4207b6b31" }
+ironrdp-input = { git = "https://github.com/Devolutions/IronRDP", rev = "62246b364a0282bab85087f658a81fe4207b6b31" }
+ironrdp-rail = { git = "https://github.com/Devolutions/IronRDP", rev = "62246b364a0282bab85087f658a81fe4207b6b31" }
+ironrdp-egfx = { git = "https://github.com/Devolutions/IronRDP", rev = "62246b364a0282bab85087f658a81fe4207b6b31" }
+
+wasm-bindgen = "=0.2.104"
+js-sys = "0.3"
+
+png = "0.18"
+jpeg-encoder = "0.6"
+zune-jpeg = "0.4"
+flate2 = { version = "1", default-features = false, features = ["rust_backend"] }
+
+getrandom2 = { package = "getrandom", version = "0.2", features = ["js"] }
+getrandom = { version = "0.3", features = ["wasm_js"] }
+getrandom4 = { package = "getrandom", version = "0.4", features = ["wasm_js"] }
+chrono = { version = "0.4", features = ["wasmbind"] }
+time = { version = "0.3", features = ["wasm-bindgen"] }
+web-time = "1.1"
+
+tracing = { version = "0.1", features = ["log"] }
+url = "2.5"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true

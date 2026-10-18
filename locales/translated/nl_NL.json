@@ -10,7 +10,7 @@
     "failedToConnect": "Kon geen verbindingstoken ophalen",
     "hostNotFound": "Host niet gevonden",
     "noHostSelected": "Geen host geselecteerd",
-    "guacdUnavailable": "De remote desktop-service (guacd) is niet beschikbaar. Zorg ervoor dat guacd draait, toegankelijk is en correct is geconfigureerd in de beheerdersinstellingen.",
+    "guacdUnavailable": "De externe guacd reageert niet. Controleer of deze draait, of schakel 'Gebruik een externe guacd' uit in de instellingen voor Remote Desktop.",
     "credentialPromptTitle": "RDP-inloggegevens invoeren",
     "credentialPromptDescription": "Voor deze host zijn inloggegevens bij het verbinden nodig. Deze worden alleen voor deze sessie gebruikt en niet opgeslagen.",
     "connect": "Verbinden",
@@ -28,7 +28,7 @@
       "uploadFailed": "Kon {{name}} niet uploaden",
       "uploadDisabled": "Uploaden is uitgeschakeld voor deze verbinding",
       "driveUnavailable": "Schakel RDP-stationherleiding in voordat u bestanden uploadt",
-      "driveNotWritable": "guacd kan niet schrijven naar de stationmap. Controleer GUACD_DRIVE_PATH en de machtigingen.",
+      "driveNotWritable": "Termix kan niet schrijven naar de map van het station. Controleer RDP_DRIVE_PATH, of GUACD_DRIVE_PATH bij een externe guacd, en de bijbehorende machtigingen.",
       "dropToUpload": "Sleep bestanden om te uploaden"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Pijl links",
       "arrowRight": "Pijl rechts",
       "fnToggle": "Functietoetsen",
-      "collapse": "Werkbalk inklappen",
-      "expand": "Werkbalk uitklappen",
-      "dragHandle": "Sleep om te verplaatsen",
-      "hide": "Verberg voor deze sessie. Om het permanent uit te schakelen, opent u Hostinstellingen → Algemeen → Verbindingswerkbalk.",
       "zoomIn": "Inzoomen",
       "zoomOut": "Uitzoomen",
       "resetZoom": "Zoom resetten",
       "fitToScreen": "Passend op scherm",
       "switchToTrackpad": "Overschakelen naar trackpadmodus (slepen om cursor te verplaatsen, tikken om te klikken)",
-      "switchToTouch": "Overschakelen naar touchmodus (tik direct waar je wilt klikken)"
+      "switchToTouch": "Overschakelen naar touchmodus (tik direct waar je wilt klikken)",
+      "label": "Werkbalk voor Remote Desktop",
+      "more": "Meer",
+      "items": {
+        "files": "Bestanden",
+        "touchMode": "Aanraakmodus",
+        "zoom": "Zoomen",
+        "lock": "Vergrendelscherm",
+        "metaKey": "Systeemtoets",
+        "modifiers": "Klevende modificatietoetsen",
+        "arrows": "Pijltoetsen",
+        "forceQuit": "Geforceerd afsluiten",
+        "macLock": "Vergrendelscherm",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "Wordt weergegeven zodra het RDP-station is ingeschakeld",
+        "touchMode": "Alleen op aanraakschermen",
+        "modifiers": "Ctrl, Alt, Shift en de systeemtoets blijven ingedrukt tot de volgende toetsaanslag"
+      },
+      "option": "Optie"
     },
     "disabled": "Remote Desktop is uitgeschakeld. Een beheerder kan het inschakelen in Instellingen."
   },
@@ -114,11 +130,11 @@
       "timezone": "Tijdzone",
       "loadBalanceInfo": "Loadbalance-informatie / Cookie",
       "loadBalanceInfoDesc": "RD Connection Broker-cookie voor loadbalancing van RDS-farms (bijv. tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "guacd-proxy",
+      "guacdProxy": "guacd-proxy (optioneel)",
       "guacdHostname": "guacd-host",
       "guacdHostnamePlaceholder": "Standaard voor alle hosts",
       "guacdPort": "guacd-poort",
-      "guacdProxyDesc": "Overschrijf de globale guacd-instantie voor deze verbinding. Laat leeg om de globaal geconfigureerde guacd te gebruiken.",
+      "guacdProxyDesc": "Termix maakt zelf verbinding met deze host. Stel alleen een guacd-server in als deze host via jouw eigen guacd moet gaan. Laat leeg om de globale instelling te gebruiken.",
       "guacdAdminOnly": "Alleen beheerders kunnen de guacd-server voor een host wijzigen.",
       "guacdSaveHostFirst": "Sla de host eerst op, stel vervolgens hier de guacd-server in.",
       "guacdSave": "guacd-server opslaan",
@@ -129,6 +145,7 @@
       "gatewayUsername": "Gateway-gebruikersnaam",
       "gatewayPassword": "Gatewaywachtwoord",
       "gatewayDomain": "Gatewaydomein",
+      "gatewayNote": "RD Gateway vereist een externe guacd. Hosts met een gateway gebruiken deze wanneer deze is ingesteld, in de instellingen voor Remote Desktop of onder guacd-proxy.",
       "remoteAppProgram": "RemoteApp-programma",
       "workingDirectory": "Werkmap",
       "arguments": "Argumenten",
@@ -145,7 +162,7 @@
       "disableAudio": "Audio uitschakelen",
       "disableAudioDesc": "Demp alle audio van de externe sessie",
       "enableAudioInput": "Audio-invoer inschakelen (microfoon)",
-      "enableAudioInputDesc": "Stuur lokale microfoon door naar de externe sessie",
+      "enableAudioInputDesc": "Lokale microfoon doorsturen naar de externe sessie | Alleen met een externe guacd",
       "wallpaper": "Achtergrondafbeelding",
       "wallpaperDesc": "Toon bureaubladachtergrond (uitschakelen verbetert de prestaties)",
       "theming": "Thema's",
@@ -159,13 +176,13 @@
       "menuAnimations": "Menu-animaties",
       "menuAnimationsDesc": "Schakel vervagende en schuivende menu-animaties in",
       "disableBitmapCaching": "Bitmapcache uitschakelen",
-      "disableBitmapCachingDesc": "Schakel bitmapcache uit (kan helpen bij weergaveproblemen)",
+      "disableBitmapCachingDesc": "Bitmapcache uitschakelen (kan helpen bij weergaveproblemen) | Alleen met een externe guacd",
       "disableOffscreenCaching": "Offscreen-cache uitschakelen",
-      "disableOffscreenCachingDesc": "Schakel offscreen-cache uit",
+      "disableOffscreenCachingDesc": "Offscreen-cache uitschakelen | Alleen met een externe guacd",
       "disableGlyphCaching": "Glyphcache uitschakelen",
-      "disableGlyphCachingDesc": "Schakel glyphcache uit",
+      "disableGlyphCachingDesc": "Glyph-cache uitschakelen | Alleen met een externe guacd",
       "enableGfx": "GFX inschakelen",
-      "enableGfxDesc": "Gebruik RemoteFX-graphicspipeline",
+      "enableGfxDesc": "RemoteFX-graphicspipeline gebruiken | Alleen met een externe guacd",
       "enablePrinting": "Printen inschakelen",
       "enablePrintingDesc": "Stuur lokale printers door naar de externe sessie",
       "enableDriveRedirection": "Schijfdoorsturing inschakelen",
@@ -175,7 +192,7 @@
       "disableUpload": "Uploaden uitschakelen",
       "disableUploadDesc": "Voorkom het uploaden van bestanden naar de externe sessie",
       "enableTouch": "Touch inschakelen",
-      "enableTouchDesc": "Schakel doorsturing van touch-invoer in",
+      "enableTouchDesc": "Doorsturen van aanraakinvoer inschakelen | Alleen met een externe guacd",
       "consoleSession": "Console-sessie",
       "consoleSessionDesc": "Verbind met de console (sessie 0) in plaats van een nieuwe sessie",
       "sendWolPacket": "WOL-pakket verzenden",
@@ -202,6 +219,7 @@
       "telnetPort": "Telnet-poort",
       "terminalType": "Terminaltype",
       "fontName": "Lettertype",
+      "fontNameDesc": "Alleen met een externe guacd. De ingebouwde engine gebruikt zijn eigen monospace-lettertype.",
       "fontSize": "Lettergrootte",
       "colorScheme": "Kleurschema",
       "backspaceKey": "Backspace-toets",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "Wit op zwart",
         "grayOnBlack": "Grijs op zwart",
         "greenOnBlack": "Groen op zwart"
-      }
+      },
+      "ardSettings": "Instellingen voor Apple Remote Desktop",
+      "ardPort": "ARD-poort",
+      "ardPassword": "macOS-wachtwoord",
+      "ardUsername": "macOS-gebruikersnaam",
+      "ardLeaveBlank": "Laat leeg voor een wachtwoord dat alleen voor VNC geldt"
     },
     "remoteDesktop": "Extern bureaublad",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "Onversleutelde shell",
     "remoteDesktopNotes": "Notities",
     "userDefaultsNote": "Instellingen die je niet wijzigt, volgen de standaardwaarden van je host.",
-    "connectionOriginNote": "In de desktop-app gebruiken RDP, VNC en Telnet de externe server, tenzij de host is ingesteld op Dit apparaat. Dit vereist een guacd die dit apparaat kan bereiken. Stel er een in bij de instellingen voor Extern bureaublad, of per host onder guacd-proxy.",
+    "connectionOriginNote": "In de desktop-app draaien RDP, VNC en Telnet op dit apparaat wanneer de host op 'Standaard' staat, net als SSH. Kies 'Externe server' om ze op de server te laten draaien.",
     "docsLink": "Documentatie bekijken",
-    "connectionOriginGuacamoleNote": "RDP, VNC en Telnet gebruiken de externe server, tenzij je \"Dit apparaat\" kiest. Dit vereist een guacd die dit apparaat kan bereiken. Stel er een in bij de instelling voor guacd-URL, of per host onder guacd-proxy."
+    "connectionOriginGuacamoleNote": "RDP, VNC en Telnet draaien standaard op dit apparaat, net als SSH. Kies 'Externe server' om ze op de server te laten draaien.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Mac-schermdeling"
   },
   "onboarding": {
     "guacdTitle": "Extern bureaublad instellen",
-    "guacdIntro": "Extern bureaublad vereist dat guacd naast Termix draait. Controleer of het reageert, of wijs Termix naar de juiste locatie.",
+    "guacdIntro": "Remote Desktop is ingesteld op het gebruik van je eigen guacd. Controleer of deze reageert, of wijs Termix naar deze.",
     "guacdChecking": "Zoeken naar guacd",
     "guacdConnected": "guacd draait op {{address}}",
     "guacdMissing": "guacd reageert niet op {{address}}",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "Extern bureaublad inschakelen",
-        "description": "RDP-, VNC- en Telnet-verbindingen via guacd toestaan."
+        "description": "RDP-, VNC- en Telnet-verbindingen toestaan."
+      },
+      "useGuacd": {
+        "label": "Gebruik een externe guacd",
+        "description": "Termix draait RDP, VNC en Telnet zelf. Schakel dit in om ze in plaats daarvan naar je eigen guacd te sturen. REMOTE_DESKTOP_ENGINE overschrijft deze instelling."
       },
       "guacdUrl": {
         "label": "guacd-URL",
@@ -352,20 +381,46 @@
         "label": "Certificaatfouten negeren"
       },
       "guacamoleConfig": {
-        "label": "guacd-instellingen"
+        "label": "Verbindingsinstellingen"
       },
       "enableToolbar": {
         "label": "Werkbalk extern bureaublad",
-        "description": "De werkbalk tonen in RDP-, VNC- en Telnet-sessies."
+        "description": "Werkbalk weergeven in RDP-, VNC-, ARD- en Telnet-sessies."
       },
       "displayGroup": "Weergave",
-      "displayDefaultsTab": "Extern bureaublad"
+      "displayDefaultsTab": "Extern bureaublad",
+      "toolbarPosition": {
+        "label": "Positie van werkbalk",
+        "description": "Werkbalk boven of onder de sessie weergeven.",
+        "top": "Boven",
+        "bottom": "Onder"
+      },
+      "toolbarLabels": {
+        "label": "Labels op werkbalk",
+        "description": "Namen naast de pictogrammen weergeven, of alleen pictogrammen. Namen worden automatisch verborgen als er onvoldoende ruimte is.",
+        "labeled": "Pictogrammen en namen",
+        "icons": "Alleen pictogrammen"
+      },
+      "toolbarButtons": {
+        "label": "Knoppen op werkbalk",
+        "description": "Kies welke knoppen worden weergegeven en in welke volgorde. Knoppen die niet passen, worden in het menu 'Meer' geplaatst.",
+        "reset": "Herstellen",
+        "moveUp": "Omhoog verplaatsen",
+        "moveDown": "Omlaag verplaatsen"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "ARD-poort"
+      }
     }
   },
   "palette": {
     "connectRdp": "Verbinden met RDP",
     "connectVnc": "Verbinden met VNC",
-    "connectTelnet": "Verbinden met Telnet"
+    "connectTelnet": "Verbinden met Telnet",
+    "connectArd": "Verbinden met Apple Remote Desktop"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "Externe server vereist. Verbind een externe server in Instellingen om dit verbindungstype te gebruiken."
   },
   "plugin": {
-    "name": "Extern bureaublad"
+    "name": "Extern bureaublad",
+    "description": "RDP-, VNC- en Telnet-sessies in je browser, met klembord, bestandsoverdracht, delen en opnemen."
   }
 }

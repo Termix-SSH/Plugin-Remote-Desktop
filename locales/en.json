@@ -10,7 +10,7 @@
     "failedToConnect": "Failed to get connection token",
     "hostNotFound": "Host not found",
     "noHostSelected": "No host selected",
-    "guacdUnavailable": "Remote desktop service (guacd) is not available. Please ensure guacd is running and accessible and configured properly in admin settings.",
+    "guacdUnavailable": "The external guacd is not answering. Check that it is running, or turn off Use an external guacd in the Remote Desktop settings.",
     "credentialPromptTitle": "Enter RDP Credentials",
     "credentialPromptDescription": "This host is set to prompt for credentials on connect. They are used for this session only and are not saved.",
     "connect": "Connect",
@@ -28,7 +28,7 @@
       "uploadFailed": "Failed to upload {{name}}",
       "uploadDisabled": "Uploads are disabled for this connection",
       "driveUnavailable": "Enable RDP drive redirection before uploading files",
-      "driveNotWritable": "guacd cannot write to the drive folder. Check GUACD_DRIVE_PATH and its permissions.",
+      "driveNotWritable": "Termix cannot write to the drive folder. Check RDP_DRIVE_PATH, or GUACD_DRIVE_PATH with an external guacd, and its permissions.",
       "dropToUpload": "Drop files to upload"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Arrow Left",
       "arrowRight": "Arrow Right",
       "fnToggle": "Function Keys",
-      "collapse": "Collapse toolbar",
-      "expand": "Expand toolbar",
-      "dragHandle": "Drag to reposition",
-      "hide": "Hide for this session. To disable it permanently, open Host Settings → General → Connection Toolbar.",
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
       "resetZoom": "Reset zoom",
       "fitToScreen": "Fit to screen",
       "switchToTrackpad": "Switch to trackpad mode (drag to move cursor, tap to click)",
-      "switchToTouch": "Switch to touch mode (tap directly where you want to click)"
+      "switchToTouch": "Switch to touch mode (tap directly where you want to click)",
+      "label": "Remote desktop toolbar",
+      "more": "More",
+      "items": {
+        "files": "Files",
+        "touchMode": "Touch mode",
+        "zoom": "Zoom",
+        "lock": "Lock screen",
+        "metaKey": "System key",
+        "modifiers": "Sticky modifier keys",
+        "arrows": "Arrow keys",
+        "forceQuit": "Force Quit",
+        "macLock": "Lock screen",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "Shows once the RDP drive is on",
+        "touchMode": "Only on touch screens",
+        "modifiers": "Ctrl, Alt, Shift and the system key stay held until the next key"
+      },
+      "option": "Option"
     },
     "disabled": "Remote Desktop is turned off. An admin can turn it on in Settings."
   },
@@ -114,11 +130,11 @@
       "timezone": "Timezone",
       "loadBalanceInfo": "Load Balance Info / Cookie",
       "loadBalanceInfoDesc": "RD Connection Broker cookie for RDS farm load balancing (e.g. tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "guacd Proxy",
+      "guacdProxy": "guacd Proxy (optional)",
       "guacdHostname": "guacd Host",
       "guacdHostnamePlaceholder": "Global default",
       "guacdPort": "guacd Port",
-      "guacdProxyDesc": "Override the global guacd instance for this connection. Leave blank to use the globally configured guacd.",
+      "guacdProxyDesc": "Termix connects to this host itself. Only set a guacd server if this host should go through your own guacd instead. Leave blank to use the global setting.",
       "guacdAdminOnly": "Only admins can change the guacd server for a host.",
       "guacdSaveHostFirst": "Save the host first, then set its guacd server here.",
       "guacdSave": "Save guacd server",
@@ -129,6 +145,7 @@
       "gatewayUsername": "Gateway Username",
       "gatewayPassword": "Gateway Password",
       "gatewayDomain": "Gateway Domain",
+      "gatewayNote": "RD Gateway needs an external guacd. Hosts with a gateway go to it when one is set up, in the Remote Desktop settings or under guacd Proxy.",
       "remoteAppProgram": "RemoteApp Program",
       "workingDirectory": "Working Directory",
       "arguments": "Arguments",
@@ -145,7 +162,7 @@
       "disableAudio": "Disable Audio",
       "disableAudioDesc": "Mute all audio from the remote session",
       "enableAudioInput": "Enable Audio Input (Microphone)",
-      "enableAudioInputDesc": "Forward local microphone to the remote session",
+      "enableAudioInputDesc": "Forward local microphone to the remote session | Only with an external guacd",
       "wallpaper": "Wallpaper",
       "wallpaperDesc": "Show desktop wallpaper (disabling improves performance)",
       "theming": "Theming",
@@ -159,13 +176,13 @@
       "menuAnimations": "Menu Animations",
       "menuAnimationsDesc": "Enable menu fade and slide animations",
       "disableBitmapCaching": "Disable Bitmap Caching",
-      "disableBitmapCachingDesc": "Turn off bitmap cache (may help with glitches)",
+      "disableBitmapCachingDesc": "Turn off bitmap cache (may help with glitches) | Only with an external guacd",
       "disableOffscreenCaching": "Disable Offscreen Caching",
-      "disableOffscreenCachingDesc": "Turn off offscreen cache",
+      "disableOffscreenCachingDesc": "Turn off offscreen cache | Only with an external guacd",
       "disableGlyphCaching": "Disable Glyph Caching",
-      "disableGlyphCachingDesc": "Turn off glyph cache",
+      "disableGlyphCachingDesc": "Turn off glyph cache | Only with an external guacd",
       "enableGfx": "Enable GFX",
-      "enableGfxDesc": "Use RemoteFX graphics pipeline",
+      "enableGfxDesc": "Use RemoteFX graphics pipeline | Only with an external guacd",
       "enablePrinting": "Enable Printing",
       "enablePrintingDesc": "Redirect local printers to the remote session",
       "enableDriveRedirection": "Enable Drive Redirection",
@@ -175,7 +192,7 @@
       "disableUpload": "Disable Upload",
       "disableUploadDesc": "Prevent uploading files to the remote session",
       "enableTouch": "Enable Touch",
-      "enableTouchDesc": "Enable touch input forwarding",
+      "enableTouchDesc": "Enable touch input forwarding | Only with an external guacd",
       "consoleSession": "Console Session",
       "consoleSessionDesc": "Connect to the console (session 0) instead of a new session",
       "sendWolPacket": "Send WOL Packet",
@@ -202,6 +219,7 @@
       "telnetPort": "Telnet Port",
       "terminalType": "Terminal Type",
       "fontName": "Font Name",
+      "fontNameDesc": "Only with an external guacd. The built-in engine uses its own monospace font.",
       "fontSize": "Font Size",
       "colorScheme": "Color Scheme",
       "backspaceKey": "Backspace Key",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "White on Black",
         "grayOnBlack": "Gray on Black",
         "greenOnBlack": "Green on Black"
-      }
+      },
+      "ardSettings": "Apple Remote Desktop Settings",
+      "ardPort": "ARD Port",
+      "ardPassword": "macOS Password",
+      "ardUsername": "macOS Username",
+      "ardLeaveBlank": "Leave blank for a VNC-only password"
     },
     "remoteDesktop": "Remote Desktop",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "Unencrypted shell",
     "remoteDesktopNotes": "Notes",
     "userDefaultsNote": "Settings you leave unchanged follow your host defaults.",
-    "connectionOriginNote": "On the desktop app, RDP, VNC and Telnet use the remote server unless the host is set to This device, which needs a guacd this machine can reach. Set one in the Remote Desktop settings, or per host under guacd Proxy.",
+    "connectionOriginNote": "On the desktop app, RDP, VNC and Telnet run on this device when the host is left on Default, like SSH. Pick Remote server to run them on the server instead.",
     "docsLink": "View docs",
-    "connectionOriginGuacamoleNote": "RDP, VNC and Telnet use the remote server unless you pick \"This device\", which needs a guacd this machine can reach. Set one in the guacd URL setting, or per host under guacd Proxy."
+    "connectionOriginGuacamoleNote": "RDP, VNC and Telnet run on this device by default, like SSH. Pick Remote server to run them on the server instead.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Mac Screen Sharing"
   },
   "onboarding": {
     "guacdTitle": "Set up remote desktop",
-    "guacdIntro": "Remote desktop needs guacd running next to Termix. Check that it answers, or point Termix at it.",
+    "guacdIntro": "Remote desktop is set to use your own guacd. Check that it answers, or point Termix at it.",
     "guacdChecking": "Looking for guacd",
     "guacdConnected": "guacd is running at {{address}}",
     "guacdMissing": "guacd is not answering at {{address}}",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "Enable Remote Desktop",
-        "description": "Allow RDP, VNC and Telnet connections through guacd."
+        "description": "Allow RDP, VNC and Telnet connections."
+      },
+      "useGuacd": {
+        "label": "Use an external guacd",
+        "description": "Termix runs RDP, VNC and Telnet itself. Turn this on to send them to your own guacd instead. REMOTE_DESKTOP_ENGINE overrides this."
       },
       "guacdUrl": {
         "label": "guacd URL",
@@ -352,20 +381,46 @@
         "label": "Ignore certificate errors"
       },
       "guacamoleConfig": {
-        "label": "guacd settings"
+        "label": "Connection settings"
       },
       "enableToolbar": {
         "label": "Remote desktop toolbar",
-        "description": "Show the toolbar in RDP, VNC and Telnet sessions."
+        "description": "Show the toolbar in RDP, VNC, ARD and Telnet sessions."
       },
       "displayGroup": "Display",
-      "displayDefaultsTab": "Remote Desktop"
+      "displayDefaultsTab": "Remote Desktop",
+      "toolbarPosition": {
+        "label": "Toolbar position",
+        "description": "Show the toolbar above or below the session.",
+        "top": "Top",
+        "bottom": "Bottom"
+      },
+      "toolbarLabels": {
+        "label": "Toolbar labels",
+        "description": "Show names next to the icons, or icons only. Names hide on their own when space runs out.",
+        "labeled": "Icons and names",
+        "icons": "Icons only"
+      },
+      "toolbarButtons": {
+        "label": "Toolbar buttons",
+        "description": "Pick which buttons show and in what order. Buttons that don't fit go in the More menu.",
+        "reset": "Reset",
+        "moveUp": "Move up",
+        "moveDown": "Move down"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "ARD port"
+      }
     }
   },
   "palette": {
     "connectRdp": "Connect with RDP",
     "connectVnc": "Connect with VNC",
-    "connectTelnet": "Connect with Telnet"
+    "connectTelnet": "Connect with Telnet",
+    "connectArd": "Connect with Apple Remote Desktop"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "Remote server required. Connect a remote server in Settings to use this connection type."
   },
   "plugin": {
-    "name": "Remote Desktop"
+    "name": "Remote Desktop",
+    "description": "RDP, VNC and Telnet sessions in your browser, with clipboard, file transfer, sharing and recording."
   }
 }

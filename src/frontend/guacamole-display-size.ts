@@ -52,3 +52,23 @@ export function getGuacamoleDisplaySize(
   const baseDpi = hasDpi ? configuredDpi : DEFAULT_RDP_DPI;
   return { ...size, dpi: Math.round(baseDpi * pixelRatio) };
 }
+
+/** About the width of a scrollbar, in CSS pixels. */
+const SMALL_CHANGE_CSS_PX = 24;
+
+/**
+ * Whether a new size is only a scrollbar away from the last one sent. On some
+ * touch screens a scrollbar shows and hides with each resize, so sending those
+ * sizes keeps the session resizing forever.
+ */
+export function isSmallChange(
+  previous: { width: number; height: number } | null,
+  next: GuacamoleDisplaySize,
+): boolean {
+  if (!previous) return false;
+  const slack = SMALL_CHANGE_CSS_PX * next.pixelRatio;
+  return (
+    Math.abs(previous.width - next.width) <= slack &&
+    Math.abs(previous.height - next.height) <= slack
+  );
+}

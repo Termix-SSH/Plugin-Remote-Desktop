@@ -10,7 +10,7 @@
     "failedToConnect": "No s'ha pogut obtenir el testimoni de connexió",
     "hostNotFound": "Amfitrió no trobat",
     "noHostSelected": "Cap amfitrió seleccionat",
-    "guacdUnavailable": "El servei d'escriptori remot (guacd) no està disponible. Assegureu-vos que guacd s'està executant, és accessible i està configurat correctament a la configuració d'administrador.",
+    "guacdUnavailable": "El guacd extern no respon. Comproveu que s'està executant o desactiveu l'opció «Utilitza un guacd extern» a la configuració d'Escriptori remot.",
     "credentialPromptTitle": "Introduïu les credencials d'RDP",
     "credentialPromptDescription": "Aquest amfitrió està configurat per demanar credencials en connectar. S'utilitzen només per a aquesta sessió i no es desaven.",
     "connect": "Connecta",
@@ -28,7 +28,7 @@
       "uploadFailed": "No s'ha pogut pujar {{name}}",
       "uploadDisabled": "Les pujades estan desactivades per a aquesta connexió",
       "driveUnavailable": "Habiliteu la redirecció de la unitat d'RDP abans de pujar fitxers",
-      "driveNotWritable": "guacd no pot escriure a la carpeta de la unitat. Comproveu GUACD_DRIVE_PATH i els seus permisos.",
+      "driveNotWritable": "Termix no pot escriure a la carpeta de la unitat. Comproveu RDP_DRIVE_PATH, o GUACD_DRIVE_PATH amb un guacd extern, i els seus permisos.",
       "dropToUpload": "Deixeu anar els fitxers per pujar-los"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Fletxa esquerra",
       "arrowRight": "Fletxa dreta",
       "fnToggle": "Teques de funció",
-      "collapse": "Minimitza la barra d'eines",
-      "expand": "Amplia la barra d'eines",
-      "dragHandle": "Arrossegueu per reposicionar",
-      "hide": "Amaga per a aquesta sessió. Per desactivar-la permanentment, obriu Configuració de l'amfitrió → General → Barra d'eines de connexió.",
       "zoomIn": "Amplia",
       "zoomOut": "Allunya",
       "resetZoom": "Restableix el zoom",
       "fitToScreen": "Ajusta a la pantalla",
       "switchToTrackpad": "Canvia al mode de trackpad (arrossega per moure el cursor, fes clic per fer clic)",
-      "switchToTouch": "Canvia al mode tàctil (toca directament on vulguis fer clic)"
+      "switchToTouch": "Canvia al mode tàctil (toca directament on vulguis fer clic)",
+      "label": "Barra d'eines d'escriptori remot",
+      "more": "Més",
+      "items": {
+        "files": "Fitxers",
+        "touchMode": "Mode tàctil",
+        "zoom": "Zoom",
+        "lock": "Bloqueja la pantalla",
+        "metaKey": "Tecla del sistema",
+        "modifiers": "Teclas modificadores enganxoses",
+        "arrows": "Teclas de fletxa",
+        "forceQuit": "Força la sortida",
+        "macLock": "Bloqueja la pantalla",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "Es mostra un cop s'activa la unitat RDP",
+        "touchMode": "Només en pantalles tàctils",
+        "modifiers": "Ctrl, Alt, Shift i la tecla del sistema es mantenen premudes fins a la següent tecla"
+      },
+      "option": "Opció"
     },
     "disabled": "L'escriptori remot està desactivat. Un administrador el pot activar a Configuració."
   },
@@ -114,11 +130,11 @@
       "timezone": "Zona horària",
       "loadBalanceInfo": "Informació d'equilibratge de càrrega / Cookie",
       "loadBalanceInfoDesc": "Cookie del Connection Broker RD per a l'equilibratge de càrrega de la granja RDS (p. ex., tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "Proxy guacd",
+      "guacdProxy": "Proxy de guacd (opcional)",
       "guacdHostname": "Amfitrió guacd",
       "guacdHostnamePlaceholder": "Valor predeterminat global",
       "guacdPort": "Port guacd",
-      "guacdProxyDesc": "Substitueix la instància global de guacd per a aquesta connexió. Deixa-ho en blanc per utilitzar el guacd configurat globalment.",
+      "guacdProxyDesc": "Termix es connecta directament a aquest host. Només estableix un servidor guacd si aquest host ha de passar pel teu propi guacd. Deixa-ho en blanc per utilitzar la configuració global.",
       "guacdAdminOnly": "Només els administradors poden canviar el servidor guacd d'un amfitrió.",
       "guacdSaveHostFirst": "Desa l'amfitrió primer i després configura el seu servidor guacd aquí.",
       "guacdSave": "Desa el servidor guacd",
@@ -129,6 +145,7 @@
       "gatewayUsername": "Nom d'usuari de la passarel·la",
       "gatewayPassword": "Contrasenya de la passarel·la",
       "gatewayDomain": "Domini de la passarel·la",
+      "gatewayNote": "RD Gateway necessita un guacd extern. Els hosts amb un gateway s'hi connecten quan està configurat, a la configuració d'Escriptori remot o sota Proxy de guacd.",
       "remoteAppProgram": "Programa de RemoteApp",
       "workingDirectory": "Directori de treball",
       "arguments": "Arguments",
@@ -145,7 +162,7 @@
       "disableAudio": "Desactivar l'àudio",
       "disableAudioDesc": "Silenciar tot l'àudio de la sessió remota",
       "enableAudioInput": "Activar l'entrada d'àudio (micròfon)",
-      "enableAudioInputDesc": "Encaminar el micròfon local a la sessió remota",
+      "enableAudioInputDesc": "Encamina el micròfon local a la sessió remota | Només amb un guacd extern",
       "wallpaper": "Fons de pantalla",
       "wallpaperDesc": "Mostrar el fons de pantalla de l'escriptori (desactivar-ho millora el rendiment)",
       "theming": "Temes",
@@ -159,13 +176,13 @@
       "menuAnimations": "Animacions de menús",
       "menuAnimationsDesc": "Activar les animacions de desvaneciment i desplaçament dels menús",
       "disableBitmapCaching": "Desactivar la memòria cau de mapes de bits",
-      "disableBitmapCachingDesc": "Desactivar la memòria cau de mapes de bits (pot ajudar amb errors visuals)",
+      "disableBitmapCachingDesc": "Desactiva la memòria cau de mapes de bits (pot ajudar amb errors gràfics) | Només amb un guacd extern",
       "disableOffscreenCaching": "Desactivar la memòria cau fora de pantalla",
-      "disableOffscreenCachingDesc": "Desactivar la memòria cau fora de pantalla",
+      "disableOffscreenCachingDesc": "Desactiva la memòria cau fora de pantalla | Només amb un guacd extern",
       "disableGlyphCaching": "Desactivar la memòria cau de glifs",
-      "disableGlyphCachingDesc": "Desactivar la memòria cau de glifs",
+      "disableGlyphCachingDesc": "Desactiva la memòria cau de glifs | Només amb un guacd extern",
       "enableGfx": "Activar GFX",
-      "enableGfxDesc": "Utilitzar el canal gràfic RemoteFX",
+      "enableGfxDesc": "Utilitza el canal gràfic RemoteFX | Només amb un guacd extern",
       "enablePrinting": "Activar la impressió",
       "enablePrintingDesc": "Redirigir les impressores locals a la sessió remota",
       "enableDriveRedirection": "Activar la redirecció de unitats",
@@ -175,7 +192,7 @@
       "disableUpload": "Desactivar la pujada",
       "disableUploadDesc": "Impedir la pujada de fitxers a la sessió remota",
       "enableTouch": "Activar el tàctil",
-      "enableTouchDesc": "Activar l'encaminament d'entrada tàctil",
+      "enableTouchDesc": "Activa l'encaminament d'entrada tàctil | Només amb un guacd extern",
       "consoleSession": "Sessió de consola",
       "consoleSessionDesc": "Connectar-se a la consola (sessió 0) en lloc d'una sessió nova",
       "sendWolPacket": "Enviar paquet WOL",
@@ -202,6 +219,7 @@
       "telnetPort": "Port Telnet",
       "terminalType": "Tipus de terminal",
       "fontName": "Nom de la font",
+      "fontNameDesc": "Només amb un guacd extern. El motor integrat utilitza la seva pròpia font monoespaiada.",
       "fontSize": "Mida de la font",
       "colorScheme": "Esquema de colors",
       "backspaceKey": "Tecla Retroces",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "Blanc sobre negre",
         "grayOnBlack": "Gris sobre negre",
         "greenOnBlack": "Verd sobre negre"
-      }
+      },
+      "ardSettings": "Configuració d'Apple Remote Desktop",
+      "ardPort": "Port ARD",
+      "ardPassword": "Contrasenya de macOS",
+      "ardUsername": "Nom d'usuari de macOS",
+      "ardLeaveBlank": "Deixa-ho en blanc per utilitzar només una contrasenya VNC"
     },
     "remoteDesktop": "Escriptori remot",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "Intèrpret d'ordres no xifrat",
     "remoteDesktopNotes": "Notes",
     "userDefaultsNote": "La configuració que deixeu sense canviar segueix els valors predeterminats del servidor.",
-    "connectionOriginNote": "A l'aplicació d'escriptori, RDP, VNC i Telnet utilitzen el servidor remot a menys que el servidor estigui configurat com a Aquest dispositiu, la qual cosa requereix un guacd que aquest ordinari pugui arribar. Configureu-ne un a la configuració d'Escriptori remot o per servidor a Proxy guacd.",
+    "connectionOriginNote": "A l'aplicació d'escriptori, RDP, VNC i Telnet s'executen en aquest dispositiu quan l'host es deixa a Predeterminat, com SSH. Tria Servidor remot per executar-los al servidor en canvi.",
     "docsLink": "Veure la documentació",
-    "connectionOriginGuacamoleNote": "RDP, VNC i Telnet utilitzen el servidor remot a menys que trieu \"Aquest dispositiu\", la qual cosa requereix un guacd que aquest ordinari pugui arribar. Configureu-ne un a la configuració de l'URL de guacd o per servidor a Proxy guacd."
+    "connectionOriginGuacamoleNote": "RDP, VNC i Telnet s'executen en aquest dispositiu per defecte, com SSH. Tria Servidor remot per executar-los al servidor en canvi.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Compartició de pantalla de Mac"
   },
   "onboarding": {
     "guacdTitle": "Configurar l'escriptori remot",
-    "guacdIntro": "L'escriptori remot necessita que guacd s'estigui executant al costat de Termix. Comproveu que respon o indiqueu-lo a Termix.",
+    "guacdIntro": "L'escriptori remot està configurat per utilitzar el teu propi guacd. Comproveu que respon o indiqueu-lo a Termix.",
     "guacdChecking": "Cercant guacd",
     "guacdConnected": "guacd s'està executant a {{address}}",
     "guacdMissing": "guacd no respon a {{address}}",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "Activa l'escriptori remot",
-        "description": "Permet connexions RDP, VNC i Telnet a través de guacd."
+        "description": "Permet connexions RDP, VNC i Telnet."
+      },
+      "useGuacd": {
+        "label": "Utilitza un guacd extern",
+        "description": "Termix executa RDP, VNC i Telnet per si mateix. Activeu aquesta opció per enviar-los al vostre propi guacd en canvi. REMOTE_DESKTOP_ENGINE anul·la aquesta opció."
       },
       "guacdUrl": {
         "label": "URL de guacd",
@@ -352,20 +381,46 @@
         "label": "Ignora els errors de certificat"
       },
       "guacamoleConfig": {
-        "label": "Configuració de guacd"
+        "label": "Configuració de connexió"
       },
       "enableToolbar": {
         "label": "Barra d'eines d'escriptori remot",
-        "description": "Mostra la barra d'eines a les sessions RDP, VNC i Telnet."
+        "description": "Mostra la barra d'eines a les sessions RDP, VNC, ARD i Telnet."
       },
       "displayGroup": "Pantalla",
-      "displayDefaultsTab": "Escriptori remot"
+      "displayDefaultsTab": "Escriptori remot",
+      "toolbarPosition": {
+        "label": "Posició de la barra d'eines",
+        "description": "Mostra la barra d'eines per sobre o per sota de la sessió.",
+        "top": "Superior",
+        "bottom": "Inferior"
+      },
+      "toolbarLabels": {
+        "label": "Etiquetes de la barra d'eines",
+        "description": "Mostra noms al costat dels icones, o només icones. Els noms s'amaguen automàticament quan falta espai.",
+        "labeled": "Icones i noms",
+        "icons": "Només icones"
+      },
+      "toolbarButtons": {
+        "label": "Botons de la barra d'eines",
+        "description": "Tria quins botons es mostren i en quin ordre. Els botons que no caben van al menú Més.",
+        "reset": "Restableix",
+        "moveUp": "Mou amunt",
+        "moveDown": "Mou avall"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "Port ARD"
+      }
     }
   },
   "palette": {
     "connectRdp": "Connecta amb RDP",
     "connectVnc": "Connecta amb VNC",
-    "connectTelnet": "Connecta amb Telnet"
+    "connectTelnet": "Connecta amb Telnet",
+    "connectArd": "Connecta amb Apple Remote Desktop"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "Cal un servidor remot. Connecta un servidor remot a Configuració per utilitzar aquest tipus de connexió."
   },
   "plugin": {
-    "name": "Escriptori remot"
+    "name": "Escriptori remot",
+    "description": "Sessions RDP, VNC i Telnet al vostre navegador, amb retallador, transferència de fitxers, compartició i gravació."
   }
 }

@@ -10,7 +10,7 @@
     "failedToConnect": "Nu s-a putut obține tokenul de conexiune",
     "hostNotFound": "Gazda nu a fost găsită",
     "noHostSelected": "Nicio gazdă selectată",
-    "guacdUnavailable": "Serviciul de desktop la distanță (guacd) nu este disponibil. Asigurați-vă că guacd rulează, este accesibil și este configurat corect în setările de administrator.",
+    "guacdUnavailable": "Serviciul extern guacd nu răspunde. Verificați dacă este în funcțiune sau dezactivați opțiunea „Folosește un guacd extern” în setările Remote Desktop.",
     "credentialPromptTitle": "Introduceți datele de autentificare RDP",
     "credentialPromptDescription": "Această gazdă este configurată să solicite date de autentificare la conectare. Acestea sunt folosite doar pentru această sesiune și nu sunt salvate.",
     "connect": "Conectare",
@@ -28,7 +28,7 @@
       "uploadFailed": "Nu s-a putut încărca {{name}}",
       "uploadDisabled": "Încărcările sunt dezactivate pentru această conexiune",
       "driveUnavailable": "Activați redirecționarea unității RDP înainte de a încărca fișiere",
-      "driveNotWritable": "guacd nu poate scrie în dosarul unității. Verificați GUACD_DRIVE_PATH și permisiunile acestuia.",
+      "driveNotWritable": "Termix nu poate scrie în folderul drive. Verificați RDP_DRIVE_PATH sau GUACD_DRIVE_PATH (dacă folosiți un guacd extern) și permisiunile acestora.",
       "dropToUpload": "Trageți fișierele pentru a le încărca"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Săgeată stânga",
       "arrowRight": "Săgeată dreapta",
       "fnToggle": "Tastele de funcție",
-      "collapse": "Restrânge bara de instrumente",
-      "expand": "Extinde bara de instrumente",
-      "dragHandle": "Trageți pentru a repositiona",
-      "hide": "Ascundeți pentru această sesiune. Pentru a o dezactiva permanent, deschideți Setări gazdă → General → Bara de instrumente de conexiune.",
       "zoomIn": "Mărire",
       "zoomOut": "Mărește zoomul",
       "resetZoom": "Resetează zoomul",
       "fitToScreen": "Potrivește la ecran",
       "switchToTrackpad": "Comută la modul trackpad (trage pentru a muta cursorul, atinge pentru a da clic)",
-      "switchToTouch": "Comută la modul touch (atinge direct unde vrei să dai clic)"
+      "switchToTouch": "Comută la modul touch (atinge direct unde vrei să dai clic)",
+      "label": "Bara de instrumente Remote Desktop",
+      "more": "Mai multe",
+      "items": {
+        "files": "Fișiere",
+        "touchMode": "Mod touch",
+        "zoom": "Zoom",
+        "lock": "Blochează ecranul",
+        "metaKey": "Tasta de sistem",
+        "modifiers": "Taste modificate lipicioase",
+        "arrows": "Tastele săgeți",
+        "forceQuit": "Închidere forțată",
+        "macLock": "Blocare ecran",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "Se afișează doar după activarea unității RDP",
+        "touchMode": "Doar pe ecrane tactile",
+        "modifiers": "Ctrl, Alt, Shift și tasta de sistem rămân apăsate până la următoarea tastă"
+      },
+      "option": "Opțiune"
     },
     "disabled": "Remote Desktop este dezactivat. Un administrator îl poate activa în Setări."
   },
@@ -114,11 +130,11 @@
       "timezone": "Fus orar",
       "loadBalanceInfo": "Informații echilibrare sarcină / Cookie",
       "loadBalanceInfoDesc": "Cookie pentru brokerul de conexiuni RD pentru echilibrarea sarcinii în ferma RDS (de ex. tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "Proxy guacd",
+      "guacdProxy": "Proxy guacd (opțional)",
       "guacdHostname": "Gazdă guacd",
       "guacdHostnamePlaceholder": "Implicit global",
       "guacdPort": "Port guacd",
-      "guacdProxyDesc": "Ignoră instanța globală guacd pentru această conexiune. Lasă gol pentru a folosi guacd configurat global.",
+      "guacdProxyDesc": "Termix se conectează direct la acest gazdă. Setează un server guacd doar dacă această gazdă trebuie să treacă prin propriul tău guacd. Lasă necompletat pentru a folosi setarea globală.",
       "guacdAdminOnly": "Doar administratorii pot modifica serverul guacd pentru o gazdă.",
       "guacdSaveHostFirst": "Salvează mai întâi gazda, apoi setează serverul său guacd aici.",
       "guacdSave": "Salvează serverul guacd",
@@ -129,6 +145,7 @@
       "gatewayUsername": "Nume utilizator gateway",
       "gatewayPassword": "Parola Gateway",
       "gatewayDomain": "Domeniu Gateway",
+      "gatewayNote": "RD Gateway necesită un guacd extern. Gazdele cu un gateway se conectează la acesta când este configurat, în setările Remote Desktop sau sub Proxy guacd.",
       "remoteAppProgram": "Program RemoteApp",
       "workingDirectory": "Director de lucru",
       "arguments": "Argumente",
@@ -145,7 +162,7 @@
       "disableAudio": "Dezactivează audio",
       "disableAudioDesc": "Oprește tot audio din sesiunea remote",
       "enableAudioInput": "Activează intrare audio (microfon)",
-      "enableAudioInputDesc": "Redirecționează microfonul local către sesiunea remote",
+      "enableAudioInputDesc": "Redirecționează microfonul local către sesiunea remote | Doar cu un guacd extern",
       "wallpaper": "Imagine de fundal",
       "wallpaperDesc": "Afișează imaginea de fundal a desktopului (dezactivarea îmbunătățește performanța)",
       "theming": "Teme vizuale",
@@ -159,13 +176,13 @@
       "menuAnimations": "Animații meniu",
       "menuAnimationsDesc": "Activează animațiile de estompare și alunecare ale meniului",
       "disableBitmapCaching": "Dezactivează cache-ul bitmap",
-      "disableBitmapCachingDesc": "Dezactivează cache-ul bitmap (poate ajuta la probleme de afișare)",
+      "disableBitmapCachingDesc": "Dezactivează cache-ul bitmap (poate ajuta la probleme de afișare) | Doar cu un guacd extern",
       "disableOffscreenCaching": "Dezactivează cache-ul offscreen",
-      "disableOffscreenCachingDesc": "Dezactivează cache-ul offscreen",
+      "disableOffscreenCachingDesc": "Dezactivează cache-ul offscreen | Doar cu un guacd extern",
       "disableGlyphCaching": "Dezactivează cache-ul glyph",
-      "disableGlyphCachingDesc": "Dezactivează cache-ul glyph",
+      "disableGlyphCachingDesc": "Dezactivează cache-ul glyph | Doar cu un guacd extern",
       "enableGfx": "Activează GFX",
-      "enableGfxDesc": "Folosește fluxul grafic RemoteFX",
+      "enableGfxDesc": "Folosește pipeline-ul grafic RemoteFX | Doar cu un guacd extern",
       "enablePrinting": "Activează imprimarea",
       "enablePrintingDesc": "Redirecționează imprimantele locale către sesiunea remote",
       "enableDriveRedirection": "Activează redirecționarea unităților",
@@ -175,7 +192,7 @@
       "disableUpload": "Dezactivează încărcarea",
       "disableUploadDesc": "Previne încărcarea fișierelor în sesiunea remote",
       "enableTouch": "Activează atingerea",
-      "enableTouchDesc": "Activează redirecționarea intrărilor tactil",
+      "enableTouchDesc": "Activează redirecționarea inputului tactil | Doar cu un guacd extern",
       "consoleSession": "Sesiune consolă",
       "consoleSessionDesc": "Conectează-te la consolă (sesiunea 0) în loc de o sesiune nouă",
       "sendWolPacket": "Trimite pachet WOL",
@@ -202,6 +219,7 @@
       "telnetPort": "Port Telnet",
       "terminalType": "Tip terminal",
       "fontName": "Nume font",
+      "fontNameDesc": "Doar cu un guacd extern. Motorul integrat folosește propriul font monospace.",
       "fontSize": "Dimensiune font",
       "colorScheme": "Schema de culori",
       "backspaceKey": "Tasta Backspace",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "Alb pe Negru",
         "grayOnBlack": "Gri pe Negru",
         "greenOnBlack": "Verde pe Negru"
-      }
+      },
+      "ardSettings": "Setări Apple Remote Desktop",
+      "ardPort": "Port ARD",
+      "ardPassword": "Parola macOS",
+      "ardUsername": "Numele de utilizator macOS",
+      "ardLeaveBlank": "Lăsați necompletat pentru o parolă doar VNC"
     },
     "remoteDesktop": "Desktop Remote",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "Shell necriptat",
     "remoteDesktopNotes": "Note",
     "userDefaultsNote": "Setările pe care le lași nemodificate urmează valorile implicite ale gazdei.",
-    "connectionOriginNote": "În aplicația desktop, RDP, VNC și Telnet folosesc serverul remote, cu excepția cazului în care gazda este setată la Acest dispozitiv, ceea ce necesită un guacd accesibil de pe acest dispozitiv. Configurează unul în setările Desktop Remote sau pentru fiecare gazdă la Proxy guacd.",
+    "connectionOriginNote": "În aplicația desktop, RDP, VNC și Telnet rulează pe acest dispozitiv când gazda este lăsată pe Implicit, la fel ca SSH. Alegeți Server remote pentru a le rula pe server.",
     "docsLink": "Vezi documentația",
-    "connectionOriginGuacamoleNote": "RDP, VNC și Telnet folosesc serverul remote, cu excepția cazului în care alegi \"Acest dispozitiv\", ceea ce necesită un guacd accesibil de pe acest dispozitiv. Configurează unul în setarea URL guacd sau pentru fiecare gazdă la Proxy guacd."
+    "connectionOriginGuacamoleNote": "RDP, VNC și Telnet rulează implicit pe acest dispozitiv, la fel ca SSH. Alegeți Server remote pentru a le rula pe server.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Partajarea ecranului Mac"
   },
   "onboarding": {
     "guacdTitle": "Configurează desktopul remote",
-    "guacdIntro": "Desktopul remote necesită guacd în execuție lângă Termix. Verifică dacă răspunde sau indică-i Termix unde se află.",
+    "guacdIntro": "Desktopul remote este configurat să folosească propriul dvs. guacd. Verificați dacă răspunde sau indicați-i Termix unde se află.",
     "guacdChecking": "Se caută guacd",
     "guacdConnected": "guacd rulează la {{address}}",
     "guacdMissing": "guacd nu răspunde la {{address}}",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "Activează Desktop Remote",
-        "description": "Permite conexiuni RDP, VNC și Telnet prin guacd."
+        "description": "Permiteți conexiunile RDP, VNC și Telnet."
+      },
+      "useGuacd": {
+        "label": "Folosește un guacd extern",
+        "description": "Termix rulează singur RDP, VNC și Telnet. Activează această opțiune pentru a le redirecționa către propriul tău serviciu guacd. Variabila REMOTE_DESKTOP_ENGINE anulează această setare."
       },
       "guacdUrl": {
         "label": "URL-ul guacd",
@@ -352,20 +381,46 @@
         "label": "Ignoră erorile de certificat"
       },
       "guacamoleConfig": {
-        "label": "Setări guacd"
+        "label": "Setări de conexiune"
       },
       "enableToolbar": {
         "label": "Bara de instrumente pentru desktop remote",
-        "description": "Afișează bara de instrumente în sesiunile RDP, VNC și Telnet."
+        "description": "Afișează bara de instrumente în sesiunile RDP, VNC, ARD și Telnet."
       },
       "displayGroup": "Afișaj",
-      "displayDefaultsTab": "Desktop Remote"
+      "displayDefaultsTab": "Desktop Remote",
+      "toolbarPosition": {
+        "label": "Poziția barei de instrumente",
+        "description": "Afișează bara de instrumente deasupra sau sub sesiune.",
+        "top": "Sus",
+        "bottom": "Jos"
+      },
+      "toolbarLabels": {
+        "label": "Etichetele barei de instrumente",
+        "description": "Afișează numele lângă pictograme sau doar pictograme. Numele se ascund automat când spațiul este insuficient.",
+        "labeled": "Pictograme și nume",
+        "icons": "Doar pictograme"
+      },
+      "toolbarButtons": {
+        "label": "Butoane din bara de instrumente",
+        "description": "Alege care butoane să fie afișate și în ce ordine. Butoanele care nu încap vor apărea în meniul Mai mult.",
+        "reset": "Resetează",
+        "moveUp": "Mută în sus",
+        "moveDown": "Mută în jos"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "Port ARD"
+      }
     }
   },
   "palette": {
     "connectRdp": "Conectează-te cu RDP",
     "connectVnc": "Conectează-te cu VNC",
-    "connectTelnet": "Conectează-te cu Telnet"
+    "connectTelnet": "Conectează-te cu Telnet",
+    "connectArd": "Conectează-te cu Apple Remote Desktop"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "Server remote necesar. Conectează un server remote în Setări pentru a folosi acest tip de conexiune."
   },
   "plugin": {
-    "name": "Desktop Remote"
+    "name": "Desktop Remote",
+    "description": "Sesiuni RDP, VNC și Telnet în browser, cu clipboard, transfer de fișiere, partajare și înregistrare."
   }
 }

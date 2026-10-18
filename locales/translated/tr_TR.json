@@ -10,7 +10,7 @@
     "failedToConnect": "Bağlantı jetonu alınamadı",
     "hostNotFound": "Ana bilgisayar bulunamadı",
     "noHostSelected": "Hiçbir ana bilgisayar seçilmedi",
-    "guacdUnavailable": "Uzaktan masaüstü servisi (guacd) kullanılamıyor. Lütfen guacd'nin çalıştığına, erişilebilir olduğuna ve yönetici ayarlarında doğru yapılandırıldığından emin olun.",
+    "guacdUnavailable": "Harici guacd yanıt vermiyor. Çalıştığından emin olun veya Uzaktan Masaüstü ayarlarında Harici guacd kullan seçeneğini kapatın.",
     "credentialPromptTitle": "RDP Kimlik Bilgilerini Girin",
     "credentialPromptDescription": "Bu ana bilgisayar, bağlanırken kimlik bilgisi istemeye ayarlanmış. Bu bilgiler yalnızca bu oturum için kullanılır ve kaydedilmez.",
     "connect": "Bağlan",
@@ -28,7 +28,7 @@
       "uploadFailed": "{{name}} yüklenemedi",
       "uploadDisabled": "Bu bağlantı için yüklemeler devre dışı",
       "driveUnavailable": "Dosya yüklemeden önce RDP sürücü yönlendirmesini etkinleştirin",
-      "driveNotWritable": "guacd sürücü klasörüne yazamıyor. GUACD_DRIVE_PATH ve izinlerini kontrol edin.",
+      "driveNotWritable": "Termix sürücü klasörüne yazamıyor. RDP_DRIVE_PATH veya harici guacd kullanıyorsanız GUACD_DRIVE_PATH ve izinlerini kontrol edin.",
       "dropToUpload": "Yüklemek için dosyaları buraya bırakın"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Sol Ok",
       "arrowRight": "Sağ Ok",
       "fnToggle": "Fonksiyon Tuşları",
-      "collapse": "Araç çubuğunu daralt",
-      "expand": "Araç çubuğunu genişlet",
-      "dragHandle": "Yeniden konumlandırmak için sürükleyin",
-      "hide": "Bu oturum için gizle. Kalıcı olarak devre dışı bırakmak için Ana Bilgisayar Ayarları → Genel → Bağlantı Araç Çubuğu'nu açın.",
       "zoomIn": "Yakınlaştır",
       "zoomOut": "Uzaklaştır",
       "resetZoom": "Yakınlaştırma sıfırla",
       "fitToScreen": "Ekrana sığdır",
       "switchToTrackpad": "Touchpad moduna geç (imleci sürükleyerek taşı, tıklamak için dokun)",
-      "switchToTouch": "Dokunmatik moduna geç (tıklamak istediğin yere doğrudan dokun)"
+      "switchToTouch": "Dokunmatik moduna geç (tıklamak istediğin yere doğrudan dokun)",
+      "label": "Uzaktan masaüstü araç çubuğu",
+      "more": "Daha fazla",
+      "items": {
+        "files": "Dosyalar",
+        "touchMode": "Dokunmatik modu",
+        "zoom": "Yakınlaştır",
+        "lock": "Ekranı kilitle",
+        "metaKey": "Sistem tuşu",
+        "modifiers": "Yapışkan değiştirici tuşları",
+        "arrows": "Ok tuşları",
+        "forceQuit": "Zorla Çık",
+        "macLock": "Ekranı kilitle",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "RDP sürücüsü açıldığında görünür",
+        "touchMode": "Yalnızca dokunmatik ekranlarda",
+        "modifiers": "Ctrl, Alt, Shift ve sistem tuşu bir sonraki tuşa basılana kadar basılı tutulur"
+      },
+      "option": "Seçenek"
     },
     "disabled": "Uzak Masaüstü kapalı. Bir yönetici bunu Ayarlar'dan açabilir."
   },
@@ -114,11 +130,11 @@
       "timezone": "Saat Dilimi",
       "loadBalanceInfo": "Yük Dengeleme Bilgisi / Çerez",
       "loadBalanceInfoDesc": "RDS çiftliği yük dengeleme için RD Bağlantı Aracı çerezi (ör. tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "guacd Proxy",
+      "guacdProxy": "guacd Proxy (isteğe bağlı)",
       "guacdHostname": "guacd Sunucusu",
       "guacdHostnamePlaceholder": "Genel varsayılan",
       "guacdPort": "guacd Bağlantı Noktası",
-      "guacdProxyDesc": "Bu bağlantı için genel guacd örneğini geçersiz kıl. Global olarak yapılandırılmış guacd'yi kullanmak için boş bırakın.",
+      "guacdProxyDesc": "Termix bu ana makineye doğrudan bağlanır. Bu ana makinenin kendi guacd sunucunuz üzerinden geçmesini istiyorsanız yalnızca bir guacd sunucusu belirleyin. Küresel ayarı kullanmak için boş bırakın.",
       "guacdAdminOnly": "Bir ana bilgisayar için guacd sunucusunu yalnızca yöneticiler değiştirebilir.",
       "guacdSaveHostFirst": "Önce ana bilgisayarı kaydedin, ardından burada guacd sunucusunu ayarlayın.",
       "guacdSave": "guacd sunucusunu kaydet",
@@ -129,6 +145,7 @@
       "gatewayUsername": "Ağ Geçidi Kullanıcı Adı",
       "gatewayPassword": "Ağ Geçidi Şifresi",
       "gatewayDomain": "Ağ Geçidi Alan Adı",
+      "gatewayNote": "RD Gateway, harici bir guacd gerektirir. Geçit yapılandırıldığında, bu geçidi kullanan ana bilgisayarlar Uzaktan Masaüstü ayarları veya guacd Proxy altında belirtilen geçide yönlendirilir.",
       "remoteAppProgram": "RemoteApp Programı",
       "workingDirectory": "Çalışma Dizin",
       "arguments": "Bağımsız Değişkenler",
@@ -145,7 +162,7 @@
       "disableAudio": "Sesi Devre Dışı Bırak",
       "disableAudioDesc": "Uzaktaki oturumdaki tüm sesleri sustur",
       "enableAudioInput": "Ses Girdisini Etkinleştir (Mikrofon)",
-      "enableAudioInputDesc": "Yerel mikrofonu uzaktaki oturuma yönlendir",
+      "enableAudioInputDesc": "Yerel mikrofonu uzaktaki oturuma ilet | Sadece harici guacd ile",
       "wallpaper": "Duvar Kağıdı",
       "wallpaperDesc": "Masaüstü duvar kağıdını göster (devre dışı bırakmak performansı artırır)",
       "theming": "Tema",
@@ -159,13 +176,13 @@
       "menuAnimations": "Menü Animasyonları",
       "menuAnimationsDesc": "Menü solma ve kayma animasyonlarını etkinleştir",
       "disableBitmapCaching": "Bitmap Önbelleklemeyi Devre Dışı Bırak",
-      "disableBitmapCachingDesc": "Bitmap önbelleğini kapat (görüntü bozukluklarında yardımcı olabilir)",
+      "disableBitmapCachingDesc": "Bitmap önbelleğini kapatın (görüntü bozukluklarını düzeltebilir) | Sadece harici guacd ile",
       "disableOffscreenCaching": "Ekran Dışı Önbelleklemeyi Devre Dışı Bırak",
-      "disableOffscreenCachingDesc": "Ekran dışı önbelleği kapat",
+      "disableOffscreenCachingDesc": "Ekran dışı önbelleği kapatın | Sadece harici guacd ile",
       "disableGlyphCaching": "Glyf Önbelleklemeyi Devre Dışı Bırak",
-      "disableGlyphCachingDesc": "Glyf önbelleğini kapat",
+      "disableGlyphCachingDesc": "Glif önbelleğini kapatın | Sadece harici guacd ile",
       "enableGfx": "GFX'yi Etkinleştir",
-      "enableGfxDesc": "RemoteFX grafik işleme hattını kullan",
+      "enableGfxDesc": "RemoteFX grafik işleme hattını kullanın | Sadece harici guacd ile",
       "enablePrinting": "Yazdırmayı Etkinleştir",
       "enablePrintingDesc": "Yerel yazıcıları uzaktaki oturuma yönlendir",
       "enableDriveRedirection": "Sürücü Yönlendirmesini Etkinleştir",
@@ -175,7 +192,7 @@
       "disableUpload": "Yüklemeyi Devre Dışı Bırak",
       "disableUploadDesc": "Uzaktaki oturuma dosya yüklemeyi engelle",
       "enableTouch": "Dokunmatik Etkinleştir",
-      "enableTouchDesc": "Dokunmatik girdi yönlendirmesini etkinleştir",
+      "enableTouchDesc": "Dokunmatik giriş iletmeyi etkinleştirin | Sadece harici guacd ile",
       "consoleSession": "Konsol Oturumu",
       "consoleSessionDesc": "Yeni bir oturum yerine konsola (oturum 0) bağlan",
       "sendWolPacket": "WOL Paketi Gönder",
@@ -202,6 +219,7 @@
       "telnetPort": "Telnet Bağlantı Noktası",
       "terminalType": "Terminal Türü",
       "fontName": "Yazı Tipi Adı",
+      "fontNameDesc": "Sadece harici guacd ile. Dahili motor kendi sabit genişlikli yazı tipini kullanır.",
       "fontSize": "Yazı Tipi Boyutu",
       "colorScheme": "Renk Şeması",
       "backspaceKey": "Geri Silme Tuşu",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "Siyah Üzerinde Beyaz",
         "grayOnBlack": "Siyah Üzerinde Gri",
         "greenOnBlack": "Siyah Üzerinde Yeşil"
-      }
+      },
+      "ardSettings": "Apple Remote Desktop Ayarları",
+      "ardPort": "ARD Bağlantı Noktası",
+      "ardPassword": "macOS Şifresi",
+      "ardUsername": "macOS Kullanıcı Adı",
+      "ardLeaveBlank": "Sadece VNC şifresi için boş bırakın"
     },
     "remoteDesktop": "Uzaktan Masaüstü",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "Şifrelenmemiş kabuk",
     "remoteDesktopNotes": "Notlar",
     "userDefaultsNote": "Değiştirmeyi seçtiğiniz ayarlar, ana bilgisayarınızın varsayılanlarını kullanır.",
-    "connectionOriginNote": "Masaüstü uygulamasında RDP, VNC ve Telnet, ana bilgisayar \"Bu cihaz\" olarak ayarlanmadıkça uzaktan sunucuyu kullanır; bu ayar, bu makinenin erişebileceği bir guacd gerektirir. Bunu Uzaktan Masaüstü ayarlarında veya her ana bilgisayar için guacd Proxy altında ayarlayın.",
+    "connectionOriginNote": "Masaüstü uygulamasında, SSH gibi, ana bilgisayar Varsayılan olarak bırakıldığında RDP, VNC ve Telnet bu cihazda çalışır. Bunun yerine bunları sunucuda çalıştırmak için Uzak sunucu seçeneğini belirleyin.",
     "docsLink": "Dokümanları görüntüle",
-    "connectionOriginGuacamoleNote": "RDP, VNC ve Telnet, \"Bu cihaz\" seçeneğini seçmedikçe uzaktan sunucuyu kullanır; bu ayar, bu makinenin erişebileceği bir guacd gerektirir. Bunu guacd URL ayarında veya her ana bilgisayar için guacd Proxy altında ayarlayın."
+    "connectionOriginGuacamoleNote": "SSH gibi, RDP, VNC ve Telnet varsayılan olarak bu cihazda çalışır. Bunun yerine bunları sunucuda çalıştırmak için Uzak sunucu seçeneğini belirleyin.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Mac Ekran Paylaşımı"
   },
   "onboarding": {
     "guacdTitle": "Uzaktan masaüstünü kurun",
-    "guacdIntro": "Uzaktan masaüstü için Termix'in yanında çalışan bir guacd gerekir. Yanıt verdiğini kontrol edin veya Termix'i ona yönlendirin.",
+    "guacdIntro": "Uzak masaüstü, kendi guacd'nizi kullanacak şekilde ayarlandı. Yanıt verdiğini kontrol edin veya Termix'i ona yönlendirin.",
     "guacdChecking": "guacd aranıyor",
     "guacdConnected": "guacd {{address}} adresinde çalışıyor",
     "guacdMissing": "guacd {{address}} adresinde yanıt vermiyor",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "Uzak Masaüstünü Etkinleştir",
-        "description": "guacd üzerinden RDP, VNC ve Telnet bağlantılarına izin ver."
+        "description": "RDP, VNC ve Telnet bağlantılarına izin verin."
+      },
+      "useGuacd": {
+        "label": "Harici bir guacd kullanın",
+        "description": "Termix, RDP, VNC ve Telnet bağlantılarını kendi içinde yönetir. Bu özelliği açarak bu bağlantıları kendi guacd sunucunuza yönlendirin. REMOTE_DESKTOP_ENGINE bu ayarın üzerine yazar."
       },
       "guacdUrl": {
         "label": "guacd URL'si",
@@ -352,20 +381,46 @@
         "label": "Sertifika hatalarını yoksay"
       },
       "guacamoleConfig": {
-        "label": "guacd ayarları"
+        "label": "Bağlantı ayarları"
       },
       "enableToolbar": {
         "label": "Uzak masaüstü araç çubuğu",
-        "description": "RDP, VNC ve Telnet oturumlarında araç çubuğunu göster."
+        "description": "RDP, VNC, ARD ve Telnet oturumlarında araç çubuğunu göster."
       },
       "displayGroup": "Ekran",
-      "displayDefaultsTab": "Uzak Masaüstü"
+      "displayDefaultsTab": "Uzak Masaüstü",
+      "toolbarPosition": {
+        "label": "Araç çubuğu konumu",
+        "description": "Araç çubuğunu oturumun üstünde veya altında göster.",
+        "top": "Üst",
+        "bottom": "Alt"
+      },
+      "toolbarLabels": {
+        "label": "Araç çubuğu etiketleri",
+        "description": "Simgelerin yanında isimleri göster veya yalnızca simgeleri kullan. Yeterli alan kalmadığında isimler otomatik olarak gizlenir.",
+        "labeled": "Simgeler ve isimler",
+        "icons": "Sadece simgeler"
+      },
+      "toolbarButtons": {
+        "label": "Araç çubuğu düğmeleri",
+        "description": "Hangi düğmelerin görüneceğini ve sıralamalarını seçin. Sığmayan düğmeler \"Diğer\" menüsüne taşınır.",
+        "reset": "Sıfırla",
+        "moveUp": "Yukarı taşı",
+        "moveDown": "Aşağı taşı"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "ARD bağlantı noktası"
+      }
     }
   },
   "palette": {
     "connectRdp": "RDP ile Bağlan",
     "connectVnc": "VNC ile Bağlan",
-    "connectTelnet": "Telnet ile Bağlan"
+    "connectTelnet": "Telnet ile Bağlan",
+    "connectArd": "Apple Remote Desktop ile bağlan"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "Uzak sunucu gerekli. Bu bağlantı türünü kullanmak için Ayarlar'dan bir uzak sunucu bağlayın."
   },
   "plugin": {
-    "name": "Uzak Masaüstü"
+    "name": "Uzak Masaüstü",
+    "description": "Panodan kopyalama, dosya aktarımı, paylaşım ve kayıt özellikleriyle tarayıcınızda RDP, VNC ve Telnet oturumları."
   }
 }

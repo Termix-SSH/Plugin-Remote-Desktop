@@ -10,7 +10,7 @@
     "failedToConnect": "Nepavyko gauti prisijungimo žetono",
     "hostNotFound": "Mazgas nerastas",
     "noHostSelected": "Nepasirinktas mazgas",
-    "guacdUnavailable": "Nuotolinio darbalaukio paslauga (guacd) nepasiekiama. Įsitikinkite, kad guacd veikia, yra pasiekiama ir tinkamai sukonfigūruota administratoriaus nustatymuose.",
+    "guacdUnavailable": "Išorinis guacd neatsako. Įsitikinkite, kad jis veikia, arba nuimkite žymę „Naudoti išorinį guacd“ nuotolinio darbalaukio nustatymuose.",
     "credentialPromptTitle": "Įveskite RDP prisijungimo duomenis",
     "credentialPromptDescription": "Šiam mazgui nustatyta prašyti prisijungimo duomenų prisijungiant. Jie naudojami tik šiai sesijai ir nėra išsaugomi.",
     "connect": "Prisijungti",
@@ -28,7 +28,7 @@
       "uploadFailed": "Nepavyko įkelti {{name}}",
       "uploadDisabled": "Šiam prisijungimui įkėlimai išjungti",
       "driveUnavailable": "Prieš įkeliant failus įjunkite RDP disko nukreipimą",
-      "driveNotWritable": "guacd negali rašyti į disko aplanką. Patikrinkite GUACD_DRIVE_PATH ir jo teises.",
+      "driveNotWritable": "Termix negali rašyti į disko aplanką. Patikrinkite RDP_DRIVE_PATH arba GUACD_DRIVE_PATH (naudojant išorinį guacd) ir jo teises.",
       "dropToUpload": "Nukreipkite failus, kad įkeltumėte"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Rodyklė į kairę",
       "arrowRight": "Rodyklė į dešinę",
       "fnToggle": "Funkciniai klavišai",
-      "collapse": "Sutraukti įrankių juostą",
-      "expand": "Išskleisti įrankių juostą",
-      "dragHandle": "Vilkite, kad pakeistumėte padėtį",
-      "hide": "Slėpti šiai sesijai. Norėdami tai išjungti visam laikui, atidarykite Mazgo nustatymai → Bendrieji → Prisijungimo įrankių juosta.",
       "zoomIn": "Priartinti",
       "zoomOut": "Sumažinti",
       "resetZoom": "Atstatyti mastelį",
       "fitToScreen": "Priderinti prie ekrano",
       "switchToTrackpad": "Perjungti į jutiklinio kilimėlio režimą (tempkite, kad judintumėte žymeklį, bakstelėkite, kad spustelėtumėte)",
-      "switchToTouch": "Perjungti į lietimo režimą (bakstelėkite tiesiai ten, kur norite spustelėti)"
+      "switchToTouch": "Perjungti į lietimo režimą (bakstelėkite tiesiai ten, kur norite spustelėti)",
+      "label": "Nuotolinio darbalaukio įrankių juosta",
+      "more": "Daugiau",
+      "items": {
+        "files": "Failai",
+        "touchMode": "Jutiklinis režimas",
+        "zoom": "Mastelis",
+        "lock": "Užrakinti ekraną",
+        "metaKey": "Sistemos klavišas",
+        "modifiers": "Lipnūs modifikatoriaus klavišai",
+        "arrows": "Rodyklės",
+        "forceQuit": "Priverstinai baigti",
+        "macLock": "Užrakinti ekraną",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "Rodoma tik įjungus RDP diską",
+        "touchMode": "Tik jutikliniuose ekranuose",
+        "modifiers": "Ctrl, Alt, Shift ir sistemos klavišas laikomi nuspausti iki kito klavišo paspaudimo"
+      },
+      "option": "Option"
     },
     "disabled": "Nuotolinis darbalaukis išjungtas. Administratorius gali jį įjungti „Nustatymuose“."
   },
@@ -114,11 +130,11 @@
       "timezone": "Laiko juosta",
       "loadBalanceInfo": "Apkrovos balansavimo informacija / slapukas",
       "loadBalanceInfoDesc": "RD Connection Broker slapukas RDS fermos apkrovos balansavimui (pvz., tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "guacd šliuzas",
+      "guacdProxy": "guacd tarpinis serveris (nebūtina)",
       "guacdHostname": "guacd serveris",
       "guacdHostnamePlaceholder": "Globalus numatytasis",
       "guacdPort": "guacd prievadas",
-      "guacdProxyDesc": "Perrašykite globalią guacd instanciją šiam ryšiui. Palikite tuščią, kad naudotumėte globaliai sukonfigūruotą guacd.",
+      "guacdProxyDesc": "Termix prisijungia prie šio serverio tiesiogiai. Nustatykite savo guacd serverį tik jei norite, kad šis serveris būtų pasiekiamas per jį. Palikite tuščią, kad būtų naudojamas globalus nustatymas.",
       "guacdAdminOnly": "Tik administratoriai gali pakeisti guacd serverį kompiuteriui.",
       "guacdSaveHostFirst": "Pirmiausia išsaugokite kompiuterį, tada čia nustatykite jo guacd serverį.",
       "guacdSave": "Išsaugoti guacd serverį",
@@ -129,6 +145,7 @@
       "gatewayUsername": "Šliuzo vartotojo vardas",
       "gatewayPassword": "Slenkčio slaptažodis",
       "gatewayDomain": "Slenkčio domenas",
+      "gatewayNote": "RD Gateway reikalauja išorinio guacd. Jei nustatytas šliuzas (Remote Desktop nustatymuose arba guacd Proxy skiltyje), šliuzą turintys serveriai jungiasi per jį.",
       "remoteAppProgram": "RemoteApp programa",
       "workingDirectory": "Darbinis katalogas",
       "arguments": "Argumentai",
@@ -145,7 +162,7 @@
       "disableAudio": "Išjungti garsą",
       "disableAudioDesc": "Nutildyti visą nuotolinės sesijos garsą",
       "enableAudioInput": "Įjungti garso įvestį (mikrofoną)",
-      "enableAudioInputDesc": "Perkelti vietinį mikrofoną į nuotolinę sesiją",
+      "enableAudioInputDesc": "Perkelti vietinį mikrofoną į nuotolinę sesiją | Tik su išoriniu guacd",
       "wallpaper": "Darbalaukio fonas",
       "wallpaperDesc": "Rodyti darbalaukio foną (išjungus pagerinamas našumas)",
       "theming": "Temos",
@@ -159,13 +176,13 @@
       "menuAnimations": "Meniu animacijos",
       "menuAnimationsDesc": "Įjungti meniu išnykimo ir slinkimo animacijas",
       "disableBitmapCaching": "Išjungti bitinių vaizdų talpyklą",
-      "disableBitmapCachingDesc": "Išjungti bitinių vaizdų talpyklą (gali padėti spragoms išspręsti)",
+      "disableBitmapCachingDesc": "Išjungti bitų žemėlapio talpyklą (gali padėti išspręsti vaizdo sutrikimus) | Tik su išoriniu guacd",
       "disableOffscreenCaching": "Išjungti už ekrano ribų talpyklą",
-      "disableOffscreenCachingDesc": "Išjungti už ekrano ribų talpyklą",
+      "disableOffscreenCachingDesc": "Išjungti už ekrano ribų esančio turinio talpyklą | Tik su išoriniu guacd",
       "disableGlyphCaching": "Išjungti glikfų talpyklą",
-      "disableGlyphCachingDesc": "Išjungti glikfų talpyklą",
+      "disableGlyphCachingDesc": "Išjungti simbolių talpyklą | Tik su išoriniu guacd",
       "enableGfx": "Įjungti GFX",
-      "enableGfxDesc": "Naudoti RemoteFX grafikos vamzdyną",
+      "enableGfxDesc": "Naudoti RemoteFX grafikos vamzdelį | Tik su išoriniu guacd",
       "enablePrinting": "Įjungti spausdinimą",
       "enablePrintingDesc": "Perkelti vietinius spausdintuvus į nuotolinę sesiją",
       "enableDriveRedirection": "Įjungti diskų nukreipimą",
@@ -175,7 +192,7 @@
       "disableUpload": "Išjungti įkėlimą",
       "disableUploadDesc": "Drausti failų įkėlimą į nuotolinę sesiją",
       "enableTouch": "Įjungti lietimą",
-      "enableTouchDesc": "Įjungti lietimo įvesties perdavimą",
+      "enableTouchDesc": "Įjungti lietimo įvesties perdavimą | Tik su išoriniu guacd",
       "consoleSession": "Konsolės sesija",
       "consoleSessionDesc": "Jungtis prie konsolės (0 sesija) vietoj naujos sesijos",
       "sendWolPacket": "Siųsti WOL paketą",
@@ -202,6 +219,7 @@
       "telnetPort": "Telnet prievadas",
       "terminalType": "Terminalo tipas",
       "fontName": "Šrifto pavadinimas",
+      "fontNameDesc": "Tik su išoriniu guacd. Įmontuotas variklis naudoja savo monospacinę šriftą.",
       "fontSize": "Šrifto dydis",
       "colorScheme": "Spalvų schema",
       "backspaceKey": "Backspace klavišas",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "Balta ant juodos",
         "grayOnBlack": "Pilka ant juodos",
         "greenOnBlack": "Žalia ant juodos"
-      }
+      },
+      "ardSettings": "Apple Remote Desktop nustatymai",
+      "ardPort": "ARD prievadas",
+      "ardPassword": "macOS slaptažodis",
+      "ardUsername": "macOS vartotojo vardas",
+      "ardLeaveBlank": "Palikite tuščią, jei naudojamas tik VNC slaptažodis"
     },
     "remoteDesktop": "Nuotolinis darbalaukis",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "Nešifruota komandų eilutė",
     "remoteDesktopNotes": "Pastabos",
     "userDefaultsNote": "Nepakeisti nustatymai seka jūsų serverio numatytuosius nustatymus.",
-    "connectionOriginNote": "Darbalaukio programoje RDP, VNC ir Telnet naudoja nuotolinį serverį, nebent serveris nustatytas kaip Šis įrenginys, kuriam reikia guacd, prie kurio šis įrenginys gali prisijungti. Nustatykite vieną „Nuotolinio darbalaukio“ nustatymuose arba kiekvienam serveriui skiltyje guacd Proxy.",
+    "connectionOriginNote": "Darbalaukio programoje RDP, VNC ir Telnet veikia šiame įrenginyje, kai serveris paliekamas numatytasis (kaip SSH). Jei norite, kad jie veiktų serveryje, pasirinkite Nuotolinis serveris.",
     "docsLink": "Peržiūrėti dokumentaciją",
-    "connectionOriginGuacamoleNote": "RDP, VNC ir Telnet naudoja nuotolinį serverį, nebent pasirinksite „Šis įrenginys“, kuriam reikia guacd, prie kurio šis įrenginys gali prisijungti. Nustatykite vieną guacd URL nustatyme arba kiekvienam serveriui skiltyje guacd Proxy."
+    "connectionOriginGuacamoleNote": "RDP, VNC ir Telnet numatyta veikia šiame įrenginyje (kaip SSH). Jei norite, kad jie veiktų serveryje, pasirinkite Nuotolinis serveris.",
+    "tabArd": "Apple nuotolinis darbalaukis",
+    "appleScreenSharing": "Mac ekrano bendrinimas"
   },
   "onboarding": {
     "guacdTitle": "Sukonfigūruoti nuotolinį darbalaukį",
-    "guacdIntro": "Nuotoliniam darbalaukiui reikia, kad šalia Termix veiktų guacd. Patikrinkite, ar jis atsako, arba nukreipkite Termix į jį.",
+    "guacdIntro": "Nuotoliniam darbalaukiui nustatyta naudoti jūsų paties guacd. Patikrinkite, ar jis atsako, arba nurodykite Termix, kur jį rasti.",
     "guacdChecking": "Ieškoma guacd",
     "guacdConnected": "guacd veikia adresu {{address}}",
     "guacdMissing": "guacd neatsako adresu {{address}}",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "Įjungti nuotolinį darbalaukį",
-        "description": "Leisti RDP, VNC ir Telnet ryšius per guacd."
+        "description": "Leisti RDP, VNC ir Telnet prisijungimus."
+      },
+      "useGuacd": {
+        "label": "Naudoti išorinį guacd",
+        "description": "Termix pats vykdo RDP, VNC ir Telnet sesijas. Įjunkite šią parinktį, jei norite nukreipti jas į savo guacd. REMOTE_DESKTOP_ENGINE perrašo šią nustatymą."
       },
       "guacdUrl": {
         "label": "guacd URL",
@@ -352,20 +381,46 @@
         "label": "Ignoruoti sertifikato klaidas"
       },
       "guacamoleConfig": {
-        "label": "guacd nustatymai"
+        "label": "Jungimo nustatymai"
       },
       "enableToolbar": {
         "label": "Nuotolinio darbalaukio įrankių juosta",
-        "description": "Rodyti įrankių juostą RDP, VNC ir Telnet sesijose."
+        "description": "Rodyti įrankių juostą RDP, VNC, ARD ir Telnet sesijose."
       },
       "displayGroup": "Ekrano nustatymai",
-      "displayDefaultsTab": "Nuotolinis darbalaukis"
+      "displayDefaultsTab": "Nuotolinis darbalaukis",
+      "toolbarPosition": {
+        "label": "Įrankių juostos padėtis",
+        "description": "Rodyti įrankių juostą virš sesijos arba po jos.",
+        "top": "Viršuje",
+        "bottom": "Apačioje"
+      },
+      "toolbarLabels": {
+        "label": "Įrankių juostos etiketės",
+        "description": "Rodyti pavadinimus šalia piktogramų arba tik piktogramas. Pavadinimai savaime slepiasi, kai trūksta vietos.",
+        "labeled": "Piktogramos ir pavadinimai",
+        "icons": "Tik piktogramos"
+      },
+      "toolbarButtons": {
+        "label": "Įrankių juostos mygtukai",
+        "description": "Pasirinkite, kurie mygtukai rodomi ir kokia tvarka. Mygtukai, kurie netelpa, bus rodomi meniu „Daugiau“.",
+        "reset": "Atstatyti",
+        "moveUp": "Perkelti aukštyn",
+        "moveDown": "Perkelti žemyn"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "ARD prievadas"
+      }
     }
   },
   "palette": {
     "connectRdp": "Prisijungti per RDP",
     "connectVnc": "Prisijungti per VNC",
-    "connectTelnet": "Prisijungti per Telnet"
+    "connectTelnet": "Prisijungti per Telnet",
+    "connectArd": "Prisijungti per Apple Remote Desktop"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "Reikalingas nuotolinis serveris. Nustatymuose prijunkite nuotolinį serverį, kad galėtumėte naudoti šį ryšio tipą."
   },
   "plugin": {
-    "name": "Nuotolinis darbalaukis"
+    "name": "Nuotolinis darbalaukis",
+    "description": "RDP, VNC ir Telnet sesijos naršyklėje, su iškarpine, failų perdavimu, bendrinimu ir įrašymu."
   }
 }

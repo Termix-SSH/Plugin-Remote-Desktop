@@ -10,7 +10,7 @@
     "failedToConnect": "Kon nie verbindingskenmerk kry nie",
     "hostNotFound": "Gasheer nie gevind nie",
     "noHostSelected": "Geen gasheer gekies nie",
-    "guacdUnavailable": "Afstandsbureaublankdiens (guacd) is nie beskikbaar nie. Maak seker dat guacd loop, toeganklik is en korrek in die administrateurinstellings geconfigureer is.",
+    "guacdUnavailable": "Die eksterne guacd reageer nie. Kontroleer of dit loop, of skakel Gebruik 'n eksterne guacd af in die Afgeleerde Skerm-instellings.",
     "credentialPromptTitle": "Voer RDP-gelaastrug in",
     "credentialPromptDescription": "Hierdie gasheer is ingestel om vir gelaastrug te vra by verbinding. Hulle word slegs vir hierdie sessie gebruik en word nie gestoor nie.",
     "connect": "Verbind",
@@ -28,7 +28,7 @@
       "uploadFailed": "Kon nie {{name}} oplaa nie",
       "uploadDisabled": "Oploadings is gedeaktiveer vir hierdie verbinding",
       "driveUnavailable": "Aktiveer RDP-stasjoenherleiding voordat jy lêers oplaa",
-      "driveNotWritable": "guacd kan nie na die stasjoenvouer skryf nie. Kontroleer GUACD_DRIVE_PATH en sy toestemmings.",
+      "driveNotWritable": "Termix kan nie na die skyf gids skryf nie. Kontroleer RDP_DRIVE_PATH, of GUACD_DRIVE_PATH met 'n eksterne guacd, en sy toestemmings.",
       "dropToUpload": "Sleep lêers om op te laai"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Pyl links",
       "arrowRight": "Pyl regs",
       "fnToggle": "Funksietoetse",
-      "collapse": "Vou werkbalk in",
-      "expand": "Vou werkbalk uit",
-      "dragHandle": "Sleep om te herposisioneer",
-      "hide": "Versteek vir hierdie sessie. Om dit permanent te deaktiveer, oopmaak Gasheerinstellings → Algemeen → Verbindingswerkbalk.",
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom uit",
       "resetZoom": "Zoom herstel",
       "fitToScreen": "Pas aan skerm aan",
       "switchToTrackpad": "Skakel oor na trackpad-modus (sleep om aanwyser te beweeg, tik om te klik)",
-      "switchToTouch": "Skakel oor na aanraakmodus (tik direk waar jy wil klik)"
+      "switchToTouch": "Skakel oor na aanraakmodus (tik direk waar jy wil klik)",
+      "label": "Afgeleerde skerm werkbalk",
+      "more": "Meer",
+      "items": {
+        "files": "Lêers",
+        "touchMode": "Aanraakmodus",
+        "zoom": "Zoem",
+        "lock": "Vergrendel skerm",
+        "metaKey": "Stelsel sleutel",
+        "modifiers": "Klewerige wysigingsleutels",
+        "arrows": "Pyltjies",
+        "forceQuit": "Gedwonge afsluiting",
+        "macLock": "Vergrendel skerm",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "Verskyn eers wanneer die RDP-stoor is aangeskakel",
+        "touchMode": "Slegs op aanraakskerm",
+        "modifiers": "Ctrl, Alt, Shift en die stelselsleutel bly ingedruk tot die volgende sleutel"
+      },
+      "option": "Opsie"
     },
     "disabled": "Afgeleë Bureaublad is afgeskakel. 'n Admin kan dit in Instellings aanskakel."
   },
@@ -114,11 +130,11 @@
       "timezone": "Tydsone",
       "loadBalanceInfo": "Laaibalanseer-inligting / Koekie",
       "loadBalanceInfoDesc": "RD-Verbindingsmakelaar-koekie vir RDS-boerdery laaibalanseering (bv. tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "guacd-proxy",
+      "guacdProxy": "guacd-deurvoerder (opsioneel)",
       "guacdHostname": "guacd-bedienaar",
       "guacdHostnamePlaceholder": "Globale verstek",
       "guacdPort": "guacd-poort",
-      "guacdProxyDesc": "Oorskryf die globale guacd-instansie vir hierdie verbinding. Laat leeg om die globaal gekonfigureerde guacd te gebruik.",
+      "guacdProxyDesc": "Termix sluit self aan by hierdie gasheer. Stel slegs 'n guacd-bedienaar in as hierdie gasheer deur jou eie guacd moet gaan. Laat leeg om die globale instelling te gebruik.",
       "guacdAdminOnly": "Slegs admins kan die guacd-bedienaar vir 'n gasheer verander.",
       "guacdSaveHostFirst": "Stoor eers die gasheer, stel dan sy guacd-bedienaar hier.",
       "guacdSave": "Stoor guacd-bedienaar",
@@ -129,6 +145,7 @@
       "gatewayUsername": "Heuwel-gebruikersnaam",
       "gatewayPassword": "Heuwelwagwoord",
       "gatewayDomain": "Heuweldomein",
+      "gatewayNote": "RD Gateway benodig 'n eksterne guacd. Hosts met 'n gateway gaan na dit wanneer een opgestel is, in die Remote Desktop-instellings of onder guacd Proxy.",
       "remoteAppProgram": "RemoteApp-programma",
       "workingDirectory": "Werkdirectory",
       "arguments": "Argumente",
@@ -145,7 +162,7 @@
       "disableAudio": "Deaktiveer Klank",
       "disableAudioDesc": "Demp alle klank van die afgeleë sessie",
       "enableAudioInput": "Aktiveer Klankinvoer (Mikrofoon)",
-      "enableAudioInputDesc": "Stuur plaaslike mikrofoon na die afgeleë sessie",
+      "enableAudioInputDesc": "Stuur plaaslike mikrofoon na die afgeleë sessie | Slegs met 'n eksterne guacd",
       "wallpaper": "Agtergrondbeeld",
       "wallpaperDesc": "Wys bureblad-agtergrondbeeld (deaktivering verbeter prestasie)",
       "theming": "Tema's",
@@ -159,13 +176,13 @@
       "menuAnimations": "Kieslysanimasies",
       "menuAnimationsDesc": "Aktiveer kieslysvervaging en gly-animasies",
       "disableBitmapCaching": "Deaktiveer Bitmapkas",
-      "disableBitmapCachingDesc": "Skakel bitmapkas af (kan help met foute)",
+      "disableBitmapCachingDesc": "Skakel bitmap-cache af (kan help met foute) | Slegs met 'n eksterne guacd",
       "disableOffscreenCaching": "Deaktiveer Buite-skermkas",
-      "disableOffscreenCachingDesc": "Skakel buite-skermkas af",
+      "disableOffscreenCachingDesc": "Skakel offscreen-cache af | Slegs met 'n eksterne guacd",
       "disableGlyphCaching": "Deaktiveer Glyfkas",
-      "disableGlyphCachingDesc": "Skakel glyfkas af",
+      "disableGlyphCachingDesc": "Skakel glyph-cache af | Slegs met 'n eksterne guacd",
       "enableGfx": "Aktiveer GFX",
-      "enableGfxDesc": "Gebruik RemoteFX-grafiekpyplyn",
+      "enableGfxDesc": "Gebruik RemoteFX-afbeeldingspyplyn | Slegs met 'n eksterne guacd",
       "enablePrinting": "Aktiveer Druk",
       "enablePrintingDesc": "Stuur plaaslike drukkers na die afgeleë sessie",
       "enableDriveRedirection": "Aktiveer Stasie-omleiding",
@@ -175,7 +192,7 @@
       "disableUpload": "Deaktiveer Oplaai",
       "disableUploadDesc": "Voorkom die oplaai van lêers na die afgeleë sessie",
       "enableTouch": "Aktiveer Aanraak",
-      "enableTouchDesc": "Aktiveer aanraakinvoer-omleiding",
+      "enableTouchDesc": "Aktiveer aanraakinput-doorgif | Slegs met 'n eksterne guacd",
       "consoleSession": "Konsolesessie",
       "consoleSessionDesc": "Maak verbinding met die konsol (sessie 0) in plaas van 'n nuwe sessie",
       "sendWolPacket": "Stuur WOL-pakket",
@@ -202,6 +219,7 @@
       "telnetPort": "Telnet-poort",
       "terminalType": "Terminaal-tipe",
       "fontName": "Lettertipe-naam",
+      "fontNameDesc": "Slegs met 'n eksterne guacd. Die ingeboude enjin gebruik sy eie monospace-lettertipe.",
       "fontSize": "Lettertipe-grootte",
       "colorScheme": "Kleurskema",
       "backspaceKey": "Backspace-toets",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "Wit op Swart",
         "grayOnBlack": "Grys op Swart",
         "greenOnBlack": "Groen op Swart"
-      }
+      },
+      "ardSettings": "Apple Remote Desktop-instellings",
+      "ardPort": "ARD-poort",
+      "ardPassword": "macOS-wagwoord",
+      "ardUsername": "macOS-gebruikersnaam",
+      "ardLeaveBlank": "Laat leeg vir 'n VNC-slegs wagwoord"
     },
     "remoteDesktop": "Afgeleë Bureaublad",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "Onversleutelde shell",
     "remoteDesktopNotes": "Notas",
     "userDefaultsNote": "Instellings wat jy onveranderd laat, volg jou gasheer se verstekke.",
-    "connectionOriginNote": "Op die bureaublad-toepassing gebruik RDP, VNC en Telnet die afgeleë bediener tensy die gasheer op Hierdie toestel gestel is, wat 'n guacd benodig wat hierdie masjien kan bereik. Stel een in die Afgeleë Bureaublad-instellings in, of per gasheer onder guacd Proxy.",
+    "connectionOriginNote": "In die lessenaarprogram word RDP, VNC en Telnet op hierdie toestel uitgevoer wanneer die gasheer op Verstek gelaat word, soos SSH. Kies Verre bediener om dit op die bediener uit te voer.",
     "docsLink": "Beskou dokumentasie",
-    "connectionOriginGuacamoleNote": "RDP, VNC en Telnet gebruik die afgeleë bediener tensy jy \"Hierdie toestel\" kies, wat 'n guacd benodig wat hierdie masjien kan bereik. Stel een in die guacd URL-instelling in, of per gasheer onder guacd Proxy."
+    "connectionOriginGuacamoleNote": "RDP, VNC en Telnet word by verstek op hierdie toestel uitgevoer, soos SSH. Kies Verre bediener om dit op die bediener uit te voer.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Mac-skermdeeling"
   },
   "onboarding": {
     "guacdTitle": "Stel afgeleë bureaublad op",
-    "guacdIntro": "Afgeleë bureaublad benodig guacd wat langs Termix loop. Kontroleer dat dit antwoord, of wys Termix daarheen.",
+    "guacdIntro": "Verre lessenaar is ingestel om jou eie guacd te gebruik. Kontroleer dat dit antwoord, of wys Termix daarheen.",
     "guacdChecking": "Soek na guacd",
     "guacdConnected": "guacd loop by {{address}}",
     "guacdMissing": "guacd antwoord nie by {{address}} nie",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "Aktiveer afstandsbureblad",
-        "description": "Laat RDP-, VNC- en Telnet-verbindings deur guacd toe."
+        "description": "Laat RDP-, VNC- en Telnet-verbindings toe."
+      },
+      "useGuacd": {
+        "label": "Gebruik 'n eksterne guacd",
+        "description": "Termix voer RDP, VNC en Telnet self uit. Skakel dit aan om dit na jou eie guacd te stuur. REMOTE_DESKTOP_ENGINE oorskryf dit."
       },
       "guacdUrl": {
         "label": "guacd-URL",
@@ -352,20 +381,46 @@
         "label": "Negeer sertifikaatfoute"
       },
       "guacamoleConfig": {
-        "label": "guacd-instellings"
+        "label": "Verbindingsinstellings"
       },
       "enableToolbar": {
         "label": "Afstandsbureblad-balk",
-        "description": "Wys die balk in RDP-, VNC- en Telnet-sessies."
+        "description": "Wys die werkbalk in RDP, VNC, ARD en Telnet-sessies."
       },
       "displayGroup": "Skerm",
-      "displayDefaultsTab": "Afstandsbureblad"
+      "displayDefaultsTab": "Afstandsbureblad",
+      "toolbarPosition": {
+        "label": "Werkbalkposisie",
+        "description": "Wys die werkbalk bo of onder die sessie.",
+        "top": "Bo",
+        "bottom": "Onder"
+      },
+      "toolbarLabels": {
+        "label": "Werkbalketikette",
+        "description": "Wys name langs die ikone, of slegs ikone. Name versteek outomaties wanneer daar nie genoeg ruimte is nie.",
+        "labeled": "Ikone en name",
+        "icons": "Slegs ikone"
+      },
+      "toolbarButtons": {
+        "label": "Werkbalkknoppies",
+        "description": "Kies watter knoppies sigbaar is en in watter volgorde. Knoppies wat nie pas nie, verskyn in die Meer-menu.",
+        "reset": "Stel terug",
+        "moveUp": "Skuif op",
+        "moveDown": "Skuif af"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "ARD-poort"
+      }
     }
   },
   "palette": {
     "connectRdp": "Verbind met RDP",
     "connectVnc": "Verbind met VNC",
-    "connectTelnet": "Verbind met Telnet"
+    "connectTelnet": "Verbind met Telnet",
+    "connectArd": "Maak verbinding met Apple Remote Desktop"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "Afstandbediener vereis. Skakel 'n afstandbediener in Instellings aan om hierdie verbindings tipe te gebruik."
   },
   "plugin": {
-    "name": "Afstandsbureblad"
+    "name": "Afstandsbureblad",
+    "description": "RDP-, VNC- en Telnet-sessies in jou blaaier, met knipbord, lêeroordrag, deel en opname."
   }
 }

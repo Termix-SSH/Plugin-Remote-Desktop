@@ -10,7 +10,7 @@
     "failedToConnect": "Neizdevās iegūt savienojuma marķieri",
     "hostNotFound": "Resursdators nav atrasts",
     "noHostSelected": "Nav izvēlēts resursdators",
-    "guacdUnavailable": "Attālinātā darbvirsmas pakalpojums (guacd) nav pieejams. Lūdzu, pārliecinieties, ka guacd darbojas, ir pieejams un pareizi konfigurēts administratora iestatījumos.",
+    "guacdUnavailable": "Ārējais guacd neatbild. Pārbaudiet, vai tas darbojas, vai arī izslēdziet opciju \"Izmantot ārēju guacd\" attālinātā darbvirsmas iestatījumos.",
     "credentialPromptTitle": "Ievadiet RDP pieteikšanās datus",
     "credentialPromptDescription": "Šim resursdatoram ir iestatīts pieteikšanās datu pieprasījums savienojoties. Tie tiek izmantoti tikai šai sesijai un netiek saglabāti.",
     "connect": "Savienot",
@@ -28,7 +28,7 @@
       "uploadFailed": "Neizdevās augšupielādēt {{name}}",
       "uploadDisabled": "Šim savienojumam augšupielādes ir atspējotas",
       "driveUnavailable": "Pirms failu augšupielādes iespējiet RDP diska pāradresāciju",
-      "driveNotWritable": "guacd nevar rakstīt diska mapē. Pārbaudiet GUACD_DRIVE_PATH un tā atļaujas.",
+      "driveNotWritable": "Termix nevar rakstīt diska mapē. Pārbaudiet RDP_DRIVE_PATH vai GUACD_DRIVE_PATH (ja tiek izmantots ārējs guacd) un tā piekļuves tiesības.",
       "dropToUpload": "Nometiet failus, lai augšupielādētu"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Pulkstenis pa kreisi",
       "arrowRight": "Pulkstenis pa labi",
       "fnToggle": "Funkcijas taustiņi",
-      "collapse": "Sakļaut rīkjoslu",
-      "expand": "Izvērst rīkjoslu",
-      "dragHandle": "Velciet, lai pārvietotu",
-      "hide": "Paslēpt šai sesijai. Lai to pilnībā atspējotu, atveriet Resursdatora iestatījumi → Vispārīgi → Savienojuma rīkjosla.",
       "zoomIn": "Pietuvināt",
       "zoomOut": "Samazināt",
       "resetZoom": "Atiestatīt tālummaiņu",
       "fitToScreen": "Pielāgot ekrānam",
       "switchToTrackpad": "Pārslēgties uz skārienpaliktni (velciet, lai pārvietotu kursoru, pieskarieties, lai noklikšķinātu)",
-      "switchToTouch": "Pārslēgties uz skāriena režīmu (pieskarieties tieši tur, kur vēlaties noklikšķināt)"
+      "switchToTouch": "Pārslēgties uz skāriena režīmu (pieskarieties tieši tur, kur vēlaties noklikšķināt)",
+      "label": "Attālinātās darbvirsmas rīkjosla",
+      "more": "Vairāk",
+      "items": {
+        "files": "Faili",
+        "touchMode": "Skārienrežīms",
+        "zoom": "Pietuvināt",
+        "lock": "Aizslēgt ekrānu",
+        "metaKey": "Sistēmas taustiņš",
+        "modifiers": "Līpošie modificējošie taustiņi",
+        "arrows": "Piltuvju taustiņi",
+        "forceQuit": "Piespiedu iziešana",
+        "macLock": "Bloķēt ekrānu",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "Parādās, kad RDP diskzīme ir ieslēgta",
+        "touchMode": "Tikai skārienekrāniem",
+        "modifiers": "Ctrl, Alt, Shift un sistēmas taustiņi tiek turēti nospiežami līdz nākamajam taustiņam"
+      },
+      "option": "Opcija"
     },
     "disabled": "Tālvadības darbvirsma ir izslēgta. Administrators to var ieslēgt Iestatījumos."
   },
@@ -114,11 +130,11 @@
       "timezone": "Laika josla",
       "loadBalanceInfo": "Aplādes izlīdzināšanas informācija / sīkdatne",
       "loadBalanceInfoDesc": "RD savienojuma brokeris sīkdatne RDS ferma aplādes izlīdzināšanai (piem., tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "guacd starpniekserveris",
+      "guacdProxy": "guacd starpniekserveris (neobligāts)",
       "guacdHostname": "guacd hosts",
       "guacdHostnamePlaceholder": "Globāli noklusējums",
       "guacdPort": "guacd ports",
-      "guacdProxyDesc": "Pārslēgt globālo guacd instanci šim savienojumam. Atstājiet tukšu, lai izmantotu globāli konfigurēto guacd.",
+      "guacdProxyDesc": "Termix pats savienojas ar šo mezglu. Iestatiet guacd serveri tikai tad, ja šim mezglam vajadzētu izmantot jūsu paša guacd. Atstājiet tukšu, lai izmantotu globālo iestatījumu.",
       "guacdAdminOnly": "Tikai administratori var mainīt guacd serveri hostam.",
       "guacdSaveHostFirst": "Vispirms saglabājiet hostu, pēc tam šeit iestatiet tā guacd serveri.",
       "guacdSave": "Saglabāt guacd serveri",
@@ -129,6 +145,7 @@
       "gatewayUsername": "Vārtu lietotājvārds",
       "gatewayPassword": "Vārtu parole",
       "gatewayDomain": "Vārtu domēns",
+      "gatewayNote": "RD Gateway prasa ārēju guacd. Ja ir iestatīts vārtu mezgls, rāmjotāji ar vārtiem tiek novirzīti uz to, kas ir iestatīts Tālvadības darbvietas iestatījumos vai zem guacd Proxy.",
       "remoteAppProgram": "RemoteApp programma",
       "workingDirectory": "Darba direktorijs",
       "arguments": "Argumenti",
@@ -145,7 +162,7 @@
       "disableAudio": "Atspējot audio",
       "disableAudioDesc": "Noklusināt visu audio no attālinātās sesijas",
       "enableAudioInput": "Iespējot audio ievadi (mikrofons)",
-      "enableAudioInputDesc": "Pārvirzīt lokālo mikrofonu uz attālināto sesiju",
+      "enableAudioInputDesc": "Novirzīt lokālo mikrofonu uz tālvadības sesiju | Tikai ar ārēju guacd",
       "wallpaper": "Darbvirsmas fons",
       "wallpaperDesc": "Rādīt darbvirsmas fonu (atspējojot uzlabojas veiktspēja)",
       "theming": "Tematizācija",
@@ -159,13 +176,13 @@
       "menuAnimations": "Izvēlnes animācijas",
       "menuAnimationsDesc": "Iespējot izvēlnes izgaismošanas un slīdēšanas animācijas",
       "disableBitmapCaching": "Atspējot bitmap kešatmiņu",
-      "disableBitmapCachingDesc": "Izslēgt bitmap kešatmiņu (var palīdzēt ar kļūdām)",
+      "disableBitmapCachingDesc": "Izslēgt bitmap kešatmiņu (var palīdzēt ar kļūdām) | Tikai ar ārēju guacd",
       "disableOffscreenCaching": "Atspējot ārpus ekrāna kešatmiņu",
-      "disableOffscreenCachingDesc": "Izslēgt ārpus ekrāna kešatmiņu",
+      "disableOffscreenCachingDesc": "Izslēgt ekrāna ārpuskešatmiņu | Tikai ar ārēju guacd",
       "disableGlyphCaching": "Atspējot glifu kešatmiņu",
-      "disableGlyphCachingDesc": "Izslēgt glifu kešatmiņu",
+      "disableGlyphCachingDesc": "Izslēgt glifu kešatmiņu | Tikai ar ārēju guacd",
       "enableGfx": "Iespējot GFX",
-      "enableGfxDesc": "Izmantot RemoteFX grafikas cauruļvadu",
+      "enableGfxDesc": "Izmantot RemoteFX grafikas cauruļvadu | Tikai ar ārēju guacd",
       "enablePrinting": "Iespējot drukāšanu",
       "enablePrintingDesc": "Pārvirzīt lokālos printerus uz attālināto sesiju",
       "enableDriveRedirection": "Iespējot diska pārvirzīšanu",
@@ -175,7 +192,7 @@
       "disableUpload": "Atspējot augšupielādi",
       "disableUploadDesc": "Novērst failu augšupielādi uz attālināto sesiju",
       "enableTouch": "Iespējot pieskārienu",
-      "enableTouchDesc": "Iespējot pieskāriena ievades pārvirzīšanu",
+      "enableTouchDesc": "Iespējot pieskāriena ievades novirzīšanu | Tikai ar ārēju guacd",
       "consoleSession": "Konsoles sesija",
       "consoleSessionDesc": "Savienoties ar konsoli (sesija 0) nevis ar jaunu sesiju",
       "sendWolPacket": "Sūtīt WOL paketi",
@@ -202,6 +219,7 @@
       "telnetPort": "Telnet ports",
       "terminalType": "Termināļa tips",
       "fontName": "Fonta nosaukums",
+      "fontNameDesc": "Tikai ar ārēju guacd. Iebūvētais dzinējs izmanto savu monospaces fontu.",
       "fontSize": "Fonta izmērs",
       "colorScheme": "Krāsu shēma",
       "backspaceKey": "Backspace taustiņš",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "Balts uz melna",
         "grayOnBlack": "Pelēks uz melna",
         "greenOnBlack": "Zaļš uz melna"
-      }
+      },
+      "ardSettings": "Apple Remote Desktop iestatījumi",
+      "ardPort": "ARD ports",
+      "ardPassword": "macOS parole",
+      "ardUsername": "macOS lietotājvārds",
+      "ardLeaveBlank": "Atstājiet tukšu, ja vēlaties izmantot tikai VNC paroli"
     },
     "remoteDesktop": "Attālais darbvirsma",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "Nešifrēts čaula",
     "remoteDesktopNotes": "Piezīmes",
     "userDefaultsNote": "Iestatījumi, kurus neatstājat nemainītus, seko jūsu hosta noklusējuma vērtībām.",
-    "connectionOriginNote": "Darbvirsma lietotnē RDP, VNC un Telnet izmanto attālo serveri, ja vien hosts nav iestatīts uz Šī ierīce, kam nepieciešams guacd, ko šī mašīna var sasniegt. Iestatiet to Attālās darbvirsma iestatījumos vai katram hostam zem guacd Proxy.",
+    "connectionOriginNote": "Darbvirsmas lietotnē RDP, VNC un Telnet darbojas šajā ierīcē, ja mezgls ir atstāts uz noklusējuma (Default), tāpat kā SSH. Izvēlieties Attālais serveris, lai palaistu tos uz servera.",
     "docsLink": "Apskatīt dokumentāciju",
-    "connectionOriginGuacamoleNote": "RDP, VNC un Telnet izmanto attālo serveri, ja vien neizvēlaties \"Šī ierīce\", kam nepieciešams guacd, ko šī mašīna var sasniegt. Iestatiet to guacd URL iestatījumā vai katram hostam zem guacd Proxy."
+    "connectionOriginGuacamoleNote": "RDP, VNC un Telnet pēc noklusējuma darbojas šajā ierīcē, tāpat kā SSH. Izvēlieties Attālais serveris, lai palaistu tos uz servera.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Mac ekrāna koplietošana"
   },
   "onboarding": {
     "guacdTitle": "Iestatīt attālo darbvirsma",
-    "guacdIntro": "Attālajai darbvirsmai nepieciešams guacd, kas darbojas blakus Termix. Pārbaudiet, vai tas atbild, vai norādiet Termix uz to.",
+    "guacdIntro": "Attālā darbvirsmas savienojums ir iestatīts izmantot jūsu paša guacd. Pārbaudiet, vai tas reaģē, vai norādiet Termix uz tā atrašanās vietu.",
     "guacdChecking": "Meklē guacd",
     "guacdConnected": "guacd darbojas adresē {{address}}",
     "guacdMissing": "guacd neatbild adresē {{address}}",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "Ieslēgt attālo darbvirsmu",
-        "description": "Atļaut RDP, VNC un Telnet savienojumus caur guacd."
+        "description": "Atļaut RDP, VNC un Telnet savienojumus."
+      },
+      "useGuacd": {
+        "label": "Izmantot ārēju guacd",
+        "description": "Termix pats izpilda RDP, VNC un Telnet savienojumus. Ieslēdziet šo opciju, lai tos novirzītu uz savu guacd. Iestatījums REMOTE_DESKTOP_ENGINE šo pārslēdz."
       },
       "guacdUrl": {
         "label": "guacd URL",
@@ -352,20 +381,46 @@
         "label": "Ignorēt sertifikāta kļūdas"
       },
       "guacamoleConfig": {
-        "label": "guacd iestatījumi"
+        "label": "Savienojuma iestatījumi"
       },
       "enableToolbar": {
         "label": "Attālās darbvirsmas rīkjosla",
-        "description": "Rādīt rīkjoslu RDP, VNC un Telnet sesijās."
+        "description": "Rādīt rīkjoslu RDP, VNC, ARD un Telnet sesijās."
       },
       "displayGroup": "Ekrāns",
-      "displayDefaultsTab": "Attālā darbvirsmas"
+      "displayDefaultsTab": "Attālā darbvirsmas",
+      "toolbarPosition": {
+        "label": "Rīkjoslas pozīcija",
+        "description": "Rādīt rīkjoslu virs vai zem sesijas.",
+        "top": "Augšā",
+        "bottom": "Apakšā"
+      },
+      "toolbarLabels": {
+        "label": "Rīkjoslas etiķetes",
+        "description": "Rādīt nosaukumus blakus ikonām vai tikai ikonas. Nosaukumi automātiski slēpjas, ja vietas pietiek maz.",
+        "labeled": "Ikonas un nosaukumi",
+        "icons": "Tikai ikonas"
+      },
+      "toolbarButtons": {
+        "label": "Rīkjoslas pogas",
+        "description": "Izvēlieties, kuras pogas tiek parādītas un kādā secībā. Pogas, kas neietilpst, tiek pārvietotas izvēlnē Vairāk.",
+        "reset": "Atiestatīt",
+        "moveUp": "Pārvietot uz augšu",
+        "moveDown": "Pārvietot uz leju"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "ARD ports"
+      }
     }
   },
   "palette": {
     "connectRdp": "Savienoties ar RDP",
     "connectVnc": "Savienoties ar VNC",
-    "connectTelnet": "Savienoties ar Telnet"
+    "connectTelnet": "Savienoties ar Telnet",
+    "connectArd": "Savienot ar Apple Remote Desktop"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "Nepieciešams attālais serveris. Iestatījumos pieslēdziet attālo serveri, lai izmantotu šo savienojuma veidu."
   },
   "plugin": {
-    "name": "Attālā darbvirsmas"
+    "name": "Attālā darbvirsmas",
+    "description": "RDP, VNC un Telnet sesijas pārlūkprogrammā, ar starpliku, failu pārsūtīšanu, koplietošanu un ierakstīšanu."
   }
 }

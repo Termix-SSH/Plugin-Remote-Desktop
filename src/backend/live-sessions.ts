@@ -16,7 +16,16 @@ interface LiveSessionInfo {
 export interface RemoteLiveSessions {
   getSession: (sessionId: string) => LiveSessionInfo | null;
   ownerEndSession: (sessionId: string, reason: string) => void;
-  createViewerToken: (sessionId: string, readOnly: boolean) => string;
+  createViewerToken: (
+    sessionId: string,
+    readOnly: boolean,
+    shareId?: string,
+  ) => string;
+  disconnectParticipants: (
+    sessionId: string,
+    shareId: string,
+    options?: { reason?: string; userId?: string | null },
+  ) => number;
 }
 
 /**
@@ -29,6 +38,7 @@ export function createLiveSessions(
     sessions: RemoteSessions;
     tokens: GuacamoleTokenService;
     endSession: (guacamoleConnectionId: string) => boolean;
+    disconnectShare: (guacamoleConnectionId: string, shareId: string) => number;
   },
 ): RemoteLiveSessions {
   const find = (sessionId: string) => {
@@ -55,11 +65,17 @@ export function createLiveSessions(
       if (find(sessionId)) deps.endSession(sessionId);
     },
 
-    createViewerToken(sessionId, readOnly) {
+    createViewerToken(sessionId, readOnly, shareId) {
       if (!find(sessionId)) {
         throw new Error(`No live ${protocol} session ${sessionId}`);
       }
-      return deps.tokens.createJoinToken(sessionId, readOnly);
+      return deps.tokens.createJoinToken(sessionId, readOnly, shareId);
+    },
+
+    // A viewer has no Termix user here, so a whole share is closed at once.
+    disconnectParticipants(sessionId, shareId) {
+      if (!find(sessionId)) return 0;
+      return deps.disconnectShare(sessionId, shareId);
     },
   };
 }

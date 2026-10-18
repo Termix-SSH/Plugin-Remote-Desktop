@@ -10,7 +10,7 @@
     "failedToConnect": "Ühendustokeni hankimine ebaõnnestus",
     "hostNotFound": "Peremeesmasinat ei leitud",
     "noHostSelected": "Ühtegi peremeesmasinat ei ole valitud",
-    "guacdUnavailable": "Kaugjuhtimise teenus (guacd) ei ole saadaval. Veenduge, et guacd töötab, on ligipääsetav ja on haldaja seadetes õigesti konfigureeritud.",
+    "guacdUnavailable": "Väline guacd ei vasta. Veendu, et see töötab, või lülita Kaugtöölaua seadetes välja kasutusvalik \"Kasuta välist guacd\".",
     "credentialPromptTitle": "Sisestage RDP-teenindusandmed",
     "credentialPromptDescription": "Selle peremeesmasina puhul küsitakse teenindusandmeid ühendumisel. Neid kasutatakse ainult selle sessiooni jaoks ja neid ei salvestata.",
     "connect": "Ühendu",
@@ -28,7 +28,7 @@
       "uploadFailed": "{{name}} üleslaadimine ebaõnnestus",
       "uploadDisabled": "Üleslaadimine on sellel ühendusel keelatud",
       "driveUnavailable": "Luba RDP-ketta ümbersuunamine enne failide üleslaadimist",
-      "driveNotWritable": "guacd ei saa kirjutada ketta kausta. Kontrollige GUACD_DRIVE_PATH ja selle õigusi.",
+      "driveNotWritable": "Termix ei saa kirjutada draivi kausta. Kontrolli RDP_DRIVE_PATH või väliste guacd puhul GUACD_DRIVE_PATH ning selle õigusi.",
       "dropToUpload": "Lohistage failid üleslaadimiseks"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Nool vasakule",
       "arrowRight": "Nool paremale",
       "fnToggle": "Funktsiooniklahvid",
-      "collapse": "Ahenda tööriistariba",
-      "expand": "Laienda tööriistariba",
-      "dragHandle": "Lohistage ümberpaigutamiseks",
-      "hide": "Peida selle sessiooni jaoks. Selle püsivalt keelamiseks avage Peremeesmasina seaded → Üldine → Ühenduse tööriistariba.",
       "zoomIn": "Suurenda",
       "zoomOut": "Vähenda",
       "resetZoom": "Lähtesta suurus",
       "fitToScreen": "Mahuta ekraanile",
       "switchToTrackpad": "Lülita puuteplaadi režiimile (lohi kursori liigutamiseks, koputa klõpsamiseks)",
-      "switchToTouch": "Lülita puuterežiimile (koputa otse kohale, kuhu soovid klõpsata)"
+      "switchToTouch": "Lülita puuterežiimile (koputa otse kohale, kuhu soovid klõpsata)",
+      "label": "Kaugtöölaua tööriistariba",
+      "more": "Rohkem",
+      "items": {
+        "files": "Failid",
+        "touchMode": "Puute režiim",
+        "zoom": "Suumi",
+        "lock": "Lukusta ekraan",
+        "metaKey": "Süsteemiklahv",
+        "modifiers": "Kleepuvad modifikaatoriklahvid",
+        "arrows": "Noolklahvid",
+        "forceQuit": "Sunnitud väljumine",
+        "macLock": "Kuvakee lukustamine",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "Näidatakse, kui RDP draiv on sisse lülitatud",
+        "touchMode": "Ainult puuteekraanidel",
+        "modifiers": "Ctrl, Alt, Shift ja süsteemiklahv hoitakse all kuni järgmise klahvinõusuni"
+      },
+      "option": "Option"
     },
     "disabled": "Kaugtöölaud on väljas lülitatud. Haldaja saab selle Sätted menüüst sisse lülitada."
   },
@@ -114,11 +130,11 @@
       "timezone": "Ajalonts",
       "loadBalanceInfo": "Koormuse tasakaalustamise info / küpsis",
       "loadBalanceInfoDesc": "RD Connection Brokeri küpsis RDS-farmi koormuse tasakaalustamiseks (nt tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "guacd proksi",
+      "guacdProxy": "guacd proksi (valikuline)",
       "guacdHostname": "guacd peremeesmasin",
       "guacdHostnamePlaceholder": "Globaalne vaikeväärtus",
       "guacdPort": "guacd port",
-      "guacdProxyDesc": "Asenda selle ühenduse jaoks globaalne guacd-instants. Jäta tühjaks, et kasutada globaalselt konfigureeritud guacd-i.",
+      "guacdProxyDesc": "Termix ühendub selle hostiga otse. Määra guacd server ainult siis, kui see host peaks läbima sinu enda guacd'i. Jäta tühjaks, et kasutada globaalset seadet.",
       "guacdAdminOnly": "Ainult haldajad saavad muuta peremeesmasina guacd-serverit.",
       "guacdSaveHostFirst": "Salvestage peremeesmasin esmalt ja määrake seejärel selle guacd-server siin.",
       "guacdSave": "Salvesta guacd-server",
@@ -129,6 +145,7 @@
       "gatewayUsername": "Läbivärava kasutajatunnus",
       "gatewayPassword": "Lähte parool",
       "gatewayDomain": "Lähte domeen",
+      "gatewayNote": "RD Gateway vajab välist guacd-d. Kui värav on seadistatud (Kaugtöölaua seadetes või guacd Proxy all), suunatakse väravaga hostid sinna.",
       "remoteAppProgram": "RemoteAppi programm",
       "workingDirectory": "Töökaust",
       "arguments": "Argumendid",
@@ -145,7 +162,7 @@
       "disableAudio": "Keela heli",
       "disableAudioDesc": "Vaigista kogu heli kaugseansi käigus",
       "enableAudioInput": "Luba helisisend (mikrofon)",
-      "enableAudioInputDesc": "Suuna kohalik mikrofon kaugseansile",
+      "enableAudioInputDesc": "Suuna kohalik mikrofon kaugseansile | Ainult väliste guacd-serveritega",
       "wallpaper": "Taustapilt",
       "wallpaperDesc": "Kuva töölaua taustapilt (keelamine parandab jõudlust)",
       "theming": "Teemad",
@@ -159,13 +176,13 @@
       "menuAnimations": "Menüü animatsioonid",
       "menuAnimationsDesc": "Luba menüü hajumise ja libisemise animatsioonid",
       "disableBitmapCaching": "Keela bitkaardi vahemälu",
-      "disableBitmapCachingDesc": "Lülita välja bitkaardi vahemälu (võib aidata vigade korral)",
+      "disableBitmapCachingDesc": "Lülita välja bitkaardi vahemälu (võib aidata vigade korral) | Ainult väliste guacd-dega",
       "disableOffscreenCaching": "Keela ekraanivälise vahemälu",
-      "disableOffscreenCachingDesc": "Lülita välja ekraaniväline vahemälu",
+      "disableOffscreenCachingDesc": "Lülita välja ekraaniväline vahemälu | Ainult välise guacd-ga",
       "disableGlyphCaching": "Keela glüüfide vahemälu",
-      "disableGlyphCachingDesc": "Lülita välja glüüfide vahemälu",
+      "disableGlyphCachingDesc": "Lülita sümboolide vahemälu välja | Ainult välise guacd-ga",
       "enableGfx": "Luba GFX",
-      "enableGfxDesc": "Kasuta RemoteFX-i graafikavoo",
+      "enableGfxDesc": "Kasuta RemoteFX-i graafikavoo | Ainult välise guacd-ga",
       "enablePrinting": "Luba trükkimine",
       "enablePrintingDesc": "Suuna kohalikud printerid kaugseansile",
       "enableDriveRedirection": "Luba ketta ümbersuunamine",
@@ -175,7 +192,7 @@
       "disableUpload": "Keela üleslaadimine",
       "disableUploadDesc": "Ära luba failide üleslaadimist kaugseansile",
       "enableTouch": "Luba puuteekraan",
-      "enableTouchDesc": "Luba puutesisendi ümbersuunamine",
+      "enableTouchDesc": "Luba puutetundliku sisendi edastamine | Ainult väliste guacd-serveritega",
       "consoleSession": "Konsoolseanss",
       "consoleSessionDesc": "Ühendu konsooliga (seanss 0) asemel uue seansiga",
       "sendWolPacket": "Saada WOL-pakett",
@@ -202,6 +219,7 @@
       "telnetPort": "Telneti port",
       "terminalType": "Terminali tüüp",
       "fontName": "Fondi nimi",
+      "fontNameDesc": "Ainult väliste guacd-serveritega. Sisseehitatud mootor kasutab oma monospace-kirjatüüpi.",
       "fontSize": "Fondi suurus",
       "colorScheme": "Värvipalett",
       "backspaceKey": "Tagasikustutusklahv",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "Valge mustal",
         "grayOnBlack": "Hall mustal",
         "greenOnBlack": "Roheline mustal"
-      }
+      },
+      "ardSettings": "Apple Remote Desktopi seaded",
+      "ardPort": "ARD-port",
+      "ardPassword": "macOS-i parool",
+      "ardUsername": "macOS kasutajanimi",
+      "ardLeaveBlank": "Jäta tühjaks, kui kasutad ainult VNC-parooli"
     },
     "remoteDesktop": "Kaugtöölaud",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "Krüpteerimata shell",
     "remoteDesktopNotes": "Märkused",
     "userDefaultsNote": "Muutmata seaded järgivad hosti vaikeväärtusi.",
-    "connectionOriginNote": "Rakenduses kasutavad RDP, VNC ja Telnet kaugserverit, välja arvatud juhul, kui host on määratud kui See seade, mis vajab ligipääsu guacd-ile sellel masinal. Määra see Kaugtöölaua seadetes või hosti kaupa jaotises guacd Proxy.",
+    "connectionOriginNote": "Töölauarakenduses käivitatakse RDP, VNC ja Telnet sellel seadmel, kui hosti seade on vaikimisi (nagu SSH). Kui soovid, et need käivituksid serveris, vali Kaugserver.",
     "docsLink": "Vaata dokumentatsiooni",
-    "connectionOriginGuacamoleNote": "RDP, VNC ja Telnet kasutavad kaugserverit, välja arvatud juhul, kui valite \"See seade\", mis vajab ligipääsu guacd-ile sellel masinal. Määra see guacd URL-i seadetes või hosti kaupa jaotises guacd Proxy."
+    "connectionOriginGuacamoleNote": "RDP, VNC ja Telnet töötavad vaikimisi sellel seadmel, nagu ka SSH. Kui soovid, et need töötaksid serveris, vali Kaugserver.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Maci ekraanijagamine"
   },
   "onboarding": {
     "guacdTitle": "Kaugtöölaua seadistamine",
-    "guacdIntro": "Kaugtöölaud vajab guacd-i käivitamist Termixi kõrval. Veenduge, et see vastab, või suunake Termix selle poole.",
+    "guacdIntro": "Kaugtöölauda seadistuses on määratud kasutama oma guacd-teenust. Veendu, et see vastab, või määra Termixile selle asukoht.",
     "guacdChecking": "guacd-i otsimine",
     "guacdConnected": "guacd töötab aadressil {{address}}",
     "guacdMissing": "guacd ei vasta aadressil {{address}}",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "Luba kaugtöölaud",
-        "description": "Luba RDP, VNC ja Telnet ühendused läbi guacd."
+        "description": "Luba RDP-, VNC- ja Telnet-i ühendused."
+      },
+      "useGuacd": {
+        "label": "Kasuta välist guacd-d",
+        "description": "Termix käivitab RDP, VNC ja Telnet ise. Lülita see sisse, et saata need oma guacd-ile. REMOTE_DESKTOP_ENGINE asendab selle seadistuse."
       },
       "guacdUrl": {
         "label": "guacd URL",
@@ -352,20 +381,46 @@
         "label": "Eira sertifikaadi vigu"
       },
       "guacamoleConfig": {
-        "label": "guacd seaded"
+        "label": "Ühenduse seaded"
       },
       "enableToolbar": {
         "label": "Kaugtöölaua tööriistariba",
-        "description": "Kuva tööriistariba RDP, VNC ja Telnet sessioonides."
+        "description": "Kuva tööriistariba RDP, VNC, ARD ja Telnet sessioonides."
       },
       "displayGroup": "Kuva",
-      "displayDefaultsTab": "Kaugtöölaud"
+      "displayDefaultsTab": "Kaugtöölaud",
+      "toolbarPosition": {
+        "label": "Tööriistariba asukoht",
+        "description": "Kuva tööriistariba sessiooni kohal või all.",
+        "top": "Ülemine",
+        "bottom": "Alumine"
+      },
+      "toolbarLabels": {
+        "label": "Tööriistariba sildid",
+        "description": "Kuva nimed ikoonide kõrval või ainult ikoonid. Nimed peituvad automaatselt, kui ruumi napib.",
+        "labeled": "Ikoonid ja nimed",
+        "icons": "Ainult ikoonid"
+      },
+      "toolbarButtons": {
+        "label": "Tööriistariba nupud",
+        "description": "Valige, millised nupud kuvatakse ja millises järjekorras. Nupud, mis ei mahu, liigutatakse menüüsse Rohkem.",
+        "reset": "Lähtesta",
+        "moveUp": "Liiguta üles",
+        "moveDown": "Liiguta alla"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "ARD port"
+      }
     }
   },
   "palette": {
     "connectRdp": "Ühendu RDP-ga",
     "connectVnc": "Ühendu VNC-ga",
-    "connectTelnet": "Ühendu Telnetiga"
+    "connectTelnet": "Ühendu Telnetiga",
+    "connectArd": "Ühendu Apple Remote Desktopiga"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "Nõutud on kaugserver. Ühenda kaugserver seadetes, et kasutada seda ühendustüüpi."
   },
   "plugin": {
-    "name": "Kaugtöölaud"
+    "name": "Kaugtöölaud",
+    "description": "RDP, VNC ja Telneti sessioonid brauseris, koos lõikelaua, failide ülekande, jagamise ja salvestamise võimalustega."
   }
 }

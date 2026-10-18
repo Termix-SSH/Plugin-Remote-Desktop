@@ -10,7 +10,7 @@
     "failedToConnect": "Nem sikerült megszerezni a kapcsolati tokent",
     "hostNotFound": "A gazdagép nem található",
     "noHostSelected": "Nincs kiválasztva gazdagép",
-    "guacdUnavailable": "A távoli asztal szolgáltatás (guacd) nem elérhető. Kérjük, győződjön meg róla, hogy a guacd fut, elérhető, és megfelelően van konfigurálva az admin beállításokban.",
+    "guacdUnavailable": "A külső guacd nem válaszol. Ellenőrizze, hogy fut-e, vagy kapcsolja ki a Külső guacd használata opciót a Távoli asztal beállításaiban.",
     "credentialPromptTitle": "RDP hitelesítő adatok megadása",
     "credentialPromptDescription": "Ez a gazdagép úgy van beállítva, hogy csatlakozáskor kérje a hitelesítő adatokat. Ezeket csak az aktuális munkamenetben használjuk, és nem mentjük el őket.",
     "connect": "Csatlakozás",
@@ -28,7 +28,7 @@
       "uploadFailed": "Nem sikerült feltölteni a(z) {{name}} fájlt",
       "uploadDisabled": "A feltöltés letiltva ezen a kapcsolaton",
       "driveUnavailable": "Engedélyezze az RDP meghajtó-átirányítást a fájlok feltöltése előtt",
-      "driveNotWritable": "A guacd nem írhat a meghajtó mappájába. Ellenőrizze a GUACD_DRIVE_PATH értékét és a jogosultságait.",
+      "driveNotWritable": "A Termix nem írhat a meghajtó mappájába. Ellenőrizze az RDP_DRIVE_PATH, vagy külső guacd esetén a GUACD_DRIVE_PATH értékét, valamint a jogosultságokat.",
       "dropToUpload": "Húzza ide a fájlokat a feltöltéshez"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Balra nyíl",
       "arrowRight": "Jobbra nyíl",
       "fnToggle": "Funkciós billentyűk",
-      "collapse": "Eszköztár összecsukása",
-      "expand": "Eszköztár kibontása",
-      "dragHandle": "Húzza az áthelyezéshez",
-      "hide": "Elrejtés ebben a munkamenetben. A végleges letiltáshoz nyissa meg a Gazdagép beállításai → Általános → Kapcsolati eszköztár menüpontot.",
       "zoomIn": "Nagyítás",
       "zoomOut": "Kicsinyítés",
       "resetZoom": "Nagyítás visszaállítása",
       "fitToScreen": "Képernyőhöz igazítás",
       "switchToTrackpad": "Átkapcsolás érintőpad módra (húzással mozgatja a kurzort, koppintással kattint)",
-      "switchToTouch": "Átkapcsolás érintő módra (koppintson közvetlenül a kívánt helyre)"
+      "switchToTouch": "Átkapcsolás érintő módra (koppintson közvetlenül a kívánt helyre)",
+      "label": "Távoli asztal eszköztár",
+      "more": "Továbbiak",
+      "items": {
+        "files": "Fájlok",
+        "touchMode": "Érintő mód",
+        "zoom": "Nagyítás",
+        "lock": "Képernyőzár",
+        "metaKey": "Rendszerbillentyű",
+        "modifiers": "Ragadós módosító billentyűk",
+        "arrows": "Nyilak",
+        "forceQuit": "Kényszerített kilépés",
+        "macLock": "Képernyőzár",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "Csak akkor jelenik meg, ha az RDP-meghajtó be van kapcsolva",
+        "touchMode": "Csak érintőképernyőn",
+        "modifiers": "A Ctrl, Alt, Shift és a rendszerbillentyű lenyomva marad a következő billentyűig"
+      },
+      "option": "Option"
     },
     "disabled": "A Távoli asztal kikapcsolva van. Egy rendszergazda bekapcsolhatja a Beállításokban."
   },
@@ -114,11 +130,11 @@
       "timezone": "Időzóna",
       "loadBalanceInfo": "Terheléselosztási információ / Cookie",
       "loadBalanceInfoDesc": "RD Connection Broker cookie az RDS farm terheléselosztásához (pl. tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "guacd proxy",
+      "guacdProxy": "guacd proxy (opcionális)",
       "guacdHostname": "guacd gazdagép",
       "guacdHostnamePlaceholder": "Globális alapértelmezett",
       "guacdPort": "guacd port",
-      "guacdProxyDesc": "A globális guacd példány felülírása ehhez a kapcsolathoz. Hagyja üresen a globálisan konfigurált guacd használatához.",
+      "guacdProxyDesc": "A Termix közvetlenül csatlakozik ehhez a gazdagéphez. Csak akkor adj meg egy guacd szervert, ha ezt a gazdagépet a saját guacd-n keresztül szeretnéd elérni. Hagyd üresen a globális beállítás használatához.",
       "guacdAdminOnly": "Csak a rendszergazdák módosíthatják egy gazdagép guacd szerverét.",
       "guacdSaveHostFirst": "Először mentse el a gazdagépet, majd állítsa be itt a guacd szerverét.",
       "guacdSave": "guacd szerver mentése",
@@ -129,6 +145,7 @@
       "gatewayUsername": "Kapuhely felhasználónév",
       "gatewayPassword": "Kapujelszó",
       "gatewayDomain": "Kapudomain",
+      "gatewayNote": "Az RD Gateway külső guacd-t igényel. A gateway-t használó gazdagépek ahhoz csatlakoznak, ha be van állítva a Távoli asztal beállításaiban vagy a guacd Proxy alatt.",
       "remoteAppProgram": "RemoteApp-program",
       "workingDirectory": "Munkakönyvtár",
       "arguments": "Argumentumok",
@@ -145,7 +162,7 @@
       "disableAudio": "Hang letiltása",
       "disableAudioDesc": "Minden hang némítása a távoli munkamenetben",
       "enableAudioInput": "Hangbemenet engedélyezése (mikrofon)",
-      "enableAudioInputDesc": "Helyi mikrofon továbbítása a távoli munkamenetbe",
+      "enableAudioInputDesc": "Helyi mikrofon továbbítása a távoli munkamenetbe | Csak külső guacd esetén",
       "wallpaper": "Asztali háttérkép",
       "wallpaperDesc": "Asztali háttérkép megjelenítése (a letiltás javítja a teljesítményt)",
       "theming": "Témák",
@@ -159,13 +176,13 @@
       "menuAnimations": "Menüanimációk",
       "menuAnimationsDesc": "Menühalványodási és csúszó animációk engedélyezése",
       "disableBitmapCaching": "Bitmap-gyorsítótár letiltása",
-      "disableBitmapCachingDesc": "Bitmap-gyorsítótár kikapcsolása (segíthet a hibák esetén)",
+      "disableBitmapCachingDesc": "Bitmap-gyorsítótár kikapcsolása (segíthet a hibák elhárításában) | Csak külső guacd esetén",
       "disableOffscreenCaching": "Képernyőn kívüli gyorsítótár letiltása",
-      "disableOffscreenCachingDesc": "Képernyőn kívüli gyorsítótár kikapcsolása",
+      "disableOffscreenCachingDesc": "Képernyőn kívüli gyorsítótár kikapcsolása | Csak külső guacd esetén",
       "disableGlyphCaching": "Glikf-gyorsítótár letiltása",
-      "disableGlyphCachingDesc": "Glikf-gyorsítótár kikapcsolása",
+      "disableGlyphCachingDesc": "Glyf-gyorsítótár kikapcsolása | Csak külső guacd esetén",
       "enableGfx": "GFX engedélyezése",
-      "enableGfxDesc": "RemoteFX grafikai csővezeték használata",
+      "enableGfxDesc": "RemoteFX grafikai csővezeték használata | Csak külső guacd esetén",
       "enablePrinting": "Nyomtatás engedélyezése",
       "enablePrintingDesc": "Helyi nyomtatók átirányítása a távoli munkamenetbe",
       "enableDriveRedirection": "Meghajtó-átirányítás engedélyezése",
@@ -175,7 +192,7 @@
       "disableUpload": "Feltöltés letiltása",
       "disableUploadDesc": "Fájlok feltöltésének megakadályozása a távoli munkamenetbe",
       "enableTouch": "Érintés engedélyezése",
-      "enableTouchDesc": "Érintőbemenet továbbításának engedélyezése",
+      "enableTouchDesc": "Érintésvezérlés továbbításának engedélyezése | Csak külső guacd esetén",
       "consoleSession": "Konzolos munkamenet",
       "consoleSessionDesc": "Csatlakozás a konzolhoz (0. munkamenet) új munkamenet helyett",
       "sendWolPacket": "WOL-csomag küldése",
@@ -202,6 +219,7 @@
       "telnetPort": "Telnet-port",
       "terminalType": "Termináltípus",
       "fontName": "Betűtípus neve",
+      "fontNameDesc": "Csak külső guacd esetén. A beépített motor saját monospace betűtípust használ.",
       "fontSize": "Betűméret",
       "colorScheme": "Színséma",
       "backspaceKey": "Visszafele billentyű",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "Fekete fehér alapon",
         "grayOnBlack": "Szürke fekete alapon",
         "greenOnBlack": "Zöld fekete alapon"
-      }
+      },
+      "ardSettings": "Apple Remote Desktop beállítások",
+      "ardPort": "ARD port",
+      "ardPassword": "macOS jelszó",
+      "ardUsername": "macOS felhasználónév",
+      "ardLeaveBlank": "Hagyja üresen, ha csak VNC jelszót szeretne használni"
     },
     "remoteDesktop": "Távoli asztal",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "Nem titkosított shell",
     "remoteDesktopNotes": "Jegyzetek",
     "userDefaultsNote": "A nem módosított beállítások a gazdagép alapértelmezett értékeit követik.",
-    "connectionOriginNote": "Az asztali alkalmazásban az RDP, VNC és Telnet a távoli szervert használja, kivéve, ha a gazdagép beállítása Ez az eszköz, amelyhez egy olyan guacd szükséges, amelyet ez a gép elér. Állíts be egyet a Távoli asztal beállításaiban, vagy gazdanként a guacd Proxy alatt.",
+    "connectionOriginNote": "Az asztali alkalmazásban az RDP, VNC és Telnet alapértelmezetten ezen az eszközön fut, akárcsak az SSH. Ha a kiszolgálón szeretné futtatni őket, válassza a Távoli kiszolgáló lehetőséget.",
     "docsLink": "Dokumentáció megtekintése",
-    "connectionOriginGuacamoleNote": "Az RDP, VNC és Telnet a távoli szervert használja, kivéve, ha az \"Ez az eszköz\" lehetőséget választja, amelyhez egy olyan guacd szükséges, amelyet ez a gép elér. Állíts be egyet a guacd URL beállításban, vagy gazdanként a guacd Proxy alatt."
+    "connectionOriginGuacamoleNote": "Az RDP, VNC és Telnet alapértelmezetten ezen az eszközön fut, akárcsak az SSH. Ha a kiszolgálón szeretné futtatni őket, válassza a Távoli kiszolgáló lehetőséget.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Mac képernyőmegosztás"
   },
   "onboarding": {
     "guacdTitle": "Távoli asztal beállítása",
-    "guacdIntro": "A távoli asztalhoz a Termix mellett futó guacd szükséges. Ellenőrizze, hogy válaszol-e, vagy mutassa rá a Termixet.",
+    "guacdIntro": "A távoli asztal beállítása a saját guacd szolgáltatását használja. Ellenőrizze, hogy válaszol-e, vagy állítsa be a Termix számára.",
     "guacdChecking": "guacd keresése",
     "guacdConnected": "A guacd fut a(z) {{address}} címen",
     "guacdMissing": "A guacd nem válaszol a(z) {{address}} címen",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "Távoli asztal engedélyezése",
-        "description": "RDP, VNC és Telnet kapcsolatok engedélyezése a guacd-n keresztül."
+        "description": "RDP, VNC és Telnet kapcsolatok engedélyezése."
+      },
+      "useGuacd": {
+        "label": "Külső guacd használata",
+        "description": "Termix önmagában kezeli az RDP, VNC és Telnet kapcsolatokat. Kapcsold be ezt az opciót, ha a saját guacd szerveredre szeretnéd irányítani ezeket. A REMOTE_DESKTOP_ENGINE felülírja ezt a beállítást."
       },
       "guacdUrl": {
         "label": "guacd URL",
@@ -352,20 +381,46 @@
         "label": "Tanúsítványhibák figyelmen kívül hagyása"
       },
       "guacamoleConfig": {
-        "label": "guacd beállítások"
+        "label": "Kapcsolati beállítások"
       },
       "enableToolbar": {
         "label": "Távoli asztal eszköztár",
-        "description": "Az eszköztár megjelenítése RDP, VNC és Telnet munkamenetekben."
+        "description": "Eszköztár megjelenítése RDP, VNC, ARD és Telnet munkamenetekben."
       },
       "displayGroup": "Kijelző",
-      "displayDefaultsTab": "Távoli asztal"
+      "displayDefaultsTab": "Távoli asztal",
+      "toolbarPosition": {
+        "label": "Eszköztár pozíciója",
+        "description": "Az eszköztár megjelenítése a munkamenet felett vagy alatt.",
+        "top": "Felül",
+        "bottom": "Alul"
+      },
+      "toolbarLabels": {
+        "label": "Eszköztár címkék",
+        "description": "Név megjelenítése az ikonok mellett, vagy csak ikonok. A nevek automatikusan elrejtődnek, ha kevés a hely.",
+        "labeled": "Ikonok és nevek",
+        "icons": "Csak ikonok"
+      },
+      "toolbarButtons": {
+        "label": "Eszköztár gombjai",
+        "description": "Válaszd ki, mely gombok jelenjenek meg, és milyen sorrendben. Azok a gombok, amelyek nem férnek el, a Több menüben lesznek.",
+        "reset": "Visszaállítás",
+        "moveUp": "Mozgatás felfelé",
+        "moveDown": "Mozgatás lefelé"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "ARD-port"
+      }
     }
   },
   "palette": {
     "connectRdp": "Csatlakozás RDP-vel",
     "connectVnc": "Csatlakozás VNC-vel",
-    "connectTelnet": "Csatlakozás Telnet-tel"
+    "connectTelnet": "Csatlakozás Telnet-tel",
+    "connectArd": "Csatlakozás Apple Remote Desktop segítségével"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "Távoli szerver szükséges. Csatlakoztasson egy távoli szervert a Beállításokban, hogy használhassa ezt a csatlakozástípust."
   },
   "plugin": {
-    "name": "Távoli asztal"
+    "name": "Távoli asztal",
+    "description": "RDP-, VNC- és Telnet-munkamenetek a böngésződben, vágólap-, fájlátvitel-, megosztási és rögzítési funkciókkal."
   }
 }

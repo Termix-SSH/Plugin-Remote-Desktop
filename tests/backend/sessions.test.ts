@@ -85,7 +85,12 @@ describe("sessions.live providers", () => {
   it("describes a live session of its own protocol only", () => {
     const sessions = new RemoteSessions();
     sessions.opened(meta, "g1");
-    const deps = { sessions, tokens, endSession: vi.fn(() => true) };
+    const deps = {
+      sessions,
+      tokens,
+      endSession: vi.fn(() => true),
+      disconnectShare: vi.fn(() => 0),
+    };
     const rdp = createLiveSessions("rdp", deps);
     const vnc = createLiveSessions("vnc", deps);
 
@@ -107,6 +112,7 @@ describe("sessions.live providers", () => {
       sessions,
       tokens,
       endSession: vi.fn(() => true),
+      disconnectShare: vi.fn(() => 0),
     });
 
     const token = tokens.decryptToken(rdp.createViewerToken("g1", true));
@@ -119,8 +125,30 @@ describe("sessions.live providers", () => {
     const sessions = new RemoteSessions();
     sessions.opened(meta, "g1");
     const endSession = vi.fn(() => true);
-    const rdp = createLiveSessions("rdp", { sessions, tokens, endSession });
+    const rdp = createLiveSessions("rdp", {
+      sessions,
+      tokens,
+      endSession,
+      disconnectShare: vi.fn(() => 0),
+    });
     rdp.ownerEndSession("g1", "owner ended");
     expect(endSession).toHaveBeenCalledWith("g1");
+  });
+
+  it("carries the share in a join token and closes that share's viewers", () => {
+    const sessions = new RemoteSessions();
+    sessions.opened(meta, "g1");
+    const disconnectShare = vi.fn(() => 2);
+    const rdp = createLiveSessions("rdp", {
+      sessions,
+      tokens,
+      endSession: vi.fn(() => true),
+      disconnectShare,
+    });
+    const token = tokens.decryptToken(rdp.createViewerToken("g1", true, "s1"));
+    expect(token?.connection.settings).toEqual({ "termix-share-id": "s1" });
+    expect(rdp.disconnectParticipants("g1", "s1")).toBe(2);
+    expect(disconnectShare).toHaveBeenCalledWith("g1", "s1");
+    expect(rdp.disconnectParticipants("nope", "s1")).toBe(0);
   });
 });

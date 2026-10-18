@@ -10,7 +10,7 @@
     "failedToConnect": "無法取得連線權杖",
     "hostNotFound": "找不到主機",
     "noHostSelected": "未選取主機",
-    "guacdUnavailable": "遠端桌面服務 (guacd) 不可用。請確保 guacd 正在執行且可存取，並已在管理設定中正確配置。",
+    "guacdUnavailable": "外部 guacd 沒有回應。請確認它正在執行，或在遠端桌面設定中關閉「使用外部 guacd」。",
     "credentialPromptTitle": "輸入 RDP 憑證",
     "credentialPromptDescription": "此主機設定為在連線時提示輸入憑證。這些憑證僅用於本次工作階段，不會儲存。",
     "connect": "連線",
@@ -28,7 +28,7 @@
       "uploadFailed": "無法上傳 {{name}}",
       "uploadDisabled": "此連線已停用上傳功能",
       "driveUnavailable": "上傳檔案前請啟用 RDP 磁碟機重新導向",
-      "driveNotWritable": "guacd 無法寫入磁碟機資料夾。請檢查 GUACD_DRIVE_PATH 及其權限。",
+      "driveNotWritable": "Termix 無法寫入磁碟機資料夾。請檢查 RDP_DRIVE_PATH，若使用外部 guacd 則檢查 GUACD_DRIVE_PATH，以及其權限設定。",
       "dropToUpload": "拖放檔案以上傳"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "向左箭頭",
       "arrowRight": "向右箭頭",
       "fnToggle": "功能鍵",
-      "collapse": "收合工具列",
-      "expand": "展開工具列",
-      "dragHandle": "拖曳以重新定位",
-      "hide": "在此工作階段中隱藏。若要永久停用，請開啟主機設定 → 一般 → 連線工具列。",
       "zoomIn": "放大",
       "zoomOut": "縮小",
       "resetZoom": "重設縮放",
       "fitToScreen": "適應螢幕",
       "switchToTrackpad": "切換至觸控板模式（拖曳移動游標，輕觸點擊）",
-      "switchToTouch": "切換至觸控模式（直接輕觸要點擊的位置）"
+      "switchToTouch": "切換至觸控模式（直接輕觸要點擊的位置）",
+      "label": "遠端桌面工具列",
+      "more": "更多",
+      "items": {
+        "files": "檔案",
+        "touchMode": "觸控模式",
+        "zoom": "縮放",
+        "lock": "鎖定畫面",
+        "metaKey": "系統鍵",
+        "modifiers": "黏性修飾鍵",
+        "arrows": "方向鍵",
+        "forceQuit": "強制結束",
+        "macLock": "鎖定畫面",
+        "spotlight": "聚焦搜尋"
+      },
+      "hints": {
+        "files": "啟用 RDP 磁碟機後顯示",
+        "touchMode": "僅限觸控螢幕",
+        "modifiers": "Ctrl、Alt、Shift 與系統鍵會持續按住，直到按下下一個鍵"
+      },
+      "option": "選項"
     },
     "disabled": "遠端桌面已關閉。管理員可在設定中開啟。"
   },
@@ -114,11 +130,11 @@
       "timezone": "時區",
       "loadBalanceInfo": "負載平衡資訊 / Cookie",
       "loadBalanceInfoDesc": "用於 RDS 叢集負載平衡的 RD 連線中介 Cookie（例如 tsv://MS Terminal Services Plugin.1.CollectionName）",
-      "guacdProxy": "guacd 代理",
+      "guacdProxy": "guacd 代理（選填）",
       "guacdHostname": "guacd 主機",
       "guacdHostnamePlaceholder": "全域預設值",
       "guacdPort": "guacd 連接埠",
-      "guacdProxyDesc": "覆寫此連線的全域 guacd 執行個體。留空則使用全域設定的 guacd。",
+      "guacdProxyDesc": "Termix 會直接連線至此主機。僅當希望此主機透過您自己的 guacd 伺服器連線時才設定。留空則使用全域設定。",
       "guacdAdminOnly": "只有管理員可以變更主機的 guacd 伺服器。",
       "guacdSaveHostFirst": "請先儲存主機，然後在此設定其 guacd 伺服器。",
       "guacdSave": "儲存 guacd 伺服器",
@@ -129,6 +145,7 @@
       "gatewayUsername": "閘道使用者名稱",
       "gatewayPassword": "閘道器密碼",
       "gatewayDomain": "閘道器網域",
+      "gatewayNote": "RD Gateway 需要外部 guacd。設定閘道器後，具有閘道器的主機將透過 Remote Desktop 設定或 guacd Proxy 進行連線。",
       "remoteAppProgram": "RemoteApp 程式",
       "workingDirectory": "工作目錄",
       "arguments": "參數",
@@ -145,7 +162,7 @@
       "disableAudio": "停用音訊",
       "disableAudioDesc": "靜音所有來自遠端工作階段的音訊",
       "enableAudioInput": "啟用音訊輸入（麥克風）",
-      "enableAudioInputDesc": "將本機麥克風轉送至遠端工作階段",
+      "enableAudioInputDesc": "將本機麥克風轉送至遠端工作階段 | 僅適用於外部 guacd",
       "wallpaper": "桌面背景",
       "wallpaperDesc": "顯示桌面背景（停用可提升效能）",
       "theming": "主題設定",
@@ -159,13 +176,13 @@
       "menuAnimations": "選單動畫",
       "menuAnimationsDesc": "啟用選單淡入淡出與滑動動畫",
       "disableBitmapCaching": "停用點陣圖快取",
-      "disableBitmapCachingDesc": "關閉點陣圖快取（可能有助於解決顯示異常）",
+      "disableBitmapCachingDesc": "關閉點陣圖快取（可能有助於解決顯示異常） | 僅適用於外部 guacd",
       "disableOffscreenCaching": "停用螢幕外快取",
-      "disableOffscreenCachingDesc": "關閉螢幕外快取",
+      "disableOffscreenCachingDesc": "關閉離屏快取 | 僅適用於外部 guacd",
       "disableGlyphCaching": "停用字形快取",
-      "disableGlyphCachingDesc": "關閉字形快取",
+      "disableGlyphCachingDesc": "關閉字形快取 | 僅適用於外部 guacd",
       "enableGfx": "啟用 GFX",
-      "enableGfxDesc": "使用 RemoteFX 圖形管線",
+      "enableGfxDesc": "使用 RemoteFX 圖形管線 | 僅適用於外部 guacd",
       "enablePrinting": "啟用列印",
       "enablePrintingDesc": "將本機印表機重新導向至遠端工作階段",
       "enableDriveRedirection": "啟用磁碟機重新導向",
@@ -175,7 +192,7 @@
       "disableUpload": "停用上傳",
       "disableUploadDesc": "防止將檔案上傳至遠端工作階段",
       "enableTouch": "啟用觸控",
-      "enableTouchDesc": "啟用觸控輸入轉送",
+      "enableTouchDesc": "啟用觸控輸入轉送 | 僅適用於外部 guacd",
       "consoleSession": "主控台工作階段",
       "consoleSessionDesc": "連線至主控台（工作階段 0）而非建立新工作階段",
       "sendWolPacket": "傳送 WOL 封包",
@@ -202,6 +219,7 @@
       "telnetPort": "Telnet 連接埠",
       "terminalType": "終端機類型",
       "fontName": "字型名稱",
+      "fontNameDesc": "僅適用於外部 guacd。內建引擎使用其專屬的等寬字型。",
       "fontSize": "字型大小",
       "colorScheme": "色彩方案",
       "backspaceKey": "Backspace 鍵",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "黑底白字",
         "grayOnBlack": "黑底灰字",
         "greenOnBlack": "黑底綠字"
-      }
+      },
+      "ardSettings": "Apple Remote Desktop 設定",
+      "ardPort": "ARD 連接埠",
+      "ardPassword": "macOS 密碼",
+      "ardUsername": "macOS 使用者名稱",
+      "ardLeaveBlank": "若僅使用 VNC 密碼，請留空"
     },
     "remoteDesktop": "遠端桌面",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "未加密的 shell",
     "remoteDesktopNotes": "備註",
     "userDefaultsNote": "未變更的設定將沿用您的主機預設值。",
-    "connectionOriginNote": "在桌面版應用程式中，RDP、VNC 和 Telnet 會使用遠端伺服器，除非主機設定為「此裝置」，這需要一台本機可以連線到的 guacd。請在遠端桌面設定中設定一個，或在每個主機的 guacd 代理下方設定。",
+    "connectionOriginNote": "在桌面應用程式中，當主機設為「預設」時，RDP、VNC 和 Telnet 會在此裝置上執行（與 SSH 相同）。若要改為在伺服器上執行，請選擇「遠端伺服器」。",
     "docsLink": "檢視說明文件",
-    "connectionOriginGuacamoleNote": "RDP、VNC 和 Telnet 會使用遠端伺服器，除非您選擇「此裝置」，這需要一台本機可以連線到的 guacd。請在 guacd URL 設定中設定一個，或在每個主機的 guacd 代理下方設定。"
+    "connectionOriginGuacamoleNote": "RDP、VNC 和 Telnet 預設會在此裝置上執行（與 SSH 相同）。若要改為在伺服器上執行，請選擇「遠端伺服器」。",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Mac 螢幕共用"
   },
   "onboarding": {
     "guacdTitle": "設定遠端桌面",
-    "guacdIntro": "遠端桌面需要 guacd 與 Termix 一起執行。請確認它正在回應，或將 Termix 指向它。",
+    "guacdIntro": "遠端桌面已設定為使用您自己的 guacd。請確認其可正常回應，或將 Termix 指向該 guacd。",
     "guacdChecking": "正在尋找 guacd",
     "guacdConnected": "guacd 正在 {{address}} 執行",
     "guacdMissing": "guacd 未在 {{address}} 回應",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "啟用遠端桌面",
-        "description": "允許透過 guacd 進行 RDP、VNC 和 Telnet 連線。"
+        "description": "允許 RDP、VNC 和 Telnet 連線。"
+      },
+      "useGuacd": {
+        "label": "使用外部 guacd",
+        "description": "Termix 會自行處理 RDP、VNC 和 Telnet。開啟此選項可將這些連線轉送至您自己的 guacd。REMOTE_DESKTOP_ENGINE 會覆寫此設定。"
       },
       "guacdUrl": {
         "label": "guacd URL",
@@ -352,20 +381,46 @@
         "label": "忽略憑證錯誤"
       },
       "guacamoleConfig": {
-        "label": "guacd 設定"
+        "label": "連線設定"
       },
       "enableToolbar": {
         "label": "遠端桌面工具列",
-        "description": "在 RDP、VNC 和 Telnet 工作階段中顯示工具列。"
+        "description": "在 RDP、VNC、ARD 和 Telnet 工作階段中顯示工具列。"
       },
       "displayGroup": "顯示",
-      "displayDefaultsTab": "遠端桌面"
+      "displayDefaultsTab": "遠端桌面",
+      "toolbarPosition": {
+        "label": "工具列位置",
+        "description": "在工作階段上方或下方顯示工具列。",
+        "top": "上方",
+        "bottom": "下方"
+      },
+      "toolbarLabels": {
+        "label": "工具列標籤",
+        "description": "在圖示旁顯示名稱，或僅顯示圖示。當空間不足時，名稱會自動隱藏。",
+        "labeled": "圖示與名稱",
+        "icons": "僅顯示圖示"
+      },
+      "toolbarButtons": {
+        "label": "工具列按鈕",
+        "description": "選擇要顯示的按鈕及其順序。無法容納的按鈕將移至「更多」選單。",
+        "reset": "重設",
+        "moveUp": "上移",
+        "moveDown": "下移"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "ARD 通訊埠"
+      }
     }
   },
   "palette": {
     "connectRdp": "使用 RDP 連線",
     "connectVnc": "使用 VNC 連線",
-    "connectTelnet": "使用 Telnet 連線"
+    "connectTelnet": "使用 Telnet 連線",
+    "connectArd": "使用 Apple Remote Desktop 連線"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "需要遠端伺服器。請在設定中連線遠端伺服器以使用此連線類型。"
   },
   "plugin": {
-    "name": "遠端桌面"
+    "name": "遠端桌面",
+    "description": "在瀏覽器中進行 RDP、VNC 和 Telnet 工作階段，支援剪貼簿、檔案傳輸、共享和錄製。"
   }
 }

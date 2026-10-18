@@ -6,6 +6,18 @@
  * guacamole port and no separate nginx block any more. Electron with a remote
  * server is the only case that targets a different host.
  */
+/**
+ * The desktop app's embedded backend port. Termix 26.10.2+ moves it off
+ * 30001 when another program holds that port.
+ */
+export function localBackendPort(): number {
+  const port = (globalThis as { electronAPI?: { backendPort?: unknown } })
+    .electronAPI?.backendPort;
+  return typeof port === "number" && Number.isInteger(port) && port > 0
+    ? port
+    : 30001;
+}
+
 export function buildGuacamoleWebSocketBaseUrl({
   isElectronApp,
   isEmbeddedApp,
@@ -32,7 +44,7 @@ export function buildGuacamoleWebSocketBaseUrl({
     return `${wsProtocol}${wsHost}${route}`;
   }
 
-  if (isElectronApp) return `ws://127.0.0.1:30001${route}`;
+  if (isElectronApp) return `ws://127.0.0.1:${localBackendPort()}${route}`;
 
   const wsProtocol = location.protocol === "https:" ? "wss" : "ws";
   return `${wsProtocol}://${location.host}${basePath}${route}`;

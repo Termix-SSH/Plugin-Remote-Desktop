@@ -10,7 +10,7 @@
     "failedToConnect": "Neuspjelo dobivanje tokena za povezivanje",
     "hostNotFound": "Host nije pronađen",
     "noHostSelected": "Nije odabran host",
-    "guacdUnavailable": "Usluga za udaljeni desktop (guacd) nije dostupna. Provjerite je li guacd pokrenut, dostupan i pravilno konfiguriran u administratorskim postavkama.",
+    "guacdUnavailable": "Vanjski guacd ne odgovara. Provjerite je li pokrenut ili isključite opciju Korištenje vanjskog guacda u postavkama Udaljenog desktopa.",
     "credentialPromptTitle": "Unesite RDP vjerodajnice",
     "credentialPromptDescription": "Ovaj host je postavljen da traži vjerodajnice pri povezivanju. Koriste se samo za ovu sesiju i ne spremaju se.",
     "connect": "Poveži",
@@ -28,7 +28,7 @@
       "uploadFailed": "Neuspjelo otpremanje {{name}}",
       "uploadDisabled": "Otpremanje je onemogućeno za ovu vezu",
       "driveUnavailable": "Omogućite preusmjeravanje RDP pogona prije otpremanja datoteka",
-      "driveNotWritable": "guacd ne može pisati u mapu pogona. Provjerite GUACD_DRIVE_PATH i njegova dopuštenja.",
+      "driveNotWritable": "Termix ne može pisati u mapu pogona. Provjerite RDP_DRIVE_PATH ili GUACD_DRIVE_PATH (ako koristite vanjski guacd) te dopuštenja za pisanje.",
       "dropToUpload": "Spustite datoteke za otpremanje"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Strelica lijevo",
       "arrowRight": "Strelica desno",
       "fnToggle": "Funkcijske tipke",
-      "collapse": "Sakrij alatnu traku",
-      "expand": "Prikaži alatnu traku",
-      "dragHandle": "Povucite za premještanje",
-      "hide": "Sakrij za ovu sesiju. Da biste je trajno onemogućili, otvorite Postavke hosta → Općenito → Alatna traka za povezivanje.",
       "zoomIn": "Povećaj",
       "zoomOut": "Povećaj prikaz",
       "resetZoom": "Poništi povećanje",
       "fitToScreen": "Prilagodi zaslonu",
       "switchToTrackpad": "Prebaci na način rada trackpada (povlačenjem pomičite kursor, dodirom kliknite)",
-      "switchToTouch": "Prebaci na način rada dodira (dodirnite izravno tamo gdje želite kliknuti)"
+      "switchToTouch": "Prebaci na način rada dodira (dodirnite izravno tamo gdje želite kliknuti)",
+      "label": "Traka alata za udaljeni desktop",
+      "more": "Više",
+      "items": {
+        "files": "Datoteke",
+        "touchMode": "Način dodira",
+        "zoom": "Zumiranje",
+        "lock": "Zaključaj zaslon",
+        "metaKey": "Sustavna tipka",
+        "modifiers": "Ljepljive tipke za modifikatore",
+        "arrows": "Tipke sa strelicama",
+        "forceQuit": "Prisilno zatvaranje",
+        "macLock": "Zaključaj zaslon",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "Prikazuje se nakon uključivanja RDP pogona",
+        "touchMode": "Samo na zaslonima osjetljivima na dodir",
+        "modifiers": "Tipke Ctrl, Alt, Shift i sustavna tipka ostaju pritisnute do sljedeće tipke"
+      },
+      "option": "Opcija"
     },
     "disabled": "Udaljeni radni stol je isključen. Administrator ga može uključiti u postavkama."
   },
@@ -114,11 +130,11 @@
       "timezone": "Vremenska zona",
       "loadBalanceInfo": "Informacije o uravnoteženju opterećenja / kolačić",
       "loadBalanceInfoDesc": "RD Connection Broker kolačić za uravnoteženje opterećenja RDS farme (npr. tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "guacd proxy",
+      "guacdProxy": "guacd posrednik (opcionalno)",
       "guacdHostname": "guacd poslužitelj",
       "guacdHostnamePlaceholder": "Globalna zadana vrijednost",
       "guacdPort": "guacd port",
-      "guacdProxyDesc": "Prepišite globalnu guacd instancu za ovu vezu. Ostavite prazno za korištenje globalno konfiguriranog guacda.",
+      "guacdProxyDesc": "Termix se sam povezuje na ovaj host. Postavite guacd poslužitelj samo ako se ovaj host treba povezivati putem vlastitog guacd poslužitelja. Ostavite prazno za korištenje globalne postavke.",
       "guacdAdminOnly": "Samo administratori mogu promijeniti guacd poslužitelj za host.",
       "guacdSaveHostFirst": "Prvo spremite host, a zatim ovdje postavite njegov guacd poslužitelj.",
       "guacdSave": "Spremi guacd poslužitelj",
@@ -129,6 +145,7 @@
       "gatewayUsername": "Gateway korisničko ime",
       "gatewayPassword": "Lozinka za gateway",
       "gatewayDomain": "Domena gatewaya",
+      "gatewayNote": "RD Gateway zahtijeva vanjski guacd. Hostovi s gatewayem idu na njega kada je postavljen, u postavkama Remote Desktopa ili pod guacd Proxy.",
       "remoteAppProgram": "RemoteApp program",
       "workingDirectory": "Radni direktorij",
       "arguments": "Argumenti",
@@ -145,7 +162,7 @@
       "disableAudio": "Onemogući audio",
       "disableAudioDesc": "Isključi sav zvuk iz udaljene sesije",
       "enableAudioInput": "Omogući audio ulaz (mikrofon)",
-      "enableAudioInputDesc": "Proslijedi lokalni mikrofon u udaljenu sesiju",
+      "enableAudioInputDesc": "Proslijedi lokalni mikrofon u udaljenu sesiju | Samo s vanjskim guacd",
       "wallpaper": "Pozadina radne površine",
       "wallpaperDesc": "Prikaži pozadinu radne površine (onemogućavanje poboljšava performanse)",
       "theming": "Teme",
@@ -159,13 +176,13 @@
       "menuAnimations": "Animacije izbornika",
       "menuAnimationsDesc": "Omogući animacije blijedenja i klizanja izbornika",
       "disableBitmapCaching": "Onemogući predmemoriranje bitmapa",
-      "disableBitmapCachingDesc": "Isključi predmemoriju bitmapa (može pomoći kod grešaka)",
+      "disableBitmapCachingDesc": "Isključi predmemoriju bitmapa (može pomoći kod grešaka) | Samo s vanjskim guacd",
       "disableOffscreenCaching": "Onemogući predmemoriranje izvan ekrana",
-      "disableOffscreenCachingDesc": "Isključi predmemoriju izvan ekrana",
+      "disableOffscreenCachingDesc": "Isključi predmemoriju izvan ekrana | Samo s vanjskim guacd",
       "disableGlyphCaching": "Onemogući predmemoriranje znakova",
-      "disableGlyphCachingDesc": "Isključi predmemoriju znakova",
+      "disableGlyphCachingDesc": "Isključi predmemoriju znakova | Samo s vanjskim guacd-om",
       "enableGfx": "Omogući GFX",
-      "enableGfxDesc": "Koristi RemoteFX grafičku cijev",
+      "enableGfxDesc": "Koristi RemoteFX grafičku cijev | Samo s vanjskim guacd",
       "enablePrinting": "Omogući ispis",
       "enablePrintingDesc": "Preusmjeri lokalne pisače u udaljenu sesiju",
       "enableDriveRedirection": "Omogući preusmjeravanje pogona",
@@ -175,7 +192,7 @@
       "disableUpload": "Onemogući otpremanje",
       "disableUploadDesc": "Spriječi otpremanje datoteka u udaljenu sesiju",
       "enableTouch": "Omogući dodir",
-      "enableTouchDesc": "Omogući proslijeđivanje dodira",
+      "enableTouchDesc": "Omogući proslijeđivanje dodira | Samo s vanjskim guacd-om",
       "consoleSession": "Konzolna sesija",
       "consoleSessionDesc": "Poveži se na konzolu (sesija 0) umjesto na novu sesiju",
       "sendWolPacket": "Pošalji WOL paket",
@@ -202,6 +219,7 @@
       "telnetPort": "Telnet port",
       "terminalType": "Vrsta terminala",
       "fontName": "Naziv fonta",
+      "fontNameDesc": "Samo s vanjskim guacd-om. Ugrađeni mehanizam koristi vlastiti font s fiksnim razmakom.",
       "fontSize": "Veličina fonta",
       "colorScheme": "Shema boja",
       "backspaceKey": "Tipka Backspace",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "Bijelo na crnom",
         "grayOnBlack": "Sivo na crnom",
         "greenOnBlack": "Zeleno na crnom"
-      }
+      },
+      "ardSettings": "Postavke Apple Remote Desktopa",
+      "ardPort": "ARD port",
+      "ardPassword": "macOS lozinka",
+      "ardUsername": "macOS korisničko ime",
+      "ardLeaveBlank": "Ostavite prazno za lozinku samo za VNC"
     },
     "remoteDesktop": "Udaljeni desktop",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "Nešifrirana ljuska",
     "remoteDesktopNotes": "Bilješke",
     "userDefaultsNote": "Postavke koje ostavite nepromijenjenima prate zadane postavke vašeg hosta.",
-    "connectionOriginNote": "U desktop aplikaciji, RDP, VNC i Telnet koriste udaljeni server osim ako host nije postavljen na Ovaj uređaj, što zahtijeva guacd koji ovaj uređaj može doseći. Postavite ga u postavkama Udaljenog desktopa ili po hostu pod guacd Proxy.",
+    "connectionOriginNote": "U desktop aplikaciji, RDP, VNC i Telnet se izvršavaju na ovom uređaju kada je za host ostavljeno Zadano, kao i SSH. Odaberite Udaljeni poslužitelj da se izvršavaju na poslužitelju.",
     "docsLink": "Pogledajte dokumentaciju",
-    "connectionOriginGuacamoleNote": "RDP, VNC i Telnet koriste udaljeni server osim ako ne odaberete \"Ovaj uređaj\", što zahtijeva guacd koji ovaj uređaj može doseći. Postavite ga u postavci guacd URL ili po hostu pod guacd Proxy."
+    "connectionOriginGuacamoleNote": "RDP, VNC i Telnet se prema zadanim postavkama izvršavaju na ovom uređaju, kao i SSH. Odaberite Udaljeni poslužitelj da se izvršavaju na poslužitelju.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Dijeljenje zaslona na Macu"
   },
   "onboarding": {
     "guacdTitle": "Postavite udaljeni desktop",
-    "guacdIntro": "Udaljeni desktop zahtijeva da guacd radi uz Termix. Provjerite odgovara li ili usmjerite Termix na njega.",
+    "guacdIntro": "Udaljeni zaslon je postavljen na korištenje vašeg vlastitog guacd poslužitelja. Provjerite odgovara li ili uperite Termix na njega.",
     "guacdChecking": "Traženje guacd",
     "guacdConnected": "guacd radi na {{address}}",
     "guacdMissing": "guacd ne odgovara na {{address}}",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "Omogući udaljenu radnu površinu",
-        "description": "Dopusti RDP, VNC i Telnet veze putem guacd-a."
+        "description": "Dopusti RDP, VNC i Telnet veze."
+      },
+      "useGuacd": {
+        "label": "Koristi vanjski guacd",
+        "description": "Termix samostalno pokreće RDP, VNC i Telnet. Uključite ovo ako želite da se one proslijeđuju na vaš vlastiti guacd. Postavka REMOTE_DESKTOP_ENGINE nadjačava ovo."
       },
       "guacdUrl": {
         "label": "guacd URL",
@@ -352,20 +381,46 @@
         "label": "Zanemari greške certifikata"
       },
       "guacamoleConfig": {
-        "label": "guacd postavke"
+        "label": "Postavke veze"
       },
       "enableToolbar": {
         "label": "Traka alata za udaljenu radnu površinu",
-        "description": "Prikaži traku alata u RDP, VNC i Telnet sesijama."
+        "description": "Prikaži alatnu traku u RDP, VNC, ARD i Telnet sesijama."
       },
       "displayGroup": "Zaslon",
-      "displayDefaultsTab": "Udaljena radna površina"
+      "displayDefaultsTab": "Udaljena radna površina",
+      "toolbarPosition": {
+        "label": "Položaj alatne trake",
+        "description": "Prikaži alatnu traku iznad ili ispod sesije.",
+        "top": "Gore",
+        "bottom": "Dolje"
+      },
+      "toolbarLabels": {
+        "label": "Oznake na alatnoj traci",
+        "description": "Prikaži imena uz ikone ili samo ikone. Imena se automatski skrivaju kada nema dovoljno prostora.",
+        "labeled": "Ikone i imena",
+        "icons": "Samo ikone"
+      },
+      "toolbarButtons": {
+        "label": "Gumbi na alatnoj traci",
+        "description": "Odaberite koje gumbe prikazati i u kojem redoslijedu. Gumbi koji se ne stave u alatnu traku idu u izbornik Više.",
+        "reset": "Poništi",
+        "moveUp": "Pomakni gore",
+        "moveDown": "Pomakni dolje"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "ARD port"
+      }
     }
   },
   "palette": {
     "connectRdp": "Poveži se putem RDP-a",
     "connectVnc": "Poveži se putem VNC-a",
-    "connectTelnet": "Poveži se putem Telnet-a"
+    "connectTelnet": "Poveži se putem Telnet-a",
+    "connectArd": "Poveži se putem Apple Remote Desktopa"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "Potreban je udaljeni poslužitelj. Povežite udaljeni poslužitelj u Postavkama kako biste koristili ovu vrstu veze."
   },
   "plugin": {
-    "name": "Udaljena radna površina"
+    "name": "Udaljena radna površina",
+    "description": "RDP, VNC i Telnet sesije u pregledniku, s podrškom za međuspremnik, prijenos datoteka, dijeljenje i snimanje."
   }
 }

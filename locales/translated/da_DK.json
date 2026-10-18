@@ -10,7 +10,7 @@
     "failedToConnect": "Kunne ikke hente forbindelsestoken",
     "hostNotFound": "Vært ikke fundet",
     "noHostSelected": "Ingen vært valgt",
-    "guacdUnavailable": "Fjernskrivebordservice (guacd) er ikke tilgængelig. Sørg for, at guacd kører, er tilgængelig og konfigureret korrekt i admin-indstillingerne.",
+    "guacdUnavailable": "Den eksterne guacd svarer ikke. Tjek, at den kører, eller slå Brug en ekstern guacd fra i indstillingerne for fjernskrivebord.",
     "credentialPromptTitle": "Indtast RDP-legitimationsoplysninger",
     "credentialPromptDescription": "Denne vært er indstillet til at bede om legitimationsoplysninger ved forbindelse. De bruges kun for denne session og gemmes ikke.",
     "connect": "Forbind",
@@ -28,7 +28,7 @@
       "uploadFailed": "Kunne ikke uploade {{name}}",
       "uploadDisabled": "Upload er deaktiveret for denne forbindelse",
       "driveUnavailable": "Aktivér RDP-drevomdirigering, før du uploader filer",
-      "driveNotWritable": "guacd kan ikke skrive til drevmappen. Tjek GUACD_DRIVE_PATH og dets tilladelser.",
+      "driveNotWritable": "Termix kan ikke skrive til drevmappen. Tjek RDP_DRIVE_PATH, eller GUACD_DRIVE_PATH med en ekstern guacd, og dens tilladelser.",
       "dropToUpload": "Slip filer for at uploade"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Pil venstre",
       "arrowRight": "Pil højre",
       "fnToggle": "Funktionstaster",
-      "collapse": "Skjul værktøjslinje",
-      "expand": "Udvid værktøjslinje",
-      "dragHandle": "Træk for at flytte",
-      "hide": "Skjul for denne session. For at deaktivere den permanent, åbn Værtindstillinger → Generelt → Forbindelsesværktøjslinje.",
       "zoomIn": "Zoom ind",
       "zoomOut": "Zoom ud",
       "resetZoom": "Nulstil zoom",
       "fitToScreen": "Tilpas til skærm",
       "switchToTrackpad": "Skift til touchpad-tilstand (træk for at flytte markøren, tryk for at klikke)",
-      "switchToTouch": "Skift til touch-tilstand (tryk direkte, hvor du vil klikke)"
+      "switchToTouch": "Skift til touch-tilstand (tryk direkte, hvor du vil klikke)",
+      "label": "Værktøjslinje til fjernskrivebord",
+      "more": "Mere",
+      "items": {
+        "files": "Filer",
+        "touchMode": "Touch-tilstand",
+        "zoom": "Zoom",
+        "lock": "Lås skærmen",
+        "metaKey": "Systemtast",
+        "modifiers": "Klæbrige modificeringstaster",
+        "arrows": "Piltasterne",
+        "forceQuit": "Tvungen afslutning",
+        "macLock": "Lås skærm",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "Vises, når RDP-drevet er aktiveret",
+        "touchMode": "Kun på skærme med touch",
+        "modifiers": "Ctrl, Alt, Shift og systemtasten holdes nede, indtil næste tast trykkes"
+      },
+      "option": "Option"
     },
     "disabled": "Remote Desktop er slået fra. En administrator kan slå det til i Indstillinger."
   },
@@ -114,11 +130,11 @@
       "timezone": "Tidszone",
       "loadBalanceInfo": "Load Balance Info / Cookie",
       "loadBalanceInfoDesc": "RD Connection Broker-cookie til load balancing af RDS-farm (f.eks. tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "guacd-proxy",
+      "guacdProxy": "guacd-proxy (valgfrit)",
       "guacdHostname": "guacd-vært",
       "guacdHostnamePlaceholder": "Global standard",
       "guacdPort": "guacd-port",
-      "guacdProxyDesc": "Overskriv den globale guacd-instans for denne forbindelse. Lad feltet være tomt for at bruge den globalt konfigurerede guacd.",
+      "guacdProxyDesc": "Termix forbinder sig selv til denne vært. Angiv kun en guacd-server, hvis denne vært skal gå gennem din egen guacd. Lad feltet være tomt for at bruge den globale indstilling.",
       "guacdAdminOnly": "Kun administratorer kan ændre guacd-serveren for en vært.",
       "guacdSaveHostFirst": "Gem værten først, og indstil derefter dens guacd-server her.",
       "guacdSave": "Gem guacd-server",
@@ -129,6 +145,7 @@
       "gatewayUsername": "Gateway-brugernavn",
       "gatewayPassword": "Gateway-adgangskode",
       "gatewayDomain": "Gateway-domæne",
+      "gatewayNote": "RD Gateway kræver en ekstern guacd. Værter med et gateway sendes til det, når det er opsat, i indstillingerne for Remote Desktop eller under guacd Proxy.",
       "remoteAppProgram": "RemoteApp-program",
       "workingDirectory": "Arbejdsmappe",
       "arguments": "Argumenter",
@@ -145,7 +162,7 @@
       "disableAudio": "Deaktiver lyd",
       "disableAudioDesc": "Slå lyd fra i den fjernsession",
       "enableAudioInput": "Aktivér lydingang (mikrofon)",
-      "enableAudioInputDesc": "Videresend lokal mikrofon til den fjernsession",
+      "enableAudioInputDesc": "Videresend lokal mikrofon til den fjernsession | Kun med en ekstern guacd",
       "wallpaper": "Baggrundsbillede",
       "wallpaperDesc": "Vis skrivebordsbaggrund (deaktivering forbedrer ydeevnen)",
       "theming": "Temaer",
@@ -159,13 +176,13 @@
       "menuAnimations": "Menu-animationer",
       "menuAnimationsDesc": "Aktivér udtonings- og glideanimationer i menuer",
       "disableBitmapCaching": "Deaktiver bitmap-caching",
-      "disableBitmapCachingDesc": "Slå bitmap-cache fra (kan hjælpe med visuelle fejl)",
+      "disableBitmapCachingDesc": "Slå bitmap-cache fra (kan hjælpe med visuelle fejl) | Kun med en ekstern guacd",
       "disableOffscreenCaching": "Deaktiver offscreen-caching",
-      "disableOffscreenCachingDesc": "Slå offscreen-cache fra",
+      "disableOffscreenCachingDesc": "Slå offscreen-cache fra | Kun med en ekstern guacd",
       "disableGlyphCaching": "Deaktiver glyph-caching",
-      "disableGlyphCachingDesc": "Slå glyph-cache fra",
+      "disableGlyphCachingDesc": "Slå glyph-cache fra | Kun med en ekstern guacd",
       "enableGfx": "Aktivér GFX",
-      "enableGfxDesc": "Brug RemoteFX-grafikpipeline",
+      "enableGfxDesc": "Brug RemoteFX-grafikpipeline | Kun med en ekstern guacd",
       "enablePrinting": "Aktivér udskrivning",
       "enablePrintingDesc": "Omdiriger lokale skrivere til den fjernsession",
       "enableDriveRedirection": "Aktivér drevomdirigering",
@@ -175,7 +192,7 @@
       "disableUpload": "Deaktiver upload",
       "disableUploadDesc": "Forhindre upload af filer til den fjernsession",
       "enableTouch": "Aktivér touch",
-      "enableTouchDesc": "Aktivér videresendelse af touch-input",
+      "enableTouchDesc": "Aktivér videresendelse af touch-input | Kun med en ekstern guacd",
       "consoleSession": "Konsol-session",
       "consoleSessionDesc": "Forbind til konsollen (session 0) i stedet for en ny session",
       "sendWolPacket": "Send WOL-pakke",
@@ -202,6 +219,7 @@
       "telnetPort": "Telnet-port",
       "terminalType": "Terminaltype",
       "fontName": "Skrifttype",
+      "fontNameDesc": "Kun med en ekstern guacd. Den indbyggede motor bruger sin egen monospace-skrifttype.",
       "fontSize": "Skriftstørrelse",
       "colorScheme": "Farveschema",
       "backspaceKey": "Backspace-tast",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "Hvid på sort",
         "grayOnBlack": "Grå på sort",
         "greenOnBlack": "Grøn på sort"
-      }
+      },
+      "ardSettings": "Apple Remote Desktop-indstillinger",
+      "ardPort": "ARD-port",
+      "ardPassword": "macOS-adgangskode",
+      "ardUsername": "macOS-brugernavn",
+      "ardLeaveBlank": "Lad være udfyldt for kun at bruge en VNC-adgangskode"
     },
     "remoteDesktop": "Fjernskrivebord",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "Ukrypteret shell",
     "remoteDesktopNotes": "Noter",
     "userDefaultsNote": "Indstillinger, du ikke ændrer, følger dine standardindstillinger for værten.",
-    "connectionOriginNote": "I desktop-appen bruger RDP, VNC og Telnet den fjerne server, medmindre værten er indstillet til Denne enhed, hvilket kræver en guacd, som denne maskine kan nå. Indstil én i indstillingerne for Fjernskrivebord, eller pr. vært under guacd Proxy.",
+    "connectionOriginNote": "I desktop-appen kører RDP, VNC og Telnet på denne enhed, når værten er sat til Standard, ligesom SSH. Vælg Fjernserver for i stedet at køre dem på serveren.",
     "docsLink": "Se dokumentation",
-    "connectionOriginGuacamoleNote": "RDP, VNC og Telnet bruger den fjerne server, medmindre du vælger \"Denne enhed\", hvilket kræver en guacd, som denne maskine kan nå. Indstil én i indstillingen for guacd URL, eller pr. vært under guacd Proxy."
+    "connectionOriginGuacamoleNote": "RDP, VNC og Telnet kører som standard på denne enhed, ligesom SSH. Vælg Fjernserver for i stedet at køre dem på serveren.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Mac-skærmdeling"
   },
   "onboarding": {
     "guacdTitle": "Opsæt fjernskrivebord",
-    "guacdIntro": "Fjernskrivebord kræver, at guacd kører ved siden af Termix. Tjek, at den svarer, eller peg Termix på den.",
+    "guacdIntro": "Fjernskrivebord er indstillet til at bruge din egen guacd. Tjek, at den svarer, eller peg Termix på den.",
     "guacdChecking": "Søger efter guacd",
     "guacdConnected": "guacd kører på {{address}}",
     "guacdMissing": "guacd svarer ikke på {{address}}",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "Aktivér fjernskrivebord",
-        "description": "Tillad RDP-, VNC- og Telnet-forbindelser gennem guacd."
+        "description": "Tillad RDP-, VNC- og Telnet-forbindelser."
+      },
+      "useGuacd": {
+        "label": "Brug en ekstern guacd",
+        "description": "Termix håndterer RDP, VNC og Telnet selv. Slå dette til for at sende dem til din egen guacd i stedet. REMOTE_DESKTOP_ENGINE tilsidesætter dette."
       },
       "guacdUrl": {
         "label": "guacd-URL",
@@ -352,20 +381,46 @@
         "label": "Ignorer certifikatfejl"
       },
       "guacamoleConfig": {
-        "label": "guacd-indstillinger"
+        "label": "Forbindelsesindstillinger"
       },
       "enableToolbar": {
         "label": "Værktøjslinje til fjernskrivebord",
-        "description": "Vis værktøjslinjen i RDP-, VNC- og Telnet-sessioner."
+        "description": "Vis værktøjslinjen i RDP-, VNC-, ARD- og Telnet-sessioner."
       },
       "displayGroup": "Skærm",
-      "displayDefaultsTab": "Fjernskrivebord"
+      "displayDefaultsTab": "Fjernskrivebord",
+      "toolbarPosition": {
+        "label": "Værktøjslinjens placering",
+        "description": "Vis værktøjslinjen over eller under sessionen.",
+        "top": "Top",
+        "bottom": "Bund"
+      },
+      "toolbarLabels": {
+        "label": "Værktøjslinjeetiketter",
+        "description": "Vis navne ved siden af ikonerne, eller kun ikoner. Navne skjules automatisk, når pladsen løber ud.",
+        "labeled": "Ikoner og navne",
+        "icons": "Kun ikoner"
+      },
+      "toolbarButtons": {
+        "label": "Værktøjslinjeknapper",
+        "description": "Vælg, hvilke knapper der vises, og i hvilken rækkefølge. Knapper, der ikke får plads, placeres i menuen Mere.",
+        "reset": "Nulstil",
+        "moveUp": "Flyt op",
+        "moveDown": "Flyt ned"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "ARD-port"
+      }
     }
   },
   "palette": {
     "connectRdp": "Forbind med RDP",
     "connectVnc": "Forbind med VNC",
-    "connectTelnet": "Forbind med Telnet"
+    "connectTelnet": "Forbind med Telnet",
+    "connectArd": "Forbind med Apple Remote Desktop"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "Fjernserver påkrævet. Forbind en fjernserver i Indstillinger for at bruge denne type forbindelse."
   },
   "plugin": {
-    "name": "Fjernskrivebord"
+    "name": "Fjernskrivebord",
+    "description": "RDP-, VNC- og Telnet-sessioner i din browser med udklipsholder, filoverførsel, deling og optagelse."
   }
 }

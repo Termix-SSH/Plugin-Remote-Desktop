@@ -6,6 +6,19 @@ import {
 } from "../../src/backend/host-settings.js";
 
 describe("normalizeImportedHost", () => {
+  it("reads an ARD host's switch and port", () => {
+    expect(
+      normalizeImportedHost({
+        pluginSettings: {
+          "remote-desktop": { enableArd: true, ardPort: 5901 },
+        },
+      }),
+    ).toEqual({ enableArd: true, ardPort: 5901 });
+    expect(
+      normalizeImportedHost({ connectionType: "ard", port: 5902 }),
+    ).toEqual({ enableArd: true, ardPort: 5902 });
+  });
+
   it("reads a Termix export's pluginSettings", () => {
     expect(
       normalizeImportedHost({

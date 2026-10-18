@@ -27,6 +27,7 @@ import {
   type RemoteProtocol,
 } from "./host-settings.js";
 import { errorMessage, type RemoteDesktopLogger } from "./log.js";
+import { builtinSessionId, type EngineMode } from "./engine/index.js";
 import {
   ADMIN_PERMISSION,
   normalizeGuacdAddress,
@@ -40,8 +41,19 @@ export interface RouteDeps {
   tokens: GuacamoleTokenService;
   sessions: RemoteSessions;
   guacd: () => GuacdOptions;
+  /** Whether an admin pointed Termix at a guacd (setting or GUACD_* env). */
+  guacdConfigured?: () => boolean;
   enabled: () => Promise<boolean>;
   recordings: () => RecordingsWriter | null;
+  engineMode: () => EngineMode;
+}
+
+/** Whether a host's sessions run on guacd rather than the built-in engine. */
+export function hostUsesGuacd(
+  mode: EngineMode,
+  overrides: { guacdHost?: string; guacdPort?: number },
+): boolean {
+  return mode === "guacd" || !!overrides.guacdHost || !!overrides.guacdPort;
 }
 
 function actor(ctx: PluginContext, res: Response): string | null {
@@ -161,7 +173,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *             properties:
    *               type:
    *                 type: string
-   *                 enum: [rdp, vnc, telnet]
+   *                 enum: [rdp, vnc, ard, telnet]
    *               hostname:
    *                 type: string
    *               port:
@@ -197,7 +209,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         }
         if (!isRemoteProtocol(type)) {
           return res.status(400).json({
-            error: "Invalid connection type. Must be rdp, vnc, or telnet",
+            error: "Invalid connection type. Must be rdp, vnc, ard, or telnet",
           });
         }
         const options: Record<string, unknown> = {};
@@ -222,22 +234,51 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         }
 
         let token: string;
+        const owner = userId ? { userId } : undefined;
         if (type === "rdp") {
-          token = tokens.createRdpToken(host, user, pass, {
-            port: targetPort,
-            domain: domain ? String(domain) : undefined,
-            ...options,
-          });
+          token = tokens.createRdpToken(
+            host,
+            user,
+            pass,
+            {
+              port: targetPort,
+              domain: domain ? String(domain) : undefined,
+              ...options,
+            },
+            undefined,
+            undefined,
+            owner,
+          );
         } else if (type === "vnc") {
-          token = tokens.createVncToken(host, user || undefined, pass, {
-            port: targetPort,
-            ...options,
-          });
+          token = tokens.createVncToken(
+            host,
+            user || undefined,
+            pass,
+            { port: targetPort, ...options },
+            undefined,
+            undefined,
+            owner,
+          );
+        } else if (type === "ard") {
+          token = tokens.createArdToken(
+            host,
+            user || undefined,
+            pass,
+            { port: targetPort, ...options },
+            undefined,
+            undefined,
+            owner,
+          );
         } else {
-          token = tokens.createTelnetToken(host, user, pass, {
-            port: targetPort,
-            ...options,
-          });
+          token = tokens.createTelnetToken(
+            host,
+            user,
+            pass,
+            { port: targetPort, ...options },
+            undefined,
+            undefined,
+            owner,
+          );
         }
         res.json({ token });
       } catch (error) {
@@ -255,7 +296,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    * /plugin-api/remote-desktop/connect-host/{hostId}:
    *   post:
    *     summary: Mint a connection token for a saved host
-   *     description: Resolves the host's RDP, VNC or Telnet login for the caller (a shared recipient gets only what was shared with them), opens a jump tunnel when the host has jump hosts, and returns an encrypted guacamole-lite token.
+   *     description: Resolves the host's RDP, VNC, ARD or Telnet login for the caller (a shared recipient gets only what was shared with them), opens a jump tunnel when the host has jump hosts, and returns an encrypted guacamole-lite token.
    *     tags:
    *       - Remote Desktop
    *     security:
@@ -274,7 +315,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *             properties:
    *               protocol:
    *                 type: string
-   *                 enum: [rdp, vnc, telnet]
+   *                 enum: [rdp, vnc, ard, telnet]
    *               promptedUsername:
    *                 type: string
    *               promptedPassword:
@@ -312,7 +353,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         const requested = body.protocol;
         const protocol: RemoteProtocol | undefined = isRemoteProtocol(requested)
           ? requested
-          : (["rdp", "vnc", "telnet"] as const).find(
+          : (["rdp", "vnc", "ard", "telnet"] as const).find(
               (candidate) => settings[ENABLE_KEY[candidate]],
             );
         if (!protocol) {
@@ -341,11 +382,22 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
             : {}),
           ...settings.guacamoleConfig,
         });
-        const guacdOverrides = await guacdOverridesFor(
+        let guacdOverrides = await guacdOverridesFor(
           ctx,
           hostId,
           settings.guacamoleConfig,
         );
+        // The built-in engine has no RD Gateway yet, so a gateway host uses
+        // a configured guacd instead.
+        if (
+          protocol === "rdp" &&
+          guacConfig["gateway-hostname"] &&
+          !hostUsesGuacd(deps.engineMode(), guacdOverrides) &&
+          deps.guacdConfigured?.()
+        ) {
+          const { host, port } = deps.guacd();
+          guacdOverrides = { guacdHost: host, guacdPort: port };
+        }
 
         const promptForLogin =
           protocol === "rdp" && target.auth.authType === "none";
@@ -367,13 +419,20 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         const termixConnectId = crypto.randomUUID();
         const cleanups: Array<() => void> = [];
         const jumpHosts = target.host.jumpHosts;
-        const needsVncProxy = protocol === "vnc" && !username;
+        const viaGuacd = hostUsesGuacd(deps.engineMode(), guacdOverrides);
+        // The built-in engine speaks Apple's login itself; only guacd needs
+        // the macOS banner proxy.
+        const needsVncProxy =
+          viaGuacd && (protocol === "vnc" || protocol === "ard") && !username;
 
+        // The built-in engine dials from this process, so loopback is enough.
         const endpoint =
           jumpHosts.length > 0 || needsVncProxy
-            ? resolveJumpTunnelEndpoint(
-                guacdOverrides.guacdHost || deps.guacd().host,
-              )
+            ? viaGuacd
+              ? resolveJumpTunnelEndpoint(
+                  guacdOverrides.guacdHost || deps.guacd().host,
+                )
+              : { bindHost: "127.0.0.1", advertisedHost: "127.0.0.1" }
             : null;
 
         try {
@@ -414,15 +473,17 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         sessions.park(termixConnectId, cleanups);
 
         const recordings = deps.recordings();
+        // guacd never recorded VNC here; the built-in engine does.
         const recordingEnabled =
-          protocol !== "vnc" &&
+          ((protocol !== "vnc" && protocol !== "ard") || !viaGuacd) &&
           !!recordings &&
-          (await recordings.enabledFor(hostId));
+          (await recordings.enabledFor(hostId).catch(() => false));
         const recordingName = `${crypto.randomUUID()}.guac`;
-        const guacdRecordingPath =
-          process.env.GUACD_RECORDING_PATH ||
-          process.env.GUACD_RECORDING_BACKEND_PATH ||
-          path.resolve(recordingsDir());
+        const guacdRecordingPath = viaGuacd
+          ? process.env.GUACD_RECORDING_PATH ||
+            process.env.GUACD_RECORDING_BACKEND_PATH ||
+            path.resolve(recordingsDir())
+          : path.resolve(recordingsDir());
         const recording = recordingEnabled
           ? {
               hostId,
@@ -477,6 +538,15 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
             recording,
             termixMeta,
           );
+        } else if (protocol === "ard") {
+          token = tokens.createArdToken(
+            hostname,
+            username || undefined,
+            password,
+            { port, ...guacConfig, ...guacdOverrides },
+            recording,
+            termixMeta,
+          );
         } else {
           token = tokens.createTelnetToken(
             hostname,
@@ -496,7 +566,13 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
           success: true,
         });
 
-        res.json({ token, termixConnectId, guacamoleConnectionId: null });
+        res.json({
+          token,
+          termixConnectId,
+          guacamoleConnectionId: viaGuacd
+            ? null
+            : builtinSessionId(termixConnectId),
+        });
       } catch (error) {
         log.error("Failed to generate a connection token for a host", {
           operation: "guac_host_token_error",
@@ -639,7 +715,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    * /plugin-api/remote-desktop/status:
    *   get:
    *     summary: Remote Desktop status
-   *     description: Whether Remote Desktop is turned on, and whether guacd answers at the configured address.
+   *     description: Whether Remote Desktop is turned on, which engine runs sessions (builtin or guacd), and with guacd whether it answers at the configured address. The built-in engine always reports a connected guacd so older clients still connect.
    *     tags:
    *       - Remote Desktop
    *     security:
@@ -659,7 +735,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *         name: protocol
    *         schema:
    *           type: string
-   *           enum: [rdp, vnc, telnet]
+   *           enum: [rdp, vnc, ard, telnet]
    *     responses:
    *       200:
    *         description: The status.
@@ -670,6 +746,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
     try {
       const enabled = await deps.enabled();
       let guacd = deps.guacd();
+      let overrides: { guacdHost?: string; guacdPort?: number } = {};
       if (req.query.hostId !== undefined) {
         const userId = actor(ctx, res);
         if (!userId) return;
@@ -693,20 +770,34 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
             .status(400)
             .json({ error: "Protocol is not enabled for this host" });
         }
-        const guacdOverrides = await guacdOverridesFor(
+        overrides = await guacdOverridesFor(
           ctx,
           hostId,
           settings.guacamoleConfig,
         );
         guacd = {
-          host: guacdOverrides.guacdHost || guacd.host,
-          port: guacdOverrides.guacdPort || guacd.port,
+          host: overrides.guacdHost || guacd.host,
+          port: overrides.guacdPort || guacd.port,
         };
+      }
+      if (!hostUsesGuacd(deps.engineMode(), overrides)) {
+        // Old clients gate on guacd.status, so the built-in engine reports
+        // itself as a connected guacd.
+        return res.json({
+          enabled,
+          engine: "builtin",
+          guacd: { host: "builtin", port: 0, status: "connected" },
+          websocket: {
+            path: "/plugin-ws/remote-desktop/display",
+            status: "running",
+          },
+        });
       }
       const probe = enabled && req.query.probe !== "0";
       const reachable = probe ? await probeGuacd(guacd) : false;
       res.json({
         enabled,
+        engine: "guacd",
         guacd: {
           host: guacd.host,
           port: guacd.port,

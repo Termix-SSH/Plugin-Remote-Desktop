@@ -3,10 +3,11 @@ import fs from "fs";
 import path from "path";
 import type { IncomingMessage } from "http";
 import type { Duplex } from "stream";
-import type {
-  GuacamoleRecordingMetadata,
-  GuacamoleTokenService,
-  TermixGuacMeta,
+import {
+  SHARE_ID_SETTING,
+  type GuacamoleRecordingMetadata,
+  type GuacamoleTokenService,
+  type TermixGuacMeta,
 } from "./token-service.js";
 import type { GuacdOptions } from "./guacd-config.js";
 import type { RemoteSessions } from "./sessions.js";
@@ -110,6 +111,7 @@ export interface GuacamoleServerDeps {
 }
 
 export interface GuacamoleServer {
+  /** Takes an upgrade whose token the display gateway already accepted. */
   handleUpgrade: (
     request: IncomingMessage,
     socket: Duplex,
@@ -119,7 +121,81 @@ export interface GuacamoleServer {
   restart: () => void;
   /** Closes a session and everyone watching it. */
   endSession: (guacamoleConnectionId: string) => boolean;
+  /** Closes the viewers that joined a session through one share. */
+  disconnectShare: (guacamoleConnectionId: string, shareId: string) => number;
   close: () => void;
+}
+
+export interface PersistDeps {
+  log: RemoteDesktopLogger;
+  recordings: () => RecordingsWriter | null;
+  asUser: <T>(userId: string, fn: () => Promise<T>) => Promise<T>;
+}
+
+/**
+ * Hands a finished .guac file to the Session Recording plugin. guacd may
+ * still be flushing or renaming it when the socket closes, so in guacd mode
+ * it waits a moment for the file to show up.
+ */
+export async function persistRecording(
+  deps: PersistDeps,
+  recording: GuacamoleRecordingMetadata,
+  { waitForFile = false }: { waitForFile?: boolean } = {},
+): Promise<void> {
+  const { log } = deps;
+  const dir = recordingsDir();
+  const resolvedPath = path.resolve(dir, recording.path);
+  if (!resolvedPath.startsWith(`${path.resolve(dir)}${path.sep}`)) return;
+
+  for (
+    let attempt = 0;
+    waitForFile && attempt < 10 && !fs.existsSync(resolvedPath);
+    attempt++
+  ) {
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  if (!fs.existsSync(resolvedPath)) {
+    log.warn("Guacamole recording file was not found", {
+      operation: "guac_recording_missing",
+      hostId: recording.hostId,
+      path: resolvedPath,
+      guacdPath: recording.guacdPath ?? dir,
+      hint:
+        "guacd writes the recording to guacdPath, the backend reads it from path. " +
+        "When guacd runs in its own container these must be the same volume: set " +
+        "GUACD_RECORDING_PATH to guacd's mount point and GUACD_RECORDING_BACKEND_PATH to this one.",
+    });
+    return;
+  }
+
+  const writer = await deps.asUser(recording.userId, async () =>
+    deps.recordings(),
+  );
+  if (!writer) {
+    log.warn("Session Recording is off; the recording was kept on disk only", {
+      operation: "guac_recording_no_writer",
+      hostId: recording.hostId,
+    });
+    return;
+  }
+
+  const endedAt = new Date();
+  const startedAt = new Date(recording.startedAt);
+  await deps.asUser(recording.userId, () =>
+    writer.createFinished({
+      hostId: recording.hostId,
+      userId: recording.userId,
+      startedAt: startedAt.toISOString(),
+      endedAt: endedAt.toISOString(),
+      duration: Math.max(
+        0,
+        Math.floor((endedAt.getTime() - startedAt.getTime()) / 1000),
+      ),
+      recordingPath: resolvedPath,
+      protocol: recording.protocol,
+      format: "guacamole",
+    }),
+  );
 }
 
 /**
@@ -131,69 +207,6 @@ export function createGuacamoleServer(
 ): GuacamoleServer {
   const { log, sessions } = deps;
   let server: GuacamoleLite | null = null;
-
-  const persistRecording = async (connection: ClientConnection) => {
-    const recording = connection.connectionSettings?.recording;
-    if (!recording) return;
-
-    const dir = recordingsDir();
-    const resolvedPath = path.resolve(dir, recording.path);
-    if (!resolvedPath.startsWith(`${path.resolve(dir)}${path.sep}`)) return;
-
-    // guacd may flush or rename the recording just after the socket closes.
-    for (
-      let attempt = 0;
-      attempt < 10 && !fs.existsSync(resolvedPath);
-      attempt++
-    ) {
-      await new Promise((resolve) => setTimeout(resolve, 100));
-    }
-    if (!fs.existsSync(resolvedPath)) {
-      log.warn("Guacamole recording file was not found", {
-        operation: "guac_recording_missing",
-        hostId: recording.hostId,
-        path: resolvedPath,
-        guacdPath: recording.guacdPath ?? dir,
-        hint:
-          "guacd writes the recording to guacdPath, the backend reads it from path. " +
-          "When guacd runs in its own container these must be the same volume: set " +
-          "GUACD_RECORDING_PATH to guacd's mount point and GUACD_RECORDING_BACKEND_PATH to this one.",
-      });
-      return;
-    }
-
-    const writer = await deps.asUser(recording.userId, async () =>
-      deps.recordings(),
-    );
-    if (!writer) {
-      log.warn(
-        "Session Recording is off; the recording was kept on disk only",
-        {
-          operation: "guac_recording_no_writer",
-          hostId: recording.hostId,
-        },
-      );
-      return;
-    }
-
-    const endedAt = new Date();
-    const startedAt = new Date(recording.startedAt);
-    await deps.asUser(recording.userId, () =>
-      writer.createFinished({
-        hostId: recording.hostId,
-        userId: recording.userId,
-        startedAt: startedAt.toISOString(),
-        endedAt: endedAt.toISOString(),
-        duration: Math.max(
-          0,
-          Math.floor((endedAt.getTime() - startedAt.getTime()) / 1000),
-        ),
-        recordingPath: resolvedPath,
-        protocol: recording.protocol,
-        format: "guacamole",
-      }),
-    );
-  };
 
   const build = (): GuacamoleLite => {
     // guacamole-lite fills in port 8080 unless it sees a server key, and ws
@@ -229,12 +242,16 @@ export function createGuacamoleServer(
       const meta = connection.connectionSettings?.termixMeta;
       const isJoin = !!connection.connectionSettings?.connection?.join;
       if (!isJoin && meta) sessions.closed(meta.termixConnectId);
-      persistRecording(connection).catch((error) => {
-        log.error("Failed to persist Guacamole recording", {
-          operation: "guac_recording_persist_error",
-          error: errorMessage(error),
-        });
-      });
+      const recording = connection.connectionSettings?.recording;
+      if (!recording) return;
+      persistRecording(deps, recording, { waitForFile: true }).catch(
+        (error) => {
+          log.error("Failed to persist Guacamole recording", {
+            operation: "guac_recording_persist_error",
+            error: errorMessage(error),
+          });
+        },
+      );
     });
 
     guacamole.on("error", (connection: ClientConnection, error: Error) => {
@@ -264,24 +281,7 @@ export function createGuacamoleServer(
 
   return {
     handleUpgrade(request, socket, head) {
-      // The route is public, so the token is the only credential: refuse
-      // anything forged, edited, expired or already used before
-      // guacamole-lite reads it.
-      const token = new URL(
-        request.url ?? "/",
-        "http://localhost",
-      ).searchParams.get("token");
-      if (!token || !deps.tokens.consumeToken(token)) {
-        try {
-          socket.write(
-            "HTTP/1.1 401 Unauthorized\r\nConnection: close\r\n\r\n",
-          );
-        } catch {
-          // The peer may already be gone.
-        }
-        socket.destroy();
-        return;
-      }
+      // The display gateway already checked and spent the token.
       const wss = (
         server as unknown as {
           webSocketServer?: {
@@ -329,6 +329,27 @@ export function createGuacamoleServer(
         }
       }
       return closed;
+    },
+
+    disconnectShare(guacamoleConnectionId, shareId) {
+      const active = (
+        server as unknown as {
+          activeConnections?: Map<unknown, ClientConnection>;
+        } | null
+      )?.activeConnections;
+      let count = 0;
+      for (const connection of [...(active?.values() ?? [])]) {
+        const settings = connection.connectionSettings?.connection as
+          Record<string, unknown> | undefined;
+        if (
+          settings?.join === guacamoleConnectionId &&
+          settings[SHARE_ID_SETTING] === shareId
+        ) {
+          connection.close?.();
+          count++;
+        }
+      }
+      return count;
     },
 
     close: closeServer,

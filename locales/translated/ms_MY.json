@@ -10,7 +10,7 @@
     "failedToConnect": "Gagal mendapatkan token sambungan",
     "hostNotFound": "Hos tidak dijumpai",
     "noHostSelected": "Tiada hos dipilih",
-    "guacdUnavailable": "Perkhidmatan desktop jauh (guacd) tidak tersedia. Sila pastikan guacd sedang berjalan, boleh diakses, dan dikonfigurasi dengan betul dalam tetapan pentadbir.",
+    "guacdUnavailable": "guacd luaran tidak menjawab. Pastikan ia sedang berjalan, atau matikan Gunakan guacd luaran dalam tetapan Meja Riba Jauh.",
     "credentialPromptTitle": "Masukkan Kelayakan RDP",
     "credentialPromptDescription": "Hos ini ditetapkan untuk meminta kelayakan semasa sambungan. Ia hanya digunakan untuk sesi ini dan tidak disimpan.",
     "connect": "Sambung",
@@ -28,7 +28,7 @@
       "uploadFailed": "Gagal memuat naik {{name}}",
       "uploadDisabled": "Muat naik dilumpuhkan untuk sambungan ini",
       "driveUnavailable": "Dayakan pengalihan pemacu RDP sebelum memuat naik fail",
-      "driveNotWritable": "guacd tidak boleh menulis ke folder pemacu. Semak GUACD_DRIVE_PATH dan keizinanannya.",
+      "driveNotWritable": "Termix tidak dapat menulis ke folder pemacu. Periksa RDP_DRIVE_PATH, atau GUACD_DRIVE_PATH dengan guacd luaran, dan keizinan aksesnya.",
       "dropToUpload": "Lepaskan fail untuk memuat naik"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Anak panah kiri",
       "arrowRight": "Anak panah kanan",
       "fnToggle": "Kunci Fungsi",
-      "collapse": "Runtuhkan bar alat",
-      "expand": "Kembangkan bar alat",
-      "dragHandle": "Seret untuk mengubah kedudukan",
-      "hide": "Sembunyikan untuk sesi ini. Untuk melumpuhkannya secara kekal, buka Tetapan Hos → Umum → Bar Alat Sambungan.",
       "zoomIn": "Zum masuk",
       "zoomOut": "Zum keluar",
       "resetZoom": "Set semula zum",
       "fitToScreen": "Muat ke skrin",
       "switchToTrackpad": "Tukar ke mod trackpad (seret untuk menggerakkan kursor, ketuk untuk klik)",
-      "switchToTouch": "Tukar ke mod sentuh (ketuk terus di tempat yang ingin diklik)"
+      "switchToTouch": "Tukar ke mod sentuh (ketuk terus di tempat yang ingin diklik)",
+      "label": "Bar alat meja riba jauh",
+      "more": "Lagi",
+      "items": {
+        "files": "Fail",
+        "touchMode": "Mod sentuh",
+        "zoom": "Zum",
+        "lock": "Kunci skrin",
+        "metaKey": "Kunci sistem",
+        "modifiers": "Kunci pengubah sukat melekit",
+        "arrows": "Kunci anak panah",
+        "forceQuit": "Paksa Tutup",
+        "macLock": "Kunci skrin",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "Muncul sekali pemacu RDP dihidupkan",
+        "touchMode": "Hanya pada skrin sentuh",
+        "modifiers": "Ctrl, Alt, Shift dan kunci sistem kekal ditekan sehingga kekunci seterusnya"
+      },
+      "option": "Pilihan"
     },
     "disabled": "Remote Desktop dimatikan. Admin boleh menghidupkannya dalam Tetapan."
   },
@@ -114,11 +130,11 @@
       "timezone": "Zon masa",
       "loadBalanceInfo": "Maklumat Imbangan Beban / Kuki",
       "loadBalanceInfoDesc": "Kuki RD Connection Broker untuk imbangan beban ladang RDS (cth. tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "Proksi guacd",
+      "guacdProxy": "Proksi guacd (pilihan)",
       "guacdHostname": "Hos guacd",
       "guacdHostnamePlaceholder": "Lalai global",
       "guacdPort": "Port guacd",
-      "guacdProxyDesc": "Tindih instance guacd global untuk sambungan ini. Kosongkan untuk menggunakan guacd yang dikonfigurasi secara global.",
+      "guacdProxyDesc": "Termix menyambung ke hos ini secara langsung. Hanya tetapkan pelayan guacd jika hos ini perlu melalui guacd anda sendiri. Biarkan kosong untuk menggunakan tetapan global.",
       "guacdAdminOnly": "Hanya admin boleh mengubah pelayan guacd untuk hos.",
       "guacdSaveHostFirst": "Simpan hos terlebih dahulu, kemudian tetapkan pelayan guacdnya di sini.",
       "guacdSave": "Simpan pelayan guacd",
@@ -129,6 +145,7 @@
       "gatewayUsername": "Nama Pengguna Gerbang",
       "gatewayPassword": "Kata Laluan Gerbang",
       "gatewayDomain": "Domain Gerbang",
+      "gatewayNote": "RD Gateway memerlukan guacd luaran. Hos dengan gateway akan menyambung ke gateway tersebut apabila ia ditetapkan, sama ada dalam tetapan Meja Riba Jauh atau di bawah Proksi guacd.",
       "remoteAppProgram": "Program RemoteApp",
       "workingDirectory": "Direktori Kerja",
       "arguments": "Argumen",
@@ -145,7 +162,7 @@
       "disableAudio": "Lumpuhkan Audio",
       "disableAudioDesc": "Bisukan semua audio dari sesi jauh",
       "enableAudioInput": "Dayakan Input Audio (Mikrofon)",
-      "enableAudioInputDesc": "Teruskan mikrofon tempatan ke sesi jauh",
+      "enableAudioInputDesc": "Hantar mikrofon tempatan ke sesi jauh | Hanya dengan guacd luaran",
       "wallpaper": "Tapak Meja",
       "wallpaperDesc": "Paparkan tapak meja desktop (melumpuhkan meningkatkan prestasi)",
       "theming": "Tema",
@@ -159,13 +176,13 @@
       "menuAnimations": "Animasi Menu",
       "menuAnimationsDesc": "Dayakan animasi pudar dan gelongsor menu",
       "disableBitmapCaching": "Lumpuhkan Penimbulan Bitmap",
-      "disableBitmapCachingDesc": "Matikan cache bitmap (mungkin membantu dengan masalah visual)",
+      "disableBitmapCachingDesc": "Matikan cache bitmap (mungkin membantu dengan masalah visual) | Hanya dengan guacd luaran",
       "disableOffscreenCaching": "Lumpuhkan Penimbulan Luar Skrin",
-      "disableOffscreenCachingDesc": "Matikan cache luar skrin",
+      "disableOffscreenCachingDesc": "Matikan cache luar skrin | Hanya dengan guacd luaran",
       "disableGlyphCaching": "Lumpuhkan Penimbulan Glif",
-      "disableGlyphCachingDesc": "Matikan cache glif",
+      "disableGlyphCachingDesc": "Matikan cache glif | Hanya dengan guacd luaran",
       "enableGfx": "Dayakan GFX",
-      "enableGfxDesc": "Gunakan paip grafik RemoteFX",
+      "enableGfxDesc": "Gunakan paip grafik RemoteFX | Hanya dengan guacd luaran",
       "enablePrinting": "Dayakan Pencetakan",
       "enablePrintingDesc": "Arahkan semula pencetak tempatan ke sesi jauh",
       "enableDriveRedirection": "Dayakan Pengalihan Pemacu",
@@ -175,7 +192,7 @@
       "disableUpload": "Lumpuhkan Muat Naik",
       "disableUploadDesc": "Cegah muat naik fail ke sesi jauh",
       "enableTouch": "Dayakan Sentuhan",
-      "enableTouchDesc": "Dayakan terusan input sentuhan",
+      "enableTouchDesc": "Dayakan penghantaran input sentuh | Hanya dengan guacd luaran",
       "consoleSession": "Sesi Konsol",
       "consoleSessionDesc": "Sambung ke konsol (sesi 0) bukannya sesi baru",
       "sendWolPacket": "Hantar Pakej WOL",
@@ -202,6 +219,7 @@
       "telnetPort": "Port Telnet",
       "terminalType": "Jenis Terminal",
       "fontName": "Nama Fon",
+      "fontNameDesc": "Hanya dengan guacd luaran. Enjin terbina dalam menggunakan fon monospace sendiri.",
       "fontSize": "Saiz Fon",
       "colorScheme": "Skema Warna",
       "backspaceKey": "Kekunci Backspace",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "Putih pada Hitam",
         "grayOnBlack": "Kelabu pada Hitam",
         "greenOnBlack": "Hijau pada Hitam"
-      }
+      },
+      "ardSettings": "Tetapan Apple Remote Desktop",
+      "ardPort": "Port ARD",
+      "ardPassword": "Kata Laluan macOS",
+      "ardUsername": "Nama Pengguna macOS",
+      "ardLeaveBlank": "Biarkan kosong untuk kata laluan VNC sahaja"
     },
     "remoteDesktop": "Meja Kerja Jauh",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "Shell tidak disulitkan",
     "remoteDesktopNotes": "Nota",
     "userDefaultsNote": "Tetapan yang anda biarkan tidak berubah mengikuti lalai hos anda.",
-    "connectionOriginNote": "Pada aplikasi desktop, RDP, VNC dan Telnet menggunakan pelayan jauh melainkan hos ditetapkan ke Peranti ini, yang memerlukan guacd yang boleh dicapai oleh mesin ini. Tetapkan satu dalam tetapan Meja Kerja Jauh, atau setiap hos di bawah Proksi guacd.",
+    "connectionOriginNote": "Pada aplikasi desktop, RDP, VNC dan Telnet berjalan pada peranti ini apabila hos diletakkan pada Lalai, seperti SSH. Pilih Pelayan Jauh untuk menjalankannya pada pelayan sebaliknya.",
     "docsLink": "Lihat dokumen",
-    "connectionOriginGuacamoleNote": "RDP, VNC dan Telnet menggunakan pelayan jauh melainkan anda memilih \"Peranti ini\", yang memerlukan guacd yang boleh dicapai oleh mesin ini. Tetapkan satu dalam tetapan URL guacd, atau setiap hos di bawah Proksi guacd."
+    "connectionOriginGuacamoleNote": "RDP, VNC dan Telnet berjalan pada peranti ini secara lalai, seperti SSH. Pilih Pelayan Jauh untuk menjalankannya pada pelayan sebaliknya.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Kongsi Skrin Mac"
   },
   "onboarding": {
     "guacdTitle": "Sediakan meja kerja jauh",
-    "guacdIntro": "Meja kerja jauh memerlukan guacd berjalan bersebelahan dengan Termix. Semak bahawa ia menjawab, atau tunjuk Termix ke arahnya.",
+    "guacdIntro": "Meja riba jauh ditetapkan untuk menggunakan guacd anda sendiri. Pastikan ia menjawab, atau tunjuk Termix ke arah guacd tersebut.",
     "guacdChecking": "Mencari guacd",
     "guacdConnected": "guacd sedang berjalan di {{address}}",
     "guacdMissing": "guacd tidak menjawab di {{address}}",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "Dayakan Meja Kerja Jauh",
-        "description": "Benarkan sambungan RDP, VNC dan Telnet melalui guacd."
+        "description": "Benarkan sambungan RDP, VNC dan Telnet."
+      },
+      "useGuacd": {
+        "label": "Gunakan guacd luaran",
+        "description": "Termix menjalankan RDP, VNC dan Telnet secara langsung. Hidupkan ini untuk menghantar mereka ke guacd anda sendiri sebaliknya. REMOTE_DESKTOP_ENGINE mengatasi ini."
       },
       "guacdUrl": {
         "label": "URL guacd",
@@ -352,20 +381,46 @@
         "label": "Abaikan ralat sijil"
       },
       "guacamoleConfig": {
-        "label": "Tetapan guacd"
+        "label": "Tetapan sambungan"
       },
       "enableToolbar": {
         "label": "Bar alat meja kerja jauh",
-        "description": "Paparkan bar alat dalam sesi RDP, VNC dan Telnet."
+        "description": "Paparkan bar alat dalam sesi RDP, VNC, ARD dan Telnet."
       },
       "displayGroup": "Paparan",
-      "displayDefaultsTab": "Meja Kerja Jauh"
+      "displayDefaultsTab": "Meja Kerja Jauh",
+      "toolbarPosition": {
+        "label": "Kedudukan bar alat",
+        "description": "Paparkan bar alat di atas atau di bawah sesi.",
+        "top": "Atas",
+        "bottom": "Bawah"
+      },
+      "toolbarLabels": {
+        "label": "Label bar alat",
+        "description": "Paparkan nama di sebelah ikon, atau ikon sahaja. Nama akan disembunyikan secara automatik apabila ruang tidak mencukupi.",
+        "labeled": "Ikon dan nama",
+        "icons": "Ikon sahaja"
+      },
+      "toolbarButtons": {
+        "label": "Butang bar alat",
+        "description": "Pilih butang mana yang dipaparkan dan dalam susunan apa. Butang yang tidak muat akan masuk ke menu Lagi.",
+        "reset": "Set Semula",
+        "moveUp": "Gerak ke atas",
+        "moveDown": "Gerak ke bawah"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "Port ARD"
+      }
     }
   },
   "palette": {
     "connectRdp": "Sambung dengan RDP",
     "connectVnc": "Sambung dengan VNC",
-    "connectTelnet": "Sambung dengan Telnet"
+    "connectTelnet": "Sambung dengan Telnet",
+    "connectArd": "Sambung dengan Apple Remote Desktop"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "Pelayan jauh diperlukan. Sambungkan pelayan jauh dalam Tetapan untuk menggunakan jenis sambungan ini."
   },
   "plugin": {
-    "name": "Meja Kerja Jauh"
+    "name": "Meja Kerja Jauh",
+    "description": "Sesi RDP, VNC dan Telnet dalam pelayar anda, dengan papan klip, pemindahan fail, perkongsian dan rakaman."
   }
 }

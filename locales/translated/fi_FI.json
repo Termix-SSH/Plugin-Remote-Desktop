@@ -10,7 +10,7 @@
     "failedToConnect": "Yhteysavaimen haku epäonnistui",
     "hostNotFound": "Isäntää ei löydy",
     "noHostSelected": "Isäntää ei ole valittu",
-    "guacdUnavailable": "Etätyöpöytäpalvelu (guacd) ei ole saatavilla. Varmista, että guacd on käynnissä, saavutettavissa ja oikein määritetty hallinta-asetuksissa.",
+    "guacdUnavailable": "Ulkoinen guacd ei vastaa. Varmista, että se on käynnissä, tai poista käytöstä vaihtoehto \"Käytä ulkoista guacd:ta\" Etätyöpöytä-asetuksissa.",
     "credentialPromptTitle": "Syötä RDP-tunnukset",
     "credentialPromptDescription": "Tämä isäntä on määritetty pyytämään tunnukset yhteyden muodostamisen yhteydessä. Niitä käytetään vain tämän istunnon aikana, eikä niitä tallenneta.",
     "connect": "Yhdistä",
@@ -28,7 +28,7 @@
       "uploadFailed": "Tiedoston {{name}} lataaminen epäonnistui",
       "uploadDisabled": "Tiedostojen lataus on poistettu käytöstä tässä yhteydessä",
       "driveUnavailable": "Ota RDP-asetunnin uudelleenohjaus käyttöön ennen tiedostojen lataamista",
-      "driveNotWritable": "guacd ei voi kirjoittaa aseman kansioon. Tarkista GUACD_DRIVE_PATH ja sen käyttöoikeudet.",
+      "driveNotWritable": "Termix ei voi kirjoittaa levykansioon. Tarkista RDP_DRIVE_PATH tai GUACD_DRIVE_PATH (kun käytetään ulkoista guacd:ta) sekä niiden käyttöoikeudet.",
       "dropToUpload": "Pudota tiedostot ladattavaksi"
     },
     "toolbar": {
@@ -58,16 +58,32 @@
       "arrowLeft": "Nuoli vasemmalle",
       "arrowRight": "Nuoli oikealle",
       "fnToggle": "Toimintonäppäimet",
-      "collapse": "Piilota työkalurivi",
-      "expand": "Laajenna työkalurivi",
-      "dragHandle": "Vedä siirtääksesi",
-      "hide": "Piilota tälle istunnolle. Poista se käytöstä pysyvästi avaamalla Isännän asetukset → Yleiset → Yhteys työkalurivi.",
       "zoomIn": "Zoomaa lähemmäs",
       "zoomOut": "Piennä",
       "resetZoom": "Palauta zoomaus",
       "fitToScreen": "Sovita näytölle",
       "switchToTrackpad": "Vaihda kosketuslevymoodiin (raahaa siirtääksesi kursoria, napauta klikataksesi)",
-      "switchToTouch": "Vaihda kosketusmoodiin (napauta suoraan kohtaan, johon haluat klikata)"
+      "switchToTouch": "Vaihda kosketusmoodiin (napauta suoraan kohtaan, johon haluat klikata)",
+      "label": "Etätyöpöydän työkalurivi",
+      "more": "Lisää",
+      "items": {
+        "files": "Tiedostot",
+        "touchMode": "Kosketustila",
+        "zoom": "Zoomaa",
+        "lock": "Lukitse näyttö",
+        "metaKey": "Järjestelmänäppäin",
+        "modifiers": "Tahmeat muokkausnäppäimet",
+        "arrows": "Nuolinäppäimet",
+        "forceQuit": "Pakota lopetus",
+        "macLock": "Lukitse näyttö",
+        "spotlight": "Spotlight"
+      },
+      "hints": {
+        "files": "Näytetään, kun RDP-levy on käytössä",
+        "touchMode": "Vain kosketusnäytöissä",
+        "modifiers": "Ctrl, Alt, Shift ja järjestelmänäppäin pysyvät painettuina seuraavaan näppäimeen asti"
+      },
+      "option": "Option"
     },
     "disabled": "Etätyöpöytä on poissa käytöstä. Ylläpitäjä voi ottaa sen käyttöön Asetuksista."
   },
@@ -114,11 +130,11 @@
       "timezone": "Aikavyöhyke",
       "loadBalanceInfo": "Kuormantasainformaatio / Eväste",
       "loadBalanceInfoDesc": "RD Connection Broker -eväste RDS-farmin kuormantasapalvelua varten (esim. tsv://MS Terminal Services Plugin.1.CollectionName)",
-      "guacdProxy": "guacd-välityspalvelin",
+      "guacdProxy": "guacd-välityspalvelin (valinnainen)",
       "guacdHostname": "guacd-palvelin",
       "guacdHostnamePlaceholder": "Globaali oletus",
       "guacdPort": "guacd-portti",
-      "guacdProxyDesc": "Korvaa tämän yhteyden globaali guacd-instanssi. Jätä tyhjäksi käyttääksesi globaalisti määritettyä guacd-palvelinta.",
+      "guacdProxyDesc": "Termix yhdistyy tähän isäntään suoraan. Määritä guacd-palvelin vain, jos tämän isännän tulee käyttää omaa guacd-palvelinta. Jätä tyhjäksi käyttääksesi globaalia asetusta.",
       "guacdAdminOnly": "Vain ylläpitäjät voivat muuttaa isäntäpalvelimen guacd-palvelinta.",
       "guacdSaveHostFirst": "Tallenna isäntäpalvelin ensin, määritä sitten sen guacd-palvelin tässä.",
       "guacdSave": "Tallenna guacd-palvelin",
@@ -129,6 +145,7 @@
       "gatewayUsername": "Yhdyskäytävän käyttäjätunnus",
       "gatewayPassword": "Yhdyskäytävän salasana",
       "gatewayDomain": "Yhdyskäytävän verkkotunnus",
+      "gatewayNote": "RD Gateway vaatii ulkoisen guacd-palvelimen. Isäntien, joilla on gateway, käytetään sitä, kun se on määritetty Etätyöpöytä-asetuksissa tai guacd Proxy -osiossa.",
       "remoteAppProgram": "RemoteApp-ohjelma",
       "workingDirectory": "Työhakemisto",
       "arguments": "Argumentit",
@@ -145,7 +162,7 @@
       "disableAudio": "Poista ääni käytöstä",
       "disableAudioDesc": "Mykistä kaikki äänet etäistunnosta",
       "enableAudioInput": "Ota äänitulo käyttöön (mikrofoni)",
-      "enableAudioInputDesc": "Ohjaa paikallinen mikrofoni etäistuntoon",
+      "enableAudioInputDesc": "Ohjaa paikallinen mikrofoni etäistuntoon | Vain ulkoisen guacd:n kanssa",
       "wallpaper": "Työpöytätapetti",
       "wallpaperDesc": "Näytä työpöytätapetti (poistaminen käytöstä parantaa suorituskykyä)",
       "theming": "Teemat",
@@ -159,13 +176,13 @@
       "menuAnimations": "Valikkoliikkeet",
       "menuAnimationsDesc": "Ota valikon haalistumis- ja liukumisliikkeet käyttöön",
       "disableBitmapCaching": "Poista bittikarttavälimuisti käytöstä",
-      "disableBitmapCachingDesc": "Sammuta bittikarttavälimuisti (voi auttaa häiriöiden kanssa)",
+      "disableBitmapCachingDesc": "Poista bittikarttavälimuisti käytöstä (voi auttaa häiriöiden kanssa) | Vain ulkoisen guacd:n kanssa",
       "disableOffscreenCaching": "Poista näytön ulkopuolinen välimuisti käytöstä",
-      "disableOffscreenCachingDesc": "Sammuta näytön ulkopuolinen välimuisti",
+      "disableOffscreenCachingDesc": "Poista näytön ulkopuolinen välimuisti käytöstä | Vain ulkoisen guacd:n kanssa",
       "disableGlyphCaching": "Poista merkkivälimuisti käytöstä",
-      "disableGlyphCachingDesc": "Sammuta merkkivälimuisti",
+      "disableGlyphCachingDesc": "Poista merkkivälimuisti käytöstä | Vain ulkoisen guacd:n kanssa",
       "enableGfx": "Ota GFX käyttöön",
-      "enableGfxDesc": "Käytä RemoteFX-grafiikkaputkea",
+      "enableGfxDesc": "Käytä RemoteFX-grafiikkaputkea | Vain ulkoisen guacd:n kanssa",
       "enablePrinting": "Ota tulostus käyttöön",
       "enablePrintingDesc": "Ohjaa paikalliset tulostimet etäistuntoon",
       "enableDriveRedirection": "Ota aseman uudelleenohjaus käyttöön",
@@ -175,7 +192,7 @@
       "disableUpload": "Poista lataus käytöstä",
       "disableUploadDesc": "Estä tiedostojen lataaminen etäistuntoon",
       "enableTouch": "Ota kosketus käyttöön",
-      "enableTouchDesc": "Ota kosketustulon uudelleenohjaus käyttöön",
+      "enableTouchDesc": "Ota kosketustulon ohjaus käyttöön | Vain ulkoisen guacd:n kanssa",
       "consoleSession": "Konsoliistunto",
       "consoleSessionDesc": "Yhdistä konsoliin (istunto 0) uuden istunnon sijaan",
       "sendWolPacket": "Lähetä WOL-paketti",
@@ -202,6 +219,7 @@
       "telnetPort": "Telnet-portti",
       "terminalType": "Päätyypp",
       "fontName": "Fontin nimi",
+      "fontNameDesc": "Vain ulkoisen guacd:n kanssa. Sisäänrakennettu moottori käyttää omaa monospaced-fonttiaan.",
       "fontSize": "Fontin koko",
       "colorScheme": "Väriteema",
       "backspaceKey": "Backspace-näppäin",
@@ -228,7 +246,12 @@
         "whiteOnBlack": "Valkoinen mustalla",
         "grayOnBlack": "Harmaa mustalla",
         "greenOnBlack": "Vihreä mustalla"
-      }
+      },
+      "ardSettings": "Apple Remote Desktop -asetukset",
+      "ardPort": "ARD-portti",
+      "ardPassword": "macOS-salasana",
+      "ardUsername": "macOS-käyttäjätunnus",
+      "ardLeaveBlank": "Jätä tyhjäksi, jos käytät vain VNC-salasanaa"
     },
     "remoteDesktop": "Etätyöpöytä",
     "tabRdp": "RDP",
@@ -238,13 +261,15 @@
     "unencryptedShell": "Salaaamaton shell",
     "remoteDesktopNotes": "Muistiinpanot",
     "userDefaultsNote": "Muuttamattomat asetukset seuraavat isäntälaitteen oletusarvoja.",
-    "connectionOriginNote": "Työpöytäsovelluksessa RDP, VNC ja Telnet käyttävät etäpalvelinta, ellei isäntä ole asetettu arvoon Tämä laite, jolloin tarvitaan guacd-palvelin, johon tämä kone pääsee. Aseta se Etätyöpöytä-asetuksista tai isäntäkohtaisesti guacd-välityspalvelin-asetuksesta.",
+    "connectionOriginNote": "Työpöytäsovelluksessa RDP-, VNC- ja Telnet-yhteydet suoritetaan tällä laitteella, kun isäntä on asetettu oletusarvoon kuten SSH. Valitse Etäpalvelin, jos haluat suorittaa ne palvelimella.",
     "docsLink": "Näytä dokumentaatio",
-    "connectionOriginGuacamoleNote": "RDP, VNC ja Telnet käyttävät etäpalvelinta, ellei valitse \"Tämä laite\", jolloin tarvitaan guacd-palvelin, johon tämä kone pääsee. Aseta se guacd-URL-asetuksesta tai isäntäkohtaisesti guacd-välityspalvelin-asetuksesta."
+    "connectionOriginGuacamoleNote": "RDP-, VNC- ja Telnet-yhteydet suoritetaan oletuksena tällä laitteella kuten SSH. Valitse Etäpalvelin, jos haluat suorittaa ne palvelimella.",
+    "tabArd": "Apple Remote Desktop",
+    "appleScreenSharing": "Macin näytön jakaminen"
   },
   "onboarding": {
     "guacdTitle": "Määritä etätyöpöytä",
-    "guacdIntro": "Etätyöpöytä vaatii guacd-palvelimen käynnissä Termixin vieressä. Tarkista, että se vastaa, tai osoita Termix siihen.",
+    "guacdIntro": "Etätyöpöytä on asetettu käyttämään omaa guacd-palvelinta. Varmista, että se vastaa, tai osoita Termix palvelimeen.",
     "guacdChecking": "Etsitään guacd-palvelinta",
     "guacdConnected": "guacd on käynnissä osoitteessa {{address}}",
     "guacdMissing": "guacd ei vastaa osoitteessa {{address}}",
@@ -312,7 +337,11 @@
     "admin": {
       "enabled": {
         "label": "Ota etätyöpöytä käyttöön",
-        "description": "Salli RDP-, VNC- ja Telnet-yhteydet guacd:n kautta."
+        "description": "Salli RDP-, VNC- ja Telnet-yhteydet."
+      },
+      "useGuacd": {
+        "label": "Käytä ulkoista guacd-palvelinta",
+        "description": "Termix käsittelee RDP-, VNC- ja Telnet-yhteydet itse. Ota tämä käyttöön, jos haluat ohjata ne omaan guacd-palvelimeesi. REMOTE_DESKTOP_ENGINE-asetus ohittaa tämän."
       },
       "guacdUrl": {
         "label": "guacd-osoite",
@@ -352,20 +381,46 @@
         "label": "Ohita varmennepäätteet"
       },
       "guacamoleConfig": {
-        "label": "guacd-asetukset"
+        "label": "Yhteysasetukset"
       },
       "enableToolbar": {
         "label": "Etätyöpöydän työkalurivi",
-        "description": "Näytä työkalurivi RDP-, VNC- ja Telnet-istunnoissa."
+        "description": "Näytä työkalurivi RDP-, VNC-, ARD- ja Telnet-istunnoissa."
       },
       "displayGroup": "Näyttö",
-      "displayDefaultsTab": "Etätyöpöytä"
+      "displayDefaultsTab": "Etätyöpöytä",
+      "toolbarPosition": {
+        "label": "Työkalurivin sijainti",
+        "description": "Näytä työkalurivi istunnon ylä- tai alapuolella.",
+        "top": "Yläreuna",
+        "bottom": "Alareuna"
+      },
+      "toolbarLabels": {
+        "label": "Työkalurivin nimet",
+        "description": "Näytä nimet kuvakkeiden vieressä tai vain kuvakkeet. Nimet piiloutuvat automaattisesti, kun tila loppuu.",
+        "labeled": "Kuvakkeet ja nimet",
+        "icons": "Vain kuvakkeet"
+      },
+      "toolbarButtons": {
+        "label": "Työkalurivin painikkeet",
+        "description": "Valitse, mitkä painikkeet näytetään ja missä järjestyksessä. Mahtumattomat painikkeet siirtyvät Lisää-valikkoon.",
+        "reset": "Palauta",
+        "moveUp": "Siirrä ylös",
+        "moveDown": "Siirrä alas"
+      },
+      "enableArd": {
+        "label": "Apple Remote Desktop"
+      },
+      "ardPort": {
+        "label": "ARD-portti"
+      }
     }
   },
   "palette": {
     "connectRdp": "Yhdistä RDP:llä",
     "connectVnc": "Yhdistä VNC:llä",
-    "connectTelnet": "Yhdistä Telnetillä"
+    "connectTelnet": "Yhdistä Telnetillä",
+    "connectArd": "Yhdistä Apple Remote Desktopilla"
   },
   "permissions": {
     "sessions": {
@@ -377,6 +432,7 @@
     "remoteServerRequired": "Etäpalvelin vaaditaan. Yhdistä etäpalvelin Asetukset-valikosta käyttääksesi tätä yhteystyyppiä."
   },
   "plugin": {
-    "name": "Etätyöpöytä"
+    "name": "Etätyöpöytä",
+    "description": "RDP-, VNC- ja Telnet-istunnot selaimessasi leikepöydän, tiedostonsiirron, jakamisen ja tallennuksen tuella."
   }
 }
