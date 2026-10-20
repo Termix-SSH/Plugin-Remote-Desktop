@@ -1,4 +1,5 @@
 import crypto from "crypto";
+import { launchNativeRdp } from "./native-rdp.js";
 import net from "net";
 import path from "path";
 import type { Request, Response, Router } from "express";
@@ -864,12 +865,12 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    */
   router.get("/native-rdp", (_req: Request, res: Response) => {
     res.json({
-      available: ctx.desktop.available() && process.platform === "win32",
+      available: ctx.desktop.local.available() && process.platform === "win32",
     });
   });
 
   router.post("/native-rdp", async (req: Request, res: Response) => {
-    if (!ctx.desktop.available()) {
+    if (!ctx.desktop.local.available()) {
       return res.status(404).json({ error: "Only in the desktop app" });
     }
     const body = (req.body ?? {}) as Record<string, unknown>;
@@ -877,8 +878,8 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
       return res.status(400).json({ error: "Missing host" });
     }
     try {
-      const result = await ctx.desktop.launchExternalClient({
-        protocol: "rdp",
+      await ctx.capabilities.require("desktop:local");
+      const result = await launchNativeRdp({
         host: body.host,
         port: Number(body.port) || DEFAULT_PORT.rdp,
         username: typeof body.username === "string" ? body.username : undefined,

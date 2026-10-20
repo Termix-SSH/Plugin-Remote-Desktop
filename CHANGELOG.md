@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.2.0
+
+### Changed
+
+- Opening a host in Windows Remote Desktop now runs inside this plugin instead of the desktop app itself, so fixes to it no longer need a new desktop build
+- Debug logs now show whether the built-in RDP engine negotiates audio and receives any sound from the server
+- Needs Termix 26.10.3 or newer
+
 ## 1.1.0
 
 ### Added

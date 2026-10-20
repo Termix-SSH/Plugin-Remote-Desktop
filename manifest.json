@@ -1,7 +1,7 @@
 {
   "id": "remote-desktop",
   "name": "Remote Desktop",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "RDP, VNC, Apple Remote Desktop and Telnet sessions in your browser, with clipboard, file transfer, sharing and recording.",
   "author": {
     "name": "Termix"
@@ -71,8 +71,8 @@
     }
   ],
   "engine": {
-    "termix": ">=26.10.0",
-    "api": "^1.2"
+    "termix": ">=26.10.3",
+    "api": "^1.5"
   },
   "capabilities": [
     "hosts:read",
@@ -80,7 +80,7 @@
     "credentials:use",
     "ssh:connect",
     "network:serve",
-    "desktop:window",
+    "desktop:local",
     "ui:surface",
     "users:impersonate"
   ],

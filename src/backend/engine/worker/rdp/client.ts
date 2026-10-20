@@ -31,6 +31,7 @@ type RdpEvent =
   | { k: "audio"; rate: number; channels: number; data: Uint8Array }
   | { k: "logon" }
   | { k: "log"; message: string }
+  | { k: "debug"; message: string }
   | { k: "terminated"; reason: string }
   | { k: "error"; kind: string; message: string };
 
@@ -472,6 +473,9 @@ export class RdpClient implements RemoteClient, PixelSource {
         break;
       case "log":
         this.host.log("warn", event.message);
+        break;
+      case "debug":
+        this.host.log("debug", event.message);
         break;
       case "terminated":
         this.host.log("info", "RDP session ended", { reason: event.reason });
