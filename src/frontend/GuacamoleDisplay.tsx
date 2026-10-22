@@ -47,7 +47,7 @@ import {
 } from "./guacamole-filesystem.ts";
 import { clampGuacamoleZoom, stepGuacamoleZoom } from "./guacamole-zoom.ts";
 import { createRdpReadyGate } from "./guacamole-ready.ts";
-import { remoteKeysym } from "./guacamole-meta-key.ts";
+import { remoteKeysym, watchRightAlt } from "./guacamole-meta-key.ts";
 
 type GuacamoleConnectionType = "rdp" | "vnc" | "ard" | "telnet";
 
@@ -140,6 +140,7 @@ export const GuacamoleDisplay = forwardRef<
   onStageChangeRef.current = onStageChange;
   const keyboardRef = useRef<Guacamole.Keyboard | null>(null);
   const unbindPointerRef = useRef<(() => void) | null>(null);
+  const unwatchAltRef = useRef<(() => void) | null>(null);
   const scaleRef = useRef<number>(1);
   const fitScaleRef = useRef<number>(1);
   const zoomRef = useRef<number>(1);
@@ -178,6 +179,8 @@ export const GuacamoleDisplay = forwardRef<
   const disconnectClient = useCallback(() => {
     unbindPointerRef.current?.();
     unbindPointerRef.current = null;
+    unwatchAltRef.current?.();
+    unwatchAltRef.current = null;
     const client = clientRef.current;
     clientRef.current = null;
     readyGateRef.current?.cancel();
@@ -398,7 +401,7 @@ export const GuacamoleDisplay = forwardRef<
       if (!hasKeyboardFocusRef.current && !stillFocused) return;
       clientRef.current.sendKeyEvent(
         1,
-        remoteKeysym(sessionProtocolRef.current, keysym),
+        remoteKeysym(sessionProtocolRef.current, keysym, true),
       );
     };
 
@@ -406,7 +409,7 @@ export const GuacamoleDisplay = forwardRef<
       // Focus loss must still release keys already sent to the remote host.
       clientRef.current?.sendKeyEvent(
         0,
-        remoteKeysym(sessionProtocolRef.current, keysym),
+        remoteKeysym(sessionProtocolRef.current, keysym, false),
       );
     };
   }, [isVisible]);
@@ -609,6 +612,8 @@ export const GuacamoleDisplay = forwardRef<
       sendMouseState,
     );
 
+    unwatchAltRef.current?.();
+    unwatchAltRef.current = watchRightAlt(displayElement);
     const keyboard = new Guacamole.Keyboard(displayElement);
     keyboardRef.current = keyboard;
 
@@ -713,7 +718,7 @@ export const GuacamoleDisplay = forwardRef<
     };
 
     client.onaudio = (stream: Guacamole.InputStream, mimetype: string) => {
-      Guacamole.AudioPlayer.getInstance(stream, mimetype);
+      return Guacamole.AudioPlayer.getInstance(stream, mimetype);
     };
 
     // Only fires when the connection enables drive redirection; guacd exposes

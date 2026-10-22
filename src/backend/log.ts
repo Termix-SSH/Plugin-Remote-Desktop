@@ -3,6 +3,7 @@ import type { PluginLogger } from "@termix-ssh/plugin-sdk/backend";
 type Meta = Record<string, unknown>;
 
 export interface RemoteDesktopLogger {
+  debug?: (message: string, meta?: Meta) => void;
   info: (message: string, meta?: Meta) => void;
   warn: (message: string, meta?: Meta) => void;
   error: (message: string, meta?: Meta) => void;
@@ -17,6 +18,7 @@ function withMeta(message: string, meta?: Meta): string {
 /** ctx.log with the structured context the old guac logger carried. */
 export function createLogger(log: PluginLogger): RemoteDesktopLogger {
   return {
+    debug: (message, meta) => log.debug(withMeta(message, meta)),
     info: (message, meta) => log.info(withMeta(message, meta)),
     warn: (message, meta) => log.warn(withMeta(message, meta)),
     error: (message, meta) => log.error(withMeta(message, meta)),

@@ -109,19 +109,18 @@ export function pixelFormatFor(
 }
 
 /** The protocol version to answer with, from the server's banner. */
-export function chooseVersion(
-  banner: string,
-  hasUsername: boolean,
-): { minor: number; reply: string } {
+export function chooseVersion(banner: string): {
+  minor: number;
+  reply: string;
+} {
   const match = /^RFB (\d{3})\.(\d{3})\n$/.exec(banner);
   if (!match) throw new VncError("Not a VNC server", Status.UPSTREAM_ERROR);
   const major = Number(match[1]);
   const minor = Number(match[2]);
-  // macOS offers Apple's own login only to clients that say 3.889.
+  // macOS offers Apple's login (type 30) to a client that answers 3.8 too.
+  // Answering 3.889 gets black frames on macOS 26, so it answers like guacd.
   if (major === 3 && minor === 889) {
-    return hasUsername
-      ? { minor: 8, reply: "RFB 003.889\n" }
-      : { minor: 8, reply: "RFB 003.008\n" };
+    return { minor: 8, reply: "RFB 003.008\n" };
   }
   if (major > 3 || minor >= 8) return { minor: 8, reply: "RFB 003.008\n" };
   if (minor === 7) return { minor: 7, reply: "RFB 003.007\n" };
@@ -354,7 +353,6 @@ export class VncClient implements RemoteClient, Framebuffer {
     const password = s.get("password");
     const { minor, reply } = chooseVersion(
       (await this.reader.bytes(12)).toString("latin1"),
-      !!username,
     );
     this.write(Buffer.from(reply, "latin1"));
     await this.security(minor, username, password);

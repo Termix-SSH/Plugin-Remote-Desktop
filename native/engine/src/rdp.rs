@@ -725,7 +725,13 @@ impl RdpClient {
         let step = match connector.next_pdu_hint() {
             None => connector.step_no_input(&mut buf),
             Some(hint) => match self.take_frame(hint) {
-                Ok(Some(frame)) => connector.step(&frame, None, &mut buf),
+                Ok(Some(frame)) => {
+                    if is_multitransport_during_licensing(&connector, &frame) {
+                        self.phase = Phase::Connecting(connector);
+                        return true;
+                    }
+                    connector.step(&frame, None, &mut buf)
+                }
                 Ok(None) => {
                     self.phase = Phase::Connecting(connector);
                     return false;
@@ -1188,6 +1194,16 @@ impl RdpClient {
         self.events.push(e.into());
         self.phase = Phase::Closed;
     }
+}
+
+/// Some servers send an Initiate Multitransport Request on the message channel
+/// before the license exchange is over, which the connector only expects
+/// after it. License PDUs use the I/O channel, so the offer is skipped and the
+/// session stays on TCP.
+fn is_multitransport_during_licensing(connector: &ClientConnector, frame: &[u8]) -> bool {
+    matches!(connector.state, ClientConnectorState::LicensingExchange { .. })
+        && connector.message_channel_id.is_some()
+        && mcs_channel(frame) == connector.message_channel_id
 }
 
 /// The channel of a slow-path MCS Send Data Indication, if `frame` starts one.

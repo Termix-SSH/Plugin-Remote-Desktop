@@ -26,13 +26,12 @@ beforeAll(() => {
 
 describe("negotiation choices", () => {
   it("answers each server version", () => {
-    expect(chooseVersion("RFB 003.003\n", false).reply).toBe("RFB 003.003\n");
-    expect(chooseVersion("RFB 003.007\n", false).reply).toBe("RFB 003.007\n");
-    expect(chooseVersion("RFB 003.008\n", false).reply).toBe("RFB 003.008\n");
-    expect(chooseVersion("RFB 004.001\n", false).minor).toBe(8);
-    expect(chooseVersion("RFB 003.889\n", true).reply).toBe("RFB 003.889\n");
-    expect(chooseVersion("RFB 003.889\n", false).reply).toBe("RFB 003.008\n");
-    expect(() => chooseVersion("SSH-2.0-x\r\n", false)).toThrow();
+    expect(chooseVersion("RFB 003.003\n").reply).toBe("RFB 003.003\n");
+    expect(chooseVersion("RFB 003.007\n").reply).toBe("RFB 003.007\n");
+    expect(chooseVersion("RFB 003.008\n").reply).toBe("RFB 003.008\n");
+    expect(chooseVersion("RFB 004.001\n").minor).toBe(8);
+    expect(chooseVersion("RFB 003.889\n").reply).toBe("RFB 003.008\n");
+    expect(() => chooseVersion("SSH-2.0-x\r\n")).toThrow();
   });
 
   it("picks the login from what the server offers", () => {

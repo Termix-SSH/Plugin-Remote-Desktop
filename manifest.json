@@ -1,7 +1,7 @@
 {
   "id": "remote-desktop",
   "name": "Remote Desktop",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "RDP, VNC, Apple Remote Desktop and Telnet sessions in your browser, with clipboard, file transfer, sharing and recording.",
   "author": {
     "name": "Termix"

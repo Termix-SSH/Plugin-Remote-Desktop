@@ -14,7 +14,8 @@ declare module "guacamole-common-js" {
       onerror: ((error: Status) => void) | null;
       onsync: ((timestamp: number) => void) | null;
       onclipboard: ((stream: InputStream, mimetype: string) => void) | null;
-      onaudio: ((stream: InputStream, mimetype: string) => void) | null;
+      onaudio:
+        ((stream: InputStream, mimetype: string) => AudioPlayer | null) | null;
       onfile:
         | ((stream: InputStream, mimetype: string, filename: string) => void)
         | null;

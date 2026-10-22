@@ -72,6 +72,8 @@ export class EngineCore implements RemoteHost {
   private readonly inbound = new Map<string, InboundStream>();
   private readonly downloads = new Map<number, OutboundFile>();
   private audioStream: { index: number; mimetype: string } | null = null;
+  private audioBytes = 0;
+  private audioLoggedAt = 0;
   private isReady = false;
   private finished = false;
   private stopped = false;
@@ -322,6 +324,12 @@ export class EngineCore implements RemoteHost {
       this.out.send("audio", this.audioStream.index, mimetype);
     }
     this.out.blobs(this.audioStream.index, pcm);
+    this.audioBytes += pcm.length;
+    const now = Date.now();
+    if (now - this.audioLoggedAt >= 10_000) {
+      this.audioLoggedAt = now;
+      this.log("debug", "rdpsnd audio sent", { bytes: this.audioBytes });
+    }
   }
 
   // Streams the clients open

@@ -171,8 +171,10 @@ export class BuiltinEngine {
             ? this.deps.log.error
             : level === "warn"
               ? this.deps.log.warn
-              : this.deps.log.info;
-        if (level !== "debug") write(message, { protocol, ...logMeta });
+              : level === "debug"
+                ? this.deps.log.debug
+                : this.deps.log.info;
+        write?.(message, { protocol, ...logMeta });
       },
       onEnd: (ended) => {
         this.live.delete(ended.id);

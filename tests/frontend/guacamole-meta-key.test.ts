@@ -3,6 +3,7 @@ import {
   detectMetaKeyFamily,
   metaKeyLabels,
   remoteKeysym,
+  watchRightAlt,
 } from "../../src/frontend/guacamole-meta-key.js";
 
 describe("guacamole toolbar meta key labels", () => {
@@ -71,5 +72,39 @@ describe("remoteKeysym", () => {
       expect(remoteKeysym(protocol, 0xffe7)).toBe(0xffe7);
       expect(remoteKeysym(protocol, 0xffe8)).toBe(0xffe8);
     }
+  });
+});
+
+describe("right Alt", () => {
+  const press = (target: HTMLElement, type: string, key: string) =>
+    target.dispatchEvent(
+      new KeyboardEvent(type, { code: "AltRight", key, bubbles: true }),
+    );
+
+  it("goes out as Alt_R when the browser sees a plain Alt", () => {
+    const el = document.createElement("div");
+    const stop = watchRightAlt(el);
+    press(el, "keydown", "Alt");
+    expect(remoteKeysym("rdp", 0xfe03, true)).toBe(0xffea);
+    press(el, "keyup", "Alt");
+    expect(remoteKeysym("rdp", 0xfe03, false)).toBe(0xffea);
+    stop();
+  });
+
+  it("stays AltGr when the browser sees AltGraph", () => {
+    const el = document.createElement("div");
+    const stop = watchRightAlt(el);
+    press(el, "keydown", "AltGraph");
+    expect(remoteKeysym("rdp", 0xfe03, true)).toBe(0xfe03);
+    expect(remoteKeysym("rdp", 0xfe03, false)).toBe(0xfe03);
+    stop();
+  });
+
+  it("leaves other sessions alone", () => {
+    const el = document.createElement("div");
+    const stop = watchRightAlt(el);
+    press(el, "keydown", "Alt");
+    expect(remoteKeysym("vnc", 0xfe03, true)).toBe(0xfe03);
+    stop();
   });
 });

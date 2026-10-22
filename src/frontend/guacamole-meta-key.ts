@@ -87,6 +87,28 @@ const META_LEFT = 0xffe7;
 const META_RIGHT = 0xffe8;
 const SUPER_LEFT = 0xffeb;
 const SUPER_RIGHT = 0xffec;
+const ALT_RIGHT = 0xffea;
+const ALT_GRAPH = 0xfe03;
+
+// guacamole-common-js reports every right Alt as AltGr. A layout without
+// AltGr (Korean, where it is the Han/Eng key) needs a real Alt_R instead.
+let rightAltIsPlain = false;
+let rightAltSentAs: number | null = null;
+
+/** Tracks whether the browser sees right Alt as Alt or as AltGraph. */
+export function watchRightAlt(target: HTMLElement): () => void {
+  const onKey = (event: KeyboardEvent) => {
+    if (event.code === "AltRight") rightAltIsPlain = event.key === "Alt";
+  };
+  target.addEventListener("keydown", onKey, true);
+  target.addEventListener("keyup", onKey, true);
+  return () => {
+    target.removeEventListener("keydown", onKey, true);
+    target.removeEventListener("keyup", onKey, true);
+    rightAltIsPlain = false;
+    rightAltSentAs = null;
+  };
+}
 
 /**
  * The key code to send for a key the browser pressed. guacamole-common-js
@@ -97,7 +119,14 @@ const SUPER_RIGHT = 0xffec;
 export function remoteKeysym(
   protocol: "rdp" | "vnc" | "ard" | "telnet" | undefined,
   keysym: number,
+  down = true,
 ): number {
+  if (protocol === "rdp" && keysym === ALT_GRAPH) {
+    if (down) rightAltSentAs = rightAltIsPlain ? ALT_RIGHT : ALT_GRAPH;
+    const sent = rightAltSentAs ?? ALT_GRAPH;
+    if (!down) rightAltSentAs = null;
+    return sent;
+  }
   if (protocol !== "ard") return keysym;
   if (keysym === META_LEFT) return SUPER_LEFT;
   if (keysym === META_RIGHT) return SUPER_RIGHT;
