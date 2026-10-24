@@ -16,6 +16,9 @@ export interface UserSocket {
   on(event: "message", listener: (data: unknown) => void): unknown;
   on(event: "close", listener: () => void): unknown;
   on(event: "error", listener: (error: Error) => void): unknown;
+  on(event: "pong", listener: () => void): unknown;
+  /** A socket level ping. Browsers answer it even in a throttled tab. */
+  ping?(): void;
 }
 
 /** The parts of a worker_threads Worker a session uses. */
@@ -143,7 +146,9 @@ export class EngineSession {
     worker.postMessage({ t: "start", config: options.config });
 
     const keepaliveMs = options.keepaliveMs ?? 5000;
-    const inactivityMs = options.inactivityMs ?? 10000;
+    // A hidden browser tab or a phone app in the background sends no nop for
+    // a while; the socket ping keeps those alive (issue #104).
+    const inactivityMs = options.inactivityMs ?? 30000;
     this.keepalive = setInterval(() => {
       const now = Date.now();
       for (const user of [...this.users.values()]) {
@@ -152,6 +157,11 @@ export class EngineSession {
           continue;
         }
         this.sendTo(user, encode("nop"));
+        try {
+          user.socket.ping?.();
+        } catch {
+          // Closing already.
+        }
       }
     }, keepaliveMs);
     this.keepalive.unref?.();
@@ -191,6 +201,9 @@ export class EngineSession {
     this.users.set(user.id, user);
     this.sendTo(user, encode("", this.id));
     socket.on("message", (data) => this.fromUser(user, data));
+    socket.on("pong", () => {
+      user.lastSeen = Date.now();
+    });
     socket.on("close", () => this.detach(user.id, "closed"));
     socket.on("error", () => this.detach(user.id, "error"));
     this.options.worker.postMessage({

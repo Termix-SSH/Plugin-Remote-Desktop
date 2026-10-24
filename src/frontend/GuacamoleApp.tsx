@@ -58,6 +58,7 @@ import { GuacamoleFileBrowser } from "./GuacamoleFileBrowser.tsx";
 import { describeUploadError } from "./guacamole-filesystem.ts";
 import { canUploadToRdpDrive } from "./guacamole-file-drop.ts";
 import { needsRdpCredentialPrompt } from "./rdp-credential-prompt";
+import { MAX_AUTO_RECONNECTS } from "./tunnel-watch";
 
 interface GuacamoleAppProps {
   hostId?: string;
@@ -473,6 +474,22 @@ const GuacamoleAppInner = React.forwardRef<
 
   reconnectRef.current = handleReconnect;
 
+  // A session lost while the tab was hidden comes back on its own (issue #104).
+  const autoReconnects = useRef(0);
+  const handleLost = useCallback(() => {
+    if (autoReconnects.current >= MAX_AUTO_RECONNECTS) {
+      setConnectionError(t("remoteDesktop.connectionLost"));
+      return;
+    }
+    autoReconnects.current += 1;
+    addLog({
+      type: "warning",
+      stage: "connection",
+      message: t("remoteDesktop.reconnectingAfterLost"),
+    });
+    handleReconnect();
+  }, [handleReconnect, addLog, t]);
+
   // A token opens one display, so a new touch mode needs a fresh one.
   const handleTouchModeChange = useCallback(
     (mode: GuacamoleTouchMode | null) => {
@@ -654,7 +671,11 @@ const GuacamoleAppInner = React.forwardRef<
             guacConfig.enableDrive === true,
             filesystem !== null,
           )}
-          onConnect={() => setIsDisplayReady(true)}
+          onConnect={() => {
+            autoReconnects.current = 0;
+            setIsDisplayReady(true);
+          }}
+          onLost={handleLost}
           onError={(err) => {
             setConnectionError(err);
             addLog({ type: "error", stage: "error", message: err });

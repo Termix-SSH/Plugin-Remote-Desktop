@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.2
+
+### Fixed
+
+- A remote desktop no longer freezes after the browser tab was hidden or the screen locked; it reconnects on its own when the connection dropped (#104)
+- The built-in engine no longer ends a session because a hidden tab or a phone in the background stopped sending keepalives for a few seconds
+
 ## 1.2.1
 
 ### Fixed

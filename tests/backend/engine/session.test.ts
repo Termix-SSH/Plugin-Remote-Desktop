@@ -203,8 +203,23 @@ describe("EngineSession", () => {
     session.attach(owner, { owner: true, readOnly: false });
     vi.advanceTimersByTime(5000);
     expect(owner.sent.at(-1)).toBe("3.nop;");
+    vi.advanceTimersByTime(25000);
+    expect(owner.closed).toBeNull();
     vi.advanceTimersByTime(10000);
     expect(owner.closed).not.toBeNull();
+  });
+
+  it("keeps a user whose socket answers pings, like a hidden browser tab", () => {
+    vi.useFakeTimers();
+    const { session } = make();
+    sessions.push(session);
+    const owner = new FakeSocket();
+    const ping = vi.fn(() => owner.emit("pong"));
+    Object.assign(owner, { ping });
+    session.attach(owner, { owner: true, readOnly: false });
+    vi.advanceTimersByTime(120000);
+    expect(ping).toHaveBeenCalled();
+    expect(owner.closed).toBeNull();
   });
 
   it("refuses a bad instruction", () => {
