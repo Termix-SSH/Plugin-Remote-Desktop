@@ -5,8 +5,11 @@
     "requestingToken": "מבקש אסימון חיבור {{type}}...",
     "openingSession": "פותח {{type}}...",
     "negotiating": "מתאם לחיצת יד {{type}}...",
+    "reconnectingAfterLost": "החיבור נותק כשהלשונית הייתה מוסתרת. מחבר מחדש...",
+    "connectionLost": "החיבור נותק ולא ניתן היה לשחזר אותו. לחץ על 'חבר מחדש' כדי לנסות שוב.",
     "sessionReady": "ה-{{type}} מוכן",
     "connectionError": "שגיאת חיבור",
+    "clipboardWaiting": "הטקסט הועתק בתוך הפעולה. לחץ או הקש מקש כאן כדי להעתיק אותו ללוח. פתח את Termix דרך HTTPS כדי להעתיק מיד.",
     "failedToConnect": "השגת אסימון החיבור נכשלה",
     "hostNotFound": "המארח לא נמצא",
     "noHostSelected": "לא נבחר מארח",
@@ -76,14 +79,24 @@
         "arrows": "מקשי חיצים",
         "forceQuit": "סגירה כפויה",
         "macLock": "נעילת מסך",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "התנתק",
+        "record": "הקלט"
       },
       "hints": {
         "files": "מוצג לאחר הפעלת כונן RDP",
         "touchMode": "רק במסכי מגע",
-        "modifiers": "מקשי Ctrl, Alt, Shift ומקש המערכת נשארים לחוצים עד להקשת המקש הבא"
+        "modifiers": "מקשי Ctrl, Alt, Shift ומקש המערכת נשארים לחוצים עד להקשת המקש הבא",
+        "logoff": "מתנתק מ-Windows על ידי הפעלת הפקודה logoff מתוך תיבת הרצה. הפעלה חייבת להיות פתוחה ולהציג את שולחן העבודה.",
+        "record": "מתחיל או עוצר הקלטה של הפעלה זו. דורש את התוסף Session Recording ואת המנוע המובנה."
       },
-      "option": "Option"
+      "option": "Option",
+      "logoffConfirm": "להתנתק מהפעלה זו של Windows? עבודה שלא נשמרה בה תאבד.",
+      "recordStart": "התחל הקלטה",
+      "recordStop": "עצור הקלטה",
+      "recordStarted": "ההקלטה התחילה",
+      "recordStopped": "ההקלטה נשמרה ב-Session Recording",
+      "recordFailed": "לא ניתן היה לשנות את ההקלטה"
     },
     "disabled": "שולחן עבודה מרוחק כבוי. מנהל מערכת יכול להפעיל אותו בהגדרות."
   },

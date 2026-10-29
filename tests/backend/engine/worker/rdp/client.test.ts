@@ -1,6 +1,7 @@
 import crypto from "node:crypto";
 import { describe, expect, it } from "vitest";
 import {
+  nextSize,
   printFile,
   rdpConfig,
   scaleFromDpi,
@@ -104,5 +105,26 @@ describe("helpers", () => {
     expect(printFile(Buffer.from("%PDF-1.7")).mimetype).toBe("application/pdf");
     expect(printFile(Buffer.from("%!PS")).name).toMatch(/\.ps$/);
     expect(printFile(Buffer.from("PK\x03\x04")).name).toMatch(/\.xps$/);
+  });
+});
+
+describe("nextSize", () => {
+  const current = { width: 1280, height: 720, dpi: 192 };
+
+  it("keeps the dpi when a resize has none", () => {
+    expect(nextSize(current, 720, 1280, 0)).toEqual({
+      width: 720,
+      height: 1280,
+      dpi: 192,
+    });
+  });
+
+  it("takes a new dpi when one is sent", () => {
+    expect(nextSize(current, 1280, 720, 96)?.dpi).toBe(96);
+  });
+
+  it("skips tiny and unchanged sizes", () => {
+    expect(nextSize(current, 100, 720, 0)).toBeNull();
+    expect(nextSize(current, 1280, 720, 0)).toBeNull();
   });
 });

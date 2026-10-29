@@ -5,8 +5,11 @@
     "requestingToken": "กำลังขอโทเค็นการเชื่อมต่อ {{type}}...",
     "openingSession": "กำลังเปิดเซสชัน {{type}}...",
     "negotiating": "กำลังเจรจาการจับมือ (handshake) {{type}}...",
+    "reconnectingAfterLost": "การเชื่อมต่อขาดขณะแท็บถูกซ่อน กำลังเชื่อมต่อใหม่...",
+    "connectionLost": "การเชื่อมต่อขาดและไม่สามารถกู้คืนได้ กรุณาเชื่อมต่อใหม่เพื่อลองอีกครั้ง",
     "sessionReady": "เซสชัน {{type}} พร้อมใช้งานแล้ว",
     "connectionError": "ข้อผิดพลาดในการเชื่อมต่อ",
+    "clipboardWaiting": "คัดลอกข้อความในเซสชันแล้ว คลิกหรือกดปุ่มที่นี่เพื่อวางลงในคลิปบอร์ด เปิด Termix ผ่าน HTTPS เพื่อคัดลอกทันที",
     "failedToConnect": "ไม่สามารถรับโทเค็นการเชื่อมต่อได้",
     "hostNotFound": "ไม่พบโฮสต์",
     "noHostSelected": "ไม่ได้เลือกโฮสต์",
@@ -76,14 +79,24 @@
         "arrows": "ปุ่มลูกศร",
         "forceQuit": "บังคับปิด",
         "macLock": "ล็อกหน้าจอ",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "ออกจากระบบ",
+        "record": "บันทึก"
       },
       "hints": {
         "files": "แสดงเมื่อเปิดไดรฟ์ RDP แล้ว",
         "touchMode": "เฉพาะบนหน้าจอสัมผัส",
-        "modifiers": "ปุ่ม Ctrl, Alt, Shift และปุ่มระบบจะค้างไว้จนกว่าจะกดปุ่มถัดไป"
+        "modifiers": "ปุ่ม Ctrl, Alt, Shift และปุ่มระบบจะค้างไว้จนกว่าจะกดปุ่มถัดไป",
+        "logoff": "ออกจากระบบ Windows โดยเรียกใช้คำสั่ง logoff จากกล่อง Run เซสชันต้องเปิดอยู่และแสดงเดสก์ท็อป",
+        "record": "เริ่มหรือหยุดการบันทึกเซสชันนี้ จำเป็นต้องใช้ปลั๊กอิน Session Recording และเอนจินในตัว"
       },
-      "option": "Option"
+      "option": "Option",
+      "logoffConfirm": "ต้องการออกจากระบบ Windows นี้หรือไม่ งานที่ยังไม่ได้บันทึกจะสูญหาย",
+      "recordStart": "เริ่มบันทึก",
+      "recordStop": "หยุดบันทึก",
+      "recordStarted": "เริ่มบันทึกแล้ว",
+      "recordStopped": "บันทึกเซสชันแล้วใน Session Recording",
+      "recordFailed": "ไม่สามารถเปลี่ยนการบันทึกได้"
     },
     "disabled": "Remote Desktop ถูกปิดใช้งาน ผู้ดูแลระบบสามารถเปิดใช้งานได้ในส่วนการตั้งค่า"
   },

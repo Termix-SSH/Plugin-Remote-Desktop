@@ -28,7 +28,11 @@ import {
   type RemoteProtocol,
 } from "./host-settings.js";
 import { errorMessage, type RemoteDesktopLogger } from "./log.js";
-import { builtinSessionId, type EngineMode } from "./engine/index.js";
+import {
+  builtinSessionId,
+  type BuiltinEngine,
+  type EngineMode,
+} from "./engine/index.js";
 import {
   ADMIN_PERMISSION,
   normalizeGuacdAddress,
@@ -47,6 +51,8 @@ export interface RouteDeps {
   enabled: () => Promise<boolean>;
   recordings: () => RecordingsWriter | null;
   engineMode: () => EngineMode;
+  /** Starts and stops recording a running built-in engine session. */
+  recordingControl?: Pick<BuiltinEngine, "recordingState" | "setRecording">;
 }
 
 /** Whether a host's sessions run on guacd rather than the built-in engine. */
@@ -142,6 +148,107 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *       401:
    *         description: Not signed in.
    */
+  /**
+   * @openapi
+   * /plugin-api/remote-desktop/sessions/{sessionId}/recording:
+   *   get:
+   *     summary: Whether a session can be recorded and is recording
+   *     description: >
+   *       For the user who opened the session. available is false when
+   *       Session Recording is off or the session does not run in the
+   *       built-in engine.
+   *     tags:
+   *       - Remote Desktop
+   *     parameters:
+   *       - in: path
+   *         name: sessionId
+   *         required: true
+   *         schema:
+   *           type: string
+   *     responses:
+   *       200:
+   *         description: available and recording.
+   *       401:
+   *         description: Not signed in.
+   *   post:
+   *     summary: Start or stop recording a session
+   *     description: Only the user who opened the session. A recording started partway through begins with the current screen.
+   *     tags:
+   *       - Remote Desktop
+   *     parameters:
+   *       - in: path
+   *         name: sessionId
+   *         required: true
+   *         schema:
+   *           type: string
+   *     requestBody:
+   *       required: true
+   *       content:
+   *         application/json:
+   *           schema:
+   *             type: object
+   *             required: [on]
+   *             properties:
+   *               on:
+   *                 type: boolean
+   *     responses:
+   *       200:
+   *         description: Whether it is recording now.
+   *       400:
+   *         description: on is missing.
+   *       403:
+   *         description: Not the session owner.
+   *       404:
+   *         description: No such session in the built-in engine, or Session Recording is off.
+   */
+  router.get(
+    "/sessions/:sessionId/recording",
+    (req: Request, res: Response) => {
+      const userId = actor(ctx, res);
+      if (!userId) return;
+      const control = deps.recordingControl;
+      const state =
+        control && deps.recordings()
+          ? control.recordingState(String(req.params.sessionId), userId)
+          : null;
+      res.json(
+        state && "recording" in state
+          ? { available: true, recording: state.recording }
+          : { available: false, recording: false },
+      );
+    },
+  );
+
+  router.post(
+    "/sessions/:sessionId/recording",
+    async (req: Request, res: Response) => {
+      const userId = actor(ctx, res);
+      if (!userId) return;
+      const on = req.body?.on;
+      if (typeof on !== "boolean") {
+        return res.status(400).json({ error: "on must be true or false" });
+      }
+      const control = deps.recordingControl;
+      if (!control || !deps.recordings()) {
+        return res.status(404).json({ error: "Session Recording is off" });
+      }
+      const result = await control.setRecording(
+        String(req.params.sessionId),
+        userId,
+        on,
+      );
+      if ("error" in result) {
+        return res.status(result.status).json({ error: result.error });
+      }
+      log.info(on ? "Session recording started" : "Session recording stopped", {
+        operation: on ? "recording_manual_start" : "recording_manual_stop",
+        sessionId: String(req.params.sessionId),
+        userId,
+      });
+      res.json({ recording: result.recording });
+    },
+  );
+
   router.get("/connection/:connectId", (req: Request, res: Response) => {
     const userId = actor(ctx, res);
     if (!userId) return;

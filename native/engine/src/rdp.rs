@@ -726,7 +726,9 @@ impl RdpClient {
             None => connector.step_no_input(&mut buf),
             Some(hint) => match self.take_frame(hint) {
                 Ok(Some(frame)) => {
-                    if is_multitransport_during_licensing(&connector, &frame) {
+                    if is_multitransport_during_licensing(&connector, &frame)
+                        || is_unreadable_multitransport(&connector, &frame)
+                    {
                         self.phase = Phase::Connecting(connector);
                         return true;
                     }
@@ -1204,6 +1206,30 @@ fn is_multitransport_during_licensing(connector: &ClientConnector, frame: &[u8])
     matches!(connector.state, ClientConnectorState::LicensingExchange { .. })
         && connector.message_channel_id.is_some()
         && mcs_channel(frame) == connector.message_channel_id
+}
+
+/// Windows Server 2019 can send a short PDU on the message channel while the
+/// connector waits for multitransport requests, and the connector reads every
+/// such PDU as a request and fails. One it cannot read is skipped, which keeps
+/// the session on TCP, the same as declining the offer.
+fn is_unreadable_multitransport(connector: &ClientConnector, frame: &[u8]) -> bool {
+    if !matches!(
+        connector.state,
+        ClientConnectorState::MultitransportBootstrapping { .. }
+    ) {
+        return false;
+    }
+    let Some(channel) = connector.message_channel_id else {
+        return false;
+    };
+    let Ok(ctx) = ironrdp_pdu::mcs::decode_send_data_indication(frame) else {
+        return false;
+    };
+    ctx.channel_id == channel
+        && ironrdp_core::decode::<ironrdp_pdu::rdp::multitransport::MultitransportRequestPdu>(
+            ctx.user_data,
+        )
+        .is_err()
 }
 
 /// The channel of a slow-path MCS Send Data Indication, if `frame` starts one.

@@ -186,6 +186,75 @@ describe("BuiltinEngine", () => {
     );
   });
 
+  it("starts and stops a recording partway through for the owner only", async () => {
+    const { instance, workers, onRecording } = engine();
+    open.push(instance);
+    await instance.open(
+      { connection: { type: "rdp", settings: {} }, termixMeta: meta },
+      new URLSearchParams(),
+      new FakeSocket(),
+    );
+    const worker = workers[0];
+
+    expect(instance.recordingState("$c-1", "someone else")).toMatchObject({
+      ok: false,
+      status: 403,
+    });
+    expect(instance.recordingState("$nope", "user 1")).toMatchObject({
+      ok: false,
+      status: 404,
+    });
+    expect(instance.recordingState("$c-1", "user 1")).toEqual({
+      ok: true,
+      recording: false,
+    });
+
+    const started = instance.setRecording("$c-1", "user 1", true);
+    await vi.waitFor(() =>
+      expect(worker.posted.some((m) => m.t === "snapshot")).toBe(true),
+    );
+    worker.emit("message", { t: "snapshot", data: "4.size,1.0;" });
+    await expect(started).resolves.toEqual({ ok: true, recording: true });
+    expect(instance.recordingState("$c-1", "user 1")).toEqual({
+      ok: true,
+      recording: true,
+    });
+
+    await expect(
+      instance.setRecording("$c-1", "user 1", false),
+    ).resolves.toEqual({ ok: true, recording: false });
+    expect(onRecording).toHaveBeenCalledTimes(1);
+    const saved = (onRecording.mock.calls[0] as unknown[])[0] as {
+      recording: { hostId: number; userId: string; path: string };
+      file: string;
+    };
+    expect(saved.recording).toMatchObject({ hostId: 7, userId: "user 1" });
+    const fs = await import("node:fs");
+    expect(fs.readFileSync(saved.file, "utf8")).toContain("4.size,1.0;");
+
+    // Ending the session after a manual stop saves nothing twice.
+    instance.endSession("$c-1");
+    expect(onRecording).toHaveBeenCalledTimes(1);
+  });
+
+  it("saves a recording still running when the session ends", async () => {
+    const { instance, workers, onRecording } = engine();
+    open.push(instance);
+    await instance.open(
+      { connection: { type: "rdp", settings: {} }, termixMeta: meta },
+      new URLSearchParams(),
+      new FakeSocket(),
+    );
+    const started = instance.setRecording("$c-1", "user 1", true);
+    await vi.waitFor(() =>
+      expect(workers[0].posted.some((m) => m.t === "snapshot")).toBe(true),
+    );
+    workers[0].emit("message", { t: "snapshot", data: "" });
+    await started;
+    instance.endSession("$c-1");
+    expect(onRecording).toHaveBeenCalledTimes(1);
+  });
+
   it("refuses a recording path outside the folder", async () => {
     const { instance, onRecording } = engine();
     open.push(instance);

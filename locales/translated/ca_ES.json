@@ -5,8 +5,11 @@
     "requestingToken": "Sol·licitant testimoni de connexió {{type}}...",
     "openingSession": "Obrint sessió {{type}}...",
     "negotiating": "Negociant el protocol d'acord {{type}}...",
+    "reconnectingAfterLost": "La connexió s'ha tallat mentre la pestanya estava oculta. S'està tornant a connectar...",
+    "connectionLost": "La connexió s'ha tallat i no s'ha pogut restablir. Torna a connectar-hi per tornar-ho a provar.",
     "sessionReady": "Sessió {{type}} llesta",
     "connectionError": "Error de connexió",
+    "clipboardWaiting": "Text copiat a la sessió. Feu clic o premeu una tecla aquí per col·locar-lo al portapapers. Obriu Termix a través d'HTTPS per copiar-lo immediatament.",
     "failedToConnect": "No s'ha pogut obtenir el testimoni de connexió",
     "hostNotFound": "Amfitrió no trobat",
     "noHostSelected": "Cap amfitrió seleccionat",
@@ -76,14 +79,24 @@
         "arrows": "Teclas de fletxa",
         "forceQuit": "Força la sortida",
         "macLock": "Bloqueja la pantalla",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Tanca la sessió",
+        "record": "Enregistra"
       },
       "hints": {
         "files": "Es mostra un cop s'activa la unitat RDP",
         "touchMode": "Només en pantalles tàctils",
-        "modifiers": "Ctrl, Alt, Shift i la tecla del sistema es mantenen premudes fins a la següent tecla"
+        "modifiers": "Ctrl, Alt, Shift i la tecla del sistema es mantenen premudes fins a la següent tecla",
+        "logoff": "Tanca la sessió de Windows executant logoff des de la caixa Executa. La sessió ha d'estar oberta i mostrar l'escriptori.",
+        "record": "Inicia o atura l'enregistrament d'aquesta sessió. Requereix el complement d'Enregistrament de sessions i el motor integrat."
       },
-      "option": "Opció"
+      "option": "Opció",
+      "logoffConfirm": "Voleu tancar la sessió d'aquesta sessió de Windows? Es perdrà la feina no desada.",
+      "recordStart": "Inicia l'enregistrament",
+      "recordStop": "Atura l'enregistrament",
+      "recordStarted": "Enregistrament iniciat",
+      "recordStopped": "Enregistrament desat a Enregistrament de sessions",
+      "recordFailed": "No s'ha pogut modificar l'enregistrament"
     },
     "disabled": "L'escriptori remot està desactivat. Un administrador el pot activar a Configuració."
   },

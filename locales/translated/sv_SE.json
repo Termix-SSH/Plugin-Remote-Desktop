@@ -5,8 +5,11 @@
     "requestingToken": "Begär {{type}}-anslutningstoken...",
     "openingSession": "Öppnar {{type}}-session...",
     "negotiating": "Förhandlar {{type}}-handshake...",
+    "reconnectingAfterLost": "Anslutningen droppade medan fliken var dold. Återansluter...",
+    "connectionLost": "Anslutningen droppade och kunde inte återställas. Anslut igen för att försöka på nytt.",
     "sessionReady": "{{type}}-sessionen är klar",
     "connectionError": "Anslutningsfel",
+    "clipboardWaiting": "Text kopierad i sessionen. Klicka eller tryck på en tangent här för att placera den i urklipp. Öppna Termix över HTTPS för att kopiera direkt.",
     "failedToConnect": "Misslyckades med att hämta anslutningstoken",
     "hostNotFound": "Värd hittades inte",
     "noHostSelected": "Ingen värd vald",
@@ -76,14 +79,24 @@
         "arrows": "Piltangenter",
         "forceQuit": "Tvinga avslut",
         "macLock": "Lås skärmen",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Logga ut",
+        "record": "Spela in"
       },
       "hints": {
         "files": "Visas när RDP-enheten är aktiverad",
         "touchMode": "Endast på pekskärmar",
-        "modifiers": "Ctrl, Alt, Shift och systemtangenten hålls intryckta tills nästa tangent trycks"
+        "modifiers": "Ctrl, Alt, Shift och systemtangenten hålls intryckta tills nästa tangent trycks",
+        "logoff": "Loggar ut från Windows genom att köra logoff från Kör-rutan. Sessionen måste vara öppen och visa skrivbordet.",
+        "record": "Startar eller stoppar inspelning av denna session. Kräver tillägget Session Recording och den inbyggda motorn."
       },
-      "option": "Alternativ"
+      "option": "Alternativ",
+      "logoffConfirm": "Vill du logga ut från denna Windows-session? Osparat arbete i den går förlorat.",
+      "recordStart": "Starta inspelning",
+      "recordStop": "Stoppa inspelning",
+      "recordStarted": "Inspelning startad",
+      "recordStopped": "Inspelning sparad till Session Recording",
+      "recordFailed": "Kunde inte ändra inspelningen"
     },
     "disabled": "Fjärrskrivbord är inaktiverat. En administratör kan aktivera det i Inställningar."
   },

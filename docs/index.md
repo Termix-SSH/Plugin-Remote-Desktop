@@ -23,6 +23,9 @@ The login is stored encrypted, like SSH logins, and can be [shared](/guide/shari
 
 The toolbar sits along the top of the session, or the bottom if you pick that. It has the drive's files, zoom, Ctrl+Alt+Del, lock screen, the system key, sticky Ctrl, Alt, Shift and system keys, function keys, Esc, Tab, Home, End, Page Up, Page Down and the arrows, plus Share when Session Sharing is on.
 
+Sign out (RDP) signs out of Windows after you confirm: it opens the Run box with the Windows key and R and runs
+`logoff`. The session has to be open and showing the desktop, so it does not work at the lock screen.
+
 In the host editor, under Toolbar, you can turn it off, move it, show icons only, and choose which buttons show and in what order. Buttons that don't fit go in the More menu. Like other host settings, these can come from your [host defaults](/guide/host-defaults).
 
 ## Display settings
@@ -51,6 +54,10 @@ A remote desktop host can sit behind SSH jump hosts. Termix opens a tunnel throu
 ## Recording
 
 With [Session Recording](/plugins/session-recording) on, turn on recording for a host and every RDP, VNC and Telnet session is saved as a video you can play back in Termix. Recordings are kept in `/app/data/session_recordings/guacamole` unless `GUACD_RECORDING_BACKEND_PATH` says otherwise.
+
+To record only part of a session, use Record in the toolbar. It starts a recording right away, beginning with what is
+on the screen, and Stop recording saves it. Only the person who opened the session can use it, and it needs Session
+Recording and the built-in engine (not an external guacd).
 
 ## Wake on LAN
 

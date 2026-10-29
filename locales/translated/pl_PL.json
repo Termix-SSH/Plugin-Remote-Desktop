@@ -5,8 +5,11 @@
     "requestingToken": "Żądanie tokenu połączenia {{type}}...",
     "openingSession": "Otwieranie sesji {{type}}...",
     "negotiating": "Negocjowanie wstępu {{type}}...",
+    "reconnectingAfterLost": "Połączenie zostało przerwane, gdy karta była ukryta. Ponowne łączenie...",
+    "connectionLost": "Połączenie zostało przerwane i nie można go przywrócić. Połącz się ponownie, aby spróbować jeszcze raz.",
     "sessionReady": "Sesja {{type}} gotowa",
     "connectionError": "Błąd połączenia",
+    "clipboardWaiting": "Tekst skopiowany w sesji. Kliknij lub naciśnij klawisz, aby wkleić go do schowka. Otwórz Termix przez HTTPS, aby kopiować natychmiast.",
     "failedToConnect": "Nie udało się uzyskać tokenu połączenia",
     "hostNotFound": "Host nie znaleziony",
     "noHostSelected": "Nie wybrano hosta",
@@ -76,14 +79,24 @@
         "arrows": "Klawisze strzałek",
         "forceQuit": "Wymuś zamknięcie",
         "macLock": "Zablokuj ekran",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Wyloguj się",
+        "record": "Nagrywaj"
       },
       "hints": {
         "files": "Wyświetlane po włączeniu dysku RDP",
         "touchMode": "Tylko na ekranach dotykowych",
-        "modifiers": "Ctrl, Alt, Shift i klawisz systemowy pozostają wciśnięte do momentu naciśnięcia następnego klawisza"
+        "modifiers": "Ctrl, Alt, Shift i klawisz systemowy pozostają wciśnięte do momentu naciśnięcia następnego klawisza",
+        "logoff": "Wylogowuje z systemu Windows, uruchamiając polecenie logoff z okna Uruchom. Sesja musi być otwarta i wyświetlać pulpit.",
+        "record": "Rozpoczyna lub zatrzymuje nagrywanie tej sesji. Wymaga wtyczki Nagrywanie sesji i wbudowanego silnika."
       },
-      "option": "Opcja"
+      "option": "Opcja",
+      "logoffConfirm": "Wylogować się z tej sesji Windows? Niezapisana praca zostanie utracona.",
+      "recordStart": "Rozpocznij nagrywanie",
+      "recordStop": "Zatrzymaj nagrywanie",
+      "recordStarted": "Nagrywanie rozpoczęte",
+      "recordStopped": "Nagranie zapisane w Nagrywaniu sesji",
+      "recordFailed": "Nie udało się zmienić nagrywania"
     },
     "disabled": "Zdalny pulpit jest wyłączony. Administrator może go włączyć w ustawieniach."
   },

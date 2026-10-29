@@ -5,8 +5,11 @@
     "requestingToken": "Solicitando token de conexão {{type}}...",
     "openingSession": "Abrindo sessão {{type}}...",
     "negotiating": "Negociando handshake {{type}}...",
+    "reconnectingAfterLost": "A conexão foi interrompida enquanto a aba estava oculta. Reconectando...",
+    "connectionLost": "A conexão foi interrompida e não pôde ser restabelecida. Reconecte para tentar novamente.",
     "sessionReady": "Sessão {{type}} pronta",
     "connectionError": "Erro de conexão",
+    "clipboardWaiting": "Texto copiado na sessão. Clique ou pressione uma tecla aqui para colocá-lo na área de transferência. Abra o Termix via HTTPS para copiar imediatamente.",
     "failedToConnect": "Falha ao obter token de conexão",
     "hostNotFound": "Host não encontrado",
     "noHostSelected": "Nenhum host selecionado",
@@ -76,14 +79,24 @@
         "arrows": "Teclas de seta",
         "forceQuit": "Forçar saída",
         "macLock": "Bloquear tela",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Encerrar sessão",
+        "record": "Gravar"
       },
       "hints": {
         "files": "Aparece quando a unidade RDP está ativa",
         "touchMode": "Apenas em telas sensíveis ao toque",
-        "modifiers": "Ctrl, Alt, Shift e a tecla do sistema permanecem pressionados até a próxima tecla"
+        "modifiers": "Ctrl, Alt, Shift e a tecla do sistema permanecem pressionados até a próxima tecla",
+        "logoff": "Encerra a sessão do Windows executando o comando logoff a partir da caixa Executar. A sessão deve estar aberta e exibindo a área de trabalho.",
+        "record": "Inicia ou para a gravação desta sessão. Requer o plugin Gravação de Sessão e o mecanismo integrado."
       },
-      "option": "Opção"
+      "option": "Opção",
+      "logoffConfirm": "Encerrar esta sessão do Windows? O trabalho não salvo nela será perdido.",
+      "recordStart": "Iniciar gravação",
+      "recordStop": "Parar gravação",
+      "recordStarted": "Gravação iniciada",
+      "recordStopped": "Gravação salva na Gravação de Sessão",
+      "recordFailed": "Não foi possível alterar a gravação"
     },
     "disabled": "O Remote Desktop está desativado. Um administrador pode ativá-lo nas Configurações."
   },

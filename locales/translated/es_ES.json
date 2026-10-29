@@ -5,8 +5,11 @@
     "requestingToken": "Solicitando token de conexión de {{type}}...",
     "openingSession": "Abriendo sesión de {{type}}...",
     "negotiating": "Negociando el protocolo de {{type}}...",
+    "reconnectingAfterLost": "La conexión se perdió mientras la pestaña estaba oculta. Reconectando...",
+    "connectionLost": "La conexión se perdió y no se pudo restablecer. Vuelve a conectarte para intentarlo de nuevo.",
     "sessionReady": "Sesión de {{type}} lista",
     "connectionError": "Error de conexión",
+    "clipboardWaiting": "Texto copiado en la sesión. Haz clic o pulsa una tecla aquí para pegarlo en tu portapapeles. Abre Termix a través de HTTPS para copiarlo al instante.",
     "failedToConnect": "No se ha podido obtener el token de conexión",
     "hostNotFound": "Host no encontrado",
     "noHostSelected": "Ningún host seleccionado",
@@ -76,14 +79,24 @@
         "arrows": "Teclas de flecha",
         "forceQuit": "Forzar salida",
         "macLock": "Bloquear pantalla",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Cerrar sesión",
+        "record": "Grabar"
       },
       "hints": {
         "files": "Se muestra una vez que la unidad RDP está activa",
         "touchMode": "Solo en pantallas táctiles",
-        "modifiers": "Ctrl, Alt, Shift y la tecla del sistema se mantienen pulsadas hasta la siguiente tecla"
+        "modifiers": "Ctrl, Alt, Shift y la tecla del sistema se mantienen pulsadas hasta la siguiente tecla",
+        "logoff": "Cierra la sesión de Windows ejecutando logoff desde el cuadro Ejecutar. La sesión debe estar abierta y mostrando el escritorio.",
+        "record": "Inicia o detiene la grabación de esta sesión. Requiere el complemento Session Recording y el motor integrado."
       },
-      "option": "Opción"
+      "option": "Opción",
+      "logoffConfirm": "¿Quieres cerrar la sesión de Windows? Se perderá el trabajo no guardado.",
+      "recordStart": "Iniciar grabación",
+      "recordStop": "Detener grabación",
+      "recordStarted": "Grabación iniciada",
+      "recordStopped": "Grabación guardada en Session Recording",
+      "recordFailed": "No se ha podido modificar la grabación"
     },
     "disabled": "El escritorio remoto está desactivado. Un administrador puede activarlo en Configuración."
   },

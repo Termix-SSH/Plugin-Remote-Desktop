@@ -5,8 +5,11 @@
     "requestingToken": "{{type}} 接続トークンを要求中...",
     "openingSession": "{{type}} セッションを開いています...",
     "negotiating": "{{type}} ハンドシェイクをネゴシエート中...",
+    "reconnectingAfterLost": "タブが非表示の間に接続が切断されました。再接続中...",
+    "connectionLost": "接続が切断され、復旧できませんでした。再試行するには再接続してください。",
     "sessionReady": "{{type}} セッションの準備ができました",
     "connectionError": "接続エラー",
+    "clipboardWaiting": "セッション内でテキストがコピーされました。ここをクリックするかキーを押してクリップボードに貼り付けてください。Termix を HTTPS で開くと、すぐにコピーできます。",
     "failedToConnect": "接続トークンの取得に失敗しました",
     "hostNotFound": "ホストが見つかりません",
     "noHostSelected": "ホストが選択されていません",
@@ -76,14 +79,24 @@
         "arrows": "矢印キー",
         "forceQuit": "強制終了",
         "macLock": "画面ロック",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "サインアウト",
+        "record": "録画"
       },
       "hints": {
         "files": "RDP ドライブが有効になると表示されます",
         "touchMode": "タッチスクリーンでのみ利用可能",
-        "modifiers": "Ctrl、Alt、Shift、システムキーは、次のキーが押されるまで押し下げられた状態を維持します"
+        "modifiers": "Ctrl、Alt、Shift、システムキーは、次のキーが押されるまで押し下げられた状態を維持します",
+        "logoff": "実行ダイアログから logoff を実行して Windows からサインアウトします。セッションが開いていてデスクトップが表示されている必要があります。",
+        "record": "このセッションの録画を開始または停止します。Session Recording プラグインと組み込みエンジンが必要です。"
       },
-      "option": "Option"
+      "option": "Option",
+      "logoffConfirm": "この Windows セッションからサインアウトしますか？保存されていない作業は失われます。",
+      "recordStart": "録画を開始",
+      "recordStop": "録画を停止",
+      "recordStarted": "録画を開始しました",
+      "recordStopped": "録画が Session Recording に保存されました",
+      "recordFailed": "録画を変更できませんでした"
     },
     "disabled": "リモートデスクトップは無効化されています。管理者が設定で有効化できます。"
   },

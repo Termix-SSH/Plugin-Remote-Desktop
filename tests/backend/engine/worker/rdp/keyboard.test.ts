@@ -142,3 +142,11 @@ describe("Keyboard", () => {
     expect(kb.releaseAll()).toEqual([up(SHIFT)]);
   });
 });
+
+describe("Korean input keys", () => {
+  it("sends the Han/Eng and Hanja scancodes", () => {
+    const kb = new Keyboard("ko-kr-qwerty");
+    expect(tap(kb, 0xff31)).toEqual([down(0x72), up(0x72)]);
+    expect(tap(kb, 0xff34)).toEqual([down(0x71), up(0x71)]);
+  });
+});

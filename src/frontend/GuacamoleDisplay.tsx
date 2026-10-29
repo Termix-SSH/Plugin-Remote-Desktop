@@ -10,7 +10,10 @@ import {
 import Guacamole from "guacamole-common-js";
 import { Upload } from "lucide-react";
 import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
+import { toast } from "sonner";
+import { createRemoteClipboard } from "./remote-clipboard";
 import { getGuacamoleToken, remoteByDefault } from "./guacamole-api";
+import { watchTunnel, type TunnelWatch } from "./tunnel-watch";
 import {
   buildGuacamoleWebSocketBaseUrl,
   localBackendPort,
@@ -100,6 +103,8 @@ interface GuacamoleDisplayProps {
   onDropUnavailable?: () => void;
   onStageChange?: (stage: ConnectionStage) => void;
   onZoomChange?: (zoom: number) => void;
+  /** The tunnel died after the session was up, or stayed silent after the page came back. */
+  onLost?: () => void;
 }
 
 export const GuacamoleDisplay = forwardRef<
@@ -119,6 +124,7 @@ export const GuacamoleDisplay = forwardRef<
     onDropUnavailable,
     onStageChange,
     onZoomChange,
+    onLost,
   },
   ref,
 ) {
@@ -129,6 +135,20 @@ export const GuacamoleDisplay = forwardRef<
     connectionConfig.width != null && connectionConfig.height != null;
   const containerRef = useRef<HTMLDivElement>(null);
   const displayRef = useRef<HTMLDivElement>(null);
+  const remoteClipboardRef = useRef<ReturnType<
+    typeof createRemoteClipboard
+  > | null>(null);
+  useEffect(() => {
+    const clipboard = createRemoteClipboard(() =>
+      toast.info(t("remoteDesktop.clipboardWaiting")),
+    );
+    remoteClipboardRef.current = clipboard;
+    return () => {
+      clipboard.dispose();
+      remoteClipboardRef.current = null;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const displayElementRef = useRef<HTMLElement | null>(null);
   const clientRef = useRef<Guacamole.Client | null>(null);
   const filesystemRef = useRef<Guacamole.Object | null>(null);
@@ -138,6 +158,11 @@ export const GuacamoleDisplay = forwardRef<
   onFilesystemRef.current = onFilesystem;
   const onStageChangeRef = useRef(onStageChange);
   onStageChangeRef.current = onStageChange;
+  const onLostRef = useRef(onLost);
+  onLostRef.current = onLost;
+  const tunnelWatchRef = useRef<TunnelWatch | null>(null);
+  // Set once this client reached CONNECTED, so a close before that stays an error.
+  const wasConnectedRef = useRef(false);
   const keyboardRef = useRef<Guacamole.Keyboard | null>(null);
   const unbindPointerRef = useRef<(() => void) | null>(null);
   const unwatchAltRef = useRef<(() => void) | null>(null);
@@ -183,6 +208,8 @@ export const GuacamoleDisplay = forwardRef<
     unwatchAltRef.current = null;
     const client = clientRef.current;
     clientRef.current = null;
+    tunnelWatchRef.current?.stop();
+    tunnelWatchRef.current = null;
     readyGateRef.current?.cancel();
     readyGateRef.current = null;
     isConnectingRef.current = false;
@@ -523,6 +550,14 @@ export const GuacamoleDisplay = forwardRef<
     const tunnel = new Guacamole.WebSocketTunnel(wsConnection.url);
     const client = new Guacamole.Client(tunnel);
     clientRef.current = client;
+    wasConnectedRef.current = false;
+    tunnelWatchRef.current?.stop();
+    tunnelWatchRef.current = watchTunnel(tunnel, () => {
+      if (!isMountedRef.current || clientRef.current !== client) return;
+      if (!wasConnectedRef.current) return;
+      setIsReady(false);
+      onLostRef.current?.();
+    });
 
     const display = client.getDisplay();
     const displayElement = display.getElement();
@@ -647,6 +682,7 @@ export const GuacamoleDisplay = forwardRef<
           break;
         case 3:
           isConnectingRef.current = false;
+          wasConnectedRef.current = true;
           if (protocol !== "rdp") {
             setIsReady(true);
             onConnect?.();
@@ -712,7 +748,7 @@ export const GuacamoleDisplay = forwardRef<
           data += text;
         };
         reader.onend = () => {
-          navigator.clipboard?.writeText?.(data).catch(() => {});
+          remoteClipboardRef.current?.copy(data);
         };
       }
     };
@@ -811,6 +847,9 @@ export const GuacamoleDisplay = forwardRef<
         document.visibilityState === "visible" && document.hasFocus();
       if (document.visibilityState !== "visible") {
         hasKeyboardFocusRef.current = false;
+      } else if (wasConnectedRef.current) {
+        // The socket may have died while the tab was hidden or the screen locked.
+        tunnelWatchRef.current?.checkAlive();
       }
       refreshKeyboardHandlers();
     };

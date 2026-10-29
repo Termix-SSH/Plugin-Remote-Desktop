@@ -15,6 +15,8 @@ export type ToWorker =
   | { t: "input"; user: string; opcode: string; args: string[] }
   | { t: "join"; user: string; owner: boolean; readOnly: boolean }
   | { t: "leave"; user: string }
+  /** Asks for the current screen, to start a recording partway through. */
+  | { t: "snapshot" }
   | { t: "stop" };
 
 export type LogLevel = "debug" | "info" | "warn" | "error";
@@ -26,6 +28,8 @@ export type FromWorker =
   | { t: "ready" }
   | { t: "error"; message: string; status: number }
   | { t: "closed" }
+  /** The current screen as instructions, answering "snapshot". */
+  | { t: "snapshot"; data: string }
   | {
       t: "log";
       level: LogLevel;

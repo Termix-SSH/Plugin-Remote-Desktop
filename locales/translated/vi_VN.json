@@ -5,8 +5,11 @@
     "requestingToken": "Đang yêu cầu mã thông báo kết nối {{type}}...",
     "openingSession": "Đang mở phiên {{type}}...",
     "negotiating": "Đang thương lượng bắt tay {{type}}...",
+    "reconnectingAfterLost": "Kết nối bị ngắt khi tab đang ẩn. Đang kết nối lại...",
+    "connectionLost": "Kết nối bị ngắt và không thể khôi phục. Hãy kết nối lại để thử một lần nữa.",
     "sessionReady": "Phiên {{type}} đã sẵn sàng",
     "connectionError": "Lỗi kết nối",
+    "clipboardWaiting": "Đã sao chép văn bản trong phiên làm việc. Nhấp chuột hoặc nhấn phím ở đây để dán vào bộ nhớ tạm của bạn. Mở Termix qua HTTPS để sao chép ngay lập tức.",
     "failedToConnect": "Không thể lấy mã thông báo kết nối",
     "hostNotFound": "Không tìm thấy máy chủ",
     "noHostSelected": "Chưa chọn máy chủ",
@@ -76,14 +79,24 @@
         "arrows": "Phím mũi tên",
         "forceQuit": "Buộc thoát",
         "macLock": "Khóa màn hình",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Đăng xuất",
+        "record": "Ghi lại"
       },
       "hints": {
         "files": "Hiển thị khi ổ RDP đã bật",
         "touchMode": "Chỉ trên màn hình cảm ứng",
-        "modifiers": "Ctrl, Alt, Shift và phím hệ thống sẽ được giữ nguyên cho đến khi nhấn phím tiếp theo"
+        "modifiers": "Ctrl, Alt, Shift và phím hệ thống sẽ được giữ nguyên cho đến khi nhấn phím tiếp theo",
+        "logoff": "Đăng xuất khỏi Windows bằng cách chạy lệnh logoff từ hộp Run. Phiên làm việc phải đang mở và hiển thị màn hình desktop.",
+        "record": "Bắt đầu hoặc dừng ghi lại phiên làm việc này. Cần có plugin Session Recording và công cụ ghi tích hợp."
       },
-      "option": "Tùy chọn"
+      "option": "Tùy chọn",
+      "logoffConfirm": "Đăng xuất khỏi phiên Windows này? Các công việc chưa lưu sẽ bị mất.",
+      "recordStart": "Bắt đầu ghi lại",
+      "recordStop": "Dừng ghi lại",
+      "recordStarted": "Đã bắt đầu ghi lại",
+      "recordStopped": "Đã lưu bản ghi vào Session Recording",
+      "recordFailed": "Không thể thay đổi bản ghi"
     },
     "disabled": "Màn hình từ xa đang bị tắt. Quản trị viên có thể bật tính năng này trong Cài đặt."
   },

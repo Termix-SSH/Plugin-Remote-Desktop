@@ -5,8 +5,11 @@
     "requestingToken": "正在請求 {{type}} 連線權杖...",
     "openingSession": "正在開啟 {{type}} 工作階段...",
     "negotiating": "正在協商 {{type}} 握手...",
+    "reconnectingAfterLost": "分頁隱藏期間連線中斷。正在重新連線...",
+    "connectionLost": "連線中斷且無法恢復。請重新連線以再試一次。",
     "sessionReady": "{{type}} 工作階段已就緒",
     "connectionError": "連線錯誤",
+    "clipboardWaiting": "文字已在會話中複製。在此處按一下或按任意鍵以貼上至剪貼簿。透過 HTTPS 開啟 Termix 即可立即複製。",
     "failedToConnect": "無法取得連線權杖",
     "hostNotFound": "找不到主機",
     "noHostSelected": "未選取主機",
@@ -76,14 +79,24 @@
         "arrows": "方向鍵",
         "forceQuit": "強制結束",
         "macLock": "鎖定畫面",
-        "spotlight": "聚焦搜尋"
+        "spotlight": "聚焦搜尋",
+        "logoff": "登出",
+        "record": "錄製"
       },
       "hints": {
         "files": "啟用 RDP 磁碟機後顯示",
         "touchMode": "僅限觸控螢幕",
-        "modifiers": "Ctrl、Alt、Shift 與系統鍵會持續按住，直到按下下一個鍵"
+        "modifiers": "Ctrl、Alt、Shift 與系統鍵會持續按住，直到按下下一個鍵",
+        "logoff": "透過執行「執行」視窗中的 logoff 命令來登出 Windows。會話必須處於開啟狀態並顯示桌面。",
+        "record": "開始或停止錄製此會話。需要會話錄製外掛程式與內建引擎。"
       },
-      "option": "選項"
+      "option": "選項",
+      "logoffConfirm": "要登出此 Windows 會話嗎？未儲存的作業將會遺失。",
+      "recordStart": "開始錄製",
+      "recordStop": "停止錄製",
+      "recordStarted": "已開始錄製",
+      "recordStopped": "錄製內容已儲存至會話錄製",
+      "recordFailed": "無法變更錄製狀態"
     },
     "disabled": "遠端桌面已關閉。管理員可在設定中開啟。"
   },

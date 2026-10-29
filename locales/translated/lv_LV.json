@@ -5,8 +5,11 @@
     "requestingToken": "Pieprasa {{type}} savienojuma marķieri...",
     "openingSession": "Atver {{type}} sesiju...",
     "negotiating": "Saskaņo {{type}} rokasspiedienu...",
+    "reconnectingAfterLost": "Savienojums tika pārtraukts, kamēr cilne bija slēpta. Notiek atkārtots savienojums...",
+    "connectionLost": "Savienojums tika pārtraukts un nevarēja atjaunoties. Atkārtoti pieslēdzieties, lai mēģinātu vēlreiz.",
     "sessionReady": "{{type}} sesija ir gatava",
     "connectionError": "Savienojuma kļūda",
+    "clipboardWaiting": "Teksts nokopēts sesijā. Noklikšķiniet vai nospiediet taustiņu šeit, lai ievietotu to starpliktuvē. Atveriet Termix pār HTTPS, lai nekavējoties nokopētu.",
     "failedToConnect": "Neizdevās iegūt savienojuma marķieri",
     "hostNotFound": "Resursdators nav atrasts",
     "noHostSelected": "Nav izvēlēts resursdators",
@@ -76,14 +79,24 @@
         "arrows": "Piltuvju taustiņi",
         "forceQuit": "Piespiedu iziešana",
         "macLock": "Bloķēt ekrānu",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Izrakstīties",
+        "record": "Ierakstīt"
       },
       "hints": {
         "files": "Parādās, kad RDP diskzīme ir ieslēgta",
         "touchMode": "Tikai skārienekrāniem",
-        "modifiers": "Ctrl, Alt, Shift un sistēmas taustiņi tiek turēti nospiežami līdz nākamajam taustiņam"
+        "modifiers": "Ctrl, Alt, Shift un sistēmas taustiņi tiek turēti nospiežami līdz nākamajam taustiņam",
+        "logoff": "Izrakstās no Windows, izpildot logoff no Run lodziņa. Sesijai ir jābūt atvērtai un jāparāda darbvirsma.",
+        "record": "Sāk vai aptur šīs sesijas ierakstīšanu. Nepieciešama Session Recording spraudprogramma un iebūvētais dzinējs."
       },
-      "option": "Opcija"
+      "option": "Opcija",
+      "logoffConfirm": "Vai vēlaties izrakstīties no šīs Windows sesijas? Nesaglabātais darbs tajā tiks zaudēts.",
+      "recordStart": "Sākt ierakstīšanu",
+      "recordStop": "Apturēt ierakstīšanu",
+      "recordStarted": "Ierakstīšana uzsākta",
+      "recordStopped": "Ieraksts saglabāts Session Recording",
+      "recordFailed": "Neizdevās mainīt ierakstīšanu"
     },
     "disabled": "Tālvadības darbvirsma ir izslēgta. Administrators to var ieslēgt Iestatījumos."
   },

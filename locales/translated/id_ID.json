@@ -5,8 +5,11 @@
     "requestingToken": "Meminta token koneksi {{type}}...",
     "openingSession": "Membuka sesi {{type}}...",
     "negotiating": "Menegosiasikan jabat tangan {{type}}...",
+    "reconnectingAfterLost": "Koneksi terputus saat tab tersembunyi. Menghubungkan kembali...",
+    "connectionLost": "Koneksi terputus dan tidak dapat pulih. Hubungkan kembali untuk mencoba lagi.",
     "sessionReady": "Sesi {{type}} siap",
     "connectionError": "Kesalahan koneksi",
+    "clipboardWaiting": "Teks disalin dalam sesi. Klik atau tekan tombol di sini untuk menempatkannya di papan klip. Buka Termix melalui HTTPS untuk menyalin langsung.",
     "failedToConnect": "Gagal mendapatkan token koneksi",
     "hostNotFound": "Host tidak ditemukan",
     "noHostSelected": "Tidak ada host yang dipilih",
@@ -76,14 +79,24 @@
         "arrows": "Tombol panah",
         "forceQuit": "Paksa Keluar",
         "macLock": "Kunci layar",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Keluar",
+        "record": "Rekam"
       },
       "hints": {
         "files": "Muncul setelah drive RDP diaktifkan",
         "touchMode": "Hanya di layar sentuh",
-        "modifiers": "Ctrl, Alt, Shift, dan tombol sistem tetap tertahan hingga tombol berikutnya ditekan"
+        "modifiers": "Ctrl, Alt, Shift, dan tombol sistem tetap tertahan hingga tombol berikutnya ditekan",
+        "logoff": "Keluar dari Windows dengan menjalankan logoff dari kotak Run. Sesi harus terbuka dan menampilkan desktop.",
+        "record": "Memulai atau menghentikan rekaman sesi ini. Membutuhkan plugin Session Recording dan mesin bawaan."
       },
-      "option": "Opsi"
+      "option": "Opsi",
+      "logoffConfirm": "Keluar dari sesi Windows ini? Pekerjaan yang belum disimpan akan hilang.",
+      "recordStart": "Mulai rekaman",
+      "recordStop": "Hentikan rekaman",
+      "recordStarted": "Rekaman dimulai",
+      "recordStopped": "Rekaman disimpan ke Session Recording",
+      "recordFailed": "Tidak dapat mengubah rekaman"
     },
     "disabled": "Remote Desktop dimatikan. Admin dapat mengaktifkannya di Pengaturan."
   },

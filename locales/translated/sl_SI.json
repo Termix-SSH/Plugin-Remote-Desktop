@@ -5,8 +5,11 @@
     "requestingToken": "Zahtevanje žetona za povezavo {{type}}...",
     "openingSession": "Odpiranje seje {{type}}...",
     "negotiating": "Pogajanje o rokoanju {{type}}...",
+    "reconnectingAfterLost": "Povezava je bila prekinjena, ko je bil zavihek skrit. Ponovno vzpostavljanje povezave...",
+    "connectionLost": "Povezava je bila prekinjena in se ni mogla obnoviti. Za ponovni poskus ponovno vzpostavite povezavo.",
     "sessionReady": "Seja {{type}} je pripravljena",
     "connectionError": "Napaka pri povezavi",
+    "clipboardWaiting": "Besedilo je bilo kopirano v sejo. Kliknite ali pritisnite tipko tukaj, da ga postavite v odložišče. Za takojšnje kopiranje odprite Termix prek HTTPS.",
     "failedToConnect": "Pridobivanje žetona za povezavo ni uspelo",
     "hostNotFound": "Gostitelja ni mogoče najti",
     "noHostSelected": "Ni izbranega gostitelja",
@@ -76,14 +79,24 @@
         "arrows": "Tipke za puščice",
         "forceQuit": "Vsili izhod",
         "macLock": "Zakleni zaslon",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Odjava",
+        "record": "Snemanje"
       },
       "hints": {
         "files": "Prikaže se, ko je RDP pogon vklopljen",
         "touchMode": "Samo na zaslonih na dotik",
-        "modifiers": "Tipke Ctrl, Alt, Shift in sistemsko tipko držite pritisnjene do naslednje tipke"
+        "modifiers": "Tipke Ctrl, Alt, Shift in sistemsko tipko držite pritisnjene do naslednje tipke",
+        "logoff": "Odjava iz Windows z izvajanjem ukaza logoff iz polja Zaženi. Seja mora biti odprta in prikazovati namizje.",
+        "record": "Začne ali ustavi snemanje te seje. Zahteva vtičnik za snemanje sej in vgrajeni motor."
       },
-      "option": "Option"
+      "option": "Option",
+      "logoffConfirm": "Se želite odjaviti iz te seje Windows? Neshranjeno delo bo izgubljeno.",
+      "recordStart": "Začni snemanje",
+      "recordStop": "Ustavi snemanje",
+      "recordStarted": "Snemanje je začeto",
+      "recordStopped": "Posnetek je shranjen v Snemanje sej",
+      "recordFailed": "Ni bilo mogoče spremeniti snemanja"
     },
     "disabled": "Oddaljena namizna površina je izklopljena. Skrbnik jo lahko vklopi v Nastavitev."
   },

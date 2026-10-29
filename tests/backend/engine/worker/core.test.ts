@@ -83,6 +83,12 @@ describe("EngineCore", () => {
     expect(client.resize).toHaveBeenCalledWith(800, 600, 120);
   });
 
+  it("passes 0 for a size with no dpi, so the client keeps its own", () => {
+    const { core, client } = setup();
+    input(core, "owner", "size", "800", "600");
+    expect(client.resize).toHaveBeenCalledWith(800, 600, 0);
+  });
+
   it("pastes clipboard text from a client stream", () => {
     const { core, client } = setup();
     input(core, "owner", "clipboard", "5", "text/plain");
@@ -175,6 +181,17 @@ describe("EngineCore", () => {
     host().ready();
     core.handle({ t: "join", user: "late", owner: false, readOnly: true });
     expect(to("late")).toContain("4.size,1.0,");
+  });
+
+  it("answers a snapshot request with the current screen", () => {
+    const { core, host, posted } = setup();
+    core.handle({ t: "snapshot" });
+    expect(posted.at(-1)).toEqual({ t: "snapshot", data: "" });
+    host().ready();
+    core.handle({ t: "snapshot" });
+    const last = posted.at(-1) as { t: string; data: string };
+    expect(last.t).toBe("snapshot");
+    expect(last.data).toContain("4.size,1.0,");
   });
 
   it("reports a client error once", () => {

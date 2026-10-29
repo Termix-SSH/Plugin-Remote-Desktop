@@ -55,6 +55,7 @@ export interface RemoteClient {
   start(): void;
   mouse(x: number, y: number, mask: number): void;
   key(keysym: number, pressed: boolean): void;
+  /** A dpi of 0 keeps the current one. */
   resize(width: number, height: number, dpi: number): void;
   clipboard(text: string): void;
   stop(): void;

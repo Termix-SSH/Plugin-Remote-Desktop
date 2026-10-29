@@ -5,8 +5,11 @@
     "requestingToken": "Žádost o token pro připojení {{type}}...",
     "openingSession": "Otevírání relace {{type}}...",
     "negotiating": "Vyjednávání handshake protokolu {{type}}...",
+    "reconnectingAfterLost": "Připojení bylo přerušeno, zatímco byla karta skrytá. Opětovné připojování...",
+    "connectionLost": "Připojení bylo přerušeno a nelze ho obnovit. Pro opakovaný pokus se připojte znovu.",
     "sessionReady": "Relace {{type}} je připravena",
     "connectionError": "Chyba připojení",
+    "clipboardWaiting": "Text byl zkopírován v relaci. Klikněte sem nebo stiskněte klávesu, aby se přenesl do schránky. Pro okamžité kopírování otevřete Termix přes HTTPS.",
     "failedToConnect": "Nepodařilo se získat token pro připojení",
     "hostNotFound": "Hostitel nebyl nalezen",
     "noHostSelected": "Nebyl vybrán žádný hostitel",
@@ -76,14 +79,24 @@
         "arrows": "Šipky",
         "forceQuit": "Vynutit ukončení",
         "macLock": "Uzamknout obrazovku",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Odhlásit se",
+        "record": "Nahrávat"
       },
       "hints": {
         "files": "Zobrazí se, jakmile je RDP jednotka aktivní",
         "touchMode": "Pouze na dotykových obrazovkách",
-        "modifiers": "Ctrl, Alt, Shift a systémová klávesa zůstávají stisknuty do další klávesy"
+        "modifiers": "Ctrl, Alt, Shift a systémová klávesa zůstávají stisknuty do další klávesy",
+        "logoff": "Odhlásí uživatele z Windows spuštěním příkazu logoff z dialogu Spustit. Relace musí být otevřená a zobrazovat plochu.",
+        "record": "Spustí nebo zastaví nahrávání této relace. Vyžaduje plugin Session Recording a vestavěný engine."
       },
-      "option": "Option"
+      "option": "Option",
+      "logoffConfirm": "Chcete se odhlásit z této relace Windows? Neuložená práce v ní bude ztracena.",
+      "recordStart": "Spustit nahrávání",
+      "recordStop": "Zastavit nahrávání",
+      "recordStarted": "Nahrávání spuštěno",
+      "recordStopped": "Nahrávání uloženo do Session Recording",
+      "recordFailed": "Nepodařilo se změnit nahrávání"
     },
     "disabled": "Vzdálená plocha je vypnutá. Administrátor ji může zapnout v Nastavení."
   },

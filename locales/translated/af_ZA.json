@@ -5,8 +5,11 @@
     "requestingToken": "Vra {{type}}-verbindingskenmerk aan...",
     "openingSession": "Maak {{type}}-sessie oop...",
     "negotiating": "Onderhandel {{type}}-handdruk...",
+    "reconnectingAfterLost": "Die verbinding is verloor terwyl die oortjie verborge was. Herkoppel...",
+    "connectionLost": "Die verbinding is verloor en kon nie herstel nie. Koppel weer aan om dit weer te probeer.",
     "sessionReady": "{{type}}-sessie gereed",
     "connectionError": "Verbindingsfout",
+    "clipboardWaiting": "Teks is in die sessie gekopieer. Klik of druk 'n sleutel hier om dit op jou knipbord te plaas. Open Termix oor HTTPS om dadelik te kopieer.",
     "failedToConnect": "Kon nie verbindingskenmerk kry nie",
     "hostNotFound": "Gasheer nie gevind nie",
     "noHostSelected": "Geen gasheer gekies nie",
@@ -76,14 +79,24 @@
         "arrows": "Pyltjies",
         "forceQuit": "Gedwonge afsluiting",
         "macLock": "Vergrendel skerm",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Teken uit",
+        "record": "Neem op"
       },
       "hints": {
         "files": "Verskyn eers wanneer die RDP-stoor is aangeskakel",
         "touchMode": "Slegs op aanraakskerm",
-        "modifiers": "Ctrl, Alt, Shift en die stelselsleutel bly ingedruk tot die volgende sleutel"
+        "modifiers": "Ctrl, Alt, Shift en die stelselsleutel bly ingedruk tot die volgende sleutel",
+        "logoff": "Teken uit van Windows deur logoff uit die Run-boks te hardloop. Die sessie moet oop wees en die bureblad wys.",
+        "record": "Begin of stop 'n opname van hierdie sessie. Vereis die Session Recording-plug-in en die ingeboude enjin."
       },
-      "option": "Opsie"
+      "option": "Opsie",
+      "logoffConfirm": "Teken uit van hierdie Windows-sessie? Ongespaarde werk daarin gaan verlore.",
+      "recordStart": "Begin opname",
+      "recordStop": "Stop opname",
+      "recordStarted": "Opname begin",
+      "recordStopped": "Opname gestoor na Session Recording",
+      "recordFailed": "Kon nie die opname verander nie"
     },
     "disabled": "Afgeleë Bureaublad is afgeskakel. 'n Admin kan dit in Instellings aanskakel."
   },

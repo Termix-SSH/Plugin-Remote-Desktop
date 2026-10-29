@@ -16,6 +16,9 @@ export interface UserSocket {
   on(event: "message", listener: (data: unknown) => void): unknown;
   on(event: "close", listener: () => void): unknown;
   on(event: "error", listener: (error: Error) => void): unknown;
+  on(event: "pong", listener: () => void): unknown;
+  /** A socket level ping. Browsers answer it even in a throttled tab. */
+  ping?(): void;
 }
 
 /** The parts of a worker_threads Worker a session uses. */
@@ -117,7 +120,11 @@ export class RecordingTee {
 export class EngineSession {
   readonly id: string;
   private readonly users = new Map<string, User>();
-  private readonly recording: RecordingTee | null;
+  private recording: RecordingTee | null;
+  private pendingRecording: {
+    options: RecordingOptions;
+    done: (started: boolean) => void;
+  } | null = null;
   private readonly keepalive: NodeJS.Timeout;
   private ended = false;
   private ready = false;
@@ -143,7 +150,9 @@ export class EngineSession {
     worker.postMessage({ t: "start", config: options.config });
 
     const keepaliveMs = options.keepaliveMs ?? 5000;
-    const inactivityMs = options.inactivityMs ?? 10000;
+    // A hidden browser tab or a phone app in the background sends no nop for
+    // a while; the socket ping keeps those alive (issue #104).
+    const inactivityMs = options.inactivityMs ?? 30000;
     this.keepalive = setInterval(() => {
       const now = Date.now();
       for (const user of [...this.users.values()]) {
@@ -152,6 +161,11 @@ export class EngineSession {
           continue;
         }
         this.sendTo(user, encode("nop"));
+        try {
+          user.socket.ping?.();
+        } catch {
+          // Closing already.
+        }
       }
     }, keepaliveMs);
     this.keepalive.unref?.();
@@ -191,6 +205,9 @@ export class EngineSession {
     this.users.set(user.id, user);
     this.sendTo(user, encode("", this.id));
     socket.on("message", (data) => this.fromUser(user, data));
+    socket.on("pong", () => {
+      user.lastSeen = Date.now();
+    });
     socket.on("close", () => this.detach(user.id, "closed"));
     socket.on("error", () => this.detach(user.id, "error"));
     this.options.worker.postMessage({
@@ -200,6 +217,37 @@ export class EngineSession {
       readOnly: user.readOnly,
     });
     return user.id;
+  }
+
+  get isRecording(): boolean {
+    return this.recording !== null;
+  }
+
+  /**
+   * Starts a recording partway through. The file begins with the current
+   * screen, so it plays back on its own. False when one is already running.
+   */
+  startRecording(options: RecordingOptions): Promise<boolean> {
+    if (this.ended || this.recording || this.pendingRecording) {
+      return Promise.resolve(false);
+    }
+    return new Promise((resolve) => {
+      this.pendingRecording = { options, done: resolve };
+      try {
+        this.options.worker.postMessage({ t: "snapshot" });
+      } catch {
+        this.pendingRecording = null;
+        resolve(false);
+      }
+    });
+  }
+
+  /** Stops the running recording. False when none was running. */
+  stopRecording(): boolean {
+    if (!this.recording) return false;
+    this.recording.close();
+    this.recording = null;
+    return true;
   }
 
   /** Closes every viewer that isn't the owner. */
@@ -345,6 +393,23 @@ export class EngineSession {
       case "ready":
         this.ready = true;
         return;
+      case "snapshot": {
+        const pending = this.pendingRecording;
+        this.pendingRecording = null;
+        if (!pending || this.ended || this.recording) {
+          pending?.done(false);
+          return;
+        }
+        try {
+          this.recording = new RecordingTee(pending.options);
+        } catch {
+          pending.done(false);
+          return;
+        }
+        this.recording.output(message.data);
+        pending.done(true);
+        return;
+      }
       case "error":
         this.fail(message.message, message.status);
         return;

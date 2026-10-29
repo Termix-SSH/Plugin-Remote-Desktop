@@ -5,8 +5,11 @@
     "requestingToken": "Prašoma {{type}} prisijungimo žetonų...",
     "openingSession": "Atidaroma {{type}} sesija...",
     "negotiating": "Derinamas {{type}} susitarimas...",
+    "reconnectingAfterLost": "Ryšys nutrūko, kai skirtukas buvo paslėptas. Vėl jungiamasi...",
+    "connectionLost": "Ryšys nutrūko ir nepavyko jo atkurti. Prisijunkite iš naujo, kad bandytumėte dar kartą.",
     "sessionReady": "{{type}} sesija paruošta",
     "connectionError": "Prisijungimo klaida",
+    "clipboardWaiting": "Tekstas nukopijuotas sesijoje. Spustelėkite arba paspauskite klavišą čia, kad įdėtumėte jį į iškarpinę. Atidarykite Termix per HTTPS, kad nukopijuotumėte iškart.",
     "failedToConnect": "Nepavyko gauti prisijungimo žetono",
     "hostNotFound": "Mazgas nerastas",
     "noHostSelected": "Nepasirinktas mazgas",
@@ -76,14 +79,24 @@
         "arrows": "Rodyklės",
         "forceQuit": "Priverstinai baigti",
         "macLock": "Užrakinti ekraną",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Atsijungti",
+        "record": "Įrašyti"
       },
       "hints": {
         "files": "Rodoma tik įjungus RDP diską",
         "touchMode": "Tik jutikliniuose ekranuose",
-        "modifiers": "Ctrl, Alt, Shift ir sistemos klavišas laikomi nuspausti iki kito klavišo paspaudimo"
+        "modifiers": "Ctrl, Alt, Shift ir sistemos klavišas laikomi nuspausti iki kito klavišo paspaudimo",
+        "logoff": "Atsijungia nuo Windows, paleidžiant logoff iš Run langelio. Sesija turi būti atidaryta ir rodyti darbalaukį.",
+        "record": "Pradeda arba sustabdo šios sesijos įrašymą. Reikalingas Session Recording priedas ir integruota variklio sistema."
       },
-      "option": "Option"
+      "option": "Option",
+      "logoffConfirm": "Atsijungti nuo šios Windows sesijos? Neišsaugotas darbas bus prarastas.",
+      "recordStart": "Pradėti įrašymą",
+      "recordStop": "Sustabdyti įrašymą",
+      "recordStarted": "Įrašymas pradėtas",
+      "recordStopped": "Įrašymas išsaugotas Session Recording",
+      "recordFailed": "Nepavyko pakeisti įrašymo"
     },
     "disabled": "Nuotolinis darbalaukis išjungtas. Administratorius gali jį įjungti „Nustatymuose“."
   },

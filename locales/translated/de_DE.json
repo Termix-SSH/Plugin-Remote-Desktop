@@ -5,8 +5,11 @@
     "requestingToken": "{{type}}-Verbindungstoken wird angefordert...",
     "openingSession": "{{type}}-Sitzung wird geöffnet...",
     "negotiating": "{{type}}-Handshake wird ausgehandelt...",
+    "reconnectingAfterLost": "Die Verbindung wurde unterbrochen, während der Tab ausgeblendet war. Verbindung wird wiederhergestellt...",
+    "connectionLost": "Die Verbindung wurde unterbrochen und konnte nicht wiederhergestellt werden. Stellen Sie die Verbindung wieder her, um es erneut zu versuchen.",
     "sessionReady": "{{type}}-Sitzung ist bereit",
     "connectionError": "Verbindungsfehler",
+    "clipboardWaiting": "Text in der Sitzung kopiert. Klicken Sie hier oder drücken Sie eine Taste, um ihn in die Zwischenablage zu übernehmen. Öffnen Sie Termix über HTTPS, um sofort zu kopieren.",
     "failedToConnect": "Verbindungstoken konnte nicht abgerufen werden",
     "hostNotFound": "Host nicht gefunden",
     "noHostSelected": "Kein Host ausgewählt",
@@ -76,14 +79,24 @@
         "arrows": "Pfeiltasten",
         "forceQuit": "Beenden erzwingen",
         "macLock": "Bildschirm sperren",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Abmelden",
+        "record": "Aufnahme"
       },
       "hints": {
         "files": "Wird angezeigt, sobald das RDP-Laufwerk aktiv ist",
         "touchMode": "Nur auf Touchscreens",
-        "modifiers": "Strg, Alt, Shift und die Systemtaste bleiben gedrückt, bis die nächste Taste betätigt wird"
+        "modifiers": "Strg, Alt, Shift und die Systemtaste bleiben gedrückt, bis die nächste Taste betätigt wird",
+        "logoff": "Meldet sich von Windows ab, indem logoff über das Ausführen-Dialogfeld ausgeführt wird. Die Sitzung muss geöffnet sein und den Desktop anzeigen.",
+        "record": "Startet oder stoppt die Aufnahme dieser Sitzung. Erfordert das Plugin „Session Recording“ und die integrierte Engine."
       },
-      "option": "Option"
+      "option": "Option",
+      "logoffConfirm": "Von dieser Windows-Sitzung abmelden? Nicht gespeicherte Arbeit geht dabei verloren.",
+      "recordStart": "Aufnahme starten",
+      "recordStop": "Aufnahme stoppen",
+      "recordStarted": "Aufnahme gestartet",
+      "recordStopped": "Aufnahme in „Session Recording“ gespeichert",
+      "recordFailed": "Aufnahme konnte nicht geändert werden"
     },
     "disabled": "Remote Desktop ist deaktiviert. Ein Administrator kann es in den Einstellungen aktivieren."
   },

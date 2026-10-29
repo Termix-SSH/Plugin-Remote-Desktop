@@ -70,6 +70,10 @@ const FIXED: Record<number, number> = {
   0xff22: 0x7b,
   0xff23: 0x79,
   0xff27: 0x70,
+  // Korean input keys: Han/Eng (Hangul) and Hanja, which Windows reads as
+  // VK_HANGUL and VK_HANJA.
+  0xff31: 0x72,
+  0xff34: 0x71,
 };
 
 // F1 to F24.

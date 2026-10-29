@@ -5,8 +5,11 @@
     "requestingToken": "Anmoder om {{type}}-forbindelsestoken...",
     "openingSession": "Åbner {{type}}-session...",
     "negotiating": "Forhandler {{type}}-håndtryk...",
+    "reconnectingAfterLost": "Forbindelsen gik tabet, mens fanen var skjult. Genopretter forbindelsen...",
+    "connectionLost": "Forbindelsen gik tabet og kunne ikke genoprettes. Genopret forbindelsen for at prøve igen.",
     "sessionReady": "{{type}}-session klar",
     "connectionError": "Forbindelsesfejl",
+    "clipboardWaiting": "Tekst kopieret i sessionen. Klik eller tryk på en tast her for at indsætte den i din udklipsholder. Åbn Termix over HTTPS for at kopiere med det samme.",
     "failedToConnect": "Kunne ikke hente forbindelsestoken",
     "hostNotFound": "Vært ikke fundet",
     "noHostSelected": "Ingen vært valgt",
@@ -76,14 +79,24 @@
         "arrows": "Piltasterne",
         "forceQuit": "Tvungen afslutning",
         "macLock": "Lås skærm",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Log ud",
+        "record": "Optag"
       },
       "hints": {
         "files": "Vises, når RDP-drevet er aktiveret",
         "touchMode": "Kun på skærme med touch",
-        "modifiers": "Ctrl, Alt, Shift og systemtasten holdes nede, indtil næste tast trykkes"
+        "modifiers": "Ctrl, Alt, Shift og systemtasten holdes nede, indtil næste tast trykkes",
+        "logoff": "Logger ud af Windows ved at køre logoff fra Kør-boksen. Sessionen skal være åben og vise skrivebordet.",
+        "record": "Starter eller stopper optagelse af denne session. Kræver Session Recording-pluginet og den indbyggede motor."
       },
-      "option": "Option"
+      "option": "Option",
+      "logoffConfirm": "Vil du logge ud af denne Windows-session? Ugemte ændringer i den går tabt.",
+      "recordStart": "Start optagelse",
+      "recordStop": "Stop optagelse",
+      "recordStarted": "Optagelse startet",
+      "recordStopped": "Optagelse gemt i Session Recording",
+      "recordFailed": "Kunne ikke ændre optagelsen"
     },
     "disabled": "Remote Desktop er slået fra. En administrator kan slå det til i Indstillinger."
   },

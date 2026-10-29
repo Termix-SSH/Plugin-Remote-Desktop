@@ -28,7 +28,10 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
   cn,
+  useConfirm,
 } from "@termix-ssh/plugin-sdk/ui";
+import { toast } from "sonner";
+import { signOutOfWindows, useSessionRecording } from "./session-actions.ts";
 import { invokeAction, useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 import type {
   GuacamoleDisplayHandle,
@@ -131,12 +134,17 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
     metaKeyFamily ?? detectRuntimeMetaKeyFamily(protocol),
   );
   const catalog = useToolbarItems(slotContext ? { ...slotContext } : undefined);
+  const confirm = useConfirm();
+  const recording = useSessionRecording(
+    slotContext?.origin === "remote" ? null : slotContext?.sessionId,
+  );
 
   const items = useMemo(
     () =>
       visibleButtons(catalog, settings.buttons).filter((item) => {
         if (item.protocols && !item.protocols.includes(protocol)) return false;
         if (item.id === "files") return hasFilesystem && !!onToggleFileBrowser;
+        if (item.id === "record") return recording.available;
         if (item.id === "touchMode") {
           return touchMode != null && !!onTouchModeChange;
         }
@@ -150,6 +158,7 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
       onToggleFileBrowser,
       touchMode,
       onTouchModeChange,
+      recording.available,
     ],
   );
 
@@ -298,7 +307,41 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
     </button>
   );
 
+  const signOut = async () => {
+    const ok = await confirm({
+      title: t("remoteDesktop.toolbar.logoffConfirm"),
+      confirmLabel: t("remoteDesktop.toolbar.items.logoff"),
+      destructive: true,
+    });
+    if (!ok) return;
+    releaseLatched();
+    await signOutOfWindows(sendKey, KEYSYM.meta);
+  };
+
+  const toggleRecording = async () => {
+    const was = recording.recording;
+    if (!(await recording.toggle())) {
+      toast.error(t("remoteDesktop.toolbar.recordFailed"));
+      return;
+    }
+    toast.success(
+      t(
+        was
+          ? "remoteDesktop.toolbar.recordStopped"
+          : "remoteDesktop.toolbar.recordStarted",
+      ),
+    );
+  };
+
   const runAction = (item: ToolbarItemInfo) => {
+    if (item.id === "logoff") {
+      void signOut();
+      return;
+    }
+    if (item.id === "record") {
+      void toggleRecording();
+      return;
+    }
     if (item.source.kind === "action") {
       void invokeAction(item.source.contribution.actionId, slotContext);
     }
@@ -308,6 +351,24 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
   const renderItem = (item: ToolbarItemInfo, labeled: boolean) => {
     const title = t(item.titleKey);
     switch (item.id) {
+      case "record": {
+        const label = t(
+          recording.recording
+            ? "remoteDesktop.toolbar.recordStop"
+            : "remoteDesktop.toolbar.recordStart",
+        );
+        return textButton(
+          item.id,
+          label,
+          labeled ? label : null,
+          () => runAction(item),
+          {
+            icon: item.icon,
+            active: recording.recording,
+            pressed: recording.recording,
+          },
+        );
+      }
       case "files":
         return textButton(
           item.id,

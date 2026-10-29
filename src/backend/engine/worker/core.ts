@@ -103,6 +103,13 @@ export class EngineCore implements RemoteHost {
         case "leave":
           this.leave(message.user);
           break;
+        case "snapshot":
+          this.out.flush();
+          this.port.post({
+            t: "snapshot",
+            data: this.isReady ? this.display.snapshot() : "",
+          });
+          break;
         case "input":
           this.input(message.user, message.opcode, message.args);
           break;
@@ -216,7 +223,8 @@ export class EngineCore implements RemoteHost {
           client?.resize(
             Number(args[0]),
             Number(args[1]),
-            Number(args[2]) || 96,
+            // guacamole-common-js sends no dpi; 0 keeps the session's.
+            Number(args[2]) || 0,
           );
         }
         break;

@@ -113,6 +113,7 @@ export async function activate(ctx: PluginContext) {
     enabled,
     recordings,
     engineMode,
+    recordingControl: engine,
     guacdConfigured: () =>
       !!(
         process.env.GUACD_URL ||

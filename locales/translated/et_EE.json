@@ -5,8 +5,11 @@
     "requestingToken": "{{type}} ühendustokeni taotlemine...",
     "openingSession": "{{type}} sessiooni avamine...",
     "negotiating": "{{type}} käepigemise läbirääkimine...",
+    "reconnectingAfterLost": "Ühendus katkes, kui vaheleht oli peidetud. Ühenduse taastamine...",
+    "connectionLost": "Ühendus katkes ja seda ei õnnestunud taastada. Proovi uuesti ühenduse taastamisega.",
     "sessionReady": "{{type}} sessioon on valmis",
     "connectionError": "Ühendusviga",
+    "clipboardWaiting": "Tekst on sessioonis kopeeritud. Klõpsa siin või vajuta klahvi, et see lõikelauale kanda. Kohe kopeerimiseks ava Termix HTTPS-i kaudu.",
     "failedToConnect": "Ühendustokeni hankimine ebaõnnestus",
     "hostNotFound": "Peremeesmasinat ei leitud",
     "noHostSelected": "Ühtegi peremeesmasinat ei ole valitud",
@@ -76,14 +79,24 @@
         "arrows": "Noolklahvid",
         "forceQuit": "Sunnitud väljumine",
         "macLock": "Kuvakee lukustamine",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Logi välja",
+        "record": "Salvesta"
       },
       "hints": {
         "files": "Näidatakse, kui RDP draiv on sisse lülitatud",
         "touchMode": "Ainult puuteekraanidel",
-        "modifiers": "Ctrl, Alt, Shift ja süsteemiklahv hoitakse all kuni järgmise klahvinõusuni"
+        "modifiers": "Ctrl, Alt, Shift ja süsteemiklahv hoitakse all kuni järgmise klahvinõusuni",
+        "logoff": "Logib Windowsist välja, käivitades käsu logoff käivitusaknast. Sessioon peab olema avatud ja töölaud nähtav.",
+        "record": "Alustab või peatab selle sessiooni salvestamist. Vajab Session Recording pluginat ja sisseehitatud mootorit."
       },
-      "option": "Option"
+      "option": "Option",
+      "logoffConfirm": "Kas soovid sellest Windowsi sessioonist välja logida? Salvestamata töö kaob.",
+      "recordStart": "Alusta salvestamist",
+      "recordStop": "Peata salvestamine",
+      "recordStarted": "Salvestamine alustatud",
+      "recordStopped": "Salvestus salvestatud Session Recordingusse",
+      "recordFailed": "Salvestamist ei õnnestunud muuta"
     },
     "disabled": "Kaugtöölaud on väljas lülitatud. Haldaja saab selle Sätted menüüst sisse lülitada."
   },

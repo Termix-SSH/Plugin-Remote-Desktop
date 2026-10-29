@@ -5,8 +5,11 @@
     "requestingToken": "Requesting {{type}} connection token...",
     "openingSession": "Opening {{type}} session...",
     "negotiating": "Negotiating {{type}} handshake...",
+    "reconnectingAfterLost": "The connection dropped while the tab was hidden. Reconnecting...",
+    "connectionLost": "The connection dropped and could not come back. Reconnect to try again.",
     "sessionReady": "{{type}} session ready",
     "connectionError": "Connection error",
+    "clipboardWaiting": "Text copied in the session. Click or press a key here to put it on your clipboard. Open Termix over HTTPS to copy right away.",
     "failedToConnect": "Failed to get connection token",
     "hostNotFound": "Host not found",
     "noHostSelected": "No host selected",
@@ -76,14 +79,24 @@
         "arrows": "Arrow keys",
         "forceQuit": "Force Quit",
         "macLock": "Lock screen",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Sign out",
+        "record": "Record"
       },
       "hints": {
         "files": "Shows once the RDP drive is on",
         "touchMode": "Only on touch screens",
-        "modifiers": "Ctrl, Alt, Shift and the system key stay held until the next key"
+        "modifiers": "Ctrl, Alt, Shift and the system key stay held until the next key",
+        "logoff": "Signs out of Windows by running logoff from the Run box. The session must be open and showing the desktop.",
+        "record": "Starts or stops a recording of this session. Needs the Session Recording plugin and the built-in engine."
       },
-      "option": "Option"
+      "option": "Option",
+      "logoffConfirm": "Sign out of this Windows session? Unsaved work in it is lost.",
+      "recordStart": "Start recording",
+      "recordStop": "Stop recording",
+      "recordStarted": "Recording started",
+      "recordStopped": "Recording saved to Session Recording",
+      "recordFailed": "Could not change the recording"
     },
     "disabled": "Remote Desktop is turned off. An admin can turn it on in Settings."
   },

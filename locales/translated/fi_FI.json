@@ -5,8 +5,11 @@
     "requestingToken": "Pyydetään {{type}}-yhteysavainta...",
     "openingSession": "Avataan {{type}}-istuntoa...",
     "negotiating": "Neuvotellaan {{type}}-käsilennot...",
+    "reconnectingAfterLost": "Yhteys katkesi, kun välilehti oli piilossa. Yhdistetään uudelleen...",
+    "connectionLost": "Yhteys katkesi eikä sitä voitu palauttaa. Yhdistä uudelleen kokeillaksesi uudelleen.",
     "sessionReady": "{{type}}-istunto on valmis",
     "connectionError": "Yhteysvirhe",
+    "clipboardWaiting": "Teksti kopioitiin istunnossa. Napsauta tai paina näppäintä täällä lisätäksesi sen leikepöydällesi. Avaa Termix HTTPS-yhteydellä kopioidaksesi heti.",
     "failedToConnect": "Yhteysavaimen haku epäonnistui",
     "hostNotFound": "Isäntää ei löydy",
     "noHostSelected": "Isäntää ei ole valittu",
@@ -76,14 +79,24 @@
         "arrows": "Nuolinäppäimet",
         "forceQuit": "Pakota lopetus",
         "macLock": "Lukitse näyttö",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Kirjaudu ulos",
+        "record": "Nauhoita"
       },
       "hints": {
         "files": "Näytetään, kun RDP-levy on käytössä",
         "touchMode": "Vain kosketusnäytöissä",
-        "modifiers": "Ctrl, Alt, Shift ja järjestelmänäppäin pysyvät painettuina seuraavaan näppäimeen asti"
+        "modifiers": "Ctrl, Alt, Shift ja järjestelmänäppäin pysyvät painettuina seuraavaan näppäimeen asti",
+        "logoff": "Kirjautuu Windowsista ulos suorittamalla logoff-käskyn Suorita-ruudusta. Istunnon on oltava auki ja työpöydän näkyvissä.",
+        "record": "Aloittaa tai lopettaa tämän istunnon nauhoituksen. Vaatii Session Recording -liitännäisen ja sisäänrakennetun moottorin."
       },
-      "option": "Option"
+      "option": "Option",
+      "logoffConfirm": "Kirjaudu ulos tästä Windows-istunnosta? Tallentamaton työ istunnossa menetetään.",
+      "recordStart": "Aloita nauhoitus",
+      "recordStop": "Lopeta nauhoitus",
+      "recordStarted": "Nauhoitus aloitettu",
+      "recordStopped": "Nauhoitus tallennettu Session Recordingiin",
+      "recordFailed": "Nauhoituksen muuttaminen epäonnistui"
     },
     "disabled": "Etätyöpöytä on poissa käytöstä. Ylläpitäjä voi ottaa sen käyttöön Asetuksista."
   },

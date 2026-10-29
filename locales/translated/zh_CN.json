@@ -5,8 +5,11 @@
     "requestingToken": "正在请求 {{type}} 连接令牌...",
     "openingSession": "正在打开 {{type}} 会话...",
     "negotiating": "正在协商 {{type}} 握手...",
+    "reconnectingAfterLost": "标签页隐藏时连接断开。正在重新连接...",
+    "connectionLost": "连接断开且无法恢复。请重新连接以重试。",
     "sessionReady": "{{type}} 会话已就绪",
     "connectionError": "连接错误",
+    "clipboardWaiting": "文本已在会话中复制。在此处点击或按键将其放入剪贴板。通过 HTTPS 打开 Termix 可立即复制。",
     "failedToConnect": "获取连接令牌失败",
     "hostNotFound": "未找到主机",
     "noHostSelected": "未选择主机",
@@ -76,14 +79,24 @@
         "arrows": "方向键",
         "forceQuit": "强制退出",
         "macLock": "锁定屏幕",
-        "spotlight": "聚焦搜索"
+        "spotlight": "聚焦搜索",
+        "logoff": "注销",
+        "record": "录制"
       },
       "hints": {
         "files": "启用 RDP 驱动器后显示",
         "touchMode": "仅限触摸屏",
-        "modifiers": "Ctrl、Alt、Shift 和系统键将保持按下状态，直到按下下一个键"
+        "modifiers": "Ctrl、Alt、Shift 和系统键将保持按下状态，直到按下下一个键",
+        "logoff": "通过运行“运行”对话框中的 logoff 命令来注销 Windows。会话必须处于打开状态并显示桌面。",
+        "record": "开始或停止录制此会话。需要会话录制插件和内置引擎。"
       },
-      "option": "Option"
+      "option": "Option",
+      "logoffConfirm": "要注销此 Windows 会话吗？其中未保存的工作将会丢失。",
+      "recordStart": "开始录制",
+      "recordStop": "停止录制",
+      "recordStarted": "录制已开始",
+      "recordStopped": "录制已保存到会话录制",
+      "recordFailed": "无法更改录制状态"
     },
     "disabled": "远程桌面已关闭。管理员可以在设置中将其开启。"
   },

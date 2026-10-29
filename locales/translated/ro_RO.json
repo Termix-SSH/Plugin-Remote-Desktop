@@ -5,8 +5,11 @@
     "requestingToken": "Se solicită tokenul de conexiune {{type}}...",
     "openingSession": "Se deschide sesiunea {{type}}...",
     "negotiating": "Se negociază handshake-ul {{type}}...",
+    "reconnectingAfterLost": "Conexiunea s-a întrerupt în timp ce fila era ascunsă. Se reconectează...",
+    "connectionLost": "Conexiunea s-a întrerupt și nu a putut fi restabilită. Reconectați pentru a încerca din nou.",
     "sessionReady": "Sesiunea {{type}} este gata",
     "connectionError": "Eroare de conexiune",
+    "clipboardWaiting": "Text copiat în sesiune. Faceți clic sau apăsați o tastă aici pentru a-l pune în clipboard. Deschideți Termix prin HTTPS pentru a copia imediat.",
     "failedToConnect": "Nu s-a putut obține tokenul de conexiune",
     "hostNotFound": "Gazda nu a fost găsită",
     "noHostSelected": "Nicio gazdă selectată",
@@ -76,14 +79,24 @@
         "arrows": "Tastele săgeți",
         "forceQuit": "Închidere forțată",
         "macLock": "Blocare ecran",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Deconectare",
+        "record": "Înregistrare"
       },
       "hints": {
         "files": "Se afișează doar după activarea unității RDP",
         "touchMode": "Doar pe ecrane tactile",
-        "modifiers": "Ctrl, Alt, Shift și tasta de sistem rămân apăsate până la următoarea tastă"
+        "modifiers": "Ctrl, Alt, Shift și tasta de sistem rămân apăsate până la următoarea tastă",
+        "logoff": "Se deconectează de la Windows rulând comanda logoff din caseta Run. Sesiunea trebuie să fie deschisă și să afișeze desktopul.",
+        "record": "Începe sau oprește înregistrarea acestei sesiuni. Necesită pluginul Session Recording și motorul integrat."
       },
-      "option": "Opțiune"
+      "option": "Opțiune",
+      "logoffConfirm": "Doriți să vă deconectați de la această sesiune Windows? Lucrul nesalvat va fi pierdut.",
+      "recordStart": "Începe înregistrarea",
+      "recordStop": "Oprește înregistrarea",
+      "recordStarted": "Înregistrarea a început",
+      "recordStopped": "Înregistrarea a fost salvată în Session Recording",
+      "recordFailed": "Nu s-a putut modifica înregistrarea"
     },
     "disabled": "Remote Desktop este dezactivat. Un administrator îl poate activa în Setări."
   },

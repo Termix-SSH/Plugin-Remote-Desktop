@@ -5,8 +5,11 @@
     "requestingToken": "Meminta token sambungan {{type}}...",
     "openingSession": "Membuka sesi {{type}}...",
     "negotiating": "Menegosiasikan jabat tangan {{type}}...",
+    "reconnectingAfterLost": "Sambungan terputus semasa tab tersembunyi. Menyambung semula...",
+    "connectionLost": "Sambungan terputus dan tidak dapat dipulihkan. Sambung semula untuk mencuba lagi.",
     "sessionReady": "Sesi {{type}} sedia",
     "connectionError": "Ralat sambungan",
+    "clipboardWaiting": "Teks disalin dalam sesi. Klik atau tekan kekunci di sini untuk meletakkannya pada papan klip anda. Buka Termix melalui HTTPS untuk menyalin serta-merta.",
     "failedToConnect": "Gagal mendapatkan token sambungan",
     "hostNotFound": "Hos tidak dijumpai",
     "noHostSelected": "Tiada hos dipilih",
@@ -76,14 +79,24 @@
         "arrows": "Kunci anak panah",
         "forceQuit": "Paksa Tutup",
         "macLock": "Kunci skrin",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Log keluar",
+        "record": "Rakam"
       },
       "hints": {
         "files": "Muncul sekali pemacu RDP dihidupkan",
         "touchMode": "Hanya pada skrin sentuh",
-        "modifiers": "Ctrl, Alt, Shift dan kunci sistem kekal ditekan sehingga kekunci seterusnya"
+        "modifiers": "Ctrl, Alt, Shift dan kunci sistem kekal ditekan sehingga kekunci seterusnya",
+        "logoff": "Log keluar dari Windows dengan menjalankan logoff dari kotak Run. Sesi mesti dibuka dan menunjukkan desktop.",
+        "record": "Memulakan atau menghentikan rakaman sesi ini. Memerlukan plugin Rakaman Sesi dan enjin terbina dalam."
       },
-      "option": "Pilihan"
+      "option": "Pilihan",
+      "logoffConfirm": "Log keluar dari sesi Windows ini? Kerja yang belum disimpan akan hilang.",
+      "recordStart": "Mula merakam",
+      "recordStop": "Hentikan rakaman",
+      "recordStarted": "Rakaman dimulakan",
+      "recordStopped": "Rakaman disimpan ke Rakaman Sesi",
+      "recordFailed": "Tidak dapat mengubah rakaman"
     },
     "disabled": "Remote Desktop dimatikan. Admin boleh menghidupkannya dalam Tetapan."
   },

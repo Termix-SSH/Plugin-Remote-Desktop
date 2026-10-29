@@ -5,8 +5,11 @@
     "requestingToken": "{{type}} 연결 토큰 요청 중...",
     "openingSession": "{{type}} 세션 열기...",
     "negotiating": "{{type}} 핸드셰이크 협상 중...",
+    "reconnectingAfterLost": "탭이 숨겨진 동안 연결이 끊겼습니다. 다시 연결하는 중...",
+    "connectionLost": "연결이 끊겨 복원할 수 없습니다. 다시 연결하여 시도하세요.",
     "sessionReady": "{{type}} 세션 준비 완료",
     "connectionError": "연결 오류",
+    "clipboardWaiting": "세션에서 텍스트가 복사되었습니다. 클립보드에 붙여넣으려면 여기를 클릭하거나 키를 누르세요. 즉시 복사하려면 HTTPS로 Termix를 열어주세요.",
     "failedToConnect": "연결 토큰을 가져오지 못했습니다",
     "hostNotFound": "호스트를 찾을 수 없습니다",
     "noHostSelected": "선택된 호스트가 없습니다",
@@ -76,14 +79,24 @@
         "arrows": "방향 키",
         "forceQuit": "강제 종료",
         "macLock": "화면 잠금",
-        "spotlight": "스포트라이트"
+        "spotlight": "스포트라이트",
+        "logoff": "로그아웃",
+        "record": "녹화"
       },
       "hints": {
         "files": "RDP 드라이브가 켜지면 표시됩니다",
         "touchMode": "터치스크린에서만 사용 가능",
-        "modifiers": "Ctrl, Alt, Shift 및 시스템 키는 다음 키가 입력될 때까지 누른 상태로 유지됩니다"
+        "modifiers": "Ctrl, Alt, Shift 및 시스템 키는 다음 키가 입력될 때까지 누른 상태로 유지됩니다",
+        "logoff": "실행 상자에서 logoff를 실행하여 Windows에서 로그아웃합니다. 세션이 열려 있고 데스크톱이 표시되어야 합니다.",
+        "record": "이 세션의 녹화를 시작하거나 중지합니다. 세션 녹화 플러그인과 기본 엔진이 필요합니다."
       },
-      "option": "Option"
+      "option": "Option",
+      "logoffConfirm": "이 Windows 세션에서 로그아웃하시겠습니까? 저장되지 않은 작업은 손실됩니다.",
+      "recordStart": "녹화 시작",
+      "recordStop": "녹화 중지",
+      "recordStarted": "녹화가 시작되었습니다",
+      "recordStopped": "녹화가 세션 녹화에 저장되었습니다",
+      "recordFailed": "녹화를 변경할 수 없습니다"
     },
     "disabled": "원격 데스크톱이 꺼져 있습니다. 관리자가 설정에서 켤 수 있습니다."
   },

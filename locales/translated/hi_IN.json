@@ -5,8 +5,11 @@
     "requestingToken": "{{type}} कनेक्शन टोकन अनुरोध किया जा रहा है...",
     "openingSession": "{{type}} सत्र खोला जा रहा है...",
     "negotiating": "{{type}} हैंडशेक का विनिमय हो रहा है...",
+    "reconnectingAfterLost": "टैब छिपा होने के दौरान कनेक्शन टूट गया। पुनः कनेक्ट हो रहा है...",
+    "connectionLost": "कनेक्शन टूट गया और वापस नहीं आ सका। पुनः प्रयास करने के लिए कनेक्ट करें।",
     "sessionReady": "{{type}} सत्र तैयार है",
     "connectionError": "कनेक्शन त्रुटि",
+    "clipboardWaiting": "सत्र में टेक्स्ट कॉपी किया गया। इसे अपने क्लिपबोर्ड पर रखने के लिए यहाँ क्लिक करें या कोई कुंजी दबाएँ। तुरंत कॉपी करने के लिए HTTPS के माध्यम से Termix खोलें।",
     "failedToConnect": "कनेक्शन टोकन प्राप्त करने में विफल",
     "hostNotFound": "होस्ट नहीं मिला",
     "noHostSelected": "कोई होस्ट चयनित नहीं है",
@@ -76,14 +79,24 @@
         "arrows": "Arrow keys",
         "forceQuit": "Force Quit",
         "macLock": "Lock screen",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "साइन आउट",
+        "record": "रिकॉर्ड करें"
       },
       "hints": {
         "files": "Shows once the RDP drive is on",
         "touchMode": "Only on touch screens",
-        "modifiers": "Ctrl, Alt, Shift and the system key stay held until the next key"
+        "modifiers": "Ctrl, Alt, Shift and the system key stay held until the next key",
+        "logoff": "रन बॉक्स से logoff चलाकर Windows से साइन आउट करता है। सत्र खुला होना चाहिए और डेस्कटॉप दिखा रहा होना चाहिए।",
+        "record": "इस सत्र की रिकॉर्डिंग शुरू या बंद करता है। इसके लिए Session Recording प्लगइन और बिल्ट-इन इंजन की आवश्यकता होती है।"
       },
-      "option": "Option"
+      "option": "Option",
+      "logoffConfirm": "क्या आप इस Windows सत्र से साइन आउट करना चाहते हैं? इसमें असहेज काम खो जाएगा।",
+      "recordStart": "रिकॉर्डिंग शुरू करें",
+      "recordStop": "रिकॉर्डिंग बंद करें",
+      "recordStarted": "रिकॉर्डिंग शुरू हो गई",
+      "recordStopped": "रिकॉर्डिंग Session Recording में सेव हो गई",
+      "recordFailed": "रिकॉर्डिंग बदलने में असमर्थ"
     },
     "disabled": "रिमोट डेस्कटॉप बंद है। एक एडमिन सेटिंग्स में इसे चालू कर सकता है।"
   },

@@ -59,6 +59,26 @@ export function subjectPublicKey(spki: Buffer): Buffer {
 }
 
 /** Pixels per inch to the scale factor RDP wants, in percent. */
+type DisplaySize = { width: number; height: number; dpi: number };
+
+/** The size to ask for, or null when nothing changes. A dpi of 0 keeps the current one. */
+export function nextSize(
+  current: DisplaySize,
+  width: number,
+  height: number,
+  dpi: number,
+): DisplaySize | null {
+  if (width < 200 || height < 200) return null;
+  const next = { width, height, dpi: dpi || current.dpi };
+  if (
+    next.width === current.width &&
+    next.height === current.height &&
+    next.dpi === current.dpi
+  )
+    return null;
+  return next;
+}
+
 export function scaleFromDpi(dpi: number): number {
   if (!dpi || dpi <= 96) return 100;
   return Math.min(500, Math.round((dpi * 100) / 96));
@@ -383,7 +403,7 @@ export class RdpClient implements RemoteClient, PixelSource {
         this.host.fail(
           verify
             ? `The server certificate was refused: ${error.message}`
-            : "TLS failed",
+            : `TLS failed: ${error.message}`,
           Status.UPSTREAM_ERROR,
         );
       }
@@ -525,15 +545,11 @@ export class RdpClient implements RemoteClient, PixelSource {
     this.pump();
   }
 
-  resize(width: number, height: number, dpi: number): void {
-    if (width < 200 || height < 200) return;
-    if (
-      width === this.size.width &&
-      height === this.size.height &&
-      dpi === this.size.dpi
-    )
-      return;
-    this.size = { width, height, dpi };
+  resize(width: number, height: number, askedDpi: number): void {
+    const next = nextSize(this.size, width, height, askedDpi);
+    if (!next) return;
+    this.size = next;
+    const { dpi } = next;
     const method = this.host.settings.get("resize-method", "display-update");
     if (method !== "display-update" && method !== "reconnect") return;
     if (this.resizeTimer) clearTimeout(this.resizeTimer);

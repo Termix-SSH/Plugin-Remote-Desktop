@@ -5,8 +5,11 @@
     "requestingToken": "Verzoek om {{type}}-verbindingstoken...",
     "openingSession": "{{type}}-sessie openen...",
     "negotiating": "{{type}}-handshake onderhandelen...",
+    "reconnectingAfterLost": "De verbinding viel weg terwijl het tabblad verborgen was. Opnieuw verbinden...",
+    "connectionLost": "De verbinding viel weg en kon niet worden hersteld. Verbind opnieuw om het opnieuw te proberen.",
     "sessionReady": "{{type}}-sessie is klaar",
     "connectionError": "Verbindingsfout",
+    "clipboardWaiting": "Tekst gekopieerd in de sessie. Klik of druk op een toets hier om het naar je klembord te kopiëren. Open Termix via HTTPS om direct te kopiëren.",
     "failedToConnect": "Kon geen verbindingstoken ophalen",
     "hostNotFound": "Host niet gevonden",
     "noHostSelected": "Geen host geselecteerd",
@@ -76,14 +79,24 @@
         "arrows": "Pijltoetsen",
         "forceQuit": "Geforceerd afsluiten",
         "macLock": "Vergrendelscherm",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Afmelden",
+        "record": "Opnemen"
       },
       "hints": {
         "files": "Wordt weergegeven zodra het RDP-station is ingeschakeld",
         "touchMode": "Alleen op aanraakschermen",
-        "modifiers": "Ctrl, Alt, Shift en de systeemtoets blijven ingedrukt tot de volgende toetsaanslag"
+        "modifiers": "Ctrl, Alt, Shift en de systeemtoets blijven ingedrukt tot de volgende toetsaanslag",
+        "logoff": "Meldt af bij Windows door logoff uit te voeren via het Uitvoeren-dialoogvenster. De sessie moet open zijn en het bureaublad tonen.",
+        "record": "Start of stopt de opname van deze sessie. Vereist de plugin Sessieopname en de ingebouwde engine."
       },
-      "option": "Optie"
+      "option": "Optie",
+      "logoffConfirm": "Afmelden van deze Windows-sessie? Niet-opgeslagen werk hierin gaat verloren.",
+      "recordStart": "Opname starten",
+      "recordStop": "Opname stoppen",
+      "recordStarted": "Opname gestart",
+      "recordStopped": "Opname opgeslagen in Sessieopname",
+      "recordFailed": "Kon de opname niet wijzigen"
     },
     "disabled": "Remote Desktop is uitgeschakeld. Een beheerder kan het inschakelen in Instellingen."
   },

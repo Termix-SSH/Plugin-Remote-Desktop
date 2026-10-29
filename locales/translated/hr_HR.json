@@ -5,8 +5,11 @@
     "requestingToken": "Zahtijevanje {{type}} tokena za povezivanje...",
     "openingSession": "Otvaranje {{type}} sesije...",
     "negotiating": "Pregovaranje o {{type}} rukovanju...",
+    "reconnectingAfterLost": "Veza je prekinuta dok je kartica bila skrivena. Ponovno povezivanje...",
+    "connectionLost": "Veza je prekinuta i nije se mogla obnoviti. Povežite se ponovno za novi pokušaj.",
     "sessionReady": "{{type}} sesija je spremna",
     "connectionError": "Greška u povezivanju",
+    "clipboardWaiting": "Tekst je kopiran u sesiji. Kliknite ili pritisnite tipku ovdje da ga postavite u međuspremnik. Otvorite Termix putem HTTPS-a za trenutno kopiranje.",
     "failedToConnect": "Neuspjelo dobivanje tokena za povezivanje",
     "hostNotFound": "Host nije pronađen",
     "noHostSelected": "Nije odabran host",
@@ -76,14 +79,24 @@
         "arrows": "Tipke sa strelicama",
         "forceQuit": "Prisilno zatvaranje",
         "macLock": "Zaključaj zaslon",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Odjava",
+        "record": "Snimanje"
       },
       "hints": {
         "files": "Prikazuje se nakon uključivanja RDP pogona",
         "touchMode": "Samo na zaslonima osjetljivima na dodir",
-        "modifiers": "Tipke Ctrl, Alt, Shift i sustavna tipka ostaju pritisnute do sljedeće tipke"
+        "modifiers": "Tipke Ctrl, Alt, Shift i sustavna tipka ostaju pritisnute do sljedeće tipke",
+        "logoff": "Odjava iz Windowsa pokretanjem naredbe logoff iz dijaloškog okvira Run. Sesija mora biti otvorena i prikazivati radnu površinu.",
+        "record": "Pokreće ili zaustavlja snimanje ove sesije. Zahtijeva dodatak Session Recording i ugrađeni mehanizam."
       },
-      "option": "Opcija"
+      "option": "Opcija",
+      "logoffConfirm": "Odjaviti se iz ove Windows sesije? Nesavedeni rad u njoj bit će izgubljen.",
+      "recordStart": "Započni snimanje",
+      "recordStop": "Zaustavi snimanje",
+      "recordStarted": "Snimanje je započeto",
+      "recordStopped": "Snimanje je spremljeno u Session Recording",
+      "recordFailed": "Nije moguće promijeniti snimanje"
     },
     "disabled": "Udaljeni radni stol je isključen. Administrator ga može uključiti u postavkama."
   },

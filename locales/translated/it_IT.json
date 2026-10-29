@@ -5,8 +5,11 @@
     "requestingToken": "Richiesta del token di connessione {{type}}...",
     "openingSession": "Apertura della sessione {{type}}...",
     "negotiating": "Negoziazione dell'handshake {{type}}...",
+    "reconnectingAfterLost": "La connessione è stata interrotta mentre la scheda era nascosta. Reconnessione in corso...",
+    "connectionLost": "La connessione è stata interrotta e non è stata ripristinata. Riconnetti per riprovare.",
     "sessionReady": "Sessione {{type}} pronta",
     "connectionError": "Errore di connessione",
+    "clipboardWaiting": "Testo copiato nella sessione. Clicca o premi un tasto qui per inserirlo negli appunti. Apri Termix tramite HTTPS per copiare immediatamente.",
     "failedToConnect": "Impossibile ottenere il token di connessione",
     "hostNotFound": "Host non trovato",
     "noHostSelected": "Nessun host selezionato",
@@ -76,14 +79,24 @@
         "arrows": "Tasti freccia",
         "forceQuit": "Forza chiusura",
         "macLock": "Blocca schermo",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Esci",
+        "record": "Registra"
       },
       "hints": {
         "files": "Viene visualizzato quando l'unità RDP è attiva",
         "touchMode": "Solo su schermi touch",
-        "modifiers": "Ctrl, Alt, Shift e il tasto di sistema rimangono premuti fino al tasto successivo"
+        "modifiers": "Ctrl, Alt, Shift e il tasto di sistema rimangono premuti fino al tasto successivo",
+        "logoff": "Effettua il logout da Windows eseguendo logoff dalla finestra Esegui. La sessione deve essere aperta e mostrare il desktop.",
+        "record": "Avvia o interrompe la registrazione di questa sessione. Richiede il plugin Session Recording e il motore integrato."
       },
-      "option": "Opzione"
+      "option": "Opzione",
+      "logoffConfirm": "Effettuare il logout da questa sessione Windows? Il lavoro non salvato verrà perso.",
+      "recordStart": "Avvia registrazione",
+      "recordStop": "Interrompi registrazione",
+      "recordStarted": "Registrazione avviata",
+      "recordStopped": "Registrazione salvata in Session Recording",
+      "recordFailed": "Impossibile modificare la registrazione"
     },
     "disabled": "Remote Desktop is turned off. An admin can turn it on in Settings."
   },

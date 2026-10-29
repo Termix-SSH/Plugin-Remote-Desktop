@@ -5,8 +5,11 @@
     "requestingToken": "{{type}} kapcsolati token kérése...",
     "openingSession": "{{type}} munkamenet megnyitása...",
     "negotiating": "{{type}} kézfogás tárgyalása...",
+    "reconnectingAfterLost": "A kapcsolat megszakadt, miközben a lap rejtve volt. Újra csatlakozás...",
+    "connectionLost": "A kapcsolat megszakadt, és nem sikerült helyreállítani. Csatlakozzon újra a próbálkozáshoz.",
     "sessionReady": "A(z) {{type}} munkamenet készen áll",
     "connectionError": "Kapcsolati hiba",
+    "clipboardWaiting": "Szöveg másolva a munkamenetben. Kattintson ide, vagy nyomjon meg egy billentyűt, hogy a vágólapra helyezze. Nyissa meg a Termixet HTTPS-en keresztül a azonnali másoláshoz.",
     "failedToConnect": "Nem sikerült megszerezni a kapcsolati tokent",
     "hostNotFound": "A gazdagép nem található",
     "noHostSelected": "Nincs kiválasztva gazdagép",
@@ -76,14 +79,24 @@
         "arrows": "Nyilak",
         "forceQuit": "Kényszerített kilépés",
         "macLock": "Képernyőzár",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Kijelentkezés",
+        "record": "Felvétel"
       },
       "hints": {
         "files": "Csak akkor jelenik meg, ha az RDP-meghajtó be van kapcsolva",
         "touchMode": "Csak érintőképernyőn",
-        "modifiers": "A Ctrl, Alt, Shift és a rendszerbillentyű lenyomva marad a következő billentyűig"
+        "modifiers": "A Ctrl, Alt, Shift és a rendszerbillentyű lenyomva marad a következő billentyűig",
+        "logoff": "Kijelentkezik a Windowsból a logoff parancs futtatásával a Futtató ablakból. A munkamenetnek nyitottnak kell lennie, és meg kell jelenítenie az asztalt.",
+        "record": "Egy munkamenet-felvétel indítását vagy leállítását kezdeményezi. Szükséges a Session Recording bővítmény és a beépített motor."
       },
-      "option": "Option"
+      "option": "Option",
+      "logoffConfirm": "Kijelentkezik ebből a Windows munkamenetből? A mentetlen munka elveszik.",
+      "recordStart": "Felvétel indítása",
+      "recordStop": "Felvétel leállítása",
+      "recordStarted": "Felvétel elindítva",
+      "recordStopped": "Felvétel mentve a Session Recordingba",
+      "recordFailed": "Nem sikerült módosítani a felvételt"
     },
     "disabled": "A Távoli asztal kikapcsolva van. Egy rendszergazda bekapcsolhatja a Beállításokban."
   },

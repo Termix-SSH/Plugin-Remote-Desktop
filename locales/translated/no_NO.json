@@ -5,8 +5,11 @@
     "requestingToken": "Ber om {{type}}-tilkoblingstoken...",
     "openingSession": "Åpner {{type}}-sesjon...",
     "negotiating": "Forhandler {{type}}-håndtrykk...",
+    "reconnectingAfterLost": "Tilkoblingen ble brutt mens fanen var skjult. Kobler på nytt...",
+    "connectionLost": "Tilkoblingen ble brutt og kunne ikke gjenopprettes. Koble til på nytt for å prøve igjen.",
     "sessionReady": "{{type}}-sesjon klar",
     "connectionError": "Tilkoblingsfeil",
+    "clipboardWaiting": "Tekst kopiert i økten. Klikk eller trykk en tast her for å legge den på utklippstavlen. Åpne Termix over HTTPS for å kopiere med en gang.",
     "failedToConnect": "Kunne ikke hente tilkoblingstoken",
     "hostNotFound": "Verten ble ikke funnet",
     "noHostSelected": "Ingen vert valgt",
@@ -76,14 +79,24 @@
         "arrows": "Piltasterne",
         "forceQuit": "Tving avslutt",
         "macLock": "Lås skjermen",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Logg av",
+        "record": "Ta opp"
       },
       "hints": {
         "files": "Vises når RDP-enheten er aktivert",
         "touchMode": "Kun på berøringsskjerm",
-        "modifiers": "Ctrl, Alt, Shift og systemtasten holdes inne til neste tastetrykk"
+        "modifiers": "Ctrl, Alt, Shift og systemtasten holdes inne til neste tastetrykk",
+        "logoff": "Logger av Windows ved å kjøre logoff fra Utfør-boksen. Økten må være åpen og vise skrivebordet.",
+        "record": "Starter eller stopper opptak av denne økten. Krever Session Recording-pluginen og den innebygde motoren."
       },
-      "option": "Alternativ"
+      "option": "Alternativ",
+      "logoffConfirm": "Vil du logge av denne Windows-økten? Ulagret arbeid i den går tapt.",
+      "recordStart": "Start opptak",
+      "recordStop": "Stopp opptak",
+      "recordStarted": "Opptak startet",
+      "recordStopped": "Opptak lagret i Session Recording",
+      "recordFailed": "Kunne ikke endre opptaket"
     },
     "disabled": "Fjernskrivebord er slått av. En administrator kan slå det på i Innstillinger."
   },

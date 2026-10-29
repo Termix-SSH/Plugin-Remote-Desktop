@@ -5,8 +5,11 @@
     "requestingToken": "{{type}} bağlantı jetonu isteniyor...",
     "openingSession": "{{type}} oturumu açılıyor...",
     "negotiating": "{{type}} el sıkışması (handshake) müzakere ediliyor...",
+    "reconnectingAfterLost": "Bağlantı sekme gizliyken koptu. Yeniden bağlanılıyor...",
+    "connectionLost": "Bağlantı koptu ve yeniden kurulamadı. Tekrar denemek için yeniden bağlanın.",
     "sessionReady": "{{type}} oturumu hazır",
     "connectionError": "Bağlantı hatası",
+    "clipboardWaiting": "Oturumda metin kopyalandı. Panonuza yapıştırmak için buraya tıklayın veya bir tuşa basın. Hemen kopyalamak için Termix'i HTTPS üzerinden açın.",
     "failedToConnect": "Bağlantı jetonu alınamadı",
     "hostNotFound": "Ana bilgisayar bulunamadı",
     "noHostSelected": "Hiçbir ana bilgisayar seçilmedi",
@@ -76,14 +79,24 @@
         "arrows": "Ok tuşları",
         "forceQuit": "Zorla Çık",
         "macLock": "Ekranı kilitle",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Oturumu kapat",
+        "record": "Kaydet"
       },
       "hints": {
         "files": "RDP sürücüsü açıldığında görünür",
         "touchMode": "Yalnızca dokunmatik ekranlarda",
-        "modifiers": "Ctrl, Alt, Shift ve sistem tuşu bir sonraki tuşa basılana kadar basılı tutulur"
+        "modifiers": "Ctrl, Alt, Shift ve sistem tuşu bir sonraki tuşa basılana kadar basılı tutulur",
+        "logoff": "Çalıştır kutusundan logoff komutunu çalıştırarak Windows oturumunu kapatır. Oturumun açık ve masaüstünün görünür olması gerekir.",
+        "record": "Bu oturumun kaydını başlatır veya durdurur. Oturum Kaydı eklentisi ve yerleşik motor gerektirir."
       },
-      "option": "Seçenek"
+      "option": "Seçenek",
+      "logoffConfirm": "Bu Windows oturumundan çıkış yapılsın mı? Kaydedilmemiş işler kaybolacak.",
+      "recordStart": "Kaydı başlat",
+      "recordStop": "Kaydı durdur",
+      "recordStarted": "Kayıt başladı",
+      "recordStopped": "Kayıt Oturum Kaydı'na kaydedildi",
+      "recordFailed": "Kayıt değiştirilemedi"
     },
     "disabled": "Uzak Masaüstü kapalı. Bir yönetici bunu Ayarlar'dan açabilir."
   },

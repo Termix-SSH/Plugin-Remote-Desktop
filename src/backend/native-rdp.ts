@@ -77,7 +77,8 @@ export async function launchNativeRdp(
   return new Promise((resolve) => {
     const child = spawn("mstsc.exe", [rdpPath], {
       detached: true,
-      windowsHide: true,
+      // Hiding the console also hides mstsc's own window, so it opened unseen.
+      windowsHide: false,
       stdio: "ignore",
     });
     const cleanup = () =>

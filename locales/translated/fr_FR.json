@@ -5,8 +5,11 @@
     "requestingToken": "Demande du jeton de connexion {{type}}...",
     "openingSession": "Ouverture de la session {{type}}...",
     "negotiating": "Négociation de la poignée de main {{type}}...",
+    "reconnectingAfterLost": "La connexion a été interrompue alors que l'onglet était masqué. Reconnexion en cours...",
+    "connectionLost": "La connexion a été interrompue et n'a pas pu être rétablie. Reconnectez-vous pour réessayer.",
     "sessionReady": "Session {{type}} prête",
     "connectionError": "Erreur de connexion",
+    "clipboardWaiting": "Texte copié dans la session. Cliquez ou appuyez sur une touche ici pour le placer dans votre presse-papiers. Ouvrez Termix via HTTPS pour copier immédiatement.",
     "failedToConnect": "Échec de l'obtention du jeton de connexion",
     "hostNotFound": "Hôte introuvable",
     "noHostSelected": "Aucun hôte sélectionné",
@@ -76,14 +79,24 @@
         "arrows": "Touches fléchées",
         "forceQuit": "Forcer la fermeture",
         "macLock": "Verrouiller l'écran",
-        "spotlight": "Spotlight"
+        "spotlight": "Spotlight",
+        "logoff": "Se déconnecter",
+        "record": "Enregistrer"
       },
       "hints": {
         "files": "Apparaît une fois le lecteur RDP activé",
         "touchMode": "Uniquement sur les écrans tactiles",
-        "modifiers": "Ctrl, Alt, Shift et la touche système restent enfoncées jusqu'à la prochaine touche"
+        "modifiers": "Ctrl, Alt, Shift et la touche système restent enfoncées jusqu'à la prochaine touche",
+        "logoff": "Se déconnecte de Windows en exécutant logoff depuis la boîte Exécuter. La session doit être ouverte et afficher le bureau.",
+        "record": "Démarrer ou arrêter l'enregistrement de cette session. Nécessite le plugin Enregistrement de session et le moteur intégré."
       },
-      "option": "Option"
+      "option": "Option",
+      "logoffConfirm": "Se déconnecter de cette session Windows ? Le travail non enregistré sera perdu.",
+      "recordStart": "Démarrer l'enregistrement",
+      "recordStop": "Arrêter l'enregistrement",
+      "recordStarted": "Enregistrement démarré",
+      "recordStopped": "Enregistrement sauvegardé dans Enregistrement de session",
+      "recordFailed": "Impossible de modifier l'enregistrement"
     },
     "disabled": "Le Bureau à distance est désactivé. Un administrateur peut l'activer dans les Paramètres."
   },

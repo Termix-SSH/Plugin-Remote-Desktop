@@ -1,3 +1,4 @@
+import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { Worker } from "node:worker_threads";
@@ -91,8 +92,27 @@ export interface BuiltinEngineDeps {
  * an EngineSession with its own worker, and browsers still speak the
  * Guacamole protocol to it.
  */
+type ActiveRecording = {
+  meta: NonNullable<GuacamoleToken["recording"]>;
+  options: RecordingOptions;
+};
+
+/** Who opened a session, for the record button. */
+interface SessionInfo {
+  userId: string;
+  hostId: number;
+  protocol: EngineProtocol;
+  settings: Record<string, string>;
+}
+
+export type RecordingControl =
+  | { ok: true; recording: boolean }
+  | { ok: false; status: number; error: string };
+
 export class BuiltinEngine {
   private readonly live = new Map<string, EngineSession>();
+  private readonly info = new Map<string, SessionInfo>();
+  private readonly recordings = new Map<string, ActiveRecording>();
   private readonly wss = new WebSocketServer({ noServer: true });
 
   constructor(private readonly deps: BuiltinEngineDeps) {}
@@ -178,24 +198,22 @@ export class BuiltinEngine {
       },
       onEnd: (ended) => {
         this.live.delete(ended.id);
+        this.info.delete(ended.id);
         if (meta) this.deps.sessions.closed(meta.termixConnectId);
         else release?.();
-        if (recording) {
-          this.deps
-            .onRecording({
-              recording: recording.meta,
-              file: recording.options.file,
-            })
-            .catch((error) =>
-              this.deps.log.error("Failed to save a recording", {
-                operation: "engine_recording_persist_error",
-                error: errorMessage(error),
-              }),
-            );
-        }
+        this.saveRecording(ended.id);
       },
     });
     this.live.set(session.id, session);
+    if (recording) this.recordings.set(session.id, recording);
+    if (userId) {
+      this.info.set(session.id, {
+        userId,
+        hostId: meta?.hostId ?? token.recording?.hostId ?? 0,
+        protocol,
+        settings,
+      });
+    }
     if (meta) {
       release = this.deps.onOpen?.(meta.hostId);
       this.deps.sessions.opened(meta, session.id, release ? [release] : []);
@@ -235,6 +253,91 @@ export class BuiltinEngine {
         includeKeys: settings["recording-include-keys"] === "true",
       },
     };
+  }
+
+  /** Whether a session is recording, for the user who opened it. */
+  recordingState(sessionId: string, userId: string): RecordingControl {
+    const session = this.live.get(sessionId);
+    const info = this.info.get(sessionId);
+    if (!session || !info || !info.hostId) {
+      return { ok: false, status: 404, error: "Session not found" };
+    }
+    if (info.userId !== userId) {
+      return {
+        ok: false,
+        status: 403,
+        error: "Only the session owner can record",
+      };
+    }
+    return { ok: true, recording: session.isRecording };
+  }
+
+  /** Starts or stops recording a running session. */
+  async setRecording(
+    sessionId: string,
+    userId: string,
+    on: boolean,
+  ): Promise<RecordingControl> {
+    const state = this.recordingState(sessionId, userId);
+    if (!state.ok) return state;
+    const session = this.live.get(sessionId)!;
+    const info = this.info.get(sessionId)!;
+    if (!on) {
+      if (session.stopRecording()) this.saveRecording(sessionId);
+      return { ok: true, recording: false };
+    }
+    if (session.isRecording) return { ok: true, recording: true };
+
+    const dir = path.resolve(this.deps.recordingsDir());
+    try {
+      fs.mkdirSync(dir, { recursive: true });
+    } catch (error) {
+      this.deps.log.warn("Could not make the recordings folder", {
+        operation: "engine_recording_dir_error",
+        path: dir,
+        error: errorMessage(error),
+      });
+      return { ok: false, status: 500, error: "Could not start recording" };
+    }
+    const name = `${crypto.randomUUID()}.guac`;
+    const active: ActiveRecording = {
+      meta: {
+        hostId: info.hostId,
+        userId: info.userId,
+        protocol: info.protocol,
+        path: name,
+        startedAt: new Date().toISOString(),
+      },
+      options: {
+        file: path.join(dir, name),
+        excludeOutput: info.settings["recording-exclude-output"] === "true",
+        excludeMouse: info.settings["recording-exclude-mouse"] === "true",
+        includeKeys: info.settings["recording-include-keys"] !== "false",
+      },
+    };
+    if (!(await session.startRecording(active.options))) {
+      return { ok: false, status: 409, error: "Could not start recording" };
+    }
+    this.recordings.set(sessionId, active);
+    return { ok: true, recording: true };
+  }
+
+  /** Hands the session's recording to Session Recording, once. */
+  private saveRecording(sessionId: string): void {
+    const recording = this.recordings.get(sessionId);
+    if (!recording) return;
+    this.recordings.delete(sessionId);
+    this.deps
+      .onRecording({
+        recording: recording.meta,
+        file: recording.options.file,
+      })
+      .catch((error) =>
+        this.deps.log.error("Failed to save a recording", {
+          operation: "engine_recording_persist_error",
+          error: errorMessage(error),
+        }),
+      );
   }
 
   /** Ends a session and closes everyone watching it. */
