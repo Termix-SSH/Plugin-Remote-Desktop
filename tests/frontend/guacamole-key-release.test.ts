@@ -3,7 +3,10 @@ import ts from "typescript";
 import Guacamole from "guacamole-common-js";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import displaySource from "../../src/frontend/GuacamoleDisplay.tsx?raw";
-import { remoteKeysym } from "../../src/frontend/guacamole-meta-key.js";
+import {
+  remoteKeysym,
+  shouldSendKey,
+} from "../../src/frontend/guacamole-meta-key.js";
 
 // Exercise the display's actual focus callback with Guacamole's real keyboard.
 const source = ts.createSourceFile(
@@ -30,7 +33,7 @@ if (!callback) throw new Error("Missing refreshKeyboardHandlers callback");
 const runRefresh = new Function(
   "state",
   ts.transpileModule(
-    `const { keyboardRef, clientRef, displayElementRef, isVisible, windowFocusedRef, hasKeyboardFocusRef, sessionProtocolRef, remoteKeysym } = state;
+    `const { keyboardRef, clientRef, displayElementRef, isVisible, windowFocusedRef, hasKeyboardFocusRef, sessionProtocolRef, remoteKeysym, shouldSendKey } = state;
     (${callback})();`,
     { compilerOptions: { target: ts.ScriptTarget.ES2022 } },
   ).outputText,
@@ -65,6 +68,7 @@ describe("remote keyboard focus loss", () => {
         hasKeyboardFocusRef: { current: true },
         sessionProtocolRef: { current: "vnc" },
         remoteKeysym,
+        shouldSendKey,
       };
       const refresh = () => runRefresh(state);
       refresh();
@@ -133,6 +137,7 @@ describe("remote keyboard on a Mac", () => {
         hasKeyboardFocusRef: { current: true },
         sessionProtocolRef: { current: protocol },
         remoteKeysym,
+        shouldSendKey,
       });
 
       keyboard.press(0xffe7); // the browser's Meta key

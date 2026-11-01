@@ -3,6 +3,7 @@ import {
   detectMetaKeyFamily,
   metaKeyLabels,
   remoteKeysym,
+  shouldSendKey,
   watchRightAlt,
 } from "../../src/frontend/guacamole-meta-key.js";
 
@@ -105,6 +106,115 @@ describe("right Alt", () => {
     const stop = watchRightAlt(el);
     press(el, "keydown", "Alt");
     expect(remoteKeysym("vnc", 0xfe03, true)).toBe(0xfe03);
+    stop();
+  });
+});
+
+describe("toggle key repeat", () => {
+  const HANGUL = 0xff31;
+  const press = (target: HTMLElement, type: string, repeat = false) =>
+    target.dispatchEvent(
+      new KeyboardEvent(type, { key: "HangulMode", repeat, bubbles: true }),
+    );
+
+  it("sends one down and one up however long the key is held", () => {
+    const target = document.createElement("div");
+    const stop = watchRightAlt(target);
+    press(target, "keydown");
+    expect(shouldSendKey(HANGUL, true)).toBe(true);
+    // The library's own repeat while the key is still down.
+    expect(shouldSendKey(HANGUL, false)).toBe(false);
+    expect(shouldSendKey(HANGUL, true)).toBe(false);
+    press(target, "keydown", true);
+    expect(shouldSendKey(HANGUL, true)).toBe(false);
+    press(target, "keyup");
+    expect(shouldSendKey(HANGUL, false)).toBe(true);
+    // The next tap goes through again.
+    press(target, "keydown");
+    expect(shouldSendKey(HANGUL, true)).toBe(true);
+    stop();
+  });
+
+  it("releases on focus loss and never filters other keys", () => {
+    const target = document.createElement("div");
+    const stop = watchRightAlt(target);
+    press(target, "keydown");
+    shouldSendKey(HANGUL, true);
+    target.dispatchEvent(new FocusEvent("blur"));
+    expect(shouldSendKey(HANGUL, false)).toBe(true);
+    expect(shouldSendKey(0x61, true)).toBe(true);
+    expect(shouldSendKey(0x61, true)).toBe(true);
+    stop();
+  });
+});
+
+describe("Option on an ARD host", () => {
+  const ALT_L = 0xffe9;
+  const ALT_R = 0xffea;
+  const ALT_GR = 0xfe03;
+  const AT = 0x40;
+  const TWO = 0x32;
+
+  function session() {
+    const target = document.createElement("div");
+    const stop = watchRightAlt(target);
+    const key = (code: string, value: string, type = "keydown") =>
+      target.dispatchEvent(
+        new KeyboardEvent(type, { code, key: value, bubbles: true }),
+      );
+    return { key, stop };
+  }
+
+  it("sends Option plus the physical key, and releases the same key", () => {
+    const { key, stop } = session();
+    key("AltLeft", "Alt");
+    expect(remoteKeysym("ard", ALT_L, true)).toBe(ALT_L);
+    key("Digit2", "@");
+    expect(remoteKeysym("ard", AT, true)).toBe(TWO);
+    // Option comes up first, the key still releases as what was sent.
+    expect(remoteKeysym("ard", ALT_L, false)).toBe(ALT_L);
+    key("Digit2", "2", "keyup");
+    expect(remoteKeysym("ard", AT, false)).toBe(TWO);
+    stop();
+  });
+
+  it("uses the code from keypress, where a Mac browser reports the character", () => {
+    const { key, stop } = session();
+    remoteKeysym("ard", ALT_L, true);
+    key("KeyQ", "@", "keypress");
+    expect(remoteKeysym("ard", AT, true)).toBe(0x71);
+    remoteKeysym("ard", AT, false);
+    remoteKeysym("ard", ALT_L, false);
+    stop();
+  });
+
+  it("sends right Option as Alt_R, and leaves a real AltGr alone", () => {
+    const { key, stop } = session();
+    key("AltRight", "Alt");
+    expect(remoteKeysym("ard", ALT_GR, true)).toBe(ALT_R);
+    key("Digit2", "@");
+    expect(remoteKeysym("ard", AT, true)).toBe(TWO);
+    remoteKeysym("ard", AT, false);
+    expect(remoteKeysym("ard", ALT_GR, false)).toBe(ALT_R);
+    key("AltRight", "AltGraph");
+    expect(remoteKeysym("ard", ALT_GR, true)).toBe(ALT_GR);
+    expect(remoteKeysym("ard", ALT_GR, false)).toBe(ALT_GR);
+    stop();
+  });
+
+  it("changes nothing without Option, for other keys, or on other protocols", () => {
+    const { key, stop } = session();
+    key("Digit2", "@");
+    expect(remoteKeysym("ard", AT, true)).toBe(AT);
+    expect(remoteKeysym("ard", AT, false)).toBe(AT);
+    remoteKeysym("ard", ALT_L, true);
+    key("Escape", "Escape");
+    expect(remoteKeysym("ard", 0xff1b, true)).toBe(0xff1b);
+    expect(remoteKeysym("ard", 0xff1b, false)).toBe(0xff1b);
+    remoteKeysym("ard", ALT_L, false);
+    expect(remoteKeysym("vnc", ALT_L, true)).toBe(ALT_L);
+    key("Digit2", "@");
+    expect(remoteKeysym("vnc", AT, true)).toBe(AT);
     stop();
   });
 });

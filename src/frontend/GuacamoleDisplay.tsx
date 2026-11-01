@@ -50,7 +50,11 @@ import {
 } from "./guacamole-filesystem.ts";
 import { clampGuacamoleZoom, stepGuacamoleZoom } from "./guacamole-zoom.ts";
 import { createRdpReadyGate } from "./guacamole-ready.ts";
-import { remoteKeysym, watchRightAlt } from "./guacamole-meta-key.ts";
+import {
+  remoteKeysym,
+  shouldSendKey,
+  watchRightAlt,
+} from "./guacamole-meta-key.ts";
 
 type GuacamoleConnectionType = "rdp" | "vnc" | "ard" | "telnet";
 
@@ -426,6 +430,7 @@ export const GuacamoleDisplay = forwardRef<
         document.activeElement === activeDisplay;
 
       if (!hasKeyboardFocusRef.current && !stillFocused) return;
+      if (!shouldSendKey(keysym, true)) return;
       clientRef.current.sendKeyEvent(
         1,
         remoteKeysym(sessionProtocolRef.current, keysym, true),
@@ -433,6 +438,7 @@ export const GuacamoleDisplay = forwardRef<
     };
 
     keyboard.onkeyup = (keysym: number) => {
+      if (!shouldSendKey(keysym, false)) return;
       // Focus loss must still release keys already sent to the remote host.
       clientRef.current?.sendKeyEvent(
         0,

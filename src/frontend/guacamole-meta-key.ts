@@ -87,27 +87,107 @@ const META_LEFT = 0xffe7;
 const META_RIGHT = 0xffe8;
 const SUPER_LEFT = 0xffeb;
 const SUPER_RIGHT = 0xffec;
+const ALT_LEFT = 0xffe9;
 const ALT_RIGHT = 0xffea;
 const ALT_GRAPH = 0xfe03;
+
+// The unshifted US character for each physical key, which is how a Mac finds
+// the key behind a code. Its own layout then decides what Option+key types.
+const US_KEY_BY_CODE: Record<string, string> = {
+  Minus: "-",
+  Equal: "=",
+  BracketLeft: "[",
+  BracketRight: "]",
+  Backslash: "\\",
+  Semicolon: ";",
+  Quote: "'",
+  Backquote: "`",
+  Comma: ",",
+  Period: ".",
+  Slash: "/",
+  Space: " ",
+};
+
+function usKeysymForCode(code: string): number | null {
+  const letter = /^Key([A-Z])$/.exec(code);
+  if (letter) return letter[1].toLowerCase().charCodeAt(0);
+  const digit = /^Digit([0-9])$/.exec(code);
+  if (digit) return digit[1].charCodeAt(0);
+  const other = US_KEY_BY_CODE[code];
+  return other ? other.charCodeAt(0) : null;
+}
+
+/** A character, as opposed to a function key or a modifier. */
+function isCharacterKeysym(keysym: number): boolean {
+  return (keysym >= 0x20 && keysym <= 0xff) || keysym >= 0x01000000;
+}
+
+const optionsDown = new Set<number>();
+const optionKeysSent = new Map<number, number>();
+let lastKeyCode = "";
 
 // guacamole-common-js reports every right Alt as AltGr. A layout without
 // AltGr (Korean, where it is the Han/Eng key) needs a real Alt_R instead.
 let rightAltIsPlain = false;
 let rightAltSentAs: number | null = null;
 
+// The Korean Han/Eng and Hanja keys flip the remote IME on every press, so the
+// key repeat guacamole-common-js runs for a held key must not reach the host.
+const TOGGLE_KEYS: Record<string, number> = {
+  HangulMode: 0xff31,
+  HanjaMode: 0xff34,
+};
+const toggleKeysyms = new Set(Object.values(TOGGLE_KEYS));
+const togglesHeld = new Set<number>();
+const togglesSent = new Set<number>();
+
 /** Tracks whether the browser sees right Alt as Alt or as AltGraph. */
 export function watchRightAlt(target: HTMLElement): () => void {
   const onKey = (event: KeyboardEvent) => {
     if (event.code === "AltRight") rightAltIsPlain = event.key === "Alt";
+    if (event.type !== "keyup") lastKeyCode = event.code;
+    const toggle = TOGGLE_KEYS[event.key];
+    if (toggle === undefined) return;
+    if (event.type === "keyup") {
+      togglesHeld.delete(toggle);
+    } else {
+      togglesHeld.add(toggle);
+      // A real press always goes through, even if a release got lost on blur.
+      if (!event.repeat) togglesSent.delete(toggle);
+    }
   };
+  const onBlur = () => togglesHeld.clear();
   target.addEventListener("keydown", onKey, true);
   target.addEventListener("keyup", onKey, true);
+  // A Mac browser reports what Option types on keypress, not keydown.
+  target.addEventListener("keypress", onKey, true);
+  target.addEventListener("blur", onBlur);
   return () => {
     target.removeEventListener("keydown", onKey, true);
     target.removeEventListener("keyup", onKey, true);
+    target.removeEventListener("keypress", onKey, true);
+    target.removeEventListener("blur", onBlur);
     rightAltIsPlain = false;
     rightAltSentAs = null;
+    togglesHeld.clear();
+    togglesSent.clear();
+    optionsDown.clear();
+    optionKeysSent.clear();
+    lastKeyCode = "";
   };
+}
+
+/** False for a repeat of a toggle key: one press sends one down and one up. */
+export function shouldSendKey(keysym: number, down: boolean): boolean {
+  if (!toggleKeysyms.has(keysym)) return true;
+  if (down) {
+    if (togglesSent.has(keysym)) return false;
+    togglesSent.add(keysym);
+    return true;
+  }
+  if (togglesHeld.has(keysym)) return false;
+  togglesSent.delete(keysym);
+  return true;
 }
 
 /**
@@ -115,6 +195,10 @@ export function watchRightAlt(target: HTMLElement): () => void {
  * reports the browser's Meta key (Command on a Mac, Windows on a PC) as
  * Meta_L, which a Mac ignores as a modifier: Cmd+C arrives as a plain c. A Mac
  * reads Super_L as Command, so an ARD session sends that instead.
+ *
+ * With Option held the browser has already applied the local layout (Option+2
+ * is @ on a Spanish Mac). An ARD session sends Option plus the physical key
+ * instead, so the Mac types the character through its own layout.
  */
 export function remoteKeysym(
   protocol: "rdp" | "vnc" | "ard" | "telnet" | undefined,
@@ -130,5 +214,24 @@ export function remoteKeysym(
   if (protocol !== "ard") return keysym;
   if (keysym === META_LEFT) return SUPER_LEFT;
   if (keysym === META_RIGHT) return SUPER_RIGHT;
-  return keysym;
+  // Right Option arrives as AltGr, which a Mac does not know.
+  const option = keysym === ALT_GRAPH && rightAltIsPlain ? ALT_RIGHT : keysym;
+  if (option === ALT_LEFT || option === ALT_RIGHT) {
+    if (down) optionsDown.add(option);
+    else optionsDown.delete(option);
+    return option;
+  }
+  if (down) {
+    const physical =
+      optionsDown.size > 0 && isCharacterKeysym(keysym)
+        ? usKeysymForCode(lastKeyCode)
+        : null;
+    if (physical === null) return keysym;
+    optionKeysSent.set(keysym, physical);
+    return physical;
+  }
+  const sent = optionKeysSent.get(keysym);
+  if (sent === undefined) return keysym;
+  optionKeysSent.delete(keysym);
+  return sent;
 }
