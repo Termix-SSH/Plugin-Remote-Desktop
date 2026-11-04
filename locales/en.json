@@ -447,5 +447,13 @@
   "plugin": {
     "name": "Remote Desktop",
     "description": "RDP, VNC and Telnet sessions in your browser, with clipboard, file transfer, sharing and recording."
+  },
+  "operations": {
+    "check": {
+      "title": "Check remote desktop ports"
+    },
+    "ports": {
+      "title": "Remote desktop"
+    }
   }
 }

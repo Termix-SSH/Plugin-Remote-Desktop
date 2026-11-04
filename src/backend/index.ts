@@ -20,12 +20,14 @@ import {
 } from "./host-settings.js";
 import { createLogger } from "./log.js";
 import { migrateGuacdHosts } from "./guacd-host.js";
+import { registerOperations } from "./operations.js";
 
 export async function activate(ctx: PluginContext) {
   const log = createLogger(ctx.log);
   const tokens = new GuacamoleTokenService(log);
   const sessions = new RemoteSessions();
   ctx.disposables.add(() => sessions.clear());
+  registerOperations(ctx);
 
   // The admin setting, unless GUACD_URL / GUACD_HOST / GUACD_PORT override it.
   let guacdUrl = (await ctx.settings.get<string>("guacdUrl")) ?? "";

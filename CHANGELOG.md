@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.4.0
+
+### Added
+
+- Check from the server that a host's RDP, VNC and Telnet ports answer, through Termix actions and as a status tile on the host page
+
+### Changed
+
+- Needs Termix 26.11.1 or newer
+
 ## 1.3.1
 
 ### Fixed

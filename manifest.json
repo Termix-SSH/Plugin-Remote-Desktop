@@ -1,7 +1,7 @@
 {
   "id": "remote-desktop",
   "name": "Remote Desktop",
-  "version": "1.3.1",
+  "version": "1.4.0",
   "description": "RDP, VNC, Apple Remote Desktop and Telnet sessions in your browser, with clipboard, file transfer, sharing and recording.",
   "author": {
     "name": "Termix"
@@ -71,7 +71,7 @@
     }
   ],
   "engine": {
-    "termix": ">=26.10.3",
+    "termix": ">=26.11.1-0",
     "api": "^1.5"
   },
   "capabilities": [
@@ -82,7 +82,8 @@
     "network:serve",
     "desktop:local",
     "ui:surface",
-    "users:impersonate"
+    "users:impersonate",
+    "operations:provide"
   ],
   "optionalDependencies": {
     "session-recording": "^1.0.0",
@@ -624,7 +625,34 @@
         ]
       }
     },
-    "uses": ["session.remoteDisplay", "wakeOnLan.macAddress"]
+    "uses": ["session.remoteDisplay", "wakeOnLan.macAddress"],
+    "operations": {
+      "actions": [
+        {
+          "id": "remote-desktop.check-ports",
+          "titleKey": "operations.check.title",
+          "icon": "MonitorCheck",
+          "scope": "host",
+          "risk": "read",
+          "permission": "sessions",
+          "hostAccess": "connect",
+          "surfaces": {
+            "assistant": true,
+            "mcp": true
+          }
+        }
+      ],
+      "signals": [
+        {
+          "id": "remote-desktop.ports",
+          "titleKey": "operations.ports.title",
+          "read": "remote-desktop.check-ports",
+          "scope": "host",
+          "kind": "status",
+          "refreshSec": 600
+        }
+      ]
+    }
   },
   "locales": "locales",
   "platforms": ["linux", "win32", "darwin"]
