@@ -32,7 +32,41 @@ export function tcpOpen(
   });
 }
 
-/** Checks the enabled remote desktop ports from the server, with no session. */
+// VNC servers like TigerVNC count a connection that closes before login as a
+// failed login and blacklist the caller, so VNC ports are read over SSH.
+const OVER_SSH = new Set<RemoteProtocol>(["vnc", "ard"]);
+
+export const LISTEN_SCRIPT =
+  "if command -v ss >/dev/null 2>&1; then ss -Hltn; " +
+  "else netstat -an 2>/dev/null | grep -i listen; fi | awk '{print $4}'";
+
+/** Ports from `ss`/`netstat` local addresses (0.0.0.0:5901, [::]:5901, *.5900). */
+export function parseListening(output: string): Set<number> {
+  const ports = new Set<number>();
+  for (const line of output.split("\n")) {
+    const match = /[:.](\d+)\s*$/.exec(line.trim());
+    if (match) ports.add(Number(match[1]));
+  }
+  return ports;
+}
+
+async function listeningPorts(
+  ctx: PluginContext,
+  hostId: number,
+): Promise<Set<number> | null> {
+  try {
+    const result = await ctx.ssh.exec(hostId, LISTEN_SCRIPT, {
+      timeoutMs: 15_000,
+      purpose: "remote-desktop-ports",
+    });
+    if (result.timedOut || result.code !== 0) return null;
+    return parseListening(result.stdout);
+  } catch {
+    return null;
+  }
+}
+
+/** Checks the enabled remote desktop ports with no session. */
 export function registerOperations(ctx: PluginContext): void {
   if (typeof ctx.operations?.register !== "function") return;
 
@@ -51,27 +85,39 @@ export function registerOperations(ctx: PluginContext): void {
           data: { rows: [], status: "unknown", label: "Off" },
         };
       }
-      if (target.jumpHosts.length > 0) {
-        return {
-          summary: "Behind a jump host, not checked",
-          data: { rows: [], status: "unknown", label: "Not checked" },
-        };
-      }
+      const behindJump = target.jumpHosts.length > 0;
+      let listening: Promise<Set<number> | null> | undefined;
       const rows = await Promise.all(
         protocols.map(async (protocol) => {
           const port = Number(settings[PORT_KEY[protocol]]);
-          const open = await tcpOpen(target.ip, port);
-          return { id: protocol, protocol, port, open: open ? "yes" : "no" };
+          let open: boolean | null;
+          if (OVER_SSH.has(protocol)) {
+            listening ??= listeningPorts(ctx, hostId);
+            const ports = await listening;
+            open = ports ? ports.has(port) : null;
+          } else {
+            open = behindJump ? null : await tcpOpen(target.ip, port);
+          }
+          return {
+            id: protocol,
+            protocol,
+            port,
+            open: open === null ? "unknown" : open ? "yes" : "no",
+          };
         }),
       );
       const closed = rows.filter((row) => row.open === "no");
-      const label = closed.length
-        ? `${closed.map((row) => row.protocol.toUpperCase()).join(", ")} closed`
-        : "Open";
-      return {
-        summary: label,
-        data: { rows, status: closed.length ? "fail" : "ok", label },
-      };
+      if (closed.length > 0) {
+        const label = `${closed.map((row) => row.protocol.toUpperCase()).join(", ")} closed`;
+        return { summary: label, data: { rows, status: "fail", label } };
+      }
+      if (rows.every((row) => row.open === "unknown")) {
+        return {
+          summary: "Not checked",
+          data: { rows, status: "unknown", label: "Not checked" },
+        };
+      }
+      return { summary: "Open", data: { rows, status: "ok", label: "Open" } };
     },
   });
 }
