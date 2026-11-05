@@ -747,7 +747,7 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
       // Clicks must not move focus off the session's keyboard.
       onMouseDown={(event) => event.preventDefault()}
       className={cn(
-        "relative z-20 flex h-8 w-full shrink-0 items-center border-border bg-sidebar px-1",
+        "relative z-20 flex h-8 w-full shrink-0 items-center border-border bg-background px-1",
         settings.position === "top" ? "border-b" : "border-t",
       )}
     >
