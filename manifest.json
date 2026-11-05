@@ -95,6 +95,11 @@
       "version": "1.0.0",
       "permission": "remote-desktop.sessions",
       "names": ["rdp", "vnc", "ard", "telnet"]
+    },
+    {
+      "service": "remote-desktop.console",
+      "version": "1.0.0",
+      "permission": "remote-desktop.sessions"
     }
   ],
   "requires": [

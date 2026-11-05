@@ -21,6 +21,7 @@ import {
 import { createLogger } from "./log.js";
 import { migrateGuacdHosts } from "./guacd-host.js";
 import { registerOperations } from "./operations.js";
+import { createConsoleService } from "./console-service.js";
 
 export async function activate(ctx: PluginContext) {
   const log = createLogger(ctx.log);
@@ -124,6 +125,11 @@ export async function activate(ctx: PluginContext) {
         guacdUrl
       ),
   });
+
+  ctx.services.provide(
+    "remote-desktop.console",
+    createConsoleService({ ctx, log, tokens, sessions, guacd, engineMode }),
+  );
 
   // Both engines own their WebSocketServer, so they take the raw upgrade.
   // Public because a display authenticates with the encrypted, single-use
