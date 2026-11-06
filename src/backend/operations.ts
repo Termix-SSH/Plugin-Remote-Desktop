@@ -9,6 +9,7 @@ import {
   readHostSettings,
   type RemoteProtocol,
 } from "./host-settings.js";
+import type { RemoteSessions } from "./sessions.js";
 
 function requireHost(context: PluginOperationContext): number {
   if (context.hostId === undefined) throw new Error("This needs a host");
@@ -67,7 +68,10 @@ async function listeningPorts(
 }
 
 /** Checks the enabled remote desktop ports with no session. */
-export function registerOperations(ctx: PluginContext): void {
+export function registerOperations(
+  ctx: PluginContext,
+  sessions?: Pick<RemoteSessions, "listByOwner">,
+): void {
   if (typeof ctx.operations?.register !== "function") return;
 
   ctx.operations.register("remote-desktop.check-ports", {
@@ -118,6 +122,28 @@ export function registerOperations(ctx: PluginContext): void {
         };
       }
       return { summary: "Open", data: { rows, status: "ok", label: "Open" } };
+    },
+  });
+
+  ctx.operations.register("remote-desktop.sessions", {
+    run: async (_input, context) => {
+      const userId = ctx.currentActor();
+      if (!userId) throw new Error("This needs a user");
+      const hostId = requireHost(context);
+      const rows = (sessions?.listByOwner(userId) ?? []).filter(
+        (session) => session.hostId === hostId,
+      );
+      return {
+        summary: `${rows.length} open sessions`,
+        data: {
+          rows: rows.map((session) => ({
+            id: session.guacamoleConnectionId,
+            name: session.hostName,
+            protocol: session.protocol,
+            started: new Date(session.openedAt).toISOString(),
+          })),
+        },
+      };
     },
   });
 }

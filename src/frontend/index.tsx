@@ -54,6 +54,7 @@ import {
 } from "./host-remote";
 import { remoteDesktopForm } from "./remote-form";
 import { GuacdSetupStep } from "./GuacdSetupStep";
+import { RemoteSessionsCard } from "./RemoteSessionsCard";
 
 const PROTOCOLS: {
   id: Protocol;
@@ -442,6 +443,15 @@ export function activate(app: TermixApp): void {
       };
     },
   );
+
+  app.registerDashboardCard({
+    id: "remote-sessions",
+    titleKey: "card.title",
+    defaultPanel: "side",
+    defaultHeight: 220,
+    frame: "framed",
+    component: RemoteSessionsCard,
+  });
 
   for (const protocol of PROTOCOLS) {
     app.registerTab(protocol.id, RemoteDesktopTab, {

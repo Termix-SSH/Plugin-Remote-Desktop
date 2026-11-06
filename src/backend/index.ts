@@ -28,7 +28,7 @@ export async function activate(ctx: PluginContext) {
   const tokens = new GuacamoleTokenService(log);
   const sessions = new RemoteSessions();
   ctx.disposables.add(() => sessions.clear());
-  registerOperations(ctx);
+  registerOperations(ctx, sessions);
 
   // The admin setting, unless GUACD_URL / GUACD_HOST / GUACD_PORT override it.
   let guacdUrl = (await ctx.settings.get<string>("guacdUrl")) ?? "";

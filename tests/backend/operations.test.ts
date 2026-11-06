@@ -37,8 +37,8 @@ function checkPorts(
     null;
   const ctx = {
     operations: {
-      register: (_id: string, handler: { run: typeof run }) => {
-        run = handler.run;
+      register: (id: string, handler: { run: typeof run }) => {
+        if (id === "remote-desktop.check-ports") run = handler.run;
       },
     },
     hosts: {

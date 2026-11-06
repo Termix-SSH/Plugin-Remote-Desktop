@@ -645,6 +645,20 @@
             "assistant": true,
             "mcp": true
           }
+        },
+        {
+          "id": "remote-desktop.sessions",
+          "titleKey": "operations.sessions.title",
+          "icon": "Monitor",
+          "scope": "host",
+          "risk": "read",
+          "permission": "sessions",
+          "hostAccess": "connect",
+          "surfaces": {
+            "assistant": true,
+            "mcp": true,
+            "palette": false
+          }
         }
       ],
       "signals": [
@@ -656,8 +670,35 @@
           "kind": "status",
           "refreshSec": 600
         }
+      ],
+      "resources": [
+        {
+          "id": "remote-desktop.session",
+          "titleKey": "operations.session.title",
+          "icon": "Monitor",
+          "list": "remote-desktop.sessions",
+          "key": "id",
+          "name": "name",
+          "columns": [
+            {
+              "key": "protocol",
+              "titleKey": "operations.session.protocol"
+            },
+            {
+              "key": "started",
+              "titleKey": "operations.session.started"
+            }
+          ]
+        }
       ]
-    }
+    },
+    "dashboardCards": [
+      {
+        "id": "remote-sessions",
+        "titleKey": "card.title",
+        "icon": "Monitor"
+      }
+    ]
   },
   "locales": "locales",
   "platforms": ["linux", "win32", "darwin"]

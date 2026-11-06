@@ -454,6 +454,19 @@
     },
     "ports": {
       "title": "Remote desktop"
+    },
+    "sessions": {
+      "title": "Open remote sessions"
+    },
+    "session": {
+      "title": "Remote sessions",
+      "protocol": "Type",
+      "started": "Started"
     }
+  },
+  "card": {
+    "title": "Remote sessions",
+    "loading": "Loading...",
+    "empty": "No open remote sessions"
   }
 }

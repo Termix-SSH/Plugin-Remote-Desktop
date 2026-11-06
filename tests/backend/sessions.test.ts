@@ -152,3 +152,25 @@ describe("sessions.live providers", () => {
     expect(rdp.disconnectParticipants("nope", "s1")).toBe(0);
   });
 });
+
+describe("RemoteSessions.listByOwner", () => {
+  it("returns only the owner's open sessions, newest first", () => {
+    const sessions = new RemoteSessions();
+    const meta = (id: string, owner: string) =>
+      ({
+        termixConnectId: id,
+        hostId: 1,
+        hostName: "h",
+        ownerUserId: owner,
+        protocol: "rdp",
+      }) as never;
+    sessions.opened(meta("a", "u1"), "ga");
+    sessions.opened(meta("b", "u2"), "gb");
+    sessions.opened(meta("c", "u1"), "gc");
+    expect(sessions.listByOwner("u1").map((s) => s.termixConnectId)).toEqual(
+      expect.arrayContaining(["a", "c"]),
+    );
+    expect(sessions.listByOwner("u1")).toHaveLength(2);
+    sessions.clear();
+  });
+});

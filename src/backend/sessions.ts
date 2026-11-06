@@ -87,6 +87,13 @@ export class RemoteSessions {
     return this.byConnectId.get(termixConnectId) ?? null;
   }
 
+  /** The open sessions one user owns, newest first. */
+  listByOwner(userId: string): RemoteSession[] {
+    return [...this.byConnectId.values()]
+      .filter((session) => session.ownerUserId === userId)
+      .sort((a, b) => b.openedAt - a.openedAt);
+  }
+
   byGuacamole(guacamoleConnectionId: string): RemoteSession | null {
     return this.byGuacamoleId.get(guacamoleConnectionId) ?? null;
   }

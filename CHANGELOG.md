@@ -5,6 +5,7 @@
 ### Added
 
 - Check from the server that a host's RDP, VNC and Telnet ports answer, through Termix actions and as a status tile on the host page
+- A dashboard card with your open remote sessions, and a host's open sessions on the host page
 - Other plugins can show a VNC display that only an SSH host can reach, such as a VM console
 
 ### Changed

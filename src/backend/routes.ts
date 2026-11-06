@@ -128,6 +128,34 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
 
   /**
    * @openapi
+   * /plugin-api/remote-desktop/live-sessions:
+   *   get:
+   *     summary: List my open remote desktop sessions
+   *     description: The caller's RDP, VNC and Telnet sessions that are open on the server now.
+   *     tags:
+   *       - Remote Desktop
+   *     responses:
+   *       200:
+   *         description: The open sessions, newest first.
+   *       401:
+   *         description: Not signed in.
+   */
+  router.get("/live-sessions", (_req: Request, res: Response) => {
+    const userId = actor(ctx, res);
+    if (!userId) return;
+    res.json(
+      deps.sessions.listByOwner(userId).map((session) => ({
+        id: session.guacamoleConnectionId,
+        hostId: session.hostId,
+        hostName: session.hostName,
+        protocol: session.protocol,
+        openedAt: session.openedAt,
+      })),
+    );
+  });
+
+  /**
+   * @openapi
    * /plugin-api/remote-desktop/connection/{connectId}:
    *   get:
    *     summary: Look up guacd's id for a session
