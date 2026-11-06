@@ -11,6 +11,7 @@
     "connectionError": "Connection error",
     "clipboardWaiting": "Text copied in the session. Click or press a key here to put it on your clipboard. Open Termix over HTTPS to copy right away.",
     "failedToConnect": "Failed to get connection token",
+    "requestAccess": "Request access",
     "hostNotFound": "Host not found",
     "noHostSelected": "No host selected",
     "guacdUnavailable": "The external guacd is not answering. Check that it is running, or turn off Use an external guacd in the Remote Desktop settings.",
@@ -99,6 +100,8 @@
       "recordStarted": "Recording started",
       "recordStopped": "Recording saved to Session Recording",
       "recordFailed": "Could not change the recording",
+      "recordRequired": "An admin made recording required on this host",
+      "recordRequiredLabel": "Recording (required)",
       "monitor": "Monitor {{number}}"
     },
     "disabled": "Remote Desktop is turned off. An admin can turn it on in Settings.",
@@ -507,6 +510,10 @@
     "sessions": {
       "title": "Share remote desktop sessions",
       "description": "Let session sharing and collab rooms show this user's RDP, VNC and Telnet sessions to others."
+    },
+    "monitor": {
+      "title": "Watch everyone's remote desktop sessions",
+      "description": "Lets other features, such as Session Recording, list, watch and end the RDP, VNC and Telnet sessions of every user."
     }
   },
   "errors": {

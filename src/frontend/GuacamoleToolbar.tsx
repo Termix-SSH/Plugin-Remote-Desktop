@@ -325,6 +325,10 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
   };
 
   const toggleRecording = async () => {
+    if (recording.forced && recording.recording) {
+      toast.info(t("remoteDesktop.toolbar.recordRequired"));
+      return;
+    }
     const was = recording.recording;
     if (!(await recording.toggle())) {
       toast.error(t("remoteDesktop.toolbar.recordFailed"));
@@ -359,9 +363,11 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
     switch (item.id) {
       case "record": {
         const label = t(
-          recording.recording
-            ? "remoteDesktop.toolbar.recordStop"
-            : "remoteDesktop.toolbar.recordStart",
+          recording.forced && recording.recording
+            ? "remoteDesktop.toolbar.recordRequiredLabel"
+            : recording.recording
+              ? "remoteDesktop.toolbar.recordStop"
+              : "remoteDesktop.toolbar.recordStart",
         );
         return textButton(
           item.id,

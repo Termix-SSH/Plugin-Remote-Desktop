@@ -106,7 +106,7 @@ interface SessionInfo {
 }
 
 export type RecordingControl =
-  | { ok: true; recording: boolean }
+  | { ok: true; recording: boolean; hostId?: number }
   | { ok: false; status: number; error: string };
 
 export class BuiltinEngine {
@@ -260,6 +260,11 @@ export class BuiltinEngine {
     };
   }
 
+  /** Whether a built-in engine session is recording right now. */
+  isRecordingSession(sessionId: string): boolean {
+    return this.live.get(sessionId)?.isRecording ?? false;
+  }
+
   /** Whether a session is recording, for the user who opened it. */
   recordingState(sessionId: string, userId: string): RecordingControl {
     const session = this.live.get(sessionId);
@@ -274,7 +279,7 @@ export class BuiltinEngine {
         error: "Only the session owner can record",
       };
     }
-    return { ok: true, recording: session.isRecording };
+    return { ok: true, recording: session.isRecording, hostId: info.hostId };
   }
 
   /** Starts or stops recording a running session. */

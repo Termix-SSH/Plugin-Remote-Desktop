@@ -37,8 +37,23 @@ function guacamoleApi(origin: ConnectionOrigin): PluginApiClient {
   return app.apiFor(origin);
 }
 
-function apiError(error: unknown, action: string): Error {
-  return new Error(errorMessage(error, `Failed to ${action}`));
+/** An Error that keeps the server's code, such as "access-required". */
+export interface RemoteApiError extends Error {
+  code?: string;
+  requestTab?: string | null;
+}
+
+function apiError(error: unknown, action: string): RemoteApiError {
+  const wrapped: RemoteApiError = new Error(
+    errorMessage(error, `Failed to ${action}`),
+  );
+  const data = (
+    error as { response?: { data?: { code?: unknown; requestTab?: unknown } } }
+  )?.response?.data;
+  if (typeof data?.code === "string") wrapped.code = data.code;
+  if (typeof data?.requestTab === "string")
+    wrapped.requestTab = data.requestTab;
+  return wrapped;
 }
 
 export interface GuacamoleTokenRequest {

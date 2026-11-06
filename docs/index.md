@@ -71,6 +71,10 @@ To record only part of a session, use Record in the toolbar. It starts a recordi
 on the screen, and Stop recording saves it. Only the person who opened the session can use it, and it needs Session
 Recording and the built-in engine (not an external guacd).
 
+When an admin makes recording required in Session Recording, every session is recorded with the whole screen and keys, the Record button can't stop it, and VNC sessions use the built-in engine even with an external guacd, since guacd can't record VNC. A host with its own guacd keeps it.
+
+With the `remote-desktop.monitor` permission (admins at first), Session Recording's auditors can watch everyone's sessions read only and end them.
+
 ## Wake on LAN
 
 With [Wake-on-LAN](/plugins/wake-on-lan) on, a sleeping host can be woken from its connect screen.
@@ -86,6 +90,10 @@ In the desktop app, a host left on Default connects from your own computer, like
 ## Sharing
 
 With [Session Sharing](/plugins/session-sharing) on, you can share a live session by link or present it in a meeting room. Read only viewers can watch but not type, click, paste or move files, and revoking a share disconnects the viewers who joined through it. The `remote-desktop.sessions` permission decides whose sessions can be shown to others.
+
+## Privileged hosts
+
+A host that [Privileged Access](/plugins/privileged-access) marks as privileged needs approved access before a session opens. Without it the connect screen says so and offers Request access.
 
 ## External guacd (optional)
 

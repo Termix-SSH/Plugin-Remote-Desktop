@@ -24,6 +24,7 @@ import {
   useHost,
   useTranslation,
   useConnectionRetry,
+  useTabs,
   logActivity,
 } from "@termix-ssh/plugin-sdk/frontend";
 import {
@@ -223,6 +224,10 @@ const GuacamoleAppInner = React.forwardRef<
     origin: ConnectionOrigin;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Set when a connect policy refused the session: the request tab, or ""
+  // when access is denied with nowhere to ask.
+  const [accessTab, setAccessTab] = useState<string | null>(null);
+  const tabsApi = useTabs();
   const [connectionError, setConnectionError] = useState<string | null>(null);
   const [isDisplayReady, setIsDisplayReady] = useState(false);
   const [touchMode, setTouchMode] = useState<GuacamoleTouchMode | null>(() =>
@@ -466,10 +471,16 @@ const GuacamoleAppInner = React.forwardRef<
         const message = errorMessage(err, t("remoteDesktop.failedToConnect"));
         setError(message || t("remoteDesktop.failedToConnect"));
         addLog({ type: "error", stage: "error", message });
+        const code = (err as { code?: unknown })?.code;
+        if (code === "access-required" || code === "access-denied") {
+          const tab = (err as { requestTab?: unknown }).requestTab;
+          setAccessTab(typeof tab === "string" ? tab : "");
+        }
         tokenRetryRef.current.markFailed();
       }
     },
-    enabled: !needsCredentialPrompt || !!promptedCredentials,
+    enabled:
+      accessTab === null && (!needsCredentialPrompt || !!promptedCredentials),
     autoStart: false,
   });
   const tokenRetryRef = useRef(tokenRetry);
@@ -643,7 +654,23 @@ const GuacamoleAppInner = React.forwardRef<
           attempt={tokenRetry.attempt}
           maxAttempts={tokenRetry.maxAttempts}
           nextRetryInMs={tokenRetry.nextRetryInMs}
-          onManualRetry={handleReconnect}
+          onManualRetry={() => {
+            setAccessTab(null);
+            handleReconnect();
+          }}
+          extraActions={
+            accessTab ? (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  tabsApi.openSingletonTab(accessTab, { data: { hostId } })
+                }
+              >
+                {t("remoteDesktop.requestAccess")}
+              </Button>
+            ) : undefined
+          }
         />
       </div>
     );

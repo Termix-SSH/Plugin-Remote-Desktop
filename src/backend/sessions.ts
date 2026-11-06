@@ -94,6 +94,13 @@ export class RemoteSessions {
       .sort((a, b) => b.openedAt - a.openedAt);
   }
 
+  /** Every open session, newest first, for monitoring. */
+  listAll(): RemoteSession[] {
+    return [...this.byConnectId.values()]
+      .filter((session) => !!session.guacamoleConnectionId)
+      .sort((a, b) => b.openedAt - a.openedAt);
+  }
+
   byGuacamole(guacamoleConnectionId: string): RemoteSession | null {
     return this.byGuacamoleId.get(guacamoleConnectionId) ?? null;
   }

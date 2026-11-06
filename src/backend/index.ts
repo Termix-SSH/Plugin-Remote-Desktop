@@ -156,7 +156,9 @@ export async function activate(ctx: PluginContext) {
     ctx.services.provide(
       "sessions.live",
       createLiveSessions(protocol, {
+        ctx,
         sessions,
+        isRecording: (id) => engine.isRecordingSession(id),
         tokens,
         endSession,
         disconnectShare,

@@ -8,11 +8,18 @@
 - A dashboard card with your open remote sessions, and a host's open sessions on the host page
 - Other plugins can show a VNC display that only an SSH host can reach, such as a VM console
 - RustDesk hosts, by ID through the public or your own RustDesk server or by direct IP, with password and 2FA logins, clipboard, audio and monitor switching
+- When an admin makes recording required, every session is recorded with the whole screen and keys, the Record button can't stop it, and VNC uses the built-in engine so it can be recorded
+- When a host needs approved access, the connect screen says so and offers a Request access button
+- Admins can let Session Recording list, watch and end everyone's remote sessions with the new Watch everyone's remote desktop sessions permission
 
 ### Changed
 
 - Needs Termix 26.11.1 or newer
 - The remote desktop toolbar uses the darker page color
+
+### Fixed
+
+- Other features could end a remote session or get a viewer link to it without owning it
 
 ## 1.3.1
 

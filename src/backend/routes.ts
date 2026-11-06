@@ -151,6 +151,44 @@ function cleanGuacConfig(
   return config;
 }
 
+/**
+ * The 403 body for a connect policy refusal (Termix 26.11.1+), so the client
+ * can offer the access request tab. Null for any other error.
+ */
+export function accessRefusal(error: unknown): Record<string, unknown> | null {
+  const failure = error as {
+    code?: unknown;
+    message?: unknown;
+    toJSON?: () => Record<string, unknown>;
+  } | null;
+  if (
+    failure?.code !== "access-required" &&
+    failure?.code !== "access-denied"
+  ) {
+    return null;
+  }
+  if (typeof failure.toJSON === "function") return failure.toJSON();
+  return { error: String(failure.message ?? ""), code: failure.code };
+}
+
+async function resolveTarget(
+  ctx: PluginContext,
+  res: Response,
+  hostId: number,
+  protocol: RemoteProtocol,
+) {
+  try {
+    const target = await ctx.credentials.resolveHostProtocol(hostId, protocol);
+    if (!target) res.status(404).json({ error: "Host not found" });
+    return target;
+  } catch (error) {
+    const refusal = accessRefusal(error);
+    if (!refusal) throw error;
+    res.status(403).json(refusal);
+    return null;
+  }
+}
+
 /** A host's admin-set guacd address, as token settings. */
 async function guacdOverridesFor(
   ctx: PluginContext,
@@ -242,7 +280,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *           type: string
    *     responses:
    *       200:
-   *         description: available and recording.
+   *         description: available, recording, and forced when an admin made recording required.
    *       401:
    *         description: Not signed in.
    *   post:
@@ -275,22 +313,28 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *         description: Not the session owner.
    *       404:
    *         description: No such session in the built-in engine, or Session Recording is off.
+   *       409:
+   *         description: Recording is required on this host, so it can't be stopped.
    */
   router.get(
     "/sessions/:sessionId/recording",
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
       const userId = actor(ctx, res);
       if (!userId) return;
       const control = deps.recordingControl;
+      const writer = deps.recordings();
       const state =
-        control && deps.recordings()
+        control && writer
           ? control.recordingState(String(req.params.sessionId), userId)
           : null;
-      res.json(
-        state && "recording" in state
-          ? { available: true, recording: state.recording }
-          : { available: false, recording: false },
-      );
+      if (!state || !("recording" in state)) {
+        return res.json({ available: false, recording: false, forced: false });
+      }
+      const forced =
+        !!state.hostId &&
+        !!writer?.isForced &&
+        (await writer.isForced(state.hostId).catch(() => false));
+      res.json({ available: true, recording: state.recording, forced });
     },
   );
 
@@ -304,8 +348,24 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         return res.status(400).json({ error: "on must be true or false" });
       }
       const control = deps.recordingControl;
-      if (!control || !deps.recordings()) {
+      const writer = deps.recordings();
+      if (!control || !writer) {
         return res.status(404).json({ error: "Session Recording is off" });
+      }
+      if (!on && writer.isForced) {
+        const state = control.recordingState(
+          String(req.params.sessionId),
+          userId,
+        );
+        if (
+          state.ok &&
+          state.hostId &&
+          (await writer.isForced(state.hostId).catch(() => false))
+        ) {
+          return res
+            .status(409)
+            .json({ error: "Recording is required on this host" });
+        }
       }
       const result = await control.setRecording(
         String(req.params.sessionId),
@@ -557,13 +617,8 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
             .json({ error: "Remote Desktop is not enabled for this host." });
         }
 
-        const target = await ctx.credentials.resolveHostProtocol(
-          hostId,
-          protocol,
-        );
-        if (!target) {
-          return res.status(404).json({ error: "Host not found" });
-        }
+        const target = await resolveTarget(ctx, res, hostId, protocol);
+        if (!target) return;
         if (!settings[ENABLE_KEY[protocol]]) {
           return res.status(400).json({
             error: `${protocol.toUpperCase()} is not enabled for this host.`,
@@ -619,8 +674,22 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         // Through an ID server the relay is reached directly, not the host.
         const jumpHosts =
           isRustdesk && !settings.rustdeskDirect ? [] : target.host.jumpHosts;
+        const recordings = deps.recordings();
+        const recordingForced =
+          !isRustdesk &&
+          !!recordings?.isForced &&
+          (await recordings.isForced(hostId).catch(() => false));
+        // guacd can't record VNC, so a required recording keeps VNC in the
+        // built-in engine unless the host names its own guacd.
+        const keepBuiltin =
+          recordingForced &&
+          (protocol === "vnc" || protocol === "ard") &&
+          !guacdOverrides.guacdHost &&
+          !guacdOverrides.guacdPort;
         const viaGuacd =
-          !isRustdesk && hostUsesGuacd(deps.engineMode(), guacdOverrides);
+          !isRustdesk &&
+          !keepBuiltin &&
+          hostUsesGuacd(deps.engineMode(), guacdOverrides);
         // The built-in engine speaks Apple's login itself; only guacd needs
         // the macOS banner proxy.
         const needsVncProxy =
@@ -673,14 +742,14 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         }
         sessions.park(termixConnectId, cleanups);
 
-        const recordings = deps.recordings();
         // guacd never recorded VNC here; the built-in engine does.
         // RustDesk video stays encoded, which recordings can not play yet.
         const recordingEnabled =
           !isRustdesk &&
           ((protocol !== "vnc" && protocol !== "ard") || !viaGuacd) &&
           !!recordings &&
-          (await recordings.enabledFor(hostId).catch(() => false));
+          (recordingForced ||
+            (await recordings.enabledFor(hostId).catch(() => false)));
         const recordingName = `${crypto.randomUUID()}.guac`;
         const guacdRecordingPath = viaGuacd
           ? process.env.GUACD_RECORDING_PATH ||
@@ -702,6 +771,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
             guacConfig,
             guacdRecordingPath,
             recordingName,
+            recordingForced,
           );
         }
 
@@ -976,11 +1046,8 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         ) {
           return res.status(400).json({ error: "Invalid host ID or protocol" });
         }
-        const target = await ctx.credentials.resolveHostProtocol(
-          hostId,
-          protocol,
-        );
-        if (!target) return res.status(404).json({ error: "Host not found" });
+        const target = await resolveTarget(ctx, res, hostId, protocol);
+        if (!target) return;
         const settings = await readHostSettings(ctx, hostId);
         if (!settings[ENABLE_KEY[protocol]]) {
           return res

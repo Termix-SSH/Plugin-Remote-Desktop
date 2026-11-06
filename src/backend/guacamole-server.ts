@@ -16,6 +16,8 @@ import { errorMessage, type RemoteDesktopLogger } from "./log.js";
 /** The recordings.writer service, when the session-recording plugin provides it. */
 export interface RecordingsWriter {
   enabledFor: (hostId: number) => Promise<boolean>;
+  /** Session Recording 1.2.0+: an admin made recording this host required. */
+  isForced?: (hostId: number) => Promise<boolean>;
   createFinished: (input: {
     hostId: number;
     userId: string;

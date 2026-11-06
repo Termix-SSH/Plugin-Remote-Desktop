@@ -311,6 +311,81 @@ describe("POST /connect-host/:hostId", () => {
   });
 });
 
+describe("required recording and access policy", () => {
+  it("records a required host even when its switch is off", async () => {
+    server = await start({
+      protocolTargets: { "7:rdp": target() },
+      services: {
+        "recordings.writer": {
+          enabledFor: async () => false,
+          isForced: async () => true,
+          createFinished: async () => ({ id: 1 }),
+        },
+      },
+    });
+    await server.mock.ctx.settings.setHost(7, "enableRdp", true);
+    await server.mock.ctx.settings.setHost(7, "guacamoleConfig", {
+      "recording-exclude-output": true,
+    });
+    const response = await server.request("POST", "/connect-host/7", {
+      protocol: "rdp",
+    });
+    const token = tokens.decryptToken(response.body.token);
+    expect(token?.recording).toMatchObject({ hostId: 7 });
+    expect(token?.connection.settings["recording-exclude-output"]).not.toBe(
+      true,
+    );
+  });
+
+  it("keeps a required VNC session in the built-in engine", async () => {
+    process.env.REMOTE_DESKTOP_ENGINE = "guacd";
+    server = await start({
+      protocolTargets: { "7:vnc": target({ username: "" }) },
+      services: {
+        "recordings.writer": {
+          enabledFor: async () => true,
+          isForced: async () => true,
+          createFinished: async () => ({ id: 1 }),
+        },
+      },
+    });
+    await server.mock.ctx.settings.setHost(7, "enableVnc", true);
+    const response = await server.request("POST", "/connect-host/7", {
+      protocol: "vnc",
+    });
+    expect(response.status).toBe(200);
+    expect(response.body.guacamoleConnectionId).toEqual(expect.any(String));
+    expect(tokens.decryptToken(response.body.token)?.recording).toMatchObject({
+      protocol: "vnc",
+    });
+  });
+
+  it("answers 403 with the request tab when access is needed", async () => {
+    server = await start({ protocolTargets: { "7:rdp": target() } });
+    await server.mock.ctx.settings.setHost(7, "enableRdp", true);
+    const refusal = Object.assign(new Error("Ask for access first"), {
+      code: "access-required",
+      toJSON: () => ({
+        error: "Ask for access first",
+        code: "access-required",
+        requestTab: "access",
+        pluginId: "privileged-access",
+      }),
+    });
+    server.mock.ctx.credentials.resolveHostProtocol = async () => {
+      throw refusal;
+    };
+    const response = await server.request("POST", "/connect-host/7", {
+      protocol: "rdp",
+    });
+    expect(response.status).toBe(403);
+    expect(response.body).toMatchObject({
+      code: "access-required",
+      requestTab: "access",
+    });
+  });
+});
+
 describe("without session recording", () => {
   it("connects when the recording service is gone", async () => {
     server = await start({
