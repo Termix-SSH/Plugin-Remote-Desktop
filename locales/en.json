@@ -496,6 +496,10 @@
       },
       "rustdeskKey": {
         "label": "RustDesk server key"
+      },
+      "rdpAutoResize": {
+        "label": "Automatically resize RDP",
+        "description": "Adjust the remote resolution when the window changes size. Turn off to keep the size chosen at connection until reconnecting."
       }
     }
   },

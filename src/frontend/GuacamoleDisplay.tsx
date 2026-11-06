@@ -74,6 +74,7 @@ interface GuacamoleConnectionConfig {
   password?: string;
   domain?: string;
   width?: number;
+  rdpAutoResize?: boolean;
   height?: number;
   dpi?: number;
   /**
@@ -144,10 +145,15 @@ export const GuacamoleDisplay = forwardRef<
   ref,
 ) {
   const { t } = useTranslation();
-  // The host config pins the session resolution; without it the display follows
-  // the container.
+  // Fixed dimensions or an RDP resize opt-out keep the initial resolution.
   const hasConfiguredSize =
     connectionConfig.width != null && connectionConfig.height != null;
+  const followsContainer =
+    !hasConfiguredSize &&
+    !(
+      (connectionConfig.protocol ?? connectionConfig.type) === "rdp" &&
+      connectionConfig.rdpAutoResize === false
+    );
   const containerRef = useRef<HTMLDivElement>(null);
   const displayRef = useRef<HTMLDivElement>(null);
   const remoteClipboardRef = useRef<ReturnType<
@@ -718,10 +724,9 @@ export const GuacamoleDisplay = forwardRef<
             setIsReady(true);
             onConnect?.();
           }
-          // A configured resolution is the size the session should render at;
-          // resizing it to the container would discard it. rescaleDisplay still
-          // fits that fixed display into whatever space is available.
-          if (!hasConfiguredSize && containerRef.current) {
+          // Preserve fixed dimensions and the initial Auto size when resizing is
+          // disabled. Local scaling still fits the display into the container.
+          if (followsContainer && containerRef.current) {
             const rect = containerRef.current.getBoundingClientRect();
             const size = getGuacamoleDisplaySize(
               rect.width,
@@ -858,7 +863,7 @@ export const GuacamoleDisplay = forwardRef<
     connectionConfig.protocol,
     connectionConfig.type,
     connectionConfig.dpi,
-    hasConfiguredSize,
+    followsContainer,
     touchMode,
     t,
   ]);
@@ -940,7 +945,7 @@ export const GuacamoleDisplay = forwardRef<
           if (rect.width > 0 && rect.height > 0) {
             // A size sent while guacd is still dialing a VNC server crashes
             // its VNC client. The connected handler sends the first size.
-            if (!hasConfiguredSize && !isConnectingRef.current) {
+            if (followsContainer && !isConnectingRef.current) {
               const size = getGuacamoleDisplaySize(
                 rect.width,
                 rect.height,
@@ -974,7 +979,7 @@ export const GuacamoleDisplay = forwardRef<
     connectionConfig.dpi,
     connectionConfig.protocol,
     connectionConfig.type,
-    hasConfiguredSize,
+    followsContainer,
     rescaleDisplay,
   ]);
 

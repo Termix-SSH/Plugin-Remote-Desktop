@@ -426,6 +426,10 @@
       },
       "ardPort": {
         "label": "ARD 通訊埠"
+      },
+      "rdpAutoResize": {
+        "label": "自動調整 RDP 解析度",
+        "description": "視窗大小變化時調整遠端解析度。關閉後保留連線時的尺寸，直到重新連線。"
       }
     }
   },

@@ -426,6 +426,10 @@
       },
       "ardPort": {
         "label": "ARD 端口"
+      },
+      "rdpAutoResize": {
+        "label": "自动调整 RDP 分辨率",
+        "description": "窗口大小变化时调整远端分辨率。关闭后保留连接时的尺寸，直到重新连接。"
       }
     }
   },

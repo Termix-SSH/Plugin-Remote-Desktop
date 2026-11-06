@@ -28,6 +28,7 @@ export interface RemoteHostOptions {
   rustdeskKey: string;
   rdpSecurity: string;
   rdpIgnoreCert: boolean;
+  rdpAutoResize: boolean;
   guacamoleConfig: GuacamoleConfig;
   enableToolbar: boolean;
 }
@@ -131,6 +132,7 @@ export function remoteOptions(
     rdpSecurity:
       typeof values.rdpSecurity === "string" ? values.rdpSecurity : "",
     rdpIgnoreCert: values.rdpIgnoreCert === true,
+    rdpAutoResize: values.rdpAutoResize !== false,
     guacamoleConfig: parseGuacamoleConfig(values.guacamoleConfig),
     enableToolbar: values.enableToolbar !== false,
   };

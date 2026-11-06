@@ -405,6 +405,14 @@
             "hidden": true
           },
           {
+            "key": "rdpAutoResize",
+            "type": "boolean",
+            "labelKey": "settings.host.rdpAutoResize.label",
+            "descriptionKey": "settings.host.rdpAutoResize.description",
+            "default": true,
+            "hidden": true
+          },
+          {
             "key": "rdpIgnoreCert",
             "type": "boolean",
             "labelKey": "settings.host.rdpIgnoreCert.label",

@@ -129,3 +129,11 @@ describe("hostPayloadLegacy", () => {
     expect(hostPayloadLegacy({}, {})).toBeNull();
   });
 });
+
+it("preserves an imported RDP resize opt-out", () => {
+  expect(
+    normalizeImportedHost({
+      pluginSettings: { "remote-desktop": { rdpAutoResize: false } },
+    }),
+  ).toEqual({ rdpAutoResize: false });
+});

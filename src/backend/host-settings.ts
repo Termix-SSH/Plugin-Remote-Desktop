@@ -178,6 +178,8 @@ export function normalizeImportedHost(
 
   const security = pick("rdpSecurity", "security");
   if (typeof security === "string" && security) out.rdpSecurity = security;
+  const autoResize = asBool(pick("rdpAutoResize"));
+  if (autoResize !== undefined) out.rdpAutoResize = autoResize;
   const ignoreCert = asBool(pick("rdpIgnoreCert", "ignoreCert"));
   if (ignoreCert !== undefined) out.rdpIgnoreCert = ignoreCert;
   const config = asObject(pick("guacamoleConfig"));
