@@ -2,7 +2,7 @@
   "id": "remote-desktop",
   "name": "Remote Desktop",
   "version": "1.4.0",
-  "description": "RDP, VNC, Apple Remote Desktop and Telnet sessions in your browser, with clipboard, file transfer, sharing and recording.",
+  "description": "RDP, VNC, Apple Remote Desktop, RustDesk and Telnet sessions in your browser, with clipboard, file transfer, sharing and recording.",
   "author": {
     "name": "Termix"
   },
@@ -14,6 +14,7 @@
   "icon": "Monitor",
   "features": [
     "RDP, VNC, Apple Remote Desktop and Telnet from any browser, with nothing else to install",
+    "RustDesk devices by ID through your own or the public RustDesk server, or by direct IP",
     "Tabs and split screen like any other session",
     "Clipboard sync, audio, printing and file transfer through RDP drives",
     "Jump host support",
@@ -94,7 +95,7 @@
       "service": "sessions.live",
       "version": "1.0.0",
       "permission": "remote-desktop.sessions",
-      "names": ["rdp", "vnc", "ard", "telnet"]
+      "names": ["rdp", "vnc", "ard", "telnet", "rustdesk"]
     },
     {
       "service": "remote-desktop.console",
@@ -135,6 +136,12 @@
         "openFrom": ["host-context-menu", "palette"]
       },
       {
+        "id": "rustdesk",
+        "titleKey": "hosts.tabRustdesk",
+        "icon": "Radio",
+        "openFrom": ["host-context-menu", "palette"]
+      },
+      {
         "id": "telnet",
         "titleKey": "hosts.tabTelnet",
         "icon": "Terminal",
@@ -167,6 +174,11 @@
         "id": "ard",
         "defaultPort": 5900,
         "hostLoginFallback": ["username", "password"]
+      },
+      {
+        "id": "rustdesk",
+        "defaultPort": 21118,
+        "hostLoginFallback": ["password"]
       },
       {
         "id": "telnet",
@@ -207,6 +219,32 @@
           "descriptionKey": "settings.admin.guacdUrl.description",
           "placeholderKey": "settings.admin.guacdUrl.placeholder",
           "requires": "useGuacd",
+          "default": ""
+        },
+        {
+          "key": "rustdeskIdServer",
+          "type": "string",
+          "labelKey": "settings.admin.rustdeskIdServer.label",
+          "descriptionKey": "settings.admin.rustdeskIdServer.description",
+          "placeholderKey": "settings.admin.rustdeskIdServer.placeholder",
+          "requires": "enabled",
+          "default": ""
+        },
+        {
+          "key": "rustdeskRelayServer",
+          "type": "string",
+          "labelKey": "settings.admin.rustdeskRelayServer.label",
+          "descriptionKey": "settings.admin.rustdeskRelayServer.description",
+          "placeholderKey": "settings.admin.rustdeskRelayServer.placeholder",
+          "requires": "enabled",
+          "default": ""
+        },
+        {
+          "key": "rustdeskKey",
+          "type": "string",
+          "labelKey": "settings.admin.rustdeskKey.label",
+          "descriptionKey": "settings.admin.rustdeskKey.description",
+          "requires": "enabled",
           "default": ""
         },
         {
@@ -259,6 +297,14 @@
             "defaultable": false
           },
           {
+            "key": "enableRustdesk",
+            "type": "boolean",
+            "labelKey": "settings.host.enableRustdesk.label",
+            "default": false,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
             "key": "rdpPort",
             "type": "number",
             "labelKey": "settings.host.rdpPort.label",
@@ -297,6 +343,53 @@
             "default": 23,
             "hidden": true,
             "defaultable": false
+          },
+          {
+            "key": "rustdeskPort",
+            "type": "number",
+            "labelKey": "settings.host.rustdeskPort.label",
+            "min": 1,
+            "max": 65535,
+            "default": 21118,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "rustdeskId",
+            "type": "string",
+            "labelKey": "settings.host.rustdeskId.label",
+            "default": "",
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "rustdeskDirect",
+            "type": "boolean",
+            "labelKey": "settings.host.rustdeskDirect.label",
+            "default": false,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "rustdeskIdServer",
+            "type": "string",
+            "labelKey": "settings.host.rustdeskIdServer.label",
+            "default": "",
+            "hidden": true
+          },
+          {
+            "key": "rustdeskRelayServer",
+            "type": "string",
+            "labelKey": "settings.host.rustdeskRelayServer.label",
+            "default": "",
+            "hidden": true
+          },
+          {
+            "key": "rustdeskKey",
+            "type": "string",
+            "labelKey": "settings.host.rustdeskKey.label",
+            "default": "",
+            "hidden": true
           },
           {
             "key": "rdpSecurity",

@@ -58,5 +58,9 @@ export interface RemoteClient {
   /** A dpi of 0 keeps the current one. */
   resize(width: number, height: number, dpi: number): void;
   clipboard(text: string): void;
+  /** Extra instructions a user joining a running session needs. */
+  joined?(user: string): string;
+  /** A named value the owner sent with argv. */
+  argument?(name: string, value: string): void;
   stop(): void;
 }

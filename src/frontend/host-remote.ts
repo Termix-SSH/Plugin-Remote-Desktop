@@ -7,7 +7,7 @@ import type { GuacamoleConfig } from "./guacamole-config";
 
 export const PLUGIN_ID = "remote-desktop";
 
-export type Protocol = "rdp" | "vnc" | "ard" | "telnet";
+export type Protocol = "rdp" | "vnc" | "ard" | "telnet" | "rustdesk";
 
 /** This plugin's host settings, as they arrive on host.pluginSettings. */
 export interface RemoteHostOptions {
@@ -15,10 +15,17 @@ export interface RemoteHostOptions {
   enableVnc: boolean;
   enableArd: boolean;
   enableTelnet: boolean;
+  enableRustdesk: boolean;
   rdpPort: number;
   vncPort: number;
   ardPort: number;
   telnetPort: number;
+  rustdeskPort: number;
+  rustdeskId: string;
+  rustdeskDirect: boolean;
+  rustdeskIdServer: string;
+  rustdeskRelayServer: string;
+  rustdeskKey: string;
   rdpSecurity: string;
   rdpIgnoreCert: boolean;
   guacamoleConfig: GuacamoleConfig;
@@ -30,6 +37,7 @@ export const ENABLE_KEY = {
   vnc: "enableVnc",
   ard: "enableArd",
   telnet: "enableTelnet",
+  rustdesk: "enableRustdesk",
 } as const satisfies Record<Protocol, keyof RemoteHostOptions>;
 
 export const PORT_KEY = {
@@ -37,6 +45,7 @@ export const PORT_KEY = {
   vnc: "vncPort",
   ard: "ardPort",
   telnet: "telnetPort",
+  rustdesk: "rustdeskPort",
 } as const satisfies Record<Protocol, keyof RemoteHostOptions>;
 
 export const DEFAULT_PORT: Record<Protocol, number> = {
@@ -44,6 +53,7 @@ export const DEFAULT_PORT: Record<Protocol, number> = {
   vnc: 5900,
   ard: 5900,
   telnet: 23,
+  rustdesk: 21118,
 };
 
 /**
@@ -81,6 +91,10 @@ function port(value: unknown, fallback: number): number {
     : fallback;
 }
 
+function text(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}
+
 function parseGuacamoleConfig(value: unknown): GuacamoleConfig {
   if (!value) return {};
   if (typeof value === "string") {
@@ -103,10 +117,17 @@ export function remoteOptions(
     enableVnc: values.enableVnc === true,
     enableArd: values.enableArd === true,
     enableTelnet: values.enableTelnet === true,
+    enableRustdesk: values.enableRustdesk === true,
     rdpPort: port(values.rdpPort, DEFAULT_PORT.rdp),
     vncPort: port(values.vncPort, DEFAULT_PORT.vnc),
     ardPort: port(values.ardPort, DEFAULT_PORT.ard),
     telnetPort: port(values.telnetPort, DEFAULT_PORT.telnet),
+    rustdeskPort: port(values.rustdeskPort, DEFAULT_PORT.rustdesk),
+    rustdeskId: text(values.rustdeskId),
+    rustdeskDirect: values.rustdeskDirect === true,
+    rustdeskIdServer: text(values.rustdeskIdServer),
+    rustdeskRelayServer: text(values.rustdeskRelayServer),
+    rustdeskKey: text(values.rustdeskKey),
     rdpSecurity:
       typeof values.rdpSecurity === "string" ? values.rdpSecurity : "",
     rdpIgnoreCert: values.rdpIgnoreCert === true,

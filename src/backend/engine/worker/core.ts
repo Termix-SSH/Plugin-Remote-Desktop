@@ -13,7 +13,8 @@ export type ClientFactory = (host: RemoteHost) => RemoteClient;
 
 interface InboundStream {
   user: string;
-  kind: "clipboard" | "upload";
+  kind: "clipboard" | "upload" | "argv";
+  name?: string;
   chunks: Buffer[];
   size: number;
   fd?: number;
@@ -184,7 +185,10 @@ export class EngineCore implements RemoteHost {
     this.display.addUser(user);
     if (owner) this.owner = user;
     if (this.isReady && !owner) {
-      this.out.to(user, this.display.snapshot());
+      this.out.to(
+        user,
+        this.display.snapshot() + (this.client?.joined?.(user) ?? ""),
+      );
     }
     if (this.isReady && owner && this.drive) {
       this.out.to(user, this.filesystemInstruction());
@@ -231,6 +235,11 @@ export class EngineCore implements RemoteHost {
       case "clipboard":
         this.openInbound(user, args[0], "clipboard");
         break;
+      case "argv":
+        if (user === this.owner) {
+          this.openInbound(user, args[0], "argv", args[2] ?? "");
+        }
+        break;
       case "file":
         this.openUpload(user, args[0], args[2] ?? "upload");
         break;
@@ -276,7 +285,12 @@ export class EngineCore implements RemoteHost {
     this.isReady = true;
     this.port.post({ t: "ready" });
     for (const [user] of this.users) {
-      if (user !== this.owner) this.out.to(user, this.display.snapshot());
+      if (user !== this.owner) {
+        this.out.to(
+          user,
+          this.display.snapshot() + (this.client?.joined?.(user) ?? ""),
+        );
+      }
     }
     if (this.drive && this.owner) {
       this.out.to(this.owner, this.filesystemInstruction());
@@ -346,10 +360,16 @@ export class EngineCore implements RemoteHost {
     return `${user}:${index}`;
   }
 
-  private openInbound(user: string, index: string, kind: "clipboard"): void {
+  private openInbound(
+    user: string,
+    index: string,
+    kind: "clipboard" | "argv",
+    name?: string,
+  ): void {
     this.inbound.set(this.key(user, index), {
       user,
       kind,
+      name,
       chunks: [],
       size: 0,
     });
@@ -391,7 +411,7 @@ export class EngineCore implements RemoteHost {
     const stream = this.inbound.get(this.key(user, index));
     if (!stream) return;
     const bytes = Buffer.from(data, "base64");
-    if (stream.kind === "clipboard") {
+    if (stream.kind === "clipboard" || stream.kind === "argv") {
       if (stream.size + bytes.length <= CLIPBOARD_LIMIT) {
         stream.chunks.push(bytes);
         stream.size += bytes.length;
@@ -415,6 +435,12 @@ export class EngineCore implements RemoteHost {
     const key = this.key(user, index);
     const stream = this.inbound.get(key);
     if (!stream) return;
+    if (stream.kind === "argv") {
+      this.client?.argument?.(
+        stream.name ?? "",
+        Buffer.concat(stream.chunks).toString("utf8"),
+      );
+    }
     if (stream.kind === "clipboard" && !this.disablePaste) {
       this.client?.clipboard(
         normalizeLineEndings(

@@ -23,6 +23,7 @@ function display(overrides: Partial<GuacamoleDisplayHandle> = {}) {
       zoomIn: vi.fn(() => 1.25),
       zoomOut: vi.fn(() => 0.75),
       resetZoom: vi.fn(() => 1),
+      selectDisplay: vi.fn(),
       ...overrides,
     } satisfies GuacamoleDisplayHandle,
   } as React.RefObject<GuacamoleDisplayHandle>;

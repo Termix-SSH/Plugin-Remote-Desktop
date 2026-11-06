@@ -8,6 +8,7 @@ type Upgrade = (request: IncomingMessage, socket: Duplex, head: Buffer) => void;
 /**
  * Whether a display token goes to the built-in engine. A join goes wherever
  * its session lives; a host with its own guacd address keeps using guacd.
+ * RustDesk always runs in the built-in engine.
  */
 export function usesBuiltinEngine(
   token: GuacamoleToken,
@@ -16,6 +17,8 @@ export function usesBuiltinEngine(
 ): boolean {
   const join = token.connection.join;
   if (join) return isBuiltinSession(join);
+  // guacd has no RustDesk.
+  if (token.connection.type === "rustdesk") return true;
   return (
     mode === "builtin" &&
     !token.connection.guacdHost &&

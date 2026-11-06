@@ -28,6 +28,12 @@ import {
   type ConnectionStage,
 } from "@termix-ssh/plugin-sdk/ui";
 import { errorMessage } from "./host-remote";
+import {
+  RUSTDESK_DISPLAYS_ARGUMENT,
+  readRustdeskDisplays,
+  rustdeskVideoPlayer,
+  type RustdeskDisplays,
+} from "./rustdesk-video";
 import { guacStateToStage } from "./guacamole-state.ts";
 import {
   createPasteCatcher,
@@ -56,7 +62,7 @@ import {
   watchRightAlt,
 } from "./guacamole-meta-key.ts";
 
-type GuacamoleConnectionType = "rdp" | "vnc" | "ard" | "telnet";
+type GuacamoleConnectionType = "rdp" | "vnc" | "ard" | "telnet" | "rustdesk";
 
 interface GuacamoleConnectionConfig {
   token?: string;
@@ -90,6 +96,8 @@ export interface GuacamoleDisplayHandle {
   zoomIn: () => number;
   zoomOut: () => number;
   resetZoom: () => number;
+  /** Shows another RustDesk monitor. */
+  selectDisplay: (index: number) => void;
 }
 
 export type GuacamoleTouchMode = "touchscreen" | "touchpad";
@@ -109,6 +117,8 @@ interface GuacamoleDisplayProps {
   onZoomChange?: (zoom: number) => void;
   /** The tunnel died after the session was up, or stayed silent after the page came back. */
   onLost?: () => void;
+  /** The RustDesk monitors, when the remote has more than one. */
+  onDisplays?: (displays: RustdeskDisplays) => void;
 }
 
 export const GuacamoleDisplay = forwardRef<
@@ -124,6 +134,7 @@ export const GuacamoleDisplay = forwardRef<
     onDisconnect,
     onError,
     onFilesystem,
+    onDisplays,
     onDropFiles,
     onDropUnavailable,
     onStageChange,
@@ -160,6 +171,8 @@ export const GuacamoleDisplay = forwardRef<
   // rebuilding the connect callback whenever the parent re-renders.
   const onFilesystemRef = useRef(onFilesystem);
   onFilesystemRef.current = onFilesystem;
+  const onDisplaysRef = useRef(onDisplays);
+  onDisplaysRef.current = onDisplays;
   const onStageChangeRef = useRef(onStageChange);
   onStageChangeRef.current = onStageChange;
   const onLostRef = useRef(onLost);
@@ -249,6 +262,18 @@ export const GuacamoleDisplay = forwardRef<
   );
 
   useImperativeHandle(ref, () => ({
+    selectDisplay: (index: number) => {
+      const client = clientRef.current;
+      if (!client) return;
+      const writer = new Guacamole.StringWriter(
+        client.createArgumentValueStream(
+          "text/plain",
+          RUSTDESK_DISPLAYS_ARGUMENT,
+        ),
+      );
+      writer.sendText(String(index));
+      writer.sendEnd();
+    },
     disconnect: disconnectClient,
     isConnected: () => isReady && !hasError,
     sendKey: (keysym: number, pressed: boolean) => {
@@ -757,6 +782,25 @@ export const GuacamoleDisplay = forwardRef<
           remoteClipboardRef.current?.copy(data);
         };
       }
+    };
+
+    client.onvideo = (stream, layer, mimetype) =>
+      rustdeskVideoPlayer(stream, layer, mimetype, (reason) => {
+        if (!isMountedRef.current || clientRef.current !== client) return;
+        if (reason === "unsupported") {
+          onError?.(t("remoteDesktop.rustdesk.videoUnsupported"));
+        }
+      });
+
+    client.onargv = (stream, _mimetype, name) => {
+      if (name !== RUSTDESK_DISPLAYS_ARGUMENT) {
+        stream.sendAck("Unsupported", 0x0100);
+        return;
+      }
+      readRustdeskDisplays(stream, Guacamole.StringReader, (displays) => {
+        if (!isMountedRef.current || clientRef.current !== client) return;
+        onDisplaysRef.current?.(displays);
+      });
     };
 
     client.onaudio = (stream: Guacamole.InputStream, mimetype: string) => {

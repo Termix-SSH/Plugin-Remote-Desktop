@@ -17,6 +17,7 @@ import {
   normalizeImportedHost,
   PORT_KEY,
   readHostSettings,
+  REMOTE_PROTOCOLS,
 } from "./host-settings.js";
 import { createLogger } from "./log.js";
 import { migrateGuacdHosts } from "./guacd-host.js";
@@ -151,7 +152,7 @@ export async function activate(ctx: PluginContext) {
     { public: true },
   );
 
-  for (const protocol of ["rdp", "vnc", "ard", "telnet"] as const) {
+  for (const protocol of REMOTE_PROTOCOLS) {
     ctx.services.provide(
       "sessions.live",
       createLiveSessions(protocol, {
@@ -171,9 +172,11 @@ export async function activate(ctx: PluginContext) {
   ctx.registry.provide("remote-desktop.hostPayloadLegacy", hostPayloadLegacy);
 
   // Core's status dot pings these hosts on the protocol's own port.
-  for (const protocol of ["rdp", "vnc", "ard", "telnet"] as const) {
+  for (const protocol of REMOTE_PROTOCOLS) {
     ctx.hosts.status.registerPort(protocol, async (hostId) => {
       const settings = await readHostSettings(ctx, hostId);
+      // A RustDesk ID has no port of its own to ping.
+      if (protocol === "rustdesk" && !settings.rustdeskDirect) return undefined;
       return settings[PORT_KEY[protocol]] as number;
     });
   }

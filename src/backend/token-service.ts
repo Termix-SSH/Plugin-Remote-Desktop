@@ -6,7 +6,7 @@ interface TokenLogger {
 }
 
 export interface GuacamoleConnectionSettings {
-  type?: "rdp" | "vnc" | "telnet";
+  type?: "rdp" | "vnc" | "telnet" | "rustdesk";
   join?: string;
   readOnly?: boolean;
   guacdHost?: string;
@@ -39,7 +39,7 @@ export interface TermixGuacMeta {
   hostId: number;
   hostName: string;
   ownerUserId: string;
-  protocol: "rdp" | "vnc" | "ard" | "telnet";
+  protocol: "rdp" | "vnc" | "ard" | "telnet" | "rustdesk";
   tabInstanceId: string | null;
 }
 
@@ -56,7 +56,7 @@ export interface GuacamoleToken {
 export interface GuacamoleRecordingMetadata {
   hostId: number;
   userId: string;
-  protocol: "rdp" | "vnc" | "ard" | "telnet";
+  protocol: "rdp" | "vnc" | "ard" | "telnet" | "rustdesk";
   path: string;
   /** Directory guacd was told to write into; differs from the backend's view
    * when guacd runs in its own container. */
@@ -332,6 +332,21 @@ export class GuacamoleTokenService {
       termixMeta,
       owner,
     );
+  }
+
+  createRustdeskToken(
+    settings: GuacamoleConnectionSettings["settings"],
+    recording?: GuacamoleRecordingMetadata,
+    termixMeta?: TermixGuacMeta,
+    owner?: { userId: string },
+  ): string {
+    const token: GuacamoleToken = {
+      connection: { type: "rustdesk", settings },
+      recording,
+      termixMeta,
+      ...(owner && !termixMeta ? { userId: owner.userId } : {}),
+    };
+    return this.encryptToken(token);
   }
 
   createTelnetToken(

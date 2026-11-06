@@ -15,7 +15,7 @@ export interface MetaKeyLabels {
  * Windows key is wrong, and the local device is the only OS we can see.
  */
 export function detectMetaKeyFamily(
-  protocol: "rdp" | "vnc" | "ard" | "telnet",
+  protocol: "rdp" | "vnc" | "ard" | "telnet" | "rustdesk",
   env: {
     platform?: string;
     userAgent?: string;
@@ -37,7 +37,7 @@ export function detectMetaKeyFamily(
 }
 
 export function detectRuntimeMetaKeyFamily(
-  protocol: "rdp" | "vnc" | "ard" | "telnet",
+  protocol: "rdp" | "vnc" | "ard" | "telnet" | "rustdesk",
 ): MetaKeyFamily {
   if (typeof navigator === "undefined") {
     return detectMetaKeyFamily(protocol);
@@ -201,7 +201,7 @@ export function shouldSendKey(keysym: number, down: boolean): boolean {
  * instead, so the Mac types the character through its own layout.
  */
 export function remoteKeysym(
-  protocol: "rdp" | "vnc" | "ard" | "telnet" | undefined,
+  protocol: "rdp" | "vnc" | "ard" | "telnet" | "rustdesk" | undefined,
   keysym: number,
   down = true,
 ): number {

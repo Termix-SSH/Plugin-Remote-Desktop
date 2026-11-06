@@ -1,6 +1,6 @@
 /** Messages between an engine session (main thread) and its worker. */
 
-export type EngineProtocol = "rdp" | "vnc" | "telnet";
+export type EngineProtocol = "rdp" | "vnc" | "telnet" | "rustdesk";
 
 export interface EngineConfig {
   protocol: EngineProtocol;

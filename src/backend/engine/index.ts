@@ -164,7 +164,12 @@ export class BuiltinEngine {
     }
 
     const protocol = token.connection.type as EngineProtocol | undefined;
-    if (protocol !== "rdp" && protocol !== "vnc" && protocol !== "telnet") {
+    if (
+      protocol !== "rdp" &&
+      protocol !== "vnc" &&
+      protocol !== "telnet" &&
+      protocol !== "rustdesk"
+    ) {
       refuse(socket, "Unsupported protocol", Status.UNSUPPORTED);
       return null;
     }

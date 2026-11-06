@@ -58,6 +58,7 @@ import {
   visibleButtons,
   type ToolbarSettings,
 } from "./toolbar-settings.ts";
+import type { RustdeskDisplays } from "./rustdesk-video";
 
 export { REMOTE_DESKTOP_TOOLBAR_SLOT };
 
@@ -74,6 +75,8 @@ interface GuacamoleToolbarProps {
   metaKeyFamily?: MetaKeyFamily;
   /** Handed to "remote-desktop.toolbar" actions (the share button). */
   slotContext?: RemoteDesktopToolbarContext;
+  /** RustDesk monitors, for the monitor picker. */
+  displays?: RustdeskDisplays | null;
 }
 
 /** What a "remote-desktop.toolbar" action is invoked with. */
@@ -81,7 +84,7 @@ interface RemoteDesktopToolbarContext {
   hostId: number;
   /** The engine's connection id, once the session is up. */
   sessionId: string | null;
-  protocol: "rdp" | "vnc" | "ard" | "telnet";
+  protocol: "rdp" | "vnc" | "ard" | "telnet" | "rustdesk";
   tabInstanceId?: string;
   /** The backend the session runs on. */
   origin?: "local" | "remote";
@@ -128,6 +131,7 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
   zoom = 1,
   metaKeyFamily,
   slotContext,
+  displays,
 }) => {
   const { t } = useTranslation();
   const meta = metaKeyLabels(
@@ -145,6 +149,7 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
         if (item.protocols && !item.protocols.includes(protocol)) return false;
         if (item.id === "files") return hasFilesystem && !!onToggleFileBrowser;
         if (item.id === "record") return recording.available;
+        if (item.id === "monitors") return (displays?.list.length ?? 0) > 1;
         if (item.id === "touchMode") {
           return touchMode != null && !!onTouchModeChange;
         }
@@ -158,6 +163,7 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
       onToggleFileBrowser,
       touchMode,
       onTouchModeChange,
+      displays,
       recording.available,
     ],
   );
@@ -369,6 +375,24 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
           },
         );
       }
+      case "monitors":
+        return (
+          <span key={item.id} className="flex items-center">
+            {(displays?.list ?? []).map((d) =>
+              textButton(
+                `monitor-${d.index}`,
+                t("remoteDesktop.toolbar.monitor", { number: d.index + 1 }),
+                String(d.index + 1),
+                () => displayRef.current?.selectDisplay(d.index),
+                {
+                  icon: d.index === 0 ? item.icon : undefined,
+                  active: displays?.current === d.index,
+                  pressed: displays?.current === d.index,
+                },
+              ),
+            )}
+          </span>
+        );
       case "files":
         return textButton(
           item.id,
@@ -582,6 +606,13 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
             run: () => displayRef.current?.resetZoom(),
           },
         ];
+      case "monitors":
+        return (displays?.list ?? []).map((d) => ({
+          key: `monitor-${d.index}`,
+          label: t("remoteDesktop.toolbar.monitor", { number: d.index + 1 }),
+          checked: displays?.current === d.index,
+          run: () => displayRef.current?.selectDisplay(d.index),
+        }));
       case "ctrlAltDel":
         return [
           {

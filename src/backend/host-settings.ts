@@ -1,6 +1,6 @@
 import type { PluginContext } from "@termix-ssh/plugin-sdk/backend";
 
-export type RemoteProtocol = "rdp" | "vnc" | "ard" | "telnet";
+export type RemoteProtocol = "rdp" | "vnc" | "ard" | "telnet" | "rustdesk";
 
 const PLUGIN_ID = "remote-desktop";
 
@@ -9,10 +9,17 @@ export interface RemoteDesktopHostSettings {
   enableVnc: boolean;
   enableArd: boolean;
   enableTelnet: boolean;
+  enableRustdesk: boolean;
   rdpPort: number;
   vncPort: number;
   ardPort: number;
   telnetPort: number;
+  rustdeskPort: number;
+  rustdeskId: string;
+  rustdeskIdServer: string;
+  rustdeskRelayServer: string;
+  rustdeskKey: string;
+  rustdeskDirect: boolean;
   rdpSecurity: string;
   rdpIgnoreCert: boolean;
   guacamoleConfig: Record<string, unknown>;
@@ -27,6 +34,7 @@ export const ENABLE_KEY: Record<
   vnc: "enableVnc",
   ard: "enableArd",
   telnet: "enableTelnet",
+  rustdesk: "enableRustdesk",
 };
 
 export const PORT_KEY: Record<RemoteProtocol, keyof RemoteDesktopHostSettings> =
@@ -35,6 +43,7 @@ export const PORT_KEY: Record<RemoteProtocol, keyof RemoteDesktopHostSettings> =
     vnc: "vncPort",
     ard: "ardPort",
     telnet: "telnetPort",
+    rustdesk: "rustdeskPort",
   };
 
 export const DEFAULT_PORT: Record<RemoteProtocol, number> = {
@@ -42,11 +51,21 @@ export const DEFAULT_PORT: Record<RemoteProtocol, number> = {
   vnc: 5900,
   ard: 5900,
   telnet: 23,
+  rustdesk: 21118,
 };
+
+export const REMOTE_PROTOCOLS = [
+  "rdp",
+  "vnc",
+  "ard",
+  "telnet",
+  "rustdesk",
+] as const;
 
 export function isRemoteProtocol(value: unknown): value is RemoteProtocol {
   return (
-    value === "rdp" || value === "vnc" || value === "ard" || value === "telnet"
+    typeof value === "string" &&
+    (REMOTE_PROTOCOLS as readonly string[]).includes(value)
   );
 }
 
@@ -74,6 +93,10 @@ function asObject(value: unknown): Record<string, unknown> | undefined {
     : undefined;
 }
 
+function asText(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
 function asBool(value: unknown): boolean | undefined {
   if (typeof value === "boolean") return value;
   if (value === 1 || value === "1" || value === "true") return true;
@@ -91,10 +114,17 @@ export async function readHostSettings(
     enableVnc: values.enableVnc === true,
     enableArd: values.enableArd === true,
     enableTelnet: values.enableTelnet === true,
+    enableRustdesk: values.enableRustdesk === true,
     rdpPort: asPort(values.rdpPort) ?? DEFAULT_PORT.rdp,
     vncPort: asPort(values.vncPort) ?? DEFAULT_PORT.vnc,
     ardPort: asPort(values.ardPort) ?? DEFAULT_PORT.ard,
     telnetPort: asPort(values.telnetPort) ?? DEFAULT_PORT.telnet,
+    rustdeskPort: asPort(values.rustdeskPort) ?? DEFAULT_PORT.rustdesk,
+    rustdeskId: asText(values.rustdeskId),
+    rustdeskIdServer: asText(values.rustdeskIdServer),
+    rustdeskRelayServer: asText(values.rustdeskRelayServer),
+    rustdeskKey: asText(values.rustdeskKey),
+    rustdeskDirect: values.rustdeskDirect === true,
     rdpSecurity:
       typeof values.rdpSecurity === "string" ? values.rdpSecurity : "",
     rdpIgnoreCert: values.rdpIgnoreCert === true,
@@ -127,7 +157,7 @@ export function normalizeImportedHost(
           : undefined;
 
   const out: Record<string, unknown> = {};
-  for (const protocol of ["rdp", "vnc", "ard", "telnet"] as const) {
+  for (const protocol of REMOTE_PROTOCOLS) {
     const key = ENABLE_KEY[protocol];
     const flag = asBool(pick(key));
     if (flag !== undefined) out[key] = flag;
@@ -135,8 +165,8 @@ export function normalizeImportedHost(
     if (port !== undefined) out[PORT_KEY[protocol]] = port;
   }
 
-  const anyFlag = ["enableRdp", "enableVnc", "enableArd", "enableTelnet"].some(
-    (key) => out[key] === true,
+  const anyFlag = REMOTE_PROTOCOLS.some(
+    (protocol) => out[ENABLE_KEY[protocol]] === true,
   );
   if (!anyFlag && isRemoteProtocol(raw.connectionType)) {
     out[ENABLE_KEY[raw.connectionType]] = true;
@@ -152,6 +182,17 @@ export function normalizeImportedHost(
   if (ignoreCert !== undefined) out.rdpIgnoreCert = ignoreCert;
   const config = asObject(pick("guacamoleConfig"));
   if (config && Object.keys(config).length > 0) out.guacamoleConfig = config;
+  for (const key of [
+    "rustdeskId",
+    "rustdeskIdServer",
+    "rustdeskRelayServer",
+    "rustdeskKey",
+  ]) {
+    const value = asText(pick(key));
+    if (value) out[key] = value;
+  }
+  const direct = asBool(pick("rustdeskDirect"));
+  if (direct !== undefined) out.rustdeskDirect = direct;
   const toolbar = asBool(pick("enableToolbar", "enableTerminalToolbar"));
   if (toolbar !== undefined) out.enableToolbar = toolbar;
 

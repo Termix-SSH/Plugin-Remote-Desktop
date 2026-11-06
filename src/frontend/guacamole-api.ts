@@ -42,7 +42,7 @@ function apiError(error: unknown, action: string): Error {
 }
 
 export interface GuacamoleTokenRequest {
-  protocol: "rdp" | "vnc" | "ard" | "telnet";
+  protocol: "rdp" | "vnc" | "ard" | "telnet" | "rustdesk";
   hostname: string;
   port?: number;
   username?: string;
@@ -195,7 +195,7 @@ export async function getGuacamoleToken(
 export async function getGuacamoleTokenFromHost(
   hostId: number,
   origin: ConnectionOrigin,
-  protocol?: "rdp" | "vnc" | "ard" | "telnet",
+  protocol?: "rdp" | "vnc" | "ard" | "telnet" | "rustdesk",
   promptedCredentials?: {
     username?: string;
     password?: string;
@@ -203,6 +203,7 @@ export async function getGuacamoleTokenFromHost(
   },
   syncId?: string | null,
   tabInstanceId?: string,
+  rustdesk?: { code?: string; codecs?: string },
 ): Promise<GuacamoleTokenResponse> {
   try {
     // A locally-originated session is served by the embedded backend, which
@@ -229,6 +230,8 @@ export async function getGuacamoleTokenFromHost(
         ...(promptedCredentials
           ? { promptedDomain: promptedCredentials.domain ?? "" }
           : {}),
+        ...(rustdesk?.code ? { promptedCode: rustdesk.code } : {}),
+        ...(rustdesk?.codecs ? { rustdeskCodecs: rustdesk.codecs } : {}),
       },
     );
     return response.data;
@@ -251,7 +254,7 @@ export async function getGuacdStatus(
   options: {
     probe?: boolean;
     hostId?: number;
-    protocol?: "rdp" | "vnc" | "ard" | "telnet";
+    protocol?: "rdp" | "vnc" | "ard" | "telnet" | "rustdesk";
     syncId?: string | null;
   } = {},
 ): Promise<RemoteDesktopStatus> {

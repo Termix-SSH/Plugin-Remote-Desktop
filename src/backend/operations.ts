@@ -81,7 +81,9 @@ export function registerOperations(
       if (!target) throw new Error("Host not found");
       const settings = await readHostSettings(ctx, hostId);
       const protocols = (Object.keys(ENABLE_KEY) as RemoteProtocol[]).filter(
-        (protocol) => settings[ENABLE_KEY[protocol]],
+        (protocol) =>
+          settings[ENABLE_KEY[protocol]] &&
+          (protocol !== "rustdesk" || settings.rustdeskDirect),
       );
       if (protocols.length === 0) {
         return {

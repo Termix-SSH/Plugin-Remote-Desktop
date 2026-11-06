@@ -89,12 +89,13 @@ describe(`${manifest.id} activate`, () => {
       expect(rendered!.registered.hostProtocols().sort()).toEqual([
         "ard",
         "rdp",
+        "rustdesk",
         "telnet",
         "vnc",
       ]),
     );
     expect(rendered.registered.hostActions().map((a) => a.id)).toEqual(
-      expect.arrayContaining(["rdp", "vnc", "ard", "telnet"]),
+      expect.arrayContaining(["rdp", "vnc", "ard", "telnet", "rustdesk"]),
     );
   });
 

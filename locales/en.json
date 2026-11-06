@@ -81,14 +81,16 @@
         "macLock": "Lock screen",
         "spotlight": "Spotlight",
         "logoff": "Sign out",
-        "record": "Record"
+        "record": "Record",
+        "monitors": "Monitors"
       },
       "hints": {
         "files": "Shows once the RDP drive is on",
         "touchMode": "Only on touch screens",
         "modifiers": "Ctrl, Alt, Shift and the system key stay held until the next key",
         "logoff": "Signs out of Windows by running logoff from the Run box. The session must be open and showing the desktop.",
-        "record": "Starts or stops a recording of this session. Needs the Session Recording plugin and the built-in engine."
+        "record": "Starts or stops a recording of this session. Needs the Session Recording plugin and the built-in engine.",
+        "monitors": "Switch between the remote monitors"
       },
       "option": "Option",
       "logoffConfirm": "Sign out of this Windows session? Unsaved work in it is lost.",
@@ -96,9 +98,20 @@
       "recordStop": "Stop recording",
       "recordStarted": "Recording started",
       "recordStopped": "Recording saved to Session Recording",
-      "recordFailed": "Could not change the recording"
+      "recordFailed": "Could not change the recording",
+      "monitor": "Monitor {{number}}"
     },
-    "disabled": "Remote Desktop is turned off. An admin can turn it on in Settings."
+    "disabled": "Remote Desktop is turned off. An admin can turn it on in Settings.",
+    "rustdesk": {
+      "videoUnsupported": "This browser can not play RustDesk video. Use a recent Chrome, Edge, Firefox or Safari.",
+      "passwordTitle": "RustDesk password",
+      "passwordDescription": "The remote device needs a password. It is used for this session only and is not saved.",
+      "passwordWrong": "That password was not accepted. Try again.",
+      "codeTitle": "Two factor code",
+      "codeDescription": "The remote device needs the code from its authenticator app.",
+      "codeWrong": "That code was not accepted. Try again.",
+      "code": "Code"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Opened in Windows Remote Desktop",
@@ -278,7 +291,26 @@
     "docsLink": "View docs",
     "connectionOriginGuacamoleNote": "RDP, VNC and Telnet run on this device by default, like SSH. Pick Remote server to run them on the server instead.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Mac Screen Sharing"
+    "appleScreenSharing": "Mac Screen Sharing",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Remote desktop by RustDesk ID",
+    "rustdesk": {
+      "direct": "Direct IP access",
+      "directDesc": "Connect to the host address instead of looking up a RustDesk ID. Direct IP access must be on in RustDesk on that device.",
+      "port": "Direct IP port",
+      "directNote": "The connection is encrypted, but with no ID server there is nothing to prove which device answered.",
+      "id": "RustDesk ID",
+      "idDesc": "The ID shown in RustDesk on the remote device.",
+      "passwordDesc": "The permanent or one time password set in RustDesk. Leave it empty to have someone accept the session on the remote device.",
+      "server": "RustDesk server",
+      "serverDesc": "Leave empty to use the server set in the Remote Desktop admin settings, or the public RustDesk server when none is set.",
+      "idServer": "ID server",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Relay server",
+      "relayServerPlaceholder": "Same as the ID server",
+      "key": "Key",
+      "keyDesc": "The public key of your RustDesk server, from id_ed25519.pub."
+    }
   },
   "onboarding": {
     "guacdTitle": "Set up remote desktop",
@@ -366,6 +398,20 @@
       },
       "hostGuacdMigrated": {
         "label": "Per-host guacd addresses moved"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID server",
+        "description": "Your own RustDesk ID server (hbbs), as host or host:port. Leave empty to use the public RustDesk server. Hosts can set their own.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk relay server",
+        "description": "Your RustDesk relay server (hbbr). Leave empty to use what the ID server says.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk server key",
+        "description": "The public key of your RustDesk server, from id_ed25519.pub. Needed with your own server."
       }
     },
     "host": {
@@ -426,6 +472,27 @@
       },
       "ardPort": {
         "label": "ARD port"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "RustDesk direct IP port"
+      },
+      "rustdeskId": {
+        "label": "RustDesk ID"
+      },
+      "rustdeskDirect": {
+        "label": "RustDesk direct IP access"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID server"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk relay server"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk server key"
       }
     }
   },
@@ -433,7 +500,8 @@
     "connectRdp": "Connect with RDP",
     "connectVnc": "Connect with VNC",
     "connectTelnet": "Connect with Telnet",
-    "connectArd": "Connect with Apple Remote Desktop"
+    "connectArd": "Connect with Apple Remote Desktop",
+    "connectRustdesk": "Connect with RustDesk"
   },
   "permissions": {
     "sessions": {

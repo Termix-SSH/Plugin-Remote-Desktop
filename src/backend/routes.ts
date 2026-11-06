@@ -25,6 +25,7 @@ import {
   isRemoteProtocol,
   readHostSettings,
   readDisplayDefaults,
+  REMOTE_PROTOCOLS,
   type RemoteProtocol,
 } from "./host-settings.js";
 import { errorMessage, type RemoteDesktopLogger } from "./log.js";
@@ -61,6 +62,52 @@ export function hostUsesGuacd(
   overrides: { guacdHost?: string; guacdPort?: number },
 ): boolean {
   return mode === "guacd" || !!overrides.guacdHost || !!overrides.guacdPort;
+}
+
+/** What the RustDesk client needs: the host's server, else the admin's. */
+export async function rustdeskSettings(
+  ctx: PluginContext,
+  settings: Awaited<ReturnType<typeof readHostSettings>>,
+  input: {
+    hostname: string;
+    port: number;
+    password: string;
+    code?: unknown;
+    codecs?: unknown;
+    guacConfig: Record<string, unknown>;
+  },
+): Promise<Record<string, unknown>> {
+  const admin = async (key: string) =>
+    String((await ctx.settings.get<string>(key)) ?? "").trim();
+  const ownServer = !!settings.rustdeskIdServer;
+  const codecs =
+    typeof input.codecs === "string" && /^[a-z0-9,]{0,40}$/.test(input.codecs)
+      ? input.codecs
+      : "";
+  const code =
+    typeof input.code === "string"
+      ? input.code.replace(/\D/g, "").slice(0, 10)
+      : "";
+  const pick = (key: string) => input.guacConfig[key];
+  return {
+    hostname: input.hostname,
+    port: input.port,
+    password: input.password,
+    "rustdesk-id": settings.rustdeskId,
+    direct: settings.rustdeskDirect,
+    "id-server": ownServer
+      ? settings.rustdeskIdServer
+      : await admin("rustdeskIdServer"),
+    "relay-server": ownServer
+      ? settings.rustdeskRelayServer
+      : await admin("rustdeskRelayServer"),
+    "server-key": ownServer ? settings.rustdeskKey : await admin("rustdeskKey"),
+    ...(code ? { code } : {}),
+    ...(codecs ? { codecs } : {}),
+    "disable-audio": pick("disable-audio") === true,
+    "disable-copy": pick("disable-copy") === true,
+    "disable-paste": pick("disable-paste") === true,
+  };
 }
 
 function actor(ctx: PluginContext, res: Response): string | null {
@@ -309,7 +356,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *             properties:
    *               type:
    *                 type: string
-   *                 enum: [rdp, vnc, ard, telnet]
+   *                 enum: [rdp, vnc, ard, telnet, rustdesk]
    *               hostname:
    *                 type: string
    *               port:
@@ -345,8 +392,14 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         }
         if (!isRemoteProtocol(type)) {
           return res.status(400).json({
-            error: "Invalid connection type. Must be rdp, vnc, ard, or telnet",
+            error:
+              "Invalid connection type. Must be rdp, vnc, ard, telnet or rustdesk",
           });
+        }
+        if (type === "rustdesk") {
+          return res
+            .status(400)
+            .json({ error: "Save RustDesk devices as a host to connect" });
         }
         const options: Record<string, unknown> = {};
         for (const [key, value] of Object.entries(raw)) {
@@ -451,13 +504,19 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *             properties:
    *               protocol:
    *                 type: string
-   *                 enum: [rdp, vnc, ard, telnet]
+   *                 enum: [rdp, vnc, ard, telnet, rustdesk]
    *               promptedUsername:
    *                 type: string
    *               promptedPassword:
    *                 type: string
    *               promptedDomain:
    *                 type: string
+   *               promptedCode:
+   *                 type: string
+   *                 description: A RustDesk 2FA code.
+   *               rustdeskCodecs:
+   *                 type: string
+   *                 description: Video codecs the browser can decode, like vp9,av1,vp8.
    *               tabInstanceId:
    *                 type: string
    *     responses:
@@ -489,7 +548,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         const requested = body.protocol;
         const protocol: RemoteProtocol | undefined = isRemoteProtocol(requested)
           ? requested
-          : (["rdp", "vnc", "ard", "telnet"] as const).find(
+          : REMOTE_PROTOCOLS.find(
               (candidate) => settings[ENABLE_KEY[candidate]],
             );
         if (!protocol) {
@@ -537,12 +596,15 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
 
         const promptForLogin =
           protocol === "rdp" && target.auth.authType === "none";
+        const isRustdesk = protocol === "rustdesk";
         const username = promptForLogin
           ? String(body.promptedUsername || "")
           : target.auth.username;
-        const password = promptForLogin
-          ? String(body.promptedPassword || "")
-          : target.auth.password;
+        // RustDesk asks for a password or 2FA code once the peer says so.
+        const password =
+          promptForLogin || (isRustdesk && body.promptedPassword)
+            ? String(body.promptedPassword || "")
+            : target.auth.password;
         const domain = resolveRdpDomain(
           target.auth.authType,
           body.promptedDomain,
@@ -554,8 +616,11 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
           (settings[PORT_KEY[protocol]] as number) || DEFAULT_PORT[protocol];
         const termixConnectId = crypto.randomUUID();
         const cleanups: Array<() => void> = [];
-        const jumpHosts = target.host.jumpHosts;
-        const viaGuacd = hostUsesGuacd(deps.engineMode(), guacdOverrides);
+        // Through an ID server the relay is reached directly, not the host.
+        const jumpHosts =
+          isRustdesk && !settings.rustdeskDirect ? [] : target.host.jumpHosts;
+        const viaGuacd =
+          !isRustdesk && hostUsesGuacd(deps.engineMode(), guacdOverrides);
         // The built-in engine speaks Apple's login itself; only guacd needs
         // the macOS banner proxy.
         const needsVncProxy =
@@ -610,7 +675,9 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
 
         const recordings = deps.recordings();
         // guacd never recorded VNC here; the built-in engine does.
+        // RustDesk video stays encoded, which recordings can not play yet.
         const recordingEnabled =
+          !isRustdesk &&
           ((protocol !== "vnc" && protocol !== "ard") || !viaGuacd) &&
           !!recordings &&
           (await recordings.enabledFor(hostId).catch(() => false));
@@ -681,6 +748,19 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
             password,
             { port, ...guacConfig, ...guacdOverrides },
             recording,
+            termixMeta,
+          );
+        } else if (isRustdesk) {
+          token = tokens.createRustdeskToken(
+            await rustdeskSettings(ctx, settings, {
+              hostname,
+              port,
+              password,
+              code: body.promptedCode,
+              codecs: body.rustdeskCodecs,
+              guacConfig,
+            }),
+            undefined,
             termixMeta,
           );
         } else {
@@ -871,7 +951,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *         name: protocol
    *         schema:
    *           type: string
-   *           enum: [rdp, vnc, ard, telnet]
+   *           enum: [rdp, vnc, ard, telnet, rustdesk]
    *     responses:
    *       200:
    *         description: The status.
@@ -883,6 +963,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
       const enabled = await deps.enabled();
       let guacd = deps.guacd();
       let overrides: { guacdHost?: string; guacdPort?: number } = {};
+      let alwaysBuiltin = false;
       if (req.query.hostId !== undefined) {
         const userId = actor(ctx, res);
         if (!userId) return;
@@ -906,6 +987,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
             .status(400)
             .json({ error: "Protocol is not enabled for this host" });
         }
+        alwaysBuiltin = protocol === "rustdesk";
         overrides = await guacdOverridesFor(
           ctx,
           hostId,
@@ -916,7 +998,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
           port: overrides.guacdPort || guacd.port,
         };
       }
-      if (!hostUsesGuacd(deps.engineMode(), overrides)) {
+      if (alwaysBuiltin || !hostUsesGuacd(deps.engineMode(), overrides)) {
         // Old clients gate on guacd.status, so the built-in engine reports
         // itself as a connected guacd.
         return res.json({

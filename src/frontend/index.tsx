@@ -5,6 +5,7 @@ import {
   Monitor,
   MonitorUp,
   MousePointerClick,
+  Radio,
   ScreenShare,
   Server,
 } from "lucide-react";
@@ -41,6 +42,7 @@ import { waitForGuacamoleConnectionId } from "./guacamole-session-id";
 import { quickConnectGuacHost } from "./quick-connect-guac-host";
 import { REMOTE_DESKTOP_TOOLBAR_SLOT } from "./toolbar-items";
 import { HostToolbarCard } from "./HostToolbarCard";
+import { HostEditorRustdeskTab } from "./HostEditorRustdeskTab";
 import {
   DEFAULT_PORT,
   ENABLE_KEY,
@@ -95,6 +97,15 @@ const PROTOCOLS: {
     priority: 35,
     order: 115,
     quickConnect: {},
+  },
+  {
+    id: "rustdesk",
+    titleKey: "hosts.tabRustdesk",
+    descriptionKey: "hosts.rustdeskDescription",
+    paletteKey: "palette.connectRustdesk",
+    icon: Radio,
+    priority: 33,
+    order: 117,
   },
   {
     id: "telnet",
@@ -254,6 +265,22 @@ function ArdSection(props: HostEditorSectionProps) {
   );
 }
 
+function RustdeskSection(props: HostEditorSectionProps) {
+  const { form, setField, setGuacField } = remoteDesktopForm(props);
+  return (
+    <>
+      <HostEditorRustdeskTab
+        form={form}
+        setField={setField}
+        setGuacField={setGuacField}
+        credentials={props.credentials as never}
+      />
+      <HostToolbarCard form={form} setField={setField} />
+      <SectionNotes />
+    </>
+  );
+}
+
 function TelnetSection(props: HostEditorSectionProps) {
   const { form, setField, setGuacField } = remoteDesktopForm(props);
   return (
@@ -297,6 +324,7 @@ const SECTIONS: Record<Protocol, ComponentType<HostEditorSectionProps>> = {
   vnc: VncSection,
   ard: ArdSection,
   telnet: TelnetSection,
+  rustdesk: RustdeskSection,
 };
 
 function registerNativeRdp(app: TermixApp): void {

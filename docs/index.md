@@ -1,13 +1,13 @@
-Remote Desktop opens RDP, VNC, Apple Remote Desktop and Telnet sessions in your browser, in tabs and split screen like any other session. It has clipboard sync, file transfer through an RDP drive, audio, printing, jump hosts, sharing and recording.
+Remote Desktop opens RDP, VNC, Apple Remote Desktop, RustDesk and Telnet sessions in your browser, in tabs and split screen like any other session. It has clipboard sync, file transfer through an RDP drive, audio, printing, jump hosts, sharing and recording.
 
-It works out of the box. Termix speaks RDP, VNC and Telnet itself, so there is nothing else to install or run, on Docker, bare metal or the desktop app.
+It works out of the box. Termix speaks RDP, VNC, RustDesk and Telnet itself, so there is nothing else to install or run, on Docker, bare metal or the desktop app.
 
 ## Add a host
 
 1. Open a host in Manage, or make a new one.
-2. In General, turn on RDP, VNC, Apple Remote Desktop or Telnet. A host can have SSH and these at once.
+2. In General, turn on RDP, VNC, Apple Remote Desktop, RustDesk or Telnet. A host can have SSH and these at once.
 3. Open the protocol's section. Fill in the port, username and password, and for RDP the domain and security mode.
-4. Save, then pick RDP, VNC, Apple Remote Desktop or Telnet from the host's menu.
+4. Save, then pick RDP, VNC, Apple Remote Desktop, RustDesk or Telnet from the host's menu.
 
 The login is stored encrypted, like SSH logins, and can be [shared](/guide/sharing) with the host.
 
@@ -42,6 +42,18 @@ RDP has settings for color depth, how the screen follows the window size, lossle
 ## VNC
 
 VNC supports password logins, VeNCrypt (TLS and X509, with or without a username), UltraVNC MS-Logon II and Apple Remote Desktop logins for macOS Screen Sharing (fill in your macOS username and password). The cursor setting picks whether the server draws the mouse pointer or your browser does, and color depth 8 or 16 uses less bandwidth on slow links.
+
+## RustDesk
+
+Termix connects to a [RustDesk](https://rustdesk.com) device the way the RustDesk app does, so the device needs nothing new. Turn on RustDesk in General and open its tab.
+
+- Enter the device's RustDesk ID and its permanent or one time password. Leave the password empty to have someone click accept on the device. Termix asks for the password or the 2FA code when the device wants one, and does not save what you type there.
+- By default Termix finds the device through the public RustDesk server. To use your own, set the ID server, relay server and key in the admin settings, under Remote Desktop. The key is the contents of `id_ed25519.pub` on your server. A host can also set its own server.
+- The Termix server talks to the ID server on TCP 21116 and the relay on TCP 21117. It always goes through the relay, since a server can't hole punch.
+- Direct IP access connects to the host address on port 21118 instead, with no ID server. Turn on Direct IP access in RustDesk on the device first. The connection is encrypted, but with no ID server nothing proves which device answered. Jump hosts work in this mode.
+- Video stays in RustDesk's own format and your browser decodes it, so it needs a recent Chrome, Edge, Firefox or Safari. VP9, AV1 and VP8 are used, never H.264 or H.265.
+- Clipboard text works both ways, and you hear the remote's audio. With more than one monitor, the toolbar has a button for each.
+- Not supported yet: file transfer and recording.
 
 ## Telnet
 
@@ -106,6 +118,8 @@ These only apply to an external guacd:
 - Wrong characters when typing: Set the keyboard layout to the one the remote machine uses.
 - "Could not connect to guacd": Only with an external guacd. Check `GUACD_HOST` points at guacd and both are on the same Docker network.
 - Recordings are empty with an external guacd: The two recording paths don't point at the same folder.
+- RustDesk says the key does not match: Copy the key from `id_ed25519.pub` on your RustDesk server into the admin settings, or the host's own server settings.
+- RustDesk shows a black screen on Linux: the device has to be logged in to an X11 desktop. RustDesk can't share a Wayland login screen.
 
 ## Apple Remote Desktop
 
