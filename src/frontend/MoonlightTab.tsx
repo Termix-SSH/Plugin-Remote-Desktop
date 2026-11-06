@@ -4,6 +4,7 @@ import {
   Button,
   isElectron,
   resolveRemoteHostId,
+  ToolbarBand,
 } from "@termix-ssh/plugin-sdk/ui";
 import { errorMessage, type RemoteHostLogin } from "./host-remote";
 import { launchMoonlight, moonlightOrigin } from "./moonlight-api";
@@ -141,11 +142,11 @@ export function MoonlightTab({ host }: { host?: RemoteHostLogin }) {
 
   return (
     <div className="flex h-full w-full flex-col">
-      <div className="flex items-center justify-end border-b border-border px-2 py-1">
+      <ToolbarBand className="justify-end">
         <Button size="xs" variant="ghost" onClick={() => openStream(state.url)}>
           {t("hosts.moonlight.openInWindow")}
         </Button>
-      </div>
+      </ToolbarBand>
       <iframe
         ref={frame}
         title={t("hosts.tabMoonlight")}

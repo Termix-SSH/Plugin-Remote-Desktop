@@ -12,7 +12,7 @@ import {
   X,
 } from "lucide-react";
 import { toast } from "sonner";
-import { Button } from "@termix-ssh/plugin-sdk/ui";
+import { Button, LoadingState, ToolbarBand } from "@termix-ssh/plugin-sdk/ui";
 import {
   downloadFile,
   listDirectory,
@@ -123,7 +123,7 @@ export function GuacamoleFileBrowser({
 
   return (
     <div className="absolute right-2 top-2 bottom-2 z-30 flex w-80 flex-col rounded-sm border border-border bg-background/95 shadow-lg backdrop-blur-sm">
-      <div className="flex items-center gap-1 border-b border-border px-2 py-1.5">
+      <ToolbarBand>
         <span className="flex-1 truncate text-xs font-semibold">
           {t("remoteDesktop.files.title")}
         </span>
@@ -136,9 +136,9 @@ export function GuacamoleFileBrowser({
         >
           <X className="size-3.5" />
         </Button>
-      </div>
+      </ToolbarBand>
 
-      <div className="flex items-center gap-1 border-b border-border px-2 py-1.5">
+      <ToolbarBand>
         <Button
           variant="ghost"
           size="icon"
@@ -161,14 +161,10 @@ export function GuacamoleFileBrowser({
         >
           <RefreshCw className="size-3.5" />
         </Button>
-      </div>
+      </ToolbarBand>
 
       <div className="flex-1 overflow-y-auto">
-        {loading && (
-          <p className="px-2 py-3 text-[11px] text-muted-foreground">
-            {t("common.loading")}
-          </p>
-        )}
+        {loading && <LoadingState label={t("common.loading")} />}
         {!loading && error && (
           <p className="px-2 py-3 text-[11px] text-red-500">{error}</p>
         )}
