@@ -405,6 +405,14 @@
             "hidden": true
           },
           {
+            "key": "rdpAutoReconnect",
+            "type": "boolean",
+            "labelKey": "settings.host.rdpAutoReconnect.label",
+            "descriptionKey": "settings.host.rdpAutoReconnect.description",
+            "default": true,
+            "hidden": true
+          },
+          {
             "key": "rdpIgnoreCert",
             "type": "boolean",
             "labelKey": "settings.host.rdpIgnoreCert.label",

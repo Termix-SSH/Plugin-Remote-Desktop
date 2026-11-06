@@ -496,6 +496,10 @@
       },
       "rustdeskKey": {
         "label": "RustDesk server key"
+      },
+      "rdpAutoReconnect": {
+        "label": "Automatically reconnect RDP",
+        "description": "Reconnect when an RDP session is lost. Turn off to reconnect manually and avoid interrupting sessions opened from another client."
       }
     }
   },

@@ -6,6 +6,14 @@ import {
 } from "../../src/backend/host-settings.js";
 
 describe("normalizeImportedHost", () => {
+  it("preserves a saved RDP auto reconnect opt-out on import", () => {
+    expect(
+      normalizeImportedHost({
+        pluginSettings: { "remote-desktop": { rdpAutoReconnect: false } },
+      }),
+    ).toEqual({ rdpAutoReconnect: false });
+  });
+
   it("reads an ARD host's switch and port", () => {
     expect(
       normalizeImportedHost({
