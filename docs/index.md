@@ -19,6 +19,15 @@ The login is stored encrypted, like SSH logins, and can be [shared](/guide/shari
 - Resize method: Display update resizes the remote screen as the window changes. Reconnect opens a fresh connection at the new size, for servers without display updates.
 - Keyboard layout should match the layout set on the remote machine. Characters it can't type are sent as Unicode.
 
+## Kerberos and Protected Users
+
+Accounts in the Active Directory Protected Users group can't use NTLM. For those, set Kerberos KDC Address on the host (under Connection settings) to a domain controller, like `dc1.example.com`. A port or `udp://` can be added, and the default is TCP port 88.
+
+- Needs the built-in engine. An external guacd does not use this setting.
+- Enter the host by its DNS name, not an IP address, and fill in the Domain.
+- The Termix server must be able to reach the domain controller on port 88.
+- Leave it empty to keep using NTLM.
+
 ## Toolbar
 
 The toolbar sits along the top of the session, or the bottom if you pick that. It has the drive's files, zoom, Ctrl+Alt+Del, lock screen, the system key, sticky Ctrl, Alt, Shift and system keys, function keys, Esc, Tab, Home, End, Page Up, Page Down and the arrows, plus Share when Session Sharing is on.

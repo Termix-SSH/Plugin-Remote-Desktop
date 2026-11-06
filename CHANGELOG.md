@@ -4,6 +4,7 @@
 
 ### Added
 
+- Kerberos sign in for RDP with a KDC address per host, for accounts in the Protected Users group
 - RDP server redirection, so GNOME Remote Login on Ubuntu connects to the user session
 - Check from the server that a host's RDP, VNC and Telnet ports answer, through Termix actions and as a status tile on the host page
 - A dashboard card with your open remote sessions, and a host's open sessions on the host page

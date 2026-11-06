@@ -158,6 +158,8 @@
       "serverLayout": "Server Layout",
       "timezone": "Timezone",
       "loadBalanceInfo": "Load Balance Info / Cookie",
+      "kdcUrl": "Kerberos KDC Address",
+      "kdcUrlDesc": "Domain controller for Kerberos sign in, for accounts in Protected Users. Needs the built-in engine, the host entered by its DNS name and the domain filled in. Leave empty for NTLM.",
       "loadBalanceInfoDesc": "RD Connection Broker cookie for RDS farm load balancing (e.g. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd Proxy (optional)",
       "guacdHostname": "guacd Host",
