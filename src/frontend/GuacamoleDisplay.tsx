@@ -600,6 +600,7 @@ export const GuacamoleDisplay = forwardRef<
           client,
           text,
           pasteModifierFor(sessionProtocolRef.current),
+          keyboardRef.current?.pressed,
         );
       }
     });
@@ -640,6 +641,7 @@ export const GuacamoleDisplay = forwardRef<
           client,
           text,
           pasteModifierFor(sessionProtocolRef.current),
+          keyboardRef.current?.pressed,
         );
       },
       true,
