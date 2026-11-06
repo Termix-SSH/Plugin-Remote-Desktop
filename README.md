@@ -28,6 +28,7 @@ Read the [docs](https://docs.termix.site/plugins/remote-desktop) to set it up an
 
 - RDP, VNC, Apple Remote Desktop and Telnet from any browser, with nothing else to install
 - RustDesk devices by ID through your own or the public RustDesk server, or by direct IP
+- Low latency streaming from Sunshine PCs through a Moonlight Web server
 - Tabs and split screen like any other session
 - Clipboard sync, audio, printing and file transfer through RDP drives
 - Jump host support

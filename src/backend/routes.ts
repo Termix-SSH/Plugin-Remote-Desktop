@@ -29,6 +29,7 @@ import {
   type RemoteProtocol,
 } from "./host-settings.js";
 import { errorMessage, type RemoteDesktopLogger } from "./log.js";
+import { registerMoonlightRoutes } from "./moonlight/routes.js";
 import {
   builtinSessionId,
   type BuiltinEngine,
@@ -175,7 +176,7 @@ async function resolveTarget(
   ctx: PluginContext,
   res: Response,
   hostId: number,
-  protocol: RemoteProtocol,
+  protocol: RemoteProtocol | "moonlight",
 ) {
   try {
     const target = await ctx.credentials.resolveHostProtocol(hostId, protocol);
@@ -204,6 +205,15 @@ async function guacdOverridesFor(
 
 export function registerRoutes(router: Router, deps: RouteDeps): void {
   const { ctx, log, tokens, sessions } = deps;
+
+  registerMoonlightRoutes(router, {
+    ctx,
+    log,
+    enabled: deps.enabled,
+    recordings: deps.recordings,
+    resolveTarget: (res, hostId) =>
+      resolveTarget(ctx, res, hostId, "moonlight"),
+  });
 
   const refuseWhenOff = async (res: Response): Promise<boolean> => {
     if (await deps.enabled()) return false;

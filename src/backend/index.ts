@@ -182,6 +182,10 @@ export async function activate(ctx: PluginContext) {
       return settings[PORT_KEY[protocol]] as number;
     });
   }
+  ctx.hosts.status.registerPort(
+    "moonlight",
+    async (hostId) => (await readHostSettings(ctx, hostId)).moonlightPort,
+  );
 }
 
 export async function deactivate() {}
