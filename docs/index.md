@@ -43,6 +43,16 @@ RDP has settings for color depth, how the screen follows the window size, lossle
 
 VNC supports password logins, VeNCrypt (TLS and X509, with or without a username), UltraVNC MS-Logon II and Apple Remote Desktop logins for macOS Screen Sharing (fill in your macOS username and password). The cursor setting picks whether the server draws the mouse pointer or your browser does, and color depth 8 or 16 uses less bandwidth on slow links.
 
+## Intel AMT
+
+Intel AMT (vPRO) machines have a built-in VNC server, so they connect as a normal VNC host. It shows the real screen, including the BIOS and boot, even when the OS is off or crashed.
+
+1. On the machine, turn on KVM and the VNC port (5900) in the Intel MEBx setup (Ctrl+P at boot) or with MeshCommander. Set the VNC password there. AMT only uses the first 8 characters, and asks for a strong one.
+2. In Termix, turn on VNC for the host, use the machine's address and port 5900, and enter that password. Leave the username blank.
+3. Open the VNC tab. If KVM is set to ask for user consent, the person at the machine has to accept first.
+
+For power on, power off and reset, add the same machine to the Out-of-band plugin as an AMT device.
+
 ## RustDesk
 
 Termix connects to a [RustDesk](https://rustdesk.com) device the way the RustDesk app does, so the device needs nothing new. Turn on RustDesk in General and open its tab.
