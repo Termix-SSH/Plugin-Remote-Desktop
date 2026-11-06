@@ -8,6 +8,7 @@ import {
   useCallback,
 } from "react";
 import Guacamole from "guacamole-common-js";
+import { bindAudioUnlock } from "./guacamole-audio";
 import { Upload } from "lucide-react";
 import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 import { toast } from "sonner";
@@ -181,6 +182,7 @@ export const GuacamoleDisplay = forwardRef<
   // Set once this client reached CONNECTED, so a close before that stays an error.
   const wasConnectedRef = useRef(false);
   const keyboardRef = useRef<Guacamole.Keyboard | null>(null);
+  const unbindAudioRef = useRef<(() => void) | null>(null);
   const unbindPointerRef = useRef<(() => void) | null>(null);
   const unwatchAltRef = useRef<(() => void) | null>(null);
   const scaleRef = useRef<number>(1);
@@ -221,6 +223,8 @@ export const GuacamoleDisplay = forwardRef<
   const disconnectClient = useCallback(() => {
     unbindPointerRef.current?.();
     unbindPointerRef.current = null;
+    unbindAudioRef.current?.();
+    unbindAudioRef.current = null;
     unwatchAltRef.current?.();
     unwatchAltRef.current = null;
     const client = clientRef.current;
@@ -609,6 +613,11 @@ export const GuacamoleDisplay = forwardRef<
       displayRef.current.appendChild(displayElement);
       displayRef.current.appendChild(pasteCatcher.element);
     }
+
+    unbindAudioRef.current?.();
+    unbindAudioRef.current = bindAudioUnlock(displayElement, () =>
+      Guacamole.AudioContextFactory.getAudioContext(),
+    );
 
     displayElement.setAttribute("tabindex", "0");
     displayElement.style.outline = "none";
