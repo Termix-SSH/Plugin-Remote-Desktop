@@ -234,7 +234,7 @@ export function HostEditorMoonlightTab({
                 ))}
               </Select2>
               <Button
-                size="sm"
+                size="lg"
                 variant="outline"
                 disabled={loading}
                 onClick={() => void refresh()}
