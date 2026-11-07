@@ -2,8 +2,10 @@ import crypto from "node:crypto";
 import { describe, expect, it } from "vitest";
 import {
   nextSize,
+  normalizeKdcUrl,
   printFile,
   rdpConfig,
+  redirectTarget,
   scaleFromDpi,
   subjectPublicKey,
   timezoneBias,
@@ -86,6 +88,23 @@ describe("rdpConfig", () => {
   });
 });
 
+describe("normalizeKdcUrl", () => {
+  it("adds the scheme and port", () => {
+    expect(normalizeKdcUrl("dc1.example.com")).toBe("tcp://dc1.example.com:88");
+    expect(normalizeKdcUrl(" dc1.example.com:8888 ")).toBe(
+      "tcp://dc1.example.com:8888",
+    );
+    expect(normalizeKdcUrl("udp://10.0.0.5")).toBe("udp://10.0.0.5:88");
+  });
+
+  it("keeps a proxy url and drops junk", () => {
+    expect(normalizeKdcUrl("https://proxy.example.com/KdcProxy")).toBe(
+      "https://proxy.example.com/KdcProxy",
+    );
+    expect(normalizeKdcUrl("")).toBe("");
+  });
+});
+
 describe("helpers", () => {
   it("turns dpi into a scale factor", () => {
     expect(scaleFromDpi(96)).toBe(100);
@@ -126,5 +145,49 @@ describe("nextSize", () => {
   it("skips tiny and unchanged sizes", () => {
     expect(nextSize(current, 100, 720, 0)).toBeNull();
     expect(nextSize(current, 1280, 720, 0)).toBeNull();
+  });
+});
+
+describe("redirectTarget", () => {
+  const event = {
+    address: "10.0.0.5",
+    fqdn: "",
+    loadBalanceInfo: "Cookie: msts=abc\r\n",
+    username: "bob",
+    domain: "",
+    password: "",
+  };
+
+  it("follows the address and strips the cookie wrapper", () => {
+    const t = redirectTarget(event, "gnome.lan", 3389, 0);
+    expect(t).toMatchObject({
+      host: "10.0.0.5",
+      port: 3389,
+      loadBalanceInfo: "abc",
+    });
+    expect(t?.username).toBe("bob");
+  });
+
+  it("uses the same host when the server sends only a token", () => {
+    const t = redirectTarget({ ...event, address: "" }, "gnome.lan", 3389, 0);
+    expect(t?.host).toBe("gnome.lan");
+  });
+
+  it("stops after three hops", () => {
+    expect(redirectTarget(event, "gnome.lan", 3389, 3)).toBeNull();
+  });
+
+  it("refuses a jump to loopback or link local", () => {
+    expect(
+      redirectTarget({ ...event, address: "127.0.0.1" }, "gnome.lan", 3389, 0),
+    ).toBeNull();
+    expect(
+      redirectTarget(
+        { ...event, address: "169.254.169.254" },
+        "gnome.lan",
+        3389,
+        0,
+      ),
+    ).toBeNull();
   });
 });

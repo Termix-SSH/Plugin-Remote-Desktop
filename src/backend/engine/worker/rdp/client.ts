@@ -13,6 +13,15 @@ import { DriveCallbacks } from "./drive.js";
 type RdpEvent =
   | { k: "send"; data: Uint8Array }
   | { k: "tls" }
+  | {
+      k: "redirect";
+      address: string;
+      fqdn: string;
+      loadBalanceInfo: string;
+      username: string;
+      domain: string;
+      password: string;
+    }
   | { k: "connected"; w: number; h: number }
   | { k: "resize"; w: number; h: number }
   | { k: "dirty"; x: number; y: number; w: number; h: number }
@@ -84,8 +93,77 @@ export function scaleFromDpi(dpi: number): number {
   return Math.min(500, Math.round((dpi * 100) / 96));
 }
 
+/** A KDC as host, host:port or a full URL, to a URL with a scheme and port. */
+export function normalizeKdcUrl(raw: string): string {
+  const value = raw.trim();
+  if (!value) return "";
+  const withScheme = /^[a-z]+:\/\//i.test(value) ? value : `tcp://${value}`;
+  try {
+    const url = new URL(withScheme);
+    if (!url.hostname) return "";
+    const port = url.port || (url.protocol === "https:" ? "" : "88");
+    return `${url.protocol}//${url.hostname.includes(":") ? `[${url.hostname}]` : url.hostname}${port ? `:${port}` : ""}${url.pathname === "/" ? "" : url.pathname}`;
+  } catch {
+    return "";
+  }
+}
+
 function on(s: Settings, name: string, fallback: boolean): boolean {
   return s.bool(name, fallback);
+}
+
+export interface RedirectTarget {
+  host: string;
+  port: number;
+  loadBalanceInfo: string;
+  username: string;
+  domain: string;
+  password: string;
+}
+
+export const MAX_REDIRECTS = 3;
+
+function privateJump(address: string): boolean {
+  return (
+    /^(127\.|169\.254\.|0\.)/.test(address) ||
+    address === "::1" ||
+    /^fe80:/i.test(address) ||
+    address.toLowerCase() === "localhost"
+  );
+}
+
+/** Where a Server Redirection PDU sends us, or null when it is not safe. */
+export function redirectTarget(
+  event: {
+    address: string;
+    fqdn: string;
+    loadBalanceInfo: string;
+    username: string;
+    domain: string;
+    password: string;
+  },
+  host: string,
+  port: number,
+  hops: number,
+): RedirectTarget | null {
+  if (hops >= MAX_REDIRECTS) return null;
+  // The address is the direct way; the name only when none was sent.
+  const wanted = (event.address || event.fqdn || host).trim();
+  if (!wanted || /[\s/]/.test(wanted)) return null;
+  // A server may not bounce us to this machine or its link local range.
+  if (wanted !== host && privateJump(wanted) && !privateJump(host)) return null;
+  // The token is sent as "Cookie: msts=<token>"; the engine adds the prefix.
+  const token = event.loadBalanceInfo
+    .replace(/^Cookie:\s*msts=/i, "")
+    .replace(/[\r\n]+$/, "");
+  return {
+    host: wanted,
+    port,
+    loadBalanceInfo: token,
+    username: event.username,
+    domain: event.domain,
+    password: event.password,
+  };
 }
 
 /** guacd's RDP parameters to the engine's config. */
@@ -123,7 +201,7 @@ export function rdpConfig(s: Settings, layoutId: number, drive: boolean) {
     loadBalanceInfo: s.get("load-balance-info"),
     timezoneBias: timezoneBias(timezone),
     timezoneName: timezone,
-    kdcUrl: s.get("kdc-url"),
+    kdcUrl: normalizeKdcUrl(s.get("kdc-url")),
     preconnectionId: s.has("preconnection-id")
       ? s.int("preconnection-id", 0)
       : null,
@@ -256,6 +334,8 @@ export class RdpClient implements RemoteClient, PixelSource {
   private connected = false;
   private stopped = false;
   private reconnecting = false;
+  private redirect: RedirectTarget | null = null;
+  private hops = 0;
   private size = { width: 0, height: 0, dpi: 96 };
   width = 0;
   height = 0;
@@ -305,6 +385,14 @@ export class RdpClient implements RemoteClient, PixelSource {
       );
       config.security = "tls";
     }
+    const target = this.redirect;
+    if (target) {
+      config.host = target.host;
+      config.loadBalanceInfo = target.loadBalanceInfo;
+      if (target.username) config.username = target.username;
+      if (target.domain) config.domain = target.domain;
+      if (target.password) config.password = target.password;
+    }
     config.width = this.size.width;
     config.height = this.size.height;
     config.scale = scaleFromDpi(this.size.dpi);
@@ -319,8 +407,8 @@ export class RdpClient implements RemoteClient, PixelSource {
     this.rdp = new this.host.wasm.RdpClient(JSON.stringify(config), callbacks);
 
     const raw = net.connect({
-      host: s.get("hostname"),
-      port: s.int("port", 3389),
+      host: target?.host ?? s.get("hostname"),
+      port: target?.port ?? s.int("port", 3389),
     });
     raw.setNoDelay(true);
     this.raw = raw;
@@ -383,7 +471,7 @@ export class RdpClient implements RemoteClient, PixelSource {
     const raw = this.raw;
     if (!raw) return;
     const s = this.host.settings;
-    const hostname = s.get("hostname");
+    const hostname = this.redirect?.host ?? s.get("hostname");
     const verify = !s.bool("ignore-cert");
     raw.off("data", this.onPlainData);
     const secure = tls.connect({
@@ -448,6 +536,9 @@ export class RdpClient implements RemoteClient, PixelSource {
         break;
       case "tls":
         this.upgradeTls();
+        break;
+      case "redirect":
+        this.follow(event);
         break;
       case "connected":
         this.connected = true;
@@ -565,6 +656,30 @@ export class RdpClient implements RemoteClient, PixelSource {
       }
       this.reconnect();
     }, 400);
+  }
+
+  /** Server redirection (GNOME Remote Login): reconnect to the new target. */
+  private follow(event: Extract<RdpEvent, { k: "redirect" }>): void {
+    if (this.stopped) return;
+    const s = this.host.settings;
+    const next = redirectTarget(
+      event,
+      s.get("hostname"),
+      s.int("port", 3389),
+      this.hops,
+    );
+    if (!next) {
+      this.host.log("warn", "RDP redirect refused");
+      this.host.fail(
+        "The server asked for a redirect that was refused",
+        Status.UPSTREAM_ERROR,
+      );
+      return;
+    }
+    this.hops += 1;
+    this.redirect = next;
+    this.host.log("info", "RDP redirect followed", { hop: this.hops });
+    this.reconnect();
   }
 
   /** guacd's "reconnect" resize: a fresh connection at the new size. */

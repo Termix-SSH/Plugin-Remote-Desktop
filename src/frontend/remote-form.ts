@@ -23,6 +23,8 @@ export interface RemoteDesktopForm {
   security: string;
   ignoreCert: boolean;
   rdpPort: number;
+  rdpAutoReconnect: boolean;
+  rdpAutoResize: boolean;
   vncPort: number;
   ardPort: number;
   telnetPort: number;
@@ -32,6 +34,11 @@ export interface RemoteDesktopForm {
   rustdeskIdServer: string;
   rustdeskRelayServer: string;
   rustdeskKey: string;
+  moonlightHostId: number;
+  moonlightAppId: number;
+  moonlightBitrate: number;
+  moonlightFps: number;
+  moonlightTransport: string;
   guacamoleConfig: Record<string, any>;
   enableToolbar: boolean;
   toolbarPosition: ToolbarPosition;
@@ -66,6 +73,8 @@ export type RemoteFormSetField = <K extends keyof RemoteDesktopForm>(
 /** Tab field name to this plugin's host setting key. */
 const SETTING_FOR_FIELD: Partial<Record<keyof RemoteDesktopForm, string>> = {
   rdpPort: "rdpPort",
+  rdpAutoReconnect: "rdpAutoReconnect",
+  rdpAutoResize: "rdpAutoResize",
   vncPort: "vncPort",
   ardPort: "ardPort",
   telnetPort: "telnetPort",
@@ -75,6 +84,11 @@ const SETTING_FOR_FIELD: Partial<Record<keyof RemoteDesktopForm, string>> = {
   rustdeskIdServer: "rustdeskIdServer",
   rustdeskRelayServer: "rustdeskRelayServer",
   rustdeskKey: "rustdeskKey",
+  moonlightHostId: "moonlightHostId",
+  moonlightAppId: "moonlightAppId",
+  moonlightBitrate: "moonlightBitrate",
+  moonlightFps: "moonlightFps",
+  moonlightTransport: "moonlightTransport",
   security: "rdpSecurity",
   ignoreCert: "rdpIgnoreCert",
   enableToolbar: "enableToolbar",
@@ -173,6 +187,8 @@ export function remoteDesktopForm(props: HostEditorSectionProps): {
   const rustdesk = loginOf(logins, "rustdesk");
   const form: RemoteDesktopForm = {
     rdpPort: options.rdpPort,
+    rdpAutoReconnect: options.rdpAutoReconnect,
+    rdpAutoResize: options.rdpAutoResize,
     vncPort: options.vncPort,
     ardPort: options.ardPort,
     telnetPort: options.telnetPort,
@@ -182,6 +198,11 @@ export function remoteDesktopForm(props: HostEditorSectionProps): {
     rustdeskIdServer: options.rustdeskIdServer,
     rustdeskRelayServer: options.rustdeskRelayServer,
     rustdeskKey: options.rustdeskKey,
+    moonlightHostId: options.moonlightHostId,
+    moonlightAppId: options.moonlightAppId,
+    moonlightBitrate: options.moonlightBitrate,
+    moonlightFps: options.moonlightFps,
+    moonlightTransport: options.moonlightTransport,
     security: options.rdpSecurity,
     ignoreCert: options.rdpIgnoreCert,
     guacamoleConfig: options.guacamoleConfig as Record<string, any>,

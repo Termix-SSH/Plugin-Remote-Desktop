@@ -53,11 +53,16 @@ CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUNNER=wasm-bindgen-test-runner cargo test -
 
 - RDP, VNC, Apple Remote Desktop and Telnet from any browser, with nothing else to install
 - RustDesk devices by ID through your own or the public RustDesk server, or by direct IP
+- Low latency streaming from Sunshine PCs through a Moonlight Web server
 - Tabs and split screen like any other session
 - Clipboard sync, audio, printing and file transfer through RDP drives
 - Jump host support
 - Session sharing and recording
 - Open a host in the native Windows Remote Desktop client from the desktop app
+- Kerberos sign in for RDP and RDP server redirection
+- Intel AMT machines through AMT's built-in VNC
+- Required recording that the user can't stop
+- A dashboard card with your open sessions, and port checks as a status tile
 
 <br />
 

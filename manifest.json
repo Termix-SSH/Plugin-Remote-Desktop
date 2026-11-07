@@ -142,6 +142,12 @@
         "openFrom": ["host-context-menu", "palette"]
       },
       {
+        "id": "moonlight",
+        "titleKey": "hosts.tabMoonlight",
+        "icon": "Gamepad2",
+        "openFrom": ["host-context-menu", "palette"]
+      },
+      {
         "id": "telnet",
         "titleKey": "hosts.tabTelnet",
         "icon": "Terminal",
@@ -181,6 +187,11 @@
         "hostLoginFallback": ["password"]
       },
       {
+        "id": "moonlight",
+        "defaultPort": 47989,
+        "hostLoginFallback": []
+      },
+      {
         "id": "telnet",
         "defaultPort": 23,
         "hostLoginFallback": ["password"]
@@ -198,6 +209,12 @@
         "name": "monitor",
         "titleKey": "permissions.monitor.title",
         "descriptionKey": "permissions.monitor.description",
+        "defaultRoles": ["admin"]
+      },
+      {
+        "name": "moonlight",
+        "titleKey": "permissions.moonlight.title",
+        "descriptionKey": "permissions.moonlight.description",
         "defaultRoles": ["admin"]
       }
     ],
@@ -254,6 +271,47 @@
           "default": ""
         },
         {
+          "key": "moonlightUrl",
+          "type": "string",
+          "labelKey": "settings.admin.moonlightUrl.label",
+          "descriptionKey": "settings.admin.moonlightUrl.description",
+          "placeholderKey": "settings.admin.moonlightUrl.placeholder",
+          "requires": "enabled",
+          "default": ""
+        },
+        {
+          "key": "moonlightPublicUrl",
+          "type": "string",
+          "labelKey": "settings.admin.moonlightPublicUrl.label",
+          "descriptionKey": "settings.admin.moonlightPublicUrl.description",
+          "placeholderKey": "settings.admin.moonlightPublicUrl.placeholder",
+          "requires": "enabled",
+          "default": ""
+        },
+        {
+          "key": "moonlightUsername",
+          "type": "string",
+          "labelKey": "settings.admin.moonlightUsername.label",
+          "descriptionKey": "settings.admin.moonlightUsername.description",
+          "requires": "enabled",
+          "default": ""
+        },
+        {
+          "key": "moonlightPassword",
+          "type": "secret",
+          "labelKey": "settings.admin.moonlightPassword.label",
+          "descriptionKey": "settings.admin.moonlightPassword.description",
+          "requires": "enabled"
+        },
+        {
+          "key": "moonlightIgnoreCert",
+          "type": "boolean",
+          "labelKey": "settings.admin.moonlightIgnoreCert.label",
+          "descriptionKey": "settings.admin.moonlightIgnoreCert.description",
+          "requires": "enabled",
+          "default": false
+        },
+        {
           "key": "hostGuacd",
           "type": "json",
           "labelKey": "settings.admin.hostGuacd.label",
@@ -306,6 +364,14 @@
             "key": "enableRustdesk",
             "type": "boolean",
             "labelKey": "settings.host.enableRustdesk.label",
+            "default": false,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "enableMoonlight",
+            "type": "boolean",
+            "labelKey": "settings.host.enableMoonlight.label",
             "default": false,
             "hidden": true,
             "defaultable": false
@@ -377,6 +443,56 @@
             "defaultable": false
           },
           {
+            "key": "moonlightPort",
+            "type": "number",
+            "labelKey": "settings.host.moonlightPort.label",
+            "min": 1,
+            "max": 65535,
+            "default": 47989,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "moonlightHostId",
+            "type": "number",
+            "labelKey": "settings.host.moonlightHostId.label",
+            "default": 0,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "moonlightAppId",
+            "type": "number",
+            "labelKey": "settings.host.moonlightAppId.label",
+            "default": 0,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "moonlightBitrate",
+            "type": "number",
+            "labelKey": "settings.host.moonlightBitrate.label",
+            "default": 0,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "moonlightFps",
+            "type": "number",
+            "labelKey": "settings.host.moonlightFps.label",
+            "default": 0,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "moonlightTransport",
+            "type": "string",
+            "labelKey": "settings.host.moonlightTransport.label",
+            "default": "auto",
+            "hidden": true,
+            "defaultable": false
+          },
+          {
             "key": "rustdeskIdServer",
             "type": "string",
             "labelKey": "settings.host.rustdeskIdServer.label",
@@ -402,6 +518,22 @@
             "type": "string",
             "labelKey": "settings.host.rdpSecurity.label",
             "default": "",
+            "hidden": true
+          },
+          {
+            "key": "rdpAutoReconnect",
+            "type": "boolean",
+            "labelKey": "settings.host.rdpAutoReconnect.label",
+            "descriptionKey": "settings.host.rdpAutoReconnect.description",
+            "default": true,
+            "hidden": true
+          },
+          {
+            "key": "rdpAutoResize",
+            "type": "boolean",
+            "labelKey": "settings.host.rdpAutoResize.label",
+            "descriptionKey": "settings.host.rdpAutoResize.description",
+            "default": true,
             "hidden": true
           },
           {

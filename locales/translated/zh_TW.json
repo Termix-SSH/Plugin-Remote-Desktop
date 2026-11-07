@@ -426,6 +426,14 @@
       },
       "ardPort": {
         "label": "ARD 通訊埠"
+      },
+      "rdpAutoReconnect": {
+        "label": "自動重新連線 RDP",
+        "description": "RDP 工作階段中斷後自動重新連線。關閉後需手動重新連線，可避免中斷從其他用戶端開啟的工作階段。"
+      },
+      "rdpAutoResize": {
+        "label": "自動調整 RDP 解析度",
+        "description": "視窗大小變化時調整遠端解析度。關閉後保留連線時的尺寸，直到重新連線。"
       }
     }
   },

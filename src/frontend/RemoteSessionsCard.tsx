@@ -8,7 +8,12 @@ import {
   useTranslation,
   type DashboardCardProps,
 } from "@termix-ssh/plugin-sdk/frontend";
-import { ListBadge, ListRow, PanelList } from "@termix-ssh/plugin-sdk/ui";
+import {
+  ListBadge,
+  ListRow,
+  PanelList,
+  LoadingState,
+} from "@termix-ssh/plugin-sdk/ui";
 
 interface LiveRow {
   id: string;
@@ -47,9 +52,7 @@ export function RemoteSessionsCard({ isVisible }: DashboardCardProps) {
 
   if (!allowed) return null;
   if (!rows) {
-    return (
-      <p className="p-3 text-xs text-muted-foreground">{t("card.loading")}</p>
-    );
+    return <LoadingState compact label={t("card.loading")} />;
   }
 
   return (
