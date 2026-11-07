@@ -22,31 +22,6 @@ Remote Desktop opens RDP, VNC, Apple Remote Desktop, RustDesk and Telnet session
 
 Read the [docs](https://docs.termix.site/plugins/remote-desktop) to set it up and use it.
 
-### RDP graphics compatibility
-
-The built-in engine supports the RDP Graphics Pipeline (MS-RDPEGFX), including
-non-AVC ClearCodec, RDP6 Planar and RFX Progressive rendering. Graphics Pipeline
-negotiation is enabled independently of display resizing, so servers that require
-it can connect even when display control is disabled.
-
-H.264/AVC420 and AVC444 are not supported or advertised by the built-in engine.
-Servers configured to require these codecs, including some KDE KRDP versions,
-need a compatible external guacd build or a native RDP client. An administrator
-can configure a saved host's **RDP** tab → **guacd Proxy (optional)** with the
-external server's hostname and port. Check that the chosen guacd/FreeRDP build
-supports the codec required by the server; guacd versions differ. Connections
-are never automatically retried through another backend.
-
-The graphics regression tests cover capability negotiation, encoded Planar
-frames through X224/DRDYNVC into the framebuffer, frame responses and WASM
-resize/display events. They do not substitute for live GNOME/KDE acceptance.
-To run them after installing the matching `wasm-bindgen-cli` version:
-
-```sh
-cd native/engine
-CARGO_TARGET_WASM32_UNKNOWN_UNKNOWN_RUNNER=wasm-bindgen-test-runner cargo test --locked --target wasm32-unknown-unknown graphics_tests
-```
-
 <br />
 
 ## Features

@@ -18,6 +18,7 @@ The login is stored encrypted, like SSH logins, and can be [shared](/guide/shari
 - Ignore certificate errors accepts a self-signed certificate. With it off, the certificate must be trusted by the Termix server.
 - Resize method: Display update resizes the remote screen as the window changes. Reconnect opens a fresh connection at the new size, for servers without display updates.
 - Keyboard layout should match the layout set on the remote machine. Characters it can't type are sent as Unicode.
+- The graphics pipeline works without H.264. A server that only allows H.264 (AVC420 or AVC444), like some KDE versions, needs an [external guacd](#external-guacd-optional) built with H.264.
 
 ## Kerberos and Protected Users
 
