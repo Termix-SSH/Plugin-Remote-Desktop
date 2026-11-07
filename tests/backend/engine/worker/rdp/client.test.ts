@@ -1,6 +1,8 @@
 import crypto from "node:crypto";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
+  CLIPBOARD_KEY_HOLD_MS,
+  RdpClient,
   nextSize,
   normalizeKdcUrl,
   printFile,
@@ -189,5 +191,63 @@ describe("redirectTarget", () => {
         0,
       ),
     ).toBeNull();
+  });
+});
+
+describe("paste after a clipboard update", () => {
+  function client() {
+    const calls: string[] = [];
+    const rdp = {
+      clipboard_set: (text: string) => calls.push(`clip:${text}`),
+      key: (code: number, down: boolean) => calls.push(`key:${code}:${down}`),
+      unicode: (code: number, down: boolean) =>
+        calls.push(`uni:${code}:${down}`),
+      take_events: () => [],
+    };
+    const c = new RdpClient({ settings: new Settings({}) } as never);
+    Object.assign(c as unknown as Record<string, unknown>, {
+      rdp,
+      connected: true,
+    });
+    return { c, calls };
+  }
+
+  it("holds keys until the server has had time to take the new clipboard (#29)", () => {
+    vi.useFakeTimers();
+    try {
+      const { c, calls } = client();
+      c.clipboard("new text");
+      c.key(0xffe3, true);
+      c.key(0x76, true);
+      c.key(0x76, false);
+      c.key(0xffe3, false);
+      expect(calls).toEqual(["clip:new text"]);
+      vi.advanceTimersByTime(CLIPBOARD_KEY_HOLD_MS);
+      expect(calls[0]).toBe("clip:new text");
+      expect(calls.slice(1)).toHaveLength(4);
+      expect(calls[1]).toMatch(/:true$/);
+      expect(calls.at(-1)).toMatch(/:false$/);
+      // Later keys go straight through again.
+      c.key(0x61, true);
+      expect(calls).toHaveLength(6);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("drops held keys when the session stops", () => {
+    vi.useFakeTimers();
+    try {
+      const { c, calls } = client();
+      c.clipboard("x");
+      c.key(0x61, true);
+      Object.assign(c as unknown as Record<string, unknown>, {
+        connected: false,
+      });
+      vi.advanceTimersByTime(CLIPBOARD_KEY_HOLD_MS);
+      expect(calls).toEqual(["clip:x"]);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 });

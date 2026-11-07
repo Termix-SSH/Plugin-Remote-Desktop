@@ -122,6 +122,8 @@ export interface RedirectTarget {
 }
 
 export const MAX_REDIRECTS = 3;
+/** How long keys wait after a clipboard update, so Ctrl+V pastes the new text. */
+export const CLIPBOARD_KEY_HOLD_MS = 250;
 
 function privateJump(address: string): boolean {
   return (
@@ -331,6 +333,9 @@ export class RdpClient implements RemoteClient, PixelSource {
   private drive: DriveCallbacks | null = null;
   private timer: NodeJS.Timeout | null = null;
   private resizeTimer: NodeJS.Timeout | null = null;
+  /** Keys that wait for the server to take a new clipboard. */
+  private heldKeys: Array<[number, boolean]> | null = null;
+  private holdTimer: NodeJS.Timeout | null = null;
   private connected = false;
   private stopped = false;
   private reconnecting = false;
@@ -629,6 +634,14 @@ export class RdpClient implements RemoteClient, PixelSource {
 
   key(keysym: number, pressed: boolean): void {
     if (!this.connected || this.host.settings.bool("read-only")) return;
+    if (this.heldKeys) {
+      this.heldKeys.push([keysym, pressed]);
+      return;
+    }
+    this.sendKey(keysym, pressed);
+  }
+
+  private sendKey(keysym: number, pressed: boolean): void {
     for (const out of this.keyboard.key(keysym, pressed)) {
       if ("scancode" in out) this.rdp?.key(out.scancode, out.down);
       else this.rdp?.unicode(out.unicode, out.down);
@@ -700,6 +713,23 @@ export class RdpClient implements RemoteClient, PixelSource {
   clipboard(text: string): void {
     this.rdp?.clipboard_set(text);
     this.pump();
+    // Windows has to take the new format list before a Ctrl+V reaches it,
+    // or it pastes the old clipboard (#29). Keys wait a moment, in order.
+    this.heldKeys ??= [];
+    if (this.holdTimer) clearTimeout(this.holdTimer);
+    this.holdTimer = setTimeout(
+      () => this.releaseKeys(),
+      CLIPBOARD_KEY_HOLD_MS,
+    );
+  }
+
+  private releaseKeys(): void {
+    const keys = this.heldKeys ?? [];
+    this.heldKeys = null;
+    this.holdTimer = null;
+    if (!this.connected || this.stopped) return;
+    for (const [keysym, pressed] of keys) this.sendKey(keysym, pressed);
+    this.pump();
   }
 
   stop(): void {
@@ -707,6 +737,7 @@ export class RdpClient implements RemoteClient, PixelSource {
     this.stopped = true;
     if (this.timer) clearInterval(this.timer);
     if (this.resizeTimer) clearTimeout(this.resizeTimer);
+    if (this.holdTimer) clearTimeout(this.holdTimer);
     try {
       this.rdp?.shutdown();
       this.pump();
