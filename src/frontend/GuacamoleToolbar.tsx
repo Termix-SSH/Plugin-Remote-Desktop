@@ -297,12 +297,13 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
       icon?: React.ComponentType<{ className?: string }>;
       active?: boolean;
       pressed?: boolean;
+      className?: string;
     } = {},
   ) => (
     <button
       key={key}
       type="button"
-      className={cn(BUTTON, options.active && LATCHED)}
+      className={cn(BUTTON, options.active && LATCHED, options.className)}
       aria-label={title}
       aria-pressed={options.pressed}
       title={title}
@@ -376,7 +377,6 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
           () => runAction(item),
           {
             icon: item.icon,
-            active: recording.recording,
             pressed: recording.recording,
           },
         );

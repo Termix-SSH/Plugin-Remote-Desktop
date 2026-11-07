@@ -5,7 +5,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import displaySource from "../../src/frontend/GuacamoleDisplay.tsx?raw";
 import {
   remoteKeysym,
-  shouldSendKey,
+  isToggleKey,
+  watchRightAlt,
 } from "../../src/frontend/guacamole-meta-key.js";
 
 // Exercise the display's actual focus callback with Guacamole's real keyboard.
@@ -33,7 +34,7 @@ if (!callback) throw new Error("Missing refreshKeyboardHandlers callback");
 const runRefresh = new Function(
   "state",
   ts.transpileModule(
-    `const { keyboardRef, clientRef, displayElementRef, isVisible, windowFocusedRef, hasKeyboardFocusRef, sessionProtocolRef, remoteKeysym, shouldSendKey } = state;
+    `const { keyboardRef, clientRef, displayElementRef, isVisible, windowFocusedRef, hasKeyboardFocusRef, sessionProtocolRef, remoteKeysym, isToggleKey } = state;
     (${callback})();`,
     { compilerOptions: { target: ts.ScriptTarget.ES2022 } },
   ).outputText,
@@ -68,7 +69,7 @@ describe("remote keyboard focus loss", () => {
         hasKeyboardFocusRef: { current: true },
         sessionProtocolRef: { current: "vnc" },
         remoteKeysym,
-        shouldSendKey,
+        isToggleKey,
       };
       const refresh = () => runRefresh(state);
       refresh();
@@ -137,7 +138,7 @@ describe("remote keyboard on a Mac", () => {
         hasKeyboardFocusRef: { current: true },
         sessionProtocolRef: { current: protocol },
         remoteKeysym,
-        shouldSendKey,
+        isToggleKey,
       });
 
       keyboard.press(0xffe7); // the browser's Meta key
@@ -153,4 +154,74 @@ describe("remote keyboard on a Mac", () => {
       ]);
     }
   });
+});
+
+describe("Korean toggle keys with the real keyboard", () => {
+  it.each([
+    ["HangulMode", 0xff31],
+    ["HanjaMode", 0xff34],
+  ] as const)(
+    "%s sends pulses without requiring keyup and ignores repeats",
+    (key, keysym) => {
+      vi.useFakeTimers();
+      const display = document.createElement("div");
+      display.tabIndex = 0;
+      document.body.append(display);
+      display.focus();
+      let keyboard: Guacamole.Keyboard;
+      const stop = watchRightAlt(display, (toggle) => {
+        keyboard.onkeydown?.(toggle);
+      });
+      keyboard = new Guacamole.Keyboard(display);
+      const sendKeyEvent = vi.fn();
+      const state = {
+        keyboardRef: { current: keyboard },
+        clientRef: { current: { sendKeyEvent } },
+        displayElementRef: { current: display },
+        isVisible: true,
+        windowFocusedRef: { current: true },
+        hasKeyboardFocusRef: { current: true },
+        sessionProtocolRef: { current: "rdp" },
+        remoteKeysym,
+        isToggleKey,
+      };
+      runRefresh(state);
+      const dispatch = (type: string, repeat = false) =>
+        display.dispatchEvent(
+          new KeyboardEvent(type, {
+            key,
+            repeat,
+            bubbles: true,
+            cancelable: true,
+          }),
+        );
+      try {
+        dispatch("keydown");
+        vi.advanceTimersByTime(2000);
+        dispatch("keydown", true);
+        expect(sendKeyEvent.mock.calls).toEqual([
+          [1, keysym],
+          [0, keysym],
+        ]);
+        // Latching drivers can deliver another physical down without any up.
+        dispatch("keydown");
+        dispatch("keyup");
+        dispatch("keypress");
+        expect(sendKeyEvent.mock.calls).toEqual([
+          [1, keysym],
+          [0, keysym],
+          [1, keysym],
+          [0, keysym],
+        ]);
+        state.isVisible = false;
+        runRefresh(state);
+        dispatch("keydown");
+        expect(sendKeyEvent).toHaveBeenCalledTimes(4);
+      } finally {
+        stop();
+        keyboard.reset();
+        vi.useRealTimers();
+      }
+    },
+  );
 });

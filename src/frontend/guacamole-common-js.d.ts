@@ -173,6 +173,7 @@ declare module "guacamole-common-js" {
     }
 
     class Keyboard {
+      pressed: Record<number, boolean>;
       constructor(element: Document | HTMLElement);
       reset(): void;
       onkeydown: ((keysym: number) => void) | null;

@@ -1,5 +1,6 @@
 import { useEffect, useState, type ComponentType, type Ref } from "react";
 import {
+  Gamepad2,
   Info,
   MessagesSquare,
   Monitor,
@@ -43,10 +44,13 @@ import { quickConnectGuacHost } from "./quick-connect-guac-host";
 import { REMOTE_DESKTOP_TOOLBAR_SLOT } from "./toolbar-items";
 import { HostToolbarCard } from "./HostToolbarCard";
 import { HostEditorRustdeskTab } from "./HostEditorRustdeskTab";
+import { HostEditorMoonlightTab } from "./HostEditorMoonlightTab";
+import { MoonlightTab } from "./MoonlightTab";
 import {
   DEFAULT_PORT,
   ENABLE_KEY,
   PORT_KEY,
+  type HostProtocol,
   hostRemoteOptions,
   isQuickConnectHost,
   protocolEnabled,
@@ -59,7 +63,7 @@ import { GuacdSetupStep } from "./GuacdSetupStep";
 import { RemoteSessionsCard } from "./RemoteSessionsCard";
 
 const PROTOCOLS: {
-  id: Protocol;
+  id: HostProtocol;
   titleKey: string;
   descriptionKey: string;
   paletteKey: string;
@@ -108,6 +112,15 @@ const PROTOCOLS: {
     order: 117,
   },
   {
+    id: "moonlight",
+    titleKey: "hosts.tabMoonlight",
+    descriptionKey: "hosts.moonlightDescription",
+    paletteKey: "palette.connectMoonlight",
+    icon: Gamepad2,
+    priority: 32,
+    order: 118,
+  },
+  {
     id: "telnet",
     titleKey: "hosts.tabTelnet",
     descriptionKey: "hosts.unencryptedShell",
@@ -138,6 +151,14 @@ function RemoteDesktopTab({ tab, host, isVisible, handleRef }: TabProps) {
 
 function RemoteDesktopStandalone({ hostId, view }: StandaloneViewProps) {
   return <GuacamoleApp hostId={hostId} protocol={view as Protocol} />;
+}
+
+function MoonlightStandalone({ hostId }: StandaloneViewProps) {
+  return <MoonlightTab host={{ id: hostId }} />;
+}
+
+function MoonlightHostTab({ host }: TabProps) {
+  return <MoonlightTab host={host as RemoteHostLogin | undefined} />;
 }
 
 /** What collab rooms and shared-session links draw a stream with. */
@@ -281,6 +302,21 @@ function RustdeskSection(props: HostEditorSectionProps) {
   );
 }
 
+function MoonlightSection(props: HostEditorSectionProps) {
+  const { form, setField } = remoteDesktopForm(props);
+  const settings = props.form?.pluginSettings as
+    Record<string, Record<string, unknown>> | undefined;
+  return (
+    <HostEditorMoonlightTab
+      form={form}
+      setField={setField}
+      address={String(props.form?.ip ?? "")}
+      port={hostRemoteOptions({ pluginSettings: settings }).moonlightPort}
+      connectionOrigin={props.host?.connectionOrigin}
+    />
+  );
+}
+
 function TelnetSection(props: HostEditorSectionProps) {
   const { form, setField, setGuacField } = remoteDesktopForm(props);
   return (
@@ -319,12 +355,13 @@ function DisplayDefaultsSection(props: HostEditorSectionProps) {
   );
 }
 
-const SECTIONS: Record<Protocol, ComponentType<HostEditorSectionProps>> = {
+const SECTIONS: Record<HostProtocol, ComponentType<HostEditorSectionProps>> = {
   rdp: RdpSection,
   vnc: VncSection,
   ard: ArdSection,
   telnet: TelnetSection,
   rustdesk: RustdeskSection,
+  moonlight: MoonlightSection,
 };
 
 function registerNativeRdp(app: TermixApp): void {
@@ -482,18 +519,23 @@ export function activate(app: TermixApp): void {
   });
 
   for (const protocol of PROTOCOLS) {
-    app.registerTab(protocol.id, RemoteDesktopTab, {
-      icon: protocol.icon,
-      titleKey: protocol.titleKey,
-      requiresHost: true,
-      noHostMessageKey: "remoteDesktop.noHostSelected",
-      persistent: true,
-      session: true,
-      restore: (host) => protocolEnabled(host, protocol.id),
-      activityTypes: [protocol.id],
-      standalone: RemoteDesktopStandalone,
-      preload: () => import("./GuacamoleApp"),
-    });
+    const moonlight = protocol.id === "moonlight";
+    app.registerTab(
+      protocol.id,
+      moonlight ? MoonlightHostTab : RemoteDesktopTab,
+      {
+        icon: protocol.icon,
+        titleKey: protocol.titleKey,
+        requiresHost: true,
+        noHostMessageKey: "remoteDesktop.noHostSelected",
+        persistent: true,
+        session: true,
+        restore: (host) => protocolEnabled(host, protocol.id),
+        activityTypes: [protocol.id],
+        standalone: moonlight ? MoonlightStandalone : RemoteDesktopStandalone,
+        preload: moonlight ? undefined : () => import("./GuacamoleApp"),
+      },
+    );
   }
 
   // An admin can turn Remote Desktop off; its ways in go with it.

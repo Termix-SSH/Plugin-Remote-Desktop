@@ -33,16 +33,26 @@ export function pasteTextToRemote(
   client: GuacamoleClipboardClient,
   text: string,
   modifier: number = CONTROL_LEFT_KEYSYM,
+  pressedKeys: Readonly<Record<number, boolean>> = {},
 ): void {
   const stream = client.createClipboardStream("text/plain");
   const writer = new Guacamole.StringWriter(stream);
   writer.sendText(text);
   writer.sendEnd();
 
-  client.sendKeyEvent(1, modifier);
-  client.sendKeyEvent(1, V_KEYSYM);
-  client.sendKeyEvent(0, V_KEYSYM);
-  client.sendKeyEvent(0, modifier);
+  // Guacamole tracks browser Command as Meta, translated to Super for ARD.
+  const modifierKeys =
+    modifier === SUPER_LEFT_KEYSYM
+      ? [SUPER_LEFT_KEYSYM, 0xffec, 0xffe7, 0xffe8]
+      : [CONTROL_LEFT_KEYSYM, 0xffe4];
+  const held = modifierKeys.some((key) => pressedKeys[key]);
+  if (!held) client.sendKeyEvent(1, modifier);
+  try {
+    client.sendKeyEvent(1, V_KEYSYM);
+    client.sendKeyEvent(0, V_KEYSYM);
+  } finally {
+    if (!held) client.sendKeyEvent(0, modifier);
+  }
 }
 
 /**
