@@ -91,6 +91,7 @@ export interface GuacamoleHostConfig {
   guacamoleConfig?: GuacamoleConfig;
   rdpAuthType?: string;
   rdpAutoReconnect?: boolean;
+  rdpAutoResize?: boolean;
   authOverrides?: RemoteHostLogin["authOverrides"];
   syncId?: string | null;
   connectionOrigin?: "local" | "remote" | null;
@@ -124,6 +125,7 @@ function savedHostConfig(
               : "telnet"),
     domain: rdpDomain(host),
     guacamoleConfig: options.guacamoleConfig,
+    rdpAutoResize: options.rdpAutoResize,
     rdpAuthType: host.protocolAuth?.rdp?.authType,
     rdpAutoReconnect: options.rdpAutoReconnect,
     authOverrides: host.authOverrides,
@@ -751,6 +753,7 @@ const GuacamoleAppInner = React.forwardRef<
             type: resolvedProtocol,
             connectionOrigin: hostConfig.connectionOrigin,
             width: configuredWidth,
+            rdpAutoResize: hostConfig.rdpAutoResize,
             height: configuredHeight,
             dpi: configuredDpi,
           }}

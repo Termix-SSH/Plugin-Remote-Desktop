@@ -594,6 +594,10 @@
       "rdpAutoReconnect": {
         "label": "Automatically reconnect RDP",
         "description": "Reconnect when an RDP session is lost. Turn off to reconnect manually and avoid interrupting sessions opened from another client."
+      },
+      "rdpAutoResize": {
+        "label": "Automatically resize RDP",
+        "description": "Adjust the remote resolution when the window changes size. Turn off to keep the size chosen at connection until reconnecting."
       }
     }
   },

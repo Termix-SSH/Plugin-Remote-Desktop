@@ -201,6 +201,8 @@ export function normalizeImportedHost(
   if (typeof security === "string" && security) out.rdpSecurity = security;
   const reconnect = asBool(pick("rdpAutoReconnect"));
   if (reconnect !== undefined) out.rdpAutoReconnect = reconnect;
+  const autoResize = asBool(pick("rdpAutoResize"));
+  if (autoResize !== undefined) out.rdpAutoResize = autoResize;
   const ignoreCert = asBool(pick("rdpIgnoreCert", "ignoreCert"));
   if (ignoreCert !== undefined) out.rdpIgnoreCert = ignoreCert;
   const config = asObject(pick("guacamoleConfig"));

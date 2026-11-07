@@ -106,3 +106,16 @@ describe("remote desktop editor form", () => {
     });
   });
 });
+
+it("defaults RDP resizing on and preserves an explicit opt-out on save and reopen", () => {
+  const { props, state } = sectionProps({});
+  const editor = remoteDesktopForm(props);
+  expect(editor.form.rdpAutoResize).toBe(true);
+  editor.setField("rdpAutoResize", false);
+  expect(state.form.pluginSettings).toEqual({
+    "remote-desktop": { rdpAutoResize: false },
+  });
+  expect(
+    remoteDesktopForm(sectionProps(state.form).props).form.rdpAutoResize,
+  ).toBe(false);
+});

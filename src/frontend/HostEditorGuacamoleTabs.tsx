@@ -323,6 +323,15 @@ export function HostEditorRdpTab({
               />
             </div>
           </div>
+          <SettingRow
+            label={t("settings.host.rdpAutoResize.label")}
+            description={t("settings.host.rdpAutoResize.description")}
+          >
+            <FakeSwitch
+              checked={form.rdpAutoResize}
+              onChange={(value) => setField("rdpAutoResize", value)}
+            />
+          </SettingRow>
           <div className="flex flex-col gap-1.5">
             <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
               {t("hosts.guac.dpi")}
