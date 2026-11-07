@@ -158,6 +158,8 @@
       "serverLayout": "Server Layout",
       "timezone": "Timezone",
       "loadBalanceInfo": "Load Balance Info / Cookie",
+      "kdcUrl": "Kerberos KDC Address",
+      "kdcUrlDesc": "Domain controller for Kerberos sign in, for accounts in Protected Users. Needs the built-in engine, the host entered by its DNS name and the domain filled in. Leave empty for NTLM.",
       "loadBalanceInfoDesc": "RD Connection Broker cookie for RDS farm load balancing (e.g. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd Proxy (optional)",
       "guacdHostname": "guacd Host",
@@ -313,6 +315,55 @@
       "relayServerPlaceholder": "Same as the ID server",
       "key": "Key",
       "keyDesc": "The public key of your RustDesk server, from id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Low latency streaming from a Sunshine PC",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "PC",
+      "pcDesc": "The Sunshine PC to stream. Moonlight Web lists every PC it knows.",
+      "choosePc": "Choose a PC",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "paired",
+      "notPaired": "not paired",
+      "offline": "offline",
+      "refresh": "Refresh",
+      "addPc": "Add this host to Moonlight Web",
+      "addPcDesc": "Adds {{address}} on port {{port}}, shared with every Moonlight Web user.",
+      "pair": "Pair",
+      "pairDesc": "This PC has to be paired with Moonlight Web once.",
+      "pairing": "Waiting for Sunshine",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "Open the Sunshine web UI on the PC, go to PIN, and enter this PIN.",
+      "pairDone": "PC paired",
+      "pairFailed": "Pairing failed. Check the PIN and try again.",
+      "pairExpired": "Pairing timed out. Try again.",
+      "noSetUpAccess": "Ask an admin to add and pair this PC.",
+      "stream": "Stream",
+      "app": "App",
+      "appDesc": "What to open on the PC.",
+      "firstApp": "First app",
+      "bitrate": "Bitrate (kbps)",
+      "bitrateDesc": "Leave at 0 to use the Moonlight Web default.",
+      "fps": "Frame rate",
+      "fpsDesc": "Leave at 0 to use the Moonlight Web default.",
+      "transport": "Transport",
+      "transportDesc": "WebRTC has the lowest delay. WebSockets work on networks that block it.",
+      "transportAuto": "Auto",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "An admin has to set up the Moonlight Web server in the Remote Desktop settings.",
+      "loading": "Getting the stream ready",
+      "signInNote": "Moonlight Web asks you to sign in the first time.",
+      "openStream": "Open stream",
+      "openInWindow": "Open in new window",
+      "noH264": "This browser can't play H.264 video. If the stream won't start, use Chrome, Edge or the Termix desktop app, or turn on HEVC or AV1 in Sunshine.",
+      "retry": "Try again",
+      "errorRecordingRequired": "Recording is required on this host, and Moonlight streams can't be recorded.",
+      "errorNotLinked": "No PC is linked. Pick one in the host editor.",
+      "errorNotPaired": "This PC is not paired yet. Pair it in the host editor.",
+      "errorOffline": "The PC is offline, or Sunshine is not running.",
+      "errorNoApps": "Sunshine has no apps to open on this PC."
     }
   },
   "onboarding": {
@@ -415,6 +466,28 @@
       "rustdeskKey": {
         "label": "RustDesk server key",
         "description": "The public key of your RustDesk server, from id_ed25519.pub. Needed with your own server."
+      },
+      "moonlightUrl": {
+        "label": "Moonlight Web address",
+        "description": "The Moonlight Web server Termix talks to, for Sunshine streaming. See the docs to run one.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Moonlight Web public address",
+        "description": "The address browsers open, if it differs from the one above. HTTPS is needed for gamepads and keyboard lock.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Moonlight Web username",
+        "description": "An admin login on Moonlight Web. Termix uses it to list, add and pair PCs."
+      },
+      "moonlightPassword": {
+        "label": "Moonlight Web password",
+        "description": "The password for that login."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Ignore Moonlight Web certificate",
+        "description": "Turn on for a self-signed certificate on Moonlight Web."
       }
     },
     "host": {
@@ -497,6 +570,31 @@
       "rustdeskKey": {
         "label": "RustDesk server key"
       },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine port"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight app"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlight bitrate"
+      },
+      "moonlightFps": {
+        "label": "Moonlight frame rate"
+      },
+      "moonlightTransport": {
+        "label": "Moonlight transport"
+      },
+      "rdpAutoReconnect": {
+        "label": "Automatically reconnect RDP",
+        "description": "Reconnect when an RDP session is lost. Turn off to reconnect manually and avoid interrupting sessions opened from another client."
+      },
       "rdpAutoResize": {
         "label": "Automatically resize RDP",
         "description": "Adjust the remote resolution when the window changes size. Turn off to keep the size chosen at connection until reconnecting."
@@ -508,7 +606,8 @@
     "connectVnc": "Connect with VNC",
     "connectTelnet": "Connect with Telnet",
     "connectArd": "Connect with Apple Remote Desktop",
-    "connectRustdesk": "Connect with RustDesk"
+    "connectRustdesk": "Connect with RustDesk",
+    "connectMoonlight": "Connect with Moonlight"
   },
   "permissions": {
     "sessions": {
@@ -518,6 +617,10 @@
     "monitor": {
       "title": "Watch everyone's remote desktop sessions",
       "description": "Lets other features, such as Session Recording, list, watch and end the RDP, VNC and Telnet sessions of every user."
+    },
+    "moonlight": {
+      "title": "Set up Moonlight PCs",
+      "description": "Add Sunshine PCs to Moonlight Web and pair them, using the saved Moonlight Web login."
     }
   },
   "errors": {

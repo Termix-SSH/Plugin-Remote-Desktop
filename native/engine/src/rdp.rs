@@ -551,14 +551,16 @@ impl RdpClient {
         if !c.load_balance_info.is_empty() {
             connector = connector.with_load_balance_info(c.load_balance_info.clone());
         }
+        // Redirection is always offered; console also asks for session 0.
+        let mut redirection = ironrdp::pdu::gcc::RedirectionFlags::REDIRECTION_SUPPORTED;
         if c.console {
-            connector = connector.with_cluster_data(ironrdp::pdu::gcc::ClientClusterData {
-                flags: ironrdp::pdu::gcc::RedirectionFlags::REDIRECTION_SUPPORTED
-                    | ironrdp::pdu::gcc::RedirectionFlags::REDIRECTED_SESSION_FIELD_VALID,
-                redirection_version: ironrdp::pdu::gcc::RedirectionVersion::V6,
-                redirected_session_id: 0,
-            });
+            redirection |= ironrdp::pdu::gcc::RedirectionFlags::REDIRECTED_SESSION_FIELD_VALID;
         }
+        connector = connector.with_cluster_data(ironrdp::pdu::gcc::ClientClusterData {
+            flags: redirection,
+            redirection_version: ironrdp::pdu::gcc::RedirectionVersion::V6,
+            redirected_session_id: 0,
+        });
         if !c.remote_app.is_empty() {
             connector.attach_static_channel(RailApp::new(
                 c.remote_app.clone(),
@@ -726,6 +728,9 @@ impl RdpClient {
             None => connector.step_no_input(&mut buf),
             Some(hint) => match self.take_frame(hint) {
                 Ok(Some(frame)) => {
+                    if self.redirected(&frame) {
+                        return false;
+                    }
                     if is_multitransport_during_licensing(&connector, &frame)
                         || is_unreadable_multitransport(&connector, &frame)
                     {
@@ -907,6 +912,9 @@ impl RdpClient {
             }
         };
         let frame: Vec<u8> = self.inbuf.drain(..info.length).collect();
+        if info.action == ironrdp::pdu::Action::X224 && self.redirected(&frame) {
+            return false;
+        }
         let Session { stage, image, .. } = &mut *session;
         match stage.process(image, info.action, &frame) {
             Ok(outputs) => {
@@ -1187,6 +1195,24 @@ impl RdpClient {
 
     fn send(&mut self, data: Vec<u8>) {
         self.push_send(data);
+    }
+
+    /// A Server Redirection PDU ends this connection; the host reconnects to
+    /// the new target.
+    fn redirected(&mut self, frame: &[u8]) -> bool {
+        let Some(r) = crate::redirect::parse_frame(frame) else {
+            return false;
+        };
+        let e = obj("redirect");
+        set(&e, "address", r.address);
+        set(&e, "fqdn", r.fqdn);
+        set(&e, "loadBalanceInfo", r.load_balance_info.iter().map(|b| *b as char).collect::<String>());
+        set(&e, "username", r.username);
+        set(&e, "domain", r.domain);
+        set(&e, "password", r.password);
+        self.events.push(e.into());
+        self.phase = Phase::Closed;
+        true
     }
 
     fn fail(&mut self, kind: &str, message: &str) {

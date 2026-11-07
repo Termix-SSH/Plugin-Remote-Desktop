@@ -32,7 +32,7 @@ export function setRemoteDesktopApp(next: Pick<TermixApp, "apiFor"> | null) {
  * silently sent a missed call site to the remote server, which fails with a
  * bare network error on a desktop that has none configured.
  */
-function guacamoleApi(origin: ConnectionOrigin): PluginApiClient {
+export function guacamoleApi(origin: ConnectionOrigin): PluginApiClient {
   if (!app) throw new Error("Remote Desktop is not active");
   return app.apiFor(origin);
 }
@@ -43,7 +43,7 @@ export interface RemoteApiError extends Error {
   requestTab?: string | null;
 }
 
-function apiError(error: unknown, action: string): RemoteApiError {
+export function apiError(error: unknown, action: string): RemoteApiError {
   const wrapped: RemoteApiError = new Error(
     errorMessage(error, `Failed to ${action}`),
   );

@@ -4,9 +4,13 @@
 
 ### Added
 
+- Kerberos sign in for RDP with a KDC address per host, for accounts in the Protected Users group
+- RDP server redirection, so GNOME Remote Login on Ubuntu connects to the user session
 - Check from the server that a host's RDP, VNC and Telnet ports answer, through Termix actions and as a status tile on the host page
 - A dashboard card with your open remote sessions, and a host's open sessions on the host page
 - Other plugins can show a VNC display that only an SSH host can reach, such as a VM console
+- Intel AMT machines, through AMT's built-in VNC (see the docs for setup)
+- Moonlight streaming from Sunshine PCs through your own Moonlight Web server, with pairing and app choice in the host editor
 - RustDesk hosts, by ID through the public or your own RustDesk server or by direct IP, with password and 2FA logins, clipboard, audio and monitor switching
 - When an admin makes recording required, every session is recorded with the whole screen and keys, the Record button can't stop it, and VNC uses the built-in engine so it can be recorded
 - When a host needs approved access, the connect screen says so and offers a Request access button
@@ -16,6 +20,7 @@
 
 - Needs Termix 26.11.1 or newer
 - The remote desktop toolbar uses the darker page color
+- Toolbars, loading screens, back buttons and Save bars match the rest of Termix
 
 ### Fixed
 

@@ -9,18 +9,31 @@ const mocks = vi.hoisted(() => {
     client: null as null | {
       sendSize: ReturnType<typeof vi.fn>;
       connect: ReturnType<typeof vi.fn>;
+      sendKeyEvent: ReturnType<typeof vi.fn>;
+      createClipboardStream: ReturnType<typeof vi.fn>;
+      disconnect: ReturnType<typeof vi.fn>;
+      element: HTMLDivElement;
       onstatechange: ((state: number) => void) | null;
     },
     resizeCallback: null as null | (() => void),
+    keyboard: null as null | { pressed: Record<number, boolean> },
   };
   return state;
 });
 
-vi.mock("guacamole-common-js", () => {
+vi.mock("guacamole-common-js", async (importOriginal) => {
+  const { default: original } =
+    await importOriginal<typeof import("guacamole-common-js")>();
   class Client {
     sendSize = vi.fn();
+    sendKeyEvent = vi.fn();
+    createClipboardStream = vi.fn(() => ({
+      sendBlob: vi.fn(),
+      sendEnd: vi.fn(),
+    }));
+    disconnect = vi.fn();
     onstatechange: ((state: number) => void) | null = null;
-    private element = document.createElement("div");
+    element = document.createElement("div");
     constructor() {
       mocks.client = this;
     }
@@ -34,9 +47,12 @@ vi.mock("guacamole-common-js", () => {
       };
     }
     connect = vi.fn();
-    disconnect() {}
   }
   class Keyboard {
+    pressed: Record<number, boolean> = {};
+    constructor() {
+      mocks.keyboard = this;
+    }
     onkeydown: unknown = null;
     onkeyup: unknown = null;
     reset() {}
@@ -51,6 +67,7 @@ vi.mock("guacamole-common-js", () => {
     default: {
       Client,
       Keyboard,
+      StringWriter: original.StringWriter,
       Mouse,
       Status,
       WebSocketTunnel: class {},
@@ -84,6 +101,7 @@ class FakeResizeObserver {
 
 beforeEach(() => {
   mocks.client = null;
+  mocks.keyboard = null;
   mocks.resizeCallback = null;
   vi.stubGlobal("ResizeObserver", FakeResizeObserver);
   vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockReturnValue({
@@ -243,5 +261,34 @@ describe("RDP automatic resizing", () => {
     resizeTo(1400, 900);
     await fireResize();
     expect(client.sendSize).not.toHaveBeenCalled();
+  });
+});
+
+describe("GuacamoleDisplay paste modifiers", () => {
+  function paste(element: HTMLElement) {
+    const event = new Event("paste", { bubbles: true, cancelable: true });
+    Object.assign(event, {
+      clipboardData: { getData: () => "clipboard text" },
+    });
+    element.dispatchEvent(event);
+  }
+
+  it("keeps a physically held Ctrl key pressed during direct paste", async () => {
+    const client = await renderConnectingVncDisplay();
+    mocks.keyboard!.pressed[0xffe3] = true;
+    paste(client.element);
+    expect(client.sendKeyEvent.mock.calls).toEqual([
+      [1, 0x76],
+      [0, 0x76],
+    ]);
+  });
+
+  it("ignores stale paste handlers after disconnect", async () => {
+    const client = await renderConnectingVncDisplay();
+    cleanup();
+    expect(client.disconnect).toHaveBeenCalled();
+    paste(client.element);
+    expect(client.createClipboardStream).not.toHaveBeenCalled();
+    expect(client.sendKeyEvent).not.toHaveBeenCalled();
   });
 });

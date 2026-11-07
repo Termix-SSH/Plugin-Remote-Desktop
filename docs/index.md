@@ -1,13 +1,13 @@
 Remote Desktop opens RDP, VNC, Apple Remote Desktop, RustDesk and Telnet sessions in your browser, in tabs and split screen like any other session. It has clipboard sync, file transfer through an RDP drive, audio, printing, jump hosts, sharing and recording.
 
-It works out of the box. Termix speaks RDP, VNC, RustDesk and Telnet itself, so there is nothing else to install or run, on Docker, bare metal or the desktop app.
+It works out of the box. Termix speaks RDP, VNC, RustDesk and Telnet itself, so there is nothing else to install or run, on Docker, bare metal or the desktop app. Only Moonlight needs a server of its own.
 
 ## Add a host
 
 1. Open a host in Manage, or make a new one.
-2. In General, turn on RDP, VNC, Apple Remote Desktop, RustDesk or Telnet. A host can have SSH and these at once.
+2. In General, turn on RDP, VNC, Apple Remote Desktop, RustDesk, Moonlight or Telnet. A host can have SSH and these at once.
 3. Open the protocol's section. Fill in the port, username and password, and for RDP the domain and security mode.
-4. Save, then pick RDP, VNC, Apple Remote Desktop, RustDesk or Telnet from the host's menu.
+4. Save, then pick RDP, VNC, Apple Remote Desktop, RustDesk, Moonlight or Telnet from the host's menu.
 
 The login is stored encrypted, like SSH logins, and can be [shared](/guide/sharing) with the host.
 
@@ -18,6 +18,15 @@ The login is stored encrypted, like SSH logins, and can be [shared](/guide/shari
 - Ignore certificate errors accepts a self-signed certificate. With it off, the certificate must be trusted by the Termix server.
 - Resize method: Display update resizes the remote screen as the window changes. Reconnect opens a fresh connection at the new size, for servers without display updates.
 - Keyboard layout should match the layout set on the remote machine. Characters it can't type are sent as Unicode.
+
+## Kerberos and Protected Users
+
+Accounts in the Active Directory Protected Users group can't use NTLM. For those, set Kerberos KDC Address on the host (under Connection settings) to a domain controller, like `dc1.example.com`. A port or `udp://` can be added, and the default is TCP port 88.
+
+- Needs the built-in engine. An external guacd does not use this setting.
+- Enter the host by its DNS name, not an IP address, and fill in the Domain.
+- The Termix server must be able to reach the domain controller on port 88.
+- Leave it empty to keep using NTLM.
 
 ## Toolbar
 
@@ -42,6 +51,77 @@ RDP has settings for color depth, how the screen follows the window size, lossle
 ## VNC
 
 VNC supports password logins, VeNCrypt (TLS and X509, with or without a username), UltraVNC MS-Logon II and Apple Remote Desktop logins for macOS Screen Sharing (fill in your macOS username and password). The cursor setting picks whether the server draws the mouse pointer or your browser does, and color depth 8 or 16 uses less bandwidth on slow links.
+
+## Intel AMT
+
+Intel AMT (vPRO) machines have a built-in VNC server, so they connect as a normal VNC host. It shows the real screen, including the BIOS and boot, even when the OS is off or crashed.
+
+1. On the machine, turn on KVM and the VNC port (5900) in the Intel MEBx setup (Ctrl+P at boot) or with MeshCommander. Set the VNC password there. AMT only uses the first 8 characters, and asks for a strong one.
+2. In Termix, turn on VNC for the host, use the machine's address and port 5900, and enter that password. Leave the username blank.
+3. Open the VNC tab. If KVM is set to ask for user consent, the person at the machine has to accept first.
+
+For power on, power off and reset, add the same machine to the Out-of-band plugin as an AMT device.
+
+## Moonlight
+
+Moonlight streams a PC with [Sunshine](https://docs.lizardbyte.dev/projects/sunshine/latest/) to your browser with very low delay, using the graphics card to encode. It suits games, CAD and video, where RDP and VNC feel slow. Termix connects to a [Moonlight Web](https://github.com/MrCreativ3001/moonlight-web-stream) server that you run yourself. The stream goes straight from that server to your browser, not through Termix.
+
+### Set up the server
+
+1. Install Sunshine on the PC and open its web UI on port 47990 to create a login.
+2. Run Moonlight Web somewhere that can reach the PC. It can run on the same PC.
+
+```yaml
+services:
+  moonlight-web:
+    image: mrcreativ3001/moonlight-web-stream:v3.0.1
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+      - "40000-40100:40000-40100/udp"
+    environment:
+      - WEBRTC_NAT_1TO1_HOST=YOUR_LAN_IP
+      - WEBRTC_PORT_RANGE=40000:40100
+    volumes:
+      - moonlight-server:/moonlight-web/server
+volumes:
+  moonlight-server:
+```
+
+If WebRTC fails and the stream falls back to WebSockets, check which addresses Moonlight Web offers. On Linux, `network_mode: host` (with `BIND_ADDRESS=0.0.0.0:8080` and no `ports`) lets it offer the PC's real LAN and VPN addresses instead of the Docker bridge address.
+
+3. Open Moonlight Web and sign in once. The first login you use becomes its admin.
+4. In Termix, open the Remote Desktop admin settings and fill in the Moonlight Web address, username and password. Use the admin login, since Termix adds and pairs PCs with it.
+
+Set Moonlight Web public address when browsers reach it at a different address than the Termix server does.
+
+### Add a PC
+
+1. In the host editor, turn on Moonlight in General. The Sunshine port is 47989 unless you changed it.
+2. Open the Moonlight section. Pick the PC, or press Add this host to Moonlight Web.
+3. Press Pair and enter the PIN in the Sunshine web UI, under PIN. You only do this once per PC.
+4. Pick an app and save. Bitrate and frame rate are optional, and 0 keeps the Moonlight Web default.
+
+Termix adds PCs as global hosts, so every Moonlight Web user can stream them with that one pairing. Adding and pairing need the Set up Moonlight PCs permission, which admins have by default.
+
+### Sign in and open a stream
+
+Press Connect. The stream shows inside the Termix tab: Termix serves the Moonlight Web stream page through its own address and signs in with the saved admin login, so nobody signs in to Moonlight Web. Only someone who just opened that PC from Termix can stream it, and Moonlight Web admin pages stay out of reach.
+
+On a linked desktop app server the stream opens in your default browser instead, and there Moonlight Web asks you to sign in the first time. If WebRTC cannot reach Moonlight Web, the page falls back to its WebSocket transport, which also goes through Termix.
+
+Use HTTPS on Moonlight Web when you can. Browsers only allow gamepads, keyboard lock and the fastest video playback on secure pages, so over plain HTTP the stream works with more delay and no gamepads.
+
+The stream page starts on the Auto codec, so it only asks for codecs your browser can decode. Sunshine always offers H.264, and with a GPU usually HEVC and AV1 too. With the software encoder it offers H.264 only, so a browser without H.264 (some Linux Chromium builds, embedded browsers like the one in JetBrains IDEs) can't play it. Termix shows a note above the stream in that case. Chrome, Edge, Safari and the Termix desktop app all play H.264.
+
+Over the internet, forward the WebRTC UDP ports or add a TURN server. See the Moonlight Web docs. WebSockets also work on networks that block WebRTC, with more delay.
+
+### Limits
+
+- Termix checks access when you press Connect, including Privileged Access approvals. Moonlight Web is a separate server, so anyone with a Moonlight Web login can stream from it without Termix.
+- When an admin makes recording required, Moonlight is refused on that host, since Termix can't record the stream.
+- Streams don't show in the remote sessions card, and session sharing doesn't apply to them.
+- The mobile app has no Moonlight tab yet.
 
 ## RustDesk
 

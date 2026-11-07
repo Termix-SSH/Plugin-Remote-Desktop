@@ -88,6 +88,7 @@ describe(`${manifest.id} activate`, () => {
     await vi.waitFor(() =>
       expect(rendered!.registered.hostProtocols().sort()).toEqual([
         "ard",
+        "moonlight",
         "rdp",
         "rustdesk",
         "telnet",

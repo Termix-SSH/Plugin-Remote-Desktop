@@ -126,7 +126,6 @@ export function GuacdSetupStep(_props: OnboardingStepProps) {
           />
           <Button
             variant="outline"
-            size="sm"
             className="h-8 text-xs"
             disabled={checking}
             onClick={() => void saveAndCheck()}

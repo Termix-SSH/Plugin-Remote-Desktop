@@ -58,7 +58,7 @@ import { clampGuacamoleZoom, stepGuacamoleZoom } from "./guacamole-zoom.ts";
 import { createRdpReadyGate } from "./guacamole-ready.ts";
 import {
   remoteKeysym,
-  shouldSendKey,
+  isToggleKey,
   watchRightAlt,
 } from "./guacamole-meta-key.ts";
 
@@ -461,15 +461,14 @@ export const GuacamoleDisplay = forwardRef<
         document.activeElement === activeDisplay;
 
       if (!hasKeyboardFocusRef.current && !stillFocused) return;
-      if (!shouldSendKey(keysym, true)) return;
       clientRef.current.sendKeyEvent(
         1,
         remoteKeysym(sessionProtocolRef.current, keysym, true),
       );
+      if (isToggleKey(keysym)) clientRef.current.sendKeyEvent(0, keysym);
     };
 
     keyboard.onkeyup = (keysym: number) => {
-      if (!shouldSendKey(keysym, false)) return;
       // Focus loss must still release keys already sent to the remote host.
       clientRef.current?.sendKeyEvent(
         0,
@@ -606,6 +605,7 @@ export const GuacamoleDisplay = forwardRef<
           client,
           text,
           pasteModifierFor(sessionProtocolRef.current),
+          keyboardRef.current?.pressed,
         );
       }
     });
@@ -646,6 +646,7 @@ export const GuacamoleDisplay = forwardRef<
           client,
           text,
           pasteModifierFor(sessionProtocolRef.current),
+          keyboardRef.current?.pressed,
         );
       },
       true,
@@ -685,7 +686,9 @@ export const GuacamoleDisplay = forwardRef<
     );
 
     unwatchAltRef.current?.();
-    unwatchAltRef.current = watchRightAlt(displayElement);
+    unwatchAltRef.current = watchRightAlt(displayElement, (keysym) => {
+      keyboardRef.current?.onkeydown?.(keysym);
+    });
     const keyboard = new Guacamole.Keyboard(displayElement);
     keyboardRef.current = keyboard;
 

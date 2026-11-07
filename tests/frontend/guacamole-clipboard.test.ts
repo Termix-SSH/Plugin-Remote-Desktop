@@ -62,6 +62,69 @@ describe("Guacamole clipboard paste", () => {
       "key:0:65507",
     ]);
   });
+
+  it.each([
+    [0xffe3, 0xffe3],
+    [0xffe3, 0xffe4],
+    [0xffeb, 0xffe7],
+    [0xffeb, 0xffe8],
+    [0xffeb, 0xffeb],
+    [0xffeb, 0xffec],
+  ])("preserves held modifier %i while pasting with %i", (modifier, held) => {
+    const keys: string[] = [];
+    const client: GuacamoleClipboardClient = {
+      createClipboardStream: () => ({ sendBlob: () => {}, sendEnd: () => {} }),
+      sendKeyEvent: (pressed, keysym) => keys.push(`${pressed}:${keysym}`),
+    };
+    const pressed = { [held]: true };
+    pasteTextToRemote(client, "new clipboard", modifier, pressed);
+    expect(keys).toEqual(["1:118", "0:118"]);
+    expect(pressed[held]).toBe(true);
+  });
+
+  it("does not release a physically held modifier when sending V fails", () => {
+    const keys: string[] = [];
+    const client: GuacamoleClipboardClient = {
+      createClipboardStream: () => ({ sendBlob: () => {}, sendEnd: () => {} }),
+      sendKeyEvent: (pressed, keysym) => {
+        keys.push(`${pressed}:${keysym}`);
+        throw new Error("Disconnected");
+      },
+    };
+    expect(() =>
+      pasteTextToRemote(client, "text", 0xffe3, { [0xffe4]: true }),
+    ).toThrow("Disconnected");
+    expect(keys).toEqual(["1:118"]);
+  });
+
+  it("does not press keys when the clipboard stream fails", () => {
+    const client: GuacamoleClipboardClient = {
+      createClipboardStream: () => ({
+        sendBlob: () => {
+          throw new Error("Disconnected");
+        },
+        sendEnd: () => {},
+      }),
+      sendKeyEvent: vi.fn(),
+    };
+    expect(() => pasteTextToRemote(client, "text")).toThrow("Disconnected");
+    expect(client.sendKeyEvent).not.toHaveBeenCalled();
+  });
+
+  it("releases only its temporary modifier if sending V fails", () => {
+    const keys: string[] = [];
+    const client: GuacamoleClipboardClient = {
+      createClipboardStream: () => ({ sendBlob: () => {}, sendEnd: () => {} }),
+      sendKeyEvent: (pressed, keysym) => {
+        keys.push(`${pressed}:${keysym}`);
+        if (keysym === 0x76) throw new Error("Disconnected");
+      },
+    };
+    expect(() => pasteTextToRemote(client, "new clipboard")).toThrow(
+      "Disconnected",
+    );
+    expect(keys).toEqual(["1:65507", "1:118", "0:65507"]);
+  });
 });
 
 describe("paste modifier", () => {

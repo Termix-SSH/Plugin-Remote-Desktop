@@ -90,6 +90,7 @@ export interface GuacamoleHostConfig {
   domain?: string;
   guacamoleConfig?: GuacamoleConfig;
   rdpAuthType?: string;
+  rdpAutoReconnect?: boolean;
   rdpAutoResize?: boolean;
   authOverrides?: RemoteHostLogin["authOverrides"];
   syncId?: string | null;
@@ -126,6 +127,7 @@ function savedHostConfig(
     guacamoleConfig: options.guacamoleConfig,
     rdpAutoResize: options.rdpAutoResize,
     rdpAuthType: host.protocolAuth?.rdp?.authType,
+    rdpAutoReconnect: options.rdpAutoReconnect,
     authOverrides: host.authOverrides,
     syncId: host.syncId,
     connectionOrigin: host.connectionOrigin,
@@ -522,7 +524,11 @@ const GuacamoleAppInner = React.forwardRef<
   // A session lost while the tab was hidden comes back on its own (issue #104).
   const autoReconnects = useRef(0);
   const handleLost = useCallback(() => {
-    if (autoReconnects.current >= MAX_AUTO_RECONNECTS) {
+    if (
+      (resolvedProtocolForConnect === "rdp" &&
+        hostConfig.rdpAutoReconnect === false) ||
+      autoReconnects.current >= MAX_AUTO_RECONNECTS
+    ) {
       setConnectionError(t("remoteDesktop.connectionLost"));
       return;
     }
@@ -533,7 +539,13 @@ const GuacamoleAppInner = React.forwardRef<
       message: t("remoteDesktop.reconnectingAfterLost"),
     });
     handleReconnect();
-  }, [handleReconnect, addLog, t]);
+  }, [
+    resolvedProtocolForConnect,
+    hostConfig.rdpAutoReconnect,
+    handleReconnect,
+    addLog,
+    t,
+  ]);
 
   // A token opens one display, so a new touch mode needs a fresh one.
   const handleTouchModeChange = useCallback(
