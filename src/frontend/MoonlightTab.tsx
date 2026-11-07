@@ -8,7 +8,11 @@ import {
 } from "@termix-ssh/plugin-sdk/ui";
 import { errorMessage, type RemoteHostLogin } from "./host-remote";
 import { apiBase, launchMoonlight, moonlightOrigin } from "./moonlight-api";
-import { keyboardLockRequest, moonlightEmbed } from "./moonlight-embed";
+import {
+  canPlayH264,
+  keyboardLockRequest,
+  moonlightEmbed,
+} from "./moonlight-embed";
 
 const ERROR_KEYS: Record<string, string> = {
   "not-configured": "hosts.moonlight.notConfigured",
@@ -44,6 +48,7 @@ export function MoonlightTab({ host }: { host?: RemoteHostLogin }) {
   const [state, setState] = useState<LaunchState>({ status: "loading" });
   const frame = useRef<HTMLIFrameElement>(null);
   const run = useRef(0);
+  const [noH264, setNoH264] = useState(false);
   const hostId = host?.id;
   const syncId = host?.syncId;
   const connectionOrigin = host?.connectionOrigin;
@@ -97,6 +102,17 @@ export function MoonlightTab({ host }: { host?: RemoteHostLogin }) {
   }, [launch]);
 
   const url = state.status === "ready" ? state.url : null;
+
+  useEffect(() => {
+    if (!url) return;
+    let live = true;
+    void canPlayH264().then((ok) => {
+      if (live) setNoH264(!ok);
+    });
+    return () => {
+      live = false;
+    };
+  }, [url]);
 
   useEffect(() => {
     if (!url) return;
@@ -157,6 +173,14 @@ export function MoonlightTab({ host }: { host?: RemoteHostLogin }) {
   return (
     <div className="flex h-full w-full flex-col">
       <ToolbarBand className="justify-end">
+        {noH264 && (
+          <span
+            className="mr-auto truncate text-xs text-muted-foreground"
+            title={t("hosts.moonlight.noH264")}
+          >
+            {t("hosts.moonlight.noH264")}
+          </span>
+        )}
         <Button size="xs" variant="ghost" onClick={() => openStream(state.url)}>
           {t("hosts.moonlight.openInWindow")}
         </Button>

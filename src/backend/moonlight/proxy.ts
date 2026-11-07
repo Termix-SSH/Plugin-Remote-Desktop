@@ -97,6 +97,16 @@ export function configScript(): string {
   var at = path.lastIndexOf(${http});
   var prefix = at < 0 ? ${http} : path.slice(0, at + ${http}.length);
   window.__CONFIG_JS__ = { path_prefix: prefix };
+  // Moonlight Web asks for H.264 only by default, which some browsers can't
+  // decode. Auto offers the host every codec this browser can play.
+  try {
+    var saved = JSON.parse(localStorage.getItem("mlSettings") || "null");
+    if (!saved || typeof saved !== "object") saved = {};
+    if (!saved.videoCodec) {
+      saved.videoCodec = "auto";
+      localStorage.setItem("mlSettings", JSON.stringify(saved));
+    }
+  } catch (e) {}
   var socketPrefix = prefix.slice(0, prefix.length - ${http}.length) + ${ws};
   var Native = window.WebSocket;
   var origin = location.origin.replace(/^http/, "ws");

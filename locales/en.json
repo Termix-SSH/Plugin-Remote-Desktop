@@ -357,6 +357,7 @@
       "signInNote": "Moonlight Web asks you to sign in the first time.",
       "openStream": "Open stream",
       "openInWindow": "Open in new window",
+      "noH264": "This browser can't play H.264 video. If the stream won't start, use Chrome, Edge or the Termix desktop app, or turn on HEVC or AV1 in Sunshine.",
       "retry": "Try again",
       "errorRecordingRequired": "Recording is required on this host, and Moonlight streams can't be recorded.",
       "errorNotLinked": "No PC is linked. Pick one in the host editor.",

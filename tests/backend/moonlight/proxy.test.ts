@@ -163,6 +163,53 @@ describe("configScript", () => {
   });
 });
 
+describe("configScript codec", () => {
+  const PAGE = "/plugin-api/remote-desktop/moonlight/web/stream.html";
+  const run = (saved: string | null) => {
+    const store = new Map<string, string>();
+    if (saved !== null) store.set("mlSettings", saved);
+    vm.runInNewContext(configScript(), {
+      window: { WebSocket: class {} },
+      location: { pathname: PAGE, origin: "http://termix.test" },
+      localStorage: {
+        getItem: (key: string) => store.get(key) ?? null,
+        setItem: (key: string, value: string) => store.set(key, value),
+      },
+    });
+    return JSON.parse(store.get("mlSettings") ?? "null") as Record<
+      string,
+      unknown
+    >;
+  };
+
+  it("starts on auto so the browser offers what it can play", () => {
+    expect(run(null)).toEqual({ videoCodec: "auto" });
+    expect(run('{"language":"en"}')).toEqual({
+      language: "en",
+      videoCodec: "auto",
+    });
+  });
+
+  it("keeps a codec someone picked", () => {
+    expect(run('{"videoCodec":"h264"}')).toEqual({ videoCodec: "h264" });
+  });
+
+  it("leaves broken saved settings to the page", () => {
+    const store = new Map([["mlSettings", "{oops"]]);
+    expect(() =>
+      vm.runInNewContext(configScript(), {
+        window: { WebSocket: class {} },
+        location: { pathname: PAGE, origin: "http://termix.test" },
+        localStorage: {
+          getItem: (key: string) => store.get(key) ?? null,
+          setItem: (key: string, value: string) => store.set(key, value),
+        },
+      }),
+    ).not.toThrow();
+    expect(store.get("mlSettings")).toBe("{oops");
+  });
+});
+
 describe("createHttpProxy", () => {
   const servers: http.Server[] = [];
   afterEach(async () => {

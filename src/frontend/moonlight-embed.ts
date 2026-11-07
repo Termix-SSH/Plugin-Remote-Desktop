@@ -45,3 +45,25 @@ export function keyboardLockRequest(
     ? data.keys.filter((key): key is string => typeof key === "string")
     : undefined;
 }
+
+/** Whether this browser can decode H.264, the one codec every Sunshine has. */
+export async function canPlayH264(): Promise<boolean> {
+  try {
+    if (typeof VideoDecoder !== "undefined") {
+      const result = await VideoDecoder.isConfigSupported({
+        codec: "avc1.42E01E",
+      });
+      if (result.supported) return true;
+    }
+  } catch {
+    // fall through to the media source check
+  }
+  try {
+    return (
+      typeof MediaSource !== "undefined" &&
+      MediaSource.isTypeSupported('video/mp4; codecs="avc1.42E01E"')
+    );
+  } catch {
+    return false;
+  }
+}

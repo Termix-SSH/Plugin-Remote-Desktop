@@ -88,6 +88,8 @@ volumes:
   moonlight-server:
 ```
 
+If WebRTC fails and the stream falls back to WebSockets, check which addresses Moonlight Web offers. On Linux, `network_mode: host` (with `BIND_ADDRESS=0.0.0.0:8080` and no `ports`) lets it offer the PC's real LAN and VPN addresses instead of the Docker bridge address.
+
 3. Open Moonlight Web and sign in once. The first login you use becomes its admin.
 4. In Termix, open the Remote Desktop admin settings and fill in the Moonlight Web address, username and password. Use the admin login, since Termix adds and pairs PCs with it.
 
@@ -109,6 +111,8 @@ Press Connect. The stream shows inside the Termix tab: Termix serves the Moonlig
 On a linked desktop app server the stream opens in your default browser instead, and there Moonlight Web asks you to sign in the first time. If WebRTC cannot reach Moonlight Web, the page falls back to its WebSocket transport, which also goes through Termix.
 
 Use HTTPS on Moonlight Web when you can. Browsers only allow gamepads, keyboard lock and the fastest video playback on secure pages, so over plain HTTP the stream works with more delay and no gamepads.
+
+The stream page starts on the Auto codec, so it only asks for codecs your browser can decode. Sunshine always offers H.264, and with a GPU usually HEVC and AV1 too. With the software encoder it offers H.264 only, so a browser without H.264 (some Linux Chromium builds, embedded browsers like the one in JetBrains IDEs) can't play it. Termix shows a note above the stream in that case. Chrome, Edge, Safari and the Termix desktop app all play H.264.
 
 Over the internet, forward the WebRTC UDP ports or add a TURN server. See the Moonlight Web docs. WebSockets also work on networks that block WebRTC, with more delay.
 

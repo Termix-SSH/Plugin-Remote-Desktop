@@ -1,5 +1,6 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
+  canPlayH264,
   keyboardLockRequest,
   moonlightEmbed,
 } from "../../src/frontend/moonlight-embed";
@@ -118,5 +119,34 @@ describe("keyboardLockRequest", () => {
         STREAM,
       ),
     ).toBeNull();
+  });
+});
+
+describe("canPlayH264", () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it("is true when WebCodecs can decode H.264", async () => {
+    vi.stubGlobal("VideoDecoder", {
+      isConfigSupported: async () => ({ supported: true }),
+    });
+    expect(await canPlayH264()).toBe(true);
+  });
+
+  it("falls back to media source", async () => {
+    vi.stubGlobal("VideoDecoder", {
+      isConfigSupported: async () => ({ supported: false }),
+    });
+    vi.stubGlobal("MediaSource", { isTypeSupported: () => true });
+    expect(await canPlayH264()).toBe(true);
+  });
+
+  it("is false when neither can", async () => {
+    vi.stubGlobal("VideoDecoder", {
+      isConfigSupported: async () => {
+        throw new Error("no");
+      },
+    });
+    vi.stubGlobal("MediaSource", { isTypeSupported: () => false });
+    expect(await canPlayH264()).toBe(false);
   });
 });
