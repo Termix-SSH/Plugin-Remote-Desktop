@@ -29,6 +29,7 @@
 - Other features could end a remote session or get a viewer link to it without owning it
 - Pasting with Ctrl or Command still held no longer lets go of that key on the remote side
 - Ctrl+V right after copying pastes the new text in an RDP session instead of the one copied before it
+- The desktop app connects to RDP servers whose certificate is only made for encryption, like many Windows ones, when Ignore certificate errors is on
 - The Korean Han/Eng and Hanja keys work on every tap with keyboards that never send a key release
 - RDP servers that need the graphics pipeline, like GNOME Remote Desktop, connect with the built-in engine
 - RDP sound plays after the first click in the session, and people who join a shared session hear it too

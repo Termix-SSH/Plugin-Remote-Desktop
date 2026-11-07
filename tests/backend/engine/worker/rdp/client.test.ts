@@ -1,8 +1,13 @@
 import crypto from "node:crypto";
+import fs from "node:fs";
+import net from "node:net";
+import tls from "node:tls";
 import { describe, expect, it, vi } from "vitest";
 import {
   CLIPBOARD_KEY_HOLD_MS,
+  RSA_KEY_EXCHANGE,
   RdpClient,
+  retryWithRsaKeyExchange,
   nextSize,
   normalizeKdcUrl,
   printFile,
@@ -248,6 +253,58 @@ describe("paste after a clipboard update", () => {
       expect(calls).toEqual(["clip:x"]);
     } finally {
       vi.useRealTimers();
+    }
+  });
+});
+
+describe("certificates without the Digital Signature use", () => {
+  const dir = new URL("./fixtures/", import.meta.url);
+  const key = fs.readFileSync(new URL("no-signature-key.pem", dir));
+  const cert = fs.readFileSync(new URL("no-signature-cert.pem", dir));
+
+  it("retries once, and only with certificate checks off", () => {
+    const error = new Error(
+      "error:1000012e:SSL routines:KEY_USAGE_BIT_INCORRECT",
+    );
+    expect(retryWithRsaKeyExchange(error, false, false)).toBe(true);
+    expect(retryWithRsaKeyExchange(error, false, true)).toBe(false);
+    expect(retryWithRsaKeyExchange(error, true, false)).toBe(false);
+    expect(retryWithRsaKeyExchange(new Error("other"), false, false)).toBe(
+      false,
+    );
+  });
+
+  it("connects with plain RSA key exchange, which only needs Key Encipherment", async () => {
+    const server = tls.createServer({ key, cert, minVersion: "TLSv1" }, (s) =>
+      s.end(),
+    );
+    await new Promise<void>((resolve) =>
+      server.listen(0, "127.0.0.1", resolve),
+    );
+    try {
+      const cipher = await new Promise<tls.CipherNameAndProtocol>(
+        (resolve, reject) => {
+          const socket = tls.connect(
+            {
+              host: "127.0.0.1",
+              port: (server.address() as net.AddressInfo).port,
+              rejectUnauthorized: false,
+              minVersion: "TLSv1",
+              ...RSA_KEY_EXCHANGE,
+            },
+            () => {
+              resolve(socket.getCipher());
+              socket.destroy();
+            },
+          );
+          socket.on("error", reject);
+        },
+      );
+      expect(cipher.version).toBe("TLSv1.2");
+      // No ECDHE or DHE: the key exchange is plain RSA.
+      expect(cipher.standardName).toMatch(/^TLS_RSA_WITH_/);
+    } finally {
+      await new Promise<void>((resolve) => server.close(() => resolve()));
     }
   });
 });
