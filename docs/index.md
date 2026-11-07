@@ -209,6 +209,7 @@ These only apply to an external guacd:
 - Recordings are empty with an external guacd: The two recording paths don't point at the same folder.
 - RustDesk says the key does not match: Copy the key from `id_ed25519.pub` on your RustDesk server into the admin settings, or the host's own server settings.
 - RustDesk shows a black screen on Linux: the device has to be logged in to an X11 desktop. RustDesk can't share a Wayland login screen.
+- No sound in an RDP session: click or press a key inside the session once, since browsers keep audio off until you do. To see whether the server sends audio, set the log level to debug in admin settings (it overrides `LOG_LEVEL`) and look for `rdpsnd formats requested`, `rdpsnd first wave` and `rdpsnd audio sent`.
 
 ## Apple Remote Desktop
 
