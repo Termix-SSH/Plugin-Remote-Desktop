@@ -87,6 +87,11 @@ For a paid sponsor spot, email [mail@termix.site](mailto:mail@termix.site).
 
 ## Support
 
+For silent built-in RDP sessions, see [audio troubleshooting](docs/audio-troubleshooting.md).
+The saved application log level can override `LOG_LEVEL`; missing debug lines alone
+do not prove that PCM is absent. The Windows 11 LTSC stall reported in issue #19
+still requires validation on an affected host.
+
 Bugs and ideas for Remote Desktop go in this repo: [report a bug](https://github.com/Termix-SSH/Plugin-Remote-Desktop/issues/new?template=bug_report.yml) or [request a feature](https://github.com/Termix-SSH/Plugin-Remote-Desktop/issues/new?template=feature_request.yml). Report an issue on the plugin's page in the Plugins tab fills in your versions for you.
 
 Problems with Termix itself (login, hosts, credentials, sharing, sync) go in the [Termix repo](https://github.com/Termix-SSH/Termix/issues/new/choose). Not sure where it goes? Open it there and it will be moved.

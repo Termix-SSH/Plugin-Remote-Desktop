@@ -57,6 +57,10 @@ declare module "guacamole-common-js" {
       onundefine: (() => void) | null;
     }
 
+    const AudioContextFactory: {
+      getAudioContext(): AudioContext | null;
+    };
+
     class AudioPlayer {
       static getInstance(
         stream: InputStream,

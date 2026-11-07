@@ -108,7 +108,9 @@ export class EngineCore implements RemoteHost {
           this.out.flush();
           this.port.post({
             t: "snapshot",
-            data: this.isReady ? this.display.snapshot() : "",
+            data: this.isReady
+              ? this.display.snapshot() + this.audioInstruction()
+              : "",
           });
           break;
         case "input":
@@ -183,6 +185,7 @@ export class EngineCore implements RemoteHost {
   private join(user: string, owner: boolean, readOnly: boolean): void {
     this.users.set(user, { readOnly });
     this.display.addUser(user);
+    if (this.audioStream) this.out.to(user, this.audioInstruction());
     if (owner) this.owner = user;
     if (this.isReady && !owner) {
       this.out.to(
@@ -333,6 +336,11 @@ export class EngineCore implements RemoteHost {
     this.out.to(this.owner, encode("file", stream, mimetype, name));
     // BlobReader acks each blob but not the stream itself.
     this.ack(stream, Status.SUCCESS);
+  }
+
+  private audioInstruction(): string {
+    const stream = this.audioStream;
+    return stream ? encode("audio", stream.index, stream.mimetype) : "";
   }
 
   audio(rate: number, channels: number, pcm: Uint8Array): void {

@@ -1,4 +1,7 @@
 import fs from "node:fs";
+import { EventEmitter } from "node:events";
+import { EngineSession } from "../../../../src/backend/engine/session.js";
+import type { ToWorker } from "../../../../src/backend/engine/messages.js";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
@@ -199,6 +202,117 @@ describe("EngineCore", () => {
     host().fail("nope", 0x203);
     host().fail("again", 0x203);
     expect(posted.filter((m) => m.t === "error")).toHaveLength(1);
+  });
+
+  it("keeps audio declarations isolated across session joins and recording snapshots", async () => {
+    let host!: RemoteHost;
+    const worker = Object.assign(new EventEmitter(), {
+      postMessage: (message: ToWorker) => core.handle(message),
+      terminate: vi.fn(),
+    });
+    const core = new EngineCore(
+      { post: (message) => worker.emit("message", message) },
+      wasm,
+      {
+        rdp: (h) => {
+          host = h;
+          return {
+            start() {},
+            stop() {},
+            key() {},
+            mouse() {},
+            resize() {},
+            clipboard() {},
+          };
+        },
+      },
+    );
+    const session = new EngineSession({
+      config: { protocol: "rdp", settings: {} },
+      worker,
+      log: vi.fn(),
+    });
+    const socket = () =>
+      Object.assign(new EventEmitter(), {
+        readyState: 1,
+        send: vi.fn(),
+        close: vi.fn(),
+      });
+    const owner = socket();
+    const viewer = socket();
+    const audioHeaders = (peer: ReturnType<typeof socket>) =>
+      peer.send.mock.calls
+        .map(([data]) => data)
+        .join("")
+        .match(/5\.audio,/g) ?? [];
+    try {
+      session.attach(owner, { owner: true, readOnly: false });
+      host.ready();
+      host.audio(44100, 2, new Uint8Array([1, 2, 3, 4]));
+      await new Promise((r) => setImmediate(r));
+      session.attach(viewer, { owner: false, readOnly: true });
+      expect(audioHeaders(owner)).toHaveLength(1);
+      expect(audioHeaders(viewer)).toHaveLength(1);
+      const file = path.join(tmp(), "audio.guac");
+      expect(
+        await session.startRecording({
+          file,
+          excludeOutput: false,
+          excludeMouse: false,
+          includeKeys: false,
+        }),
+      ).toBe(true);
+      expect(audioHeaders(owner)).toHaveLength(1);
+      expect(audioHeaders(viewer)).toHaveLength(1);
+      session.stopRecording();
+      await new Promise((r) => setImmediate(r));
+      expect(fs.readFileSync(file, "utf8")).toContain(
+        "audio/L16;rate=44100,channels=2",
+      );
+      viewer.emit("close");
+      viewer.send.mockClear();
+      const replacement = socket();
+      session.attach(replacement, { owner: false, readOnly: true });
+      expect(audioHeaders(replacement)).toHaveLength(1);
+      host.audio(48000, 2, new Uint8Array([5, 6, 7, 8]));
+      await new Promise((r) => setImmediate(r));
+      expect(audioHeaders(owner)).toHaveLength(2);
+      expect(audioHeaders(replacement)).toHaveLength(2);
+      expect(viewer.send).not.toHaveBeenCalled();
+    } finally {
+      session.end();
+    }
+  });
+
+  it("declares the active audio stream only to late joiners and recordings", async () => {
+    const { core, host, posted, to } = setup();
+    host().ready();
+    host().audio(44100, 2, new Uint8Array([1, 2, 3, 4]));
+    await new Promise((r) => setImmediate(r));
+    posted.length = 0;
+    core.handle({ t: "join", user: "listener", owner: false, readOnly: true });
+    expect(to("listener")).toContain(
+      "5.audio,1.1,31.audio/L16;rate=44100,channels=2;",
+    );
+    expect(posted.filter((m) => m.t === "out" && !m.to)).toHaveLength(0);
+    core.handle({ t: "snapshot" });
+    expect(posted.at(-1)).toMatchObject({
+      t: "snapshot",
+      data: expect.stringContaining("5.audio,1.1,"),
+    });
+    core.handle({ t: "leave", user: "listener" });
+    host().audio(48000, 2, new Uint8Array([5, 6, 7, 8]));
+    await new Promise((r) => setImmediate(r));
+    posted.length = 0;
+    core.handle({
+      t: "join",
+      user: "replacement",
+      owner: false,
+      readOnly: true,
+    });
+    expect(to("replacement")).toContain("audio/L16;rate=48000,channels=2");
+    expect(to("replacement")).not.toContain("rate=44100");
+    expect(to("listener")).toBe("");
   });
 
   it("streams audio as L16 and switches streams when the format changes", async () => {
