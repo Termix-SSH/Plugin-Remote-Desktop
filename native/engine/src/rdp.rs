@@ -15,6 +15,7 @@ use ironrdp::connector::{
 use ironrdp::displaycontrol::client::DisplayControlClient;
 use ironrdp::displaycontrol::pdu::MonitorLayoutEntry;
 use ironrdp::dvc::DrdynvcClient;
+use ironrdp_egfx::client::{GraphicsPipelineClient, GraphicsPipelineHandler};
 use ironrdp::graphics::image_processing::PixelFormat;
 use ironrdp::pdu::gcc::KeyboardType;
 use ironrdp::pdu::input::fast_path::{FastPathInputEvent, KeyboardFlags, SynchronizeFlags};
@@ -36,6 +37,20 @@ use crate::drive::{DriveBackend, DriveHost};
 use crate::encode;
 use crate::rail::RailApp;
 use crate::sound::SoundBackend;
+
+// IronRDP's ActiveStage composites this channel into the session framebuffer.
+// No H.264 decoder is configured, so only non-AVC capabilities are advertised.
+struct GraphicsHandler;
+impl GraphicsPipelineHandler for GraphicsHandler {}
+
+fn dynamic_channels(display_control: bool) -> DrdynvcClient {
+    let mut channels = DrdynvcClient::new()
+        .with_dynamic_channel(GraphicsPipelineClient::new(Box::new(GraphicsHandler), None));
+    if display_control {
+        channels.attach_dynamic_channel(DisplayControlClient::new(|_| Ok(Vec::new())));
+    }
+    channels
+}
 
 #[derive(Deserialize, Default)]
 #[serde(rename_all = "camelCase", default)]
@@ -529,7 +544,7 @@ impl RdpClient {
             request_data: None,
             pointer_software_rendering: false,
             multitransport_flags: None,
-            support_dyn_vc_gfx_protocol: false,
+            support_dyn_vc_gfx_protocol: true,
             performance_flags: perf,
             desktop_scale_factor: if (100..=500).contains(&c.scale) { c.scale } else { 0 },
             hardware_id: None,
@@ -599,11 +614,7 @@ impl RdpClient {
             }
             connector.attach_static_channel(rdpdr);
         }
-        if self.config.display_control {
-            connector.attach_static_channel(
-                DrdynvcClient::new().with_dynamic_channel(DisplayControlClient::new(|_| Ok(Vec::new()))),
-            );
-        }
+        connector.attach_static_channel(dynamic_channels(self.config.display_control));
         connector
     }
 
@@ -916,8 +927,16 @@ impl RdpClient {
             return false;
         }
         let Session { stage, image, .. } = &mut *session;
+        let previous_size = (image.width(), image.height());
         match stage.process(image, info.action, &frame) {
             Ok(outputs) => {
+                // GFX ResetGraphics can resize without a deactivation sequence.
+                if (image.width(), image.height()) != previous_size {
+                    let e = obj("resize");
+                    set(&e, "w", image.width());
+                    set(&e, "h", image.height());
+                    self.events.push(e.into());
+                }
                 let keep = self.handle_outputs(&mut session, outputs);
                 if keep {
                     self.phase = Phase::Active(session);
@@ -1282,3 +1301,7 @@ fn classify(error: &connector::ConnectorError) -> &'static str {
         _ => "protocol",
     }
 }
+
+#[cfg(test)]
+#[path = "rdp_graphics_tests.rs"]
+mod graphics_tests;
