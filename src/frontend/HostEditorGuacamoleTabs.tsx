@@ -81,6 +81,15 @@ export function HostEditorRdpTab({
               className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
           </div>
+          <SettingRow
+            label={t("settings.host.rdpAutoReconnect.label")}
+            description={t("settings.host.rdpAutoReconnect.description")}
+          >
+            <FakeSwitch
+              checked={form.rdpAutoReconnect}
+              onChange={(value) => setField("rdpAutoReconnect", value)}
+            />
+          </SettingRow>
         </div>
       </SectionCard>
       <GuacdProxyCard hostId={hostId} setGuacField={setGuacField} />

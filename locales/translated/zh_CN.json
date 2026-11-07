@@ -426,6 +426,10 @@
       },
       "ardPort": {
         "label": "ARD 端口"
+      },
+      "rdpAutoReconnect": {
+        "label": "自动重连 RDP",
+        "description": "RDP 会话断开后自动重连。关闭后需要手动重连，可避免打断从其他客户端打开的会话。"
       }
     }
   },
