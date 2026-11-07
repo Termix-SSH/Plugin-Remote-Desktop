@@ -34,6 +34,10 @@ Read the [docs](https://docs.termix.site/plugins/remote-desktop) to set it up an
 - Jump host support
 - Session sharing and recording
 - Open a host in the native Windows Remote Desktop client from the desktop app
+- Kerberos sign in for RDP and RDP server redirection
+- Intel AMT machines through AMT's built-in VNC
+- Required recording that the user can't stop
+- A dashboard card with your open sessions, and port checks as a status tile
 
 <br />
 
