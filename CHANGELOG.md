@@ -17,6 +17,7 @@
 - Admins can let Session Recording list, watch and end everyone's remote sessions with the new Watch everyone's remote desktop sessions permission
 - A host switch to turn off reconnecting an RDP session on its own, so an idle tab does not kick out a session opened elsewhere
 - A host switch to keep the RDP screen size from when you connected instead of following the window
+- A Verify button when a host needs a second factor before connecting
 
 ### Changed
 

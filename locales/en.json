@@ -12,6 +12,7 @@
     "clipboardWaiting": "Text copied in the session. Click or press a key here to put it on your clipboard. Open Termix over HTTPS to copy right away.",
     "failedToConnect": "Failed to get connection token",
     "requestAccess": "Request access",
+    "verifyAccess": "Verify",
     "hostNotFound": "Host not found",
     "noHostSelected": "No host selected",
     "guacdUnavailable": "The external guacd is not answering. Check that it is running, or turn off Use an external guacd in the Remote Desktop settings.",

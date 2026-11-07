@@ -231,6 +231,7 @@ const GuacamoleAppInner = React.forwardRef<
   // Set when a connect policy refused the session: the request tab, or ""
   // when access is denied with nowhere to ask.
   const [accessTab, setAccessTab] = useState<string | null>(null);
+  const [accessVerify, setAccessVerify] = useState(false);
   const tabsApi = useTabs();
   const [connectionError, setConnectionError] = useState<string | null>(null);
   const [isDisplayReady, setIsDisplayReady] = useState(false);
@@ -479,6 +480,9 @@ const GuacamoleAppInner = React.forwardRef<
         if (code === "access-required" || code === "access-denied") {
           const tab = (err as { requestTab?: unknown }).requestTab;
           setAccessTab(typeof tab === "string" ? tab : "");
+          setAccessVerify(
+            (err as { requestKind?: unknown }).requestKind === "verify",
+          );
         }
         tokenRetryRef.current.markFailed();
       }
@@ -681,7 +685,11 @@ const GuacamoleAppInner = React.forwardRef<
                   tabsApi.openSingletonTab(accessTab, { data: { hostId } })
                 }
               >
-                {t("remoteDesktop.requestAccess")}
+                {t(
+                  accessVerify
+                    ? "remoteDesktop.verifyAccess"
+                    : "remoteDesktop.requestAccess",
+                )}
               </Button>
             ) : undefined
           }

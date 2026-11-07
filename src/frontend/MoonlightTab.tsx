@@ -25,7 +25,12 @@ const ERROR_KEYS: Record<string, string> = {
 
 type LaunchState =
   | { status: "loading" }
-  | { status: "failed"; message: string; requestTab: string | null }
+  | {
+      status: "failed";
+      message: string;
+      requestTab: string | null;
+      verify: boolean;
+    }
   | { status: "ready"; url: string; framed: boolean };
 
 type Keyboard = { lock?: (keys?: string[]) => Promise<void> };
@@ -81,15 +86,17 @@ export function MoonlightTab({ host }: { host?: RemoteHostLogin }) {
       }
     } catch (error) {
       if (current !== run.current) return;
-      const { code, requestTab } = error as {
+      const { code, requestTab, requestKind } = error as {
         code?: string;
         requestTab?: string | null;
+        requestKind?: string | null;
       };
       const key = code ? ERROR_KEYS[code] : undefined;
       setState({
         status: "failed",
         message: key ? t(key) : errorMessage(error),
         requestTab: requestTab ?? null,
+        verify: requestKind === "verify",
       });
     }
   }, [hostId, syncId, connectionOrigin, t]);
@@ -135,7 +142,7 @@ export function MoonlightTab({ host }: { host?: RemoteHostLogin }) {
   }
 
   if (state.status === "failed") {
-    const { message, requestTab } = state;
+    const { message, requestTab, verify } = state;
     return (
       <Centered>
         <p>{message}</p>
@@ -151,7 +158,11 @@ export function MoonlightTab({ host }: { host?: RemoteHostLogin }) {
                 tabs.openSingletonTab(requestTab, { data: { hostId } })
               }
             >
-              {t("remoteDesktop.requestAccess")}
+              {t(
+                verify
+                  ? "remoteDesktop.verifyAccess"
+                  : "remoteDesktop.requestAccess",
+              )}
             </Button>
           )}
         </div>

@@ -41,6 +41,7 @@ export function guacamoleApi(origin: ConnectionOrigin): PluginApiClient {
 export interface RemoteApiError extends Error {
   code?: string;
   requestTab?: string | null;
+  requestKind?: string | null;
 }
 
 export function apiError(error: unknown, action: string): RemoteApiError {
@@ -48,11 +49,17 @@ export function apiError(error: unknown, action: string): RemoteApiError {
     errorMessage(error, `Failed to ${action}`),
   );
   const data = (
-    error as { response?: { data?: { code?: unknown; requestTab?: unknown } } }
+    error as {
+      response?: {
+        data?: { code?: unknown; requestTab?: unknown; requestKind?: unknown };
+      };
+    }
   )?.response?.data;
   if (typeof data?.code === "string") wrapped.code = data.code;
   if (typeof data?.requestTab === "string")
     wrapped.requestTab = data.requestTab;
+  if (typeof data?.requestKind === "string")
+    wrapped.requestKind = data.requestKind;
   return wrapped;
 }
 
