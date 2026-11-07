@@ -50,6 +50,10 @@ export interface MoonlightClient {
   addHost(address: string, port: number): Promise<MoonlightHost>;
   listApps(hostId: number): Promise<MoonlightApp[]>;
   pair(hostId: number, signal: AbortSignal): Promise<MoonlightPairing>;
+  /** The saved server and a signed in session, for the stream proxy. */
+  session(): Promise<{ config: MoonlightConfig; token: string }>;
+  /** Drops the session so the next call signs in again. */
+  forget(): void;
 }
 
 interface RequestOptions {
@@ -285,6 +289,13 @@ export function createMoonlightClient(
   };
 
   return {
+    session: async () => {
+      const config = await requireConfig();
+      return { config, token: await login(config) };
+    },
+    forget: () => {
+      session = null;
+    },
     check: async () => {
       await login(await requireConfig());
     },

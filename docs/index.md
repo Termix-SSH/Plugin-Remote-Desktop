@@ -104,9 +104,9 @@ Termix adds PCs as global hosts, so every Moonlight Web user can stream them wit
 
 ### Sign in and open a stream
 
-Press Connect, then Open stream. The stream opens in a new window, or your default browser on the desktop app. Moonlight Web asks you to sign in the first time, because it keeps its own users. Each person needs a Moonlight Web user.
+Press Connect. The stream shows inside the Termix tab: Termix serves the Moonlight Web stream page through its own address and signs in with the saved admin login, so nobody signs in to Moonlight Web. Only someone who just opened that PC from Termix can stream it, and Moonlight Web admin pages stay out of reach.
 
-The stream shows inside the Termix tab only when Termix and Moonlight Web use HTTPS or HTTP alike and share a parent domain, like termix.example.com and moonlight.example.com. A frame on any other address can't keep the Moonlight Web sign in. Use different hostnames, since Termix won't frame a page on its own hostname.
+On a linked desktop app server the stream opens in your default browser instead, and there Moonlight Web asks you to sign in the first time. If WebRTC cannot reach Moonlight Web, the page falls back to its WebSocket transport, which also goes through Termix.
 
 Use HTTPS on Moonlight Web when you can. Browsers only allow gamepads, keyboard lock and the fastest video playback on secure pages, so over plain HTTP the stream works with more delay and no gamepads.
 

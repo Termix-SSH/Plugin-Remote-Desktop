@@ -109,8 +109,18 @@ export async function getMoonlightPairing(
 export function launchMoonlight(
   origin: Origin,
   hostId: number | string,
-): Promise<{ url: string; app: string }> {
+): Promise<{ url: string; proxyUrl?: string; app: string }> {
   return request("open the stream", () =>
     guacamoleApi(origin).post(`/moonlight/launch/${hostId}`, {}),
   );
+}
+
+/**
+ * Where this frontend reaches the backend, in front of /plugin-api. Empty when
+ * it is the page's own origin, a prefix behind the dev server, or a full
+ * address in the desktop app.
+ */
+export function apiBase(origin: Origin): string {
+  const client = guacamoleApi(origin) as { defaults?: { baseURL?: string } };
+  return (client.defaults?.baseURL ?? "").replace(/\/+$/, "");
 }

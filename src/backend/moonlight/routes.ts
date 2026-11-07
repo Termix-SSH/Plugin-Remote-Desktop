@@ -11,6 +11,15 @@ import {
   type MoonlightConfig,
 } from "./client.js";
 import { createPairJobs, type PairJobs } from "./pairing.js";
+import {
+  createGrants,
+  createHttpProxy,
+  createSocketProxy,
+  hostIdFromJson,
+  PROXY_HTTP_PATH,
+  PROXY_WS_PATH,
+  type Grants,
+} from "./proxy.js";
 
 const SET_UP_PERMISSION = "moonlight";
 
@@ -23,6 +32,20 @@ export interface MoonlightDeps {
   resolveTarget: (res: Response, hostId: number) => Promise<unknown>;
   client?: MoonlightClient;
   pairJobs?: PairJobs;
+  grants?: Grants;
+}
+
+/** The stream page through Termix's own address, as a path. */
+function proxiedStreamPath(
+  options: Parameters<typeof moonlightStreamUrl>[1],
+): string {
+  const url = new URL(
+    moonlightStreamUrl(
+      `http://termix.local/plugin-api/remote-desktop${PROXY_HTTP_PATH}`,
+      options,
+    ),
+  );
+  return url.pathname + url.search;
 }
 
 function httpUrl(value: unknown): string {
@@ -77,6 +100,7 @@ export function registerMoonlightRoutes(
   const client =
     deps.client ?? createMoonlightClient(() => readMoonlightConfig(ctx));
   const jobs = deps.pairJobs ?? createPairJobs(client);
+  const grants = deps.grants ?? createGrants();
 
   const fail = (res: Response, error: unknown) => {
     if (error instanceof MoonlightError) {
@@ -96,6 +120,33 @@ export function registerMoonlightRoutes(
     res.status(403).json({ error: "Remote Desktop is turned off" });
     return true;
   };
+
+  // Moonlight Web's stream page, served through Termix so a tab can frame it.
+  const proxyDeps = {
+    client,
+    grants,
+    hostIdOf: hostIdFromJson,
+    log: (message: string, meta?: Record<string, unknown>) =>
+      log.warn(message, { operation: "moonlight_proxy", ...meta }),
+  };
+  const httpProxy = createHttpProxy(proxyDeps);
+  const socketProxy = createSocketProxy(proxyDeps);
+  router.use(
+    PROXY_HTTP_PATH,
+    ctx.rbac.require("sessions"),
+    async (req: Request, res: Response) => {
+      if (await refuseWhenOff(res)) return;
+      await httpProxy(req, res);
+    },
+  );
+  ctx.ws.upgrade(PROXY_WS_PATH, (request, socket, head, userId) =>
+    socketProxy(
+      request as Parameters<typeof socketProxy>[0],
+      socket as Parameters<typeof socketProxy>[1],
+      head as Buffer,
+      userId,
+    ),
+  );
 
   /**
    * @openapi
@@ -438,7 +489,16 @@ export function registerMoonlightRoutes(
           resourceName: pc.name,
           success: true,
         });
+        const userId = ctx.currentActor();
+        if (userId) grants.allow(userId, pc.id);
         res.json({
+          proxyUrl: proxiedStreamPath({
+            hostId: pc.id,
+            appId: app.id,
+            bitrate: settings.moonlightBitrate,
+            fps: settings.moonlightFps,
+            transport: settings.moonlightTransport,
+          }),
           url: moonlightStreamUrl(base, {
             hostId: pc.id,
             appId: app.id,

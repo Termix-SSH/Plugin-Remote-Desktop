@@ -77,6 +77,7 @@ async function start(options: Options = {}) {
         scope === "admin" ? (options.admin ?? ADMIN) : (options.host ?? HOST),
     },
     audit: { record: audit },
+    ws: { upgrade: vi.fn() },
   } as unknown as PluginContext;
   const client: MoonlightClient = {
     check: async () => undefined,
@@ -87,6 +88,16 @@ async function start(options: Options = {}) {
       { id: 8, title: "Steam" },
     ],
     pair: async () => ({ pin: "0000", result: Promise.resolve(true) }),
+    session: async () => ({
+      config: {
+        url: "http://ml.test",
+        username: "a",
+        password: "b",
+        ignoreCert: false,
+      },
+      token: "tok",
+    }),
+    forget: () => undefined,
     ...options.client,
   };
   const router = express.Router();

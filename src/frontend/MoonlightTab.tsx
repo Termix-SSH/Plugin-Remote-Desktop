@@ -7,7 +7,7 @@ import {
   ToolbarBand,
 } from "@termix-ssh/plugin-sdk/ui";
 import { errorMessage, type RemoteHostLogin } from "./host-remote";
-import { launchMoonlight, moonlightOrigin } from "./moonlight-api";
+import { apiBase, launchMoonlight, moonlightOrigin } from "./moonlight-api";
 import { keyboardLockRequest, moonlightEmbed } from "./moonlight-embed";
 
 const ERROR_KEYS: Record<string, string> = {
@@ -22,7 +22,7 @@ const ERROR_KEYS: Record<string, string> = {
 type LaunchState =
   | { status: "loading" }
   | { status: "failed"; message: string; requestTab: string | null }
-  | { status: "ready"; url: string };
+  | { status: "ready"; url: string; framed: boolean };
 
 type Keyboard = { lock?: (keys?: string[]) => Promise<void> };
 
@@ -58,8 +58,22 @@ export function MoonlightTab({ host }: { host?: RemoteHostLogin }) {
       if (id === undefined || id === null) {
         throw new Error(t("remoteDesktop.noHostSelected"));
       }
-      const { url } = await launchMoonlight(origin, id);
-      if (current === run.current) setState({ status: "ready", url });
+      const launched = await launchMoonlight(origin, id);
+      // Through this server the page is on Termix's own address, so it can be
+      // framed. A linked server's proxy is another address, so it opens apart.
+      const proxied = !!launched.proxyUrl && !remote;
+      const url = proxied
+        ? new URL(
+            `${apiBase(origin)}${launched.proxyUrl as string}`,
+            location.href,
+          ).toString()
+        : launched.url;
+      const framed =
+        proxied ||
+        moonlightEmbed(url, location.href, isElectron()) === "iframe";
+      if (current === run.current) {
+        setState({ status: "ready", url, framed });
+      }
     } catch (error) {
       if (current !== run.current) return;
       const { code, requestTab } = error as {
@@ -129,7 +143,7 @@ export function MoonlightTab({ host }: { host?: RemoteHostLogin }) {
     );
   }
 
-  if (moonlightEmbed(state.url, location.href, isElectron()) === "window") {
+  if (!state.framed) {
     return (
       <Centered>
         <Button onClick={() => openStream(state.url)}>
