@@ -93,6 +93,18 @@ const ALT_L = 0x38;
 const WIN_L = EXT | 0x5b;
 const WIN_R = EXT | 0x5c;
 const CAPS = 0x3a;
+const NUM_LOCK = 0x45;
+
+/**
+ * The Num Lock state a keypad key needs on the server: digits and the
+ * decimal point only type with it on, the navigation keys only with it off.
+ */
+function keypadNumLock(keysym: number): boolean | undefined {
+  const digit = keysym >= 0xffb0 && keysym <= 0xffb9;
+  if (digit || keysym === 0xffae || keysym === 0xffac) return true;
+  if (keysym >= 0xff95 && keysym <= 0xff9f) return false;
+  return undefined;
+}
 
 type Layer = "base" | "shift" | "altgr" | "altgrShift";
 
@@ -138,7 +150,15 @@ function indexLayout(spec: LayoutSpec): Map<string, Mapping> {
 }
 
 export type KeyOutput =
-  { scancode: number; down: boolean } | { unicode: number; down: boolean };
+  | { scancode: number; down: boolean }
+  | { unicode: number; down: boolean }
+  /** Sets the server's lock keys, sent before a key that needs them. */
+  | { locks: Locks };
+
+export interface Locks {
+  num: boolean;
+  caps: boolean;
+}
 
 /**
  * Turns the keysyms a Guacamole client sends into RDP scancodes for the
@@ -154,6 +174,7 @@ export class Keyboard {
   /** What each held keysym pressed, so its release lifts the same thing. */
   private readonly pressedBy = new Map<number, KeyOutput[]>();
   private capsLock = false;
+  private numLock = false;
 
   constructor(layout: string) {
     this.spec = LAYOUTS[layout] ?? LAYOUTS[DEFAULT_LAYOUT];
@@ -162,6 +183,11 @@ export class Keyboard {
 
   get layoutId(): number {
     return this.spec.id;
+  }
+
+  /** The lock state the server should have, to sync on (re)connect. */
+  get locks(): Locks {
+    return { num: this.numLock, caps: this.capsLock };
   }
 
   key(keysym: number, pressed: boolean): KeyOutput[] {
@@ -195,8 +221,9 @@ export class Keyboard {
     const fixed = FIXED[keysym];
     if (fixed !== undefined) {
       if (fixed === CAPS) this.capsLock = !this.capsLock;
+      if (fixed === NUM_LOCK) this.numLock = !this.numLock;
       this.pressedBy.set(keysym, [{ scancode: fixed, down: false }]);
-      return [this.downKey(fixed)];
+      return [...this.syncNumLock(keysym), this.downKey(fixed)];
     }
     const char = keysymToChar(keysym);
     if (char === null) return [];
@@ -214,6 +241,17 @@ export class Keyboard {
       if (mapping) return this.typed(keysym, char, mapping);
     }
     return this.unicode(char);
+  }
+
+  /**
+   * The server reads a keypad scancode by its own Num Lock, not the user's,
+   * so set it to what the keysym means before sending the key.
+   */
+  private syncNumLock(keysym: number): KeyOutput[] {
+    const want = keypadNumLock(keysym);
+    if (want === undefined || want === this.numLock) return [];
+    this.numLock = want;
+    return [{ locks: this.locks }];
   }
 
   private release(keysym: number): KeyOutput[] {
