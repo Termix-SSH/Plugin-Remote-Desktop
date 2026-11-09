@@ -34,7 +34,7 @@ if (!callback) throw new Error("Missing refreshKeyboardHandlers callback");
 const runRefresh = new Function(
   "state",
   ts.transpileModule(
-    `const { keyboardRef, clientRef, displayElementRef, isVisible, windowFocusedRef, hasKeyboardFocusRef, sessionProtocolRef, remoteKeysym, isToggleKey } = state;
+    `const { keyboardRef, clientRef, displayElementRef, isVisible, windowFocusedRef, hasKeyboardFocusRef, sessionProtocolRef, remoteKeysym, isToggleKey, systemKeysRef } = state;
     (${callback})();`,
     { compilerOptions: { target: ts.ScriptTarget.ES2022 } },
   ).outputText,
@@ -68,6 +68,7 @@ describe("remote keyboard focus loss", () => {
         windowFocusedRef: { current: true },
         hasKeyboardFocusRef: { current: true },
         sessionProtocolRef: { current: "vnc" },
+        systemKeysRef: { current: vi.fn() },
         remoteKeysym,
         isToggleKey,
       };
@@ -91,6 +92,8 @@ describe("remote keyboard focus loss", () => {
         [...keys].sort((a, b) => a - b).map((key) => [0, key]),
       );
       expect(Object.keys(keyboard.pressed)).toEqual([]);
+      // The Windows keys go back to the local system with the focus.
+      expect(state.systemKeysRef.current.mock.calls).toEqual([[true], [false]]);
       expect(keyboard.onkeydown).toBeNull();
       expect(keyboard.onkeyup).toBeNull();
       keyboard.press(0x6c);
@@ -137,6 +140,7 @@ describe("remote keyboard on a Mac", () => {
         windowFocusedRef: { current: true },
         hasKeyboardFocusRef: { current: true },
         sessionProtocolRef: { current: protocol },
+        systemKeysRef: { current: vi.fn() },
         remoteKeysym,
         isToggleKey,
       });
@@ -182,6 +186,7 @@ describe("Korean toggle keys with the real keyboard", () => {
         windowFocusedRef: { current: true },
         hasKeyboardFocusRef: { current: true },
         sessionProtocolRef: { current: "rdp" },
+        systemKeysRef: { current: vi.fn() },
         remoteKeysym,
         isToggleKey,
       };
