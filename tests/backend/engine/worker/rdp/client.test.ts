@@ -165,14 +165,31 @@ describe("redirectTarget", () => {
     password: "",
   };
 
-  it("follows the address and strips the cookie wrapper", () => {
+  it("follows the address and keeps the token as sent, less its CRLF", () => {
     const t = redirectTarget(event, "gnome.lan", 3389, 0);
     expect(t).toMatchObject({
       host: "10.0.0.5",
       port: 3389,
-      loadBalanceInfo: "abc",
+      loadBalanceInfo: "Cookie: msts=abc",
     });
     expect(t?.username).toBe("bob");
+  });
+
+  it("carries the RDSTLS guid and password cookie to the next hop", () => {
+    const t = redirectTarget(
+      {
+        ...event,
+        redirectionGuid: new Uint8Array([1, 2]),
+        passwordCookie: new Uint8Array([3, 4]),
+      },
+      "gnome.lan",
+      3389,
+      0,
+    );
+    expect(t).toMatchObject({
+      redirectionGuid: [1, 2],
+      passwordCookie: [3, 4],
+    });
   });
 
   it("uses the same host when the server sends only a token", () => {
