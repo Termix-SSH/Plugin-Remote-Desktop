@@ -36,4 +36,24 @@ describe("engine module", () => {
     surface.copy_rect(0, 0, 2, 2, 2, 2);
     surface.free();
   });
+
+  it("compresses repeating screen content in PNG frames", () => {
+    const wasm = loadWasm(new WebAssembly.Module(wasmBytes as BufferSource));
+    const size = 256;
+    const surface = new wasm.Surface(size, size);
+    const pixels = surfaceView(wasm, surface);
+    // Dark marks repeating on a light background, like lines of text.
+    for (let y = 0; y < size; y++) {
+      for (let x = 0; x < size; x++) {
+        const i = (y * size + x) * 4;
+        const value = ((x % 8) * 3 + (y % 12) * 5) % 7 < 2 ? 20 : 235;
+        pixels.fill(value, i, i + 3);
+        pixels[i + 3] = 255;
+      }
+    }
+    const png = surface.encode_png(0, 0, size, size, false);
+    // Huffman-only deflate kept this near raw size, a frame's worth per repaint.
+    expect(png.length).toBeLessThan((size * size * 3) / 4);
+    surface.free();
+  });
 });
