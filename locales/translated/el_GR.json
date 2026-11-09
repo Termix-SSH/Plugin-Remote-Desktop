@@ -11,6 +11,8 @@
     "connectionError": "Σφάλμα σύνδεσης",
     "clipboardWaiting": "Το κείμενο αντιγράφηκε στη συνεδρία. Κάντε κλικ ή πατήστε ένα πλήκτρο εδώ για να το τοποθετήσετε στο πρόχειρο. Ανοίξτε το Termix μέσω HTTPS για άμεσο αντιγραφή.",
     "failedToConnect": "Αποτυχία λήψης διακριτικού σύνδεσης",
+    "requestAccess": "Αίτηση πρόσβασης",
+    "verifyAccess": "Επαλήθευση",
     "hostNotFound": "Ο υπολογιστής δεν βρέθηκε",
     "noHostSelected": "Δεν έχει επιλεγεί υπολογιστής",
     "guacdUnavailable": "Ο εξωτερικός guacd δεν απαντά. Ελέγξτε ότι εκτελείται ή απενεργοποιήστε τη χρήση εξωτερικού guacd στις ρυθμίσεις Απομακρυσμένης Εργασιακής Επιφάνειας.",
@@ -81,14 +83,16 @@
         "macLock": "Κλείδωμα οθόνης",
         "spotlight": "Spotlight",
         "logoff": "Αποσύνδεση",
-        "record": "Εγγραφή"
+        "record": "Εγγραφή",
+        "monitors": "Οθόνες"
       },
       "hints": {
         "files": "Εμφανίζεται μόλις ενεργοποιηθεί ο δίσκος RDP",
         "touchMode": "Μόνο σε οθόνες αφής",
         "modifiers": "Τα πλήκτρα Ctrl, Alt, Shift και το πλήκτρο συστήματος παραμένουν πατημένα μέχρι το επόμενο πλήκτρο",
         "logoff": "Αποσυνδέεται από το Windows εκτελώντας την εντολή logoff από το παράθυρο Run. Η συνεδρία πρέπει να είναι ανοιχτή και να εμφανίζει την επιφάνεια εργασίας.",
-        "record": "Εκκινεί ή σταματά την εγγραφή αυτής της συνεδρίας. Απαιτείται το πρόσθετο Session Recording και η ενσωματωμένη μηχανή."
+        "record": "Εκκινεί ή σταματά την εγγραφή αυτής της συνεδρίας. Απαιτείται το πρόσθετο Session Recording και η ενσωματωμένη μηχανή.",
+        "monitors": "Εναλλαγή μεταξύ των απομακρυσμένων οθονών"
       },
       "option": "Επιλογή",
       "logoffConfirm": "Αποσύνδεση από αυτή τη συνεδρία Windows; Η μη αποθηκευμένη εργασία θα χαθεί.",
@@ -96,9 +100,22 @@
       "recordStop": "Διακοπή εγγραφής",
       "recordStarted": "Η εγγραφή ξεκίνησε",
       "recordStopped": "Η εγγραφή αποθηκεύτηκε στο Session Recording",
-      "recordFailed": "Αδυναμία αλλαγής της εγγραφής"
+      "recordFailed": "Αδυναμία αλλαγής της εγγραφής",
+      "recordRequired": "Ένας διαχειριστής έχει καθορίσει την εγγραφή ως υποχρεωτική σε αυτόν τον υπολογιστή",
+      "recordRequiredLabel": "Εγγραφή (υποχρεωτική)",
+      "monitor": "Οθόνη {{number}}"
     },
-    "disabled": "Το Remote Desktop είναι απενεργοποιημένο. Ένας διαχειριστής μπορεί να το ενεργοποιήσει στις Ρυθμίσεις."
+    "disabled": "Το Remote Desktop είναι απενεργοποιημένο. Ένας διαχειριστής μπορεί να το ενεργοποιήσει στις Ρυθμίσεις.",
+    "rustdesk": {
+      "videoUnsupported": "Αυτός ο περιηγητής δεν μπορεί να αναπαράγει βίντεο RustDesk. Χρησιμοποιήστε μια πρόσφατη έκδοση του Chrome, Edge, Firefox ή Safari.",
+      "passwordTitle": "Κωδικός πρόσβασης RustDesk",
+      "passwordDescription": "Η απομακρυσμένη συσκευή απαιτεί κωδικό πρόσβασης. Χρησιμοποιείται μόνο για αυτή τη συνεδρία και δεν αποθηκεύεται.",
+      "passwordWrong": "Αυτό το συνθηματικό δεν αποδεχθηκε. Δοκιμάστε ξανά.",
+      "codeTitle": "Κωδικός δύο παραγόντων",
+      "codeDescription": "Η απομακρυσμένη συσκευή χρειάζεται τον κωδικό από την εφαρμογή ελέγχου ταυτότητας.",
+      "codeWrong": "Αυτός ο κωδικός δεν αποδεχθηκε. Δοκιμάστε ξανά.",
+      "code": "Κωδικός"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Άνοιξε στο Windows Remote Desktop",
@@ -142,6 +159,8 @@
       "serverLayout": "Διάταξη διακομιστή",
       "timezone": "Ζώνη ώρας",
       "loadBalanceInfo": "Πληροφορίες ισορροπίας φόρτου / Cookie",
+      "kdcUrl": "Διεύθυνση KDC Kerberos",
+      "kdcUrlDesc": "Ελεγκτής τομέα για σύνδεση Kerberos, για λογαριασμούς στους Προστατευόμενους Χρήστες. Απαιτείται η ενσωματωμένη μηχανή, η συσκευή που εισάγεται με το όνομα DNS της και ο τομέας να συμπληρώνεται. Αφήστε κενό για NTLM.",
       "loadBalanceInfoDesc": "Cookie του RD Connection Broker για ισορροπία φόρτου σε φάρμα RDS (π.χ. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "Proxy guacd (προαιρετικό)",
       "guacdHostname": "Διακομιστής guacd",
@@ -278,7 +297,75 @@
     "docsLink": "Προβολή εγγράφων",
     "connectionOriginGuacamoleNote": "Τα RDP, VNC και Telnet εκτελούνται σε αυτή τη συσκευή από προεπιλογή, όπως το SSH. Επιλέξτε Remote server για να τα εκτελέσετε στον εξυπηρετητή αντί για τη συσκευή.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Κοινοποίηση οθόνης Mac"
+    "appleScreenSharing": "Κοινοποίηση οθόνης Mac",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Απομακρυσμένη οθόνη μέσω ID RustDesk",
+    "rustdesk": {
+      "direct": "Άμεση πρόσβαση μέσω IP",
+      "directDesc": "Συνδεθείτε στην διεύθυνση του υπολογιστή αντί να αναζητήσετε ένα RustDesk ID. Η απευθείας πρόσβαση μέσω IP πρέπει να είναι ενεργοποιημένη στο RustDesk της συσκευής.",
+      "port": "Θύρα απευθείας IP",
+      "directNote": "Η σύνδεση είναι κρυπτογραφημένη, αλλά χωρίς διακομιστή ID δεν υπάρχει τρόπος να επιβεβαιωθεί ποια συσκευή απάντησε.",
+      "id": "RustDesk ID",
+      "idDesc": "Το ID που εμφανίζεται στο RustDesk της απομακρυσμένης συσκευής.",
+      "passwordDesc": "Ο μόνιμος ή ο μονοχρήστους κωδικός πρόσβασης που ορίστηκε στο RustDesk. Αφήστε το κενό για να ζητηθεί αποδοχή της συνεδρίας από κάποιον στην απομακρυσμένη συσκευή.",
+      "server": "Διακομιστής RustDesk",
+      "serverDesc": "Αφήστε κενό για να χρησιμοποιηθεί ο διακομιστής που έχει οριστεί στις ρυθμίσεις διαχείρισης της Απομακρυσμένης Εργασιακής Επιφάνειας, ή ο δημόσιος διακομιστής RustDesk αν δεν έχει οριστεί κανένας.",
+      "idServer": "Διακομιστής ID",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Διακομιστής μεσολάβησης",
+      "relayServerPlaceholder": "Ίδιος με τον διακομιστή ID",
+      "key": "Κλειδί",
+      "keyDesc": "Το δημόσιο κλειδί του διακομιστή RustDesk, από το αρχείο id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Ροή χαμηλής καθυστέρησης από έναν υπολογιστή με Sunshine",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "Υπολογιστής",
+      "pcDesc": "Ο υπολογιστής με Sunshine για ροή. Το Moonlight Web εμφανίζει όλους τους γνωστούς υπολογιστές.",
+      "choosePc": "Επιλέξτε έναν υπολογιστή",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "συζευγμένο",
+      "notPaired": "δεν είναι συζευγμένο",
+      "offline": "εκτός σύνδεσης",
+      "refresh": "Ανανέωση",
+      "addPc": "Προσθήκη αυτού του host στο Moonlight Web",
+      "addPcDesc": "Προσθέτει το {{address}} στην θύρα {{port}}, κοινόχρηστο για όλους τους χρήστες του Moonlight Web.",
+      "pair": "Σύζευξη",
+      "pairDesc": "Αυτός ο υπολογιστής πρέπει να συζευχθεί με το Moonlight Web μία φορά.",
+      "pairing": "Αναμονή για το Sunshine",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "Ανοίξτε το web UI του Sunshine στον υπολογιστή, πηγαίνετε στο PIN και εισάγετε αυτόν τον κωδικό PIN.",
+      "pairDone": "Ο υπολογιστής συνδέθηκε",
+      "pairFailed": "Η σύνδεση απέτυχε. Ελέγξτε τον κωδικό PIN και προσπαθήστε ξανά.",
+      "pairExpired": "Λήξη χρόνου σύνδεσης. Προσπαθήστε ξανά.",
+      "noSetUpAccess": "Ζητήστε από έναν διαχειριστή να προσθέσει και να συνδέσει αυτόν τον υπολογιστή.",
+      "stream": "Ροή",
+      "app": "Εφαρμογή",
+      "appDesc": "Τι θα ανοίξει στον υπολογιστή.",
+      "firstApp": "Πρώτη εφαρμογή",
+      "bitrate": "Ρυθμός μετάδοσης (kbps)",
+      "bitrateDesc": "Αφήστε το στο 0 για να χρησιμοποιήσετε την προεπιλογή του Moonlight Web.",
+      "fps": "Ρυθμός καρέ",
+      "fpsDesc": "Αφήστε το στο 0 για να χρησιμοποιήσετε την προεπιλογή του Moonlight Web.",
+      "transport": "Μεταφορά",
+      "transportDesc": "Το WebRTC έχει την χαμηλότερη καθυστέρηση. Τα WebSockets λειτουργούν σε δίκτυα που το μπλοκάρουν.",
+      "transportAuto": "Αυτόματο",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "Ένας διαχειριστής πρέπει να ρυθμίσει τον διακομιστή Moonlight Web στις ρυθμίσεις Απομακρυσμένης Εργασιακής Επιφάνειας.",
+      "loading": "Ετοιμασία ροής",
+      "signInNote": "Το Moonlight Web ζητάει σύνδεση την πρώτη φορά.",
+      "openStream": "Άνοιγμα ροής",
+      "openInWindow": "Άνοιγμα σε νέο παράθυρο",
+      "noH264": "Αυτός ο περιηγητής δεν μπορεί να αναπαράγει βίντεο H.264. Αν η ροή δεν ξεκινήσει, χρησιμοποιήστε Chrome, Edge ή την εφαρμογή Termix για υπολογιστές, ή ενεργοποιήστε HEVC ή AV1 στο Sunshine.",
+      "retry": "Δοκιμή ξανά",
+      "errorRecordingRequired": "Η εγγραφή είναι υποχρεωτική σε αυτόν τον υπολογιστή και οι ροές Moonlight δεν μπορούν να καταγραφούν.",
+      "errorNotLinked": "Δεν έχει συνδεθεί κανένας υπολογιστής. Επιλέξτε έναν στο επεξεργαστή υπολογιστών.",
+      "errorNotPaired": "Αυτός ο υπολογιστής δεν έχει συζευχθεί ακόμη. Συζευξτέ τον στο επεξεργαστή υπολογιστών.",
+      "errorOffline": "Ο υπολογιστής είναι εκτός δικτύου ή το Sunshine δεν εκτελείται.",
+      "errorNoApps": "Το Sunshine δεν έχει εφαρμογές για άνοιγμα σε αυτόν τον υπολογιστή."
+    }
   },
   "onboarding": {
     "guacdTitle": "Ρύθμιση απομακρυσμένης οθόνης",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "Οι διευθύνσεις guacd ανά διακομιστή μετακινήθηκαν"
+      },
+      "rustdeskIdServer": {
+        "label": "Διακομιστής ID RustDesk",
+        "description": "Ο δικός σας διακομιστής ID RustDesk (hbbs), ως host ή host:port. Αφήστε κενό για να χρησιμοποιήσετε τον δημόσιο διακομιστή RustDesk. Οι hosts μπορούν να ορίσουν τον δικό τους.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "Διακομιστής μεσολάβησης RustDesk",
+        "description": "Ο διακομιστής μεσολάβησης RustDesk (hbbr). Αφήστε κενό για να χρησιμοποιήσετε αυτό που αναφέρει ο διακομιστής ID.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "Κλειδί διακομιστή RustDesk",
+        "description": "Το δημόσιο κλειδί του διακομιστή RustDesk, από το id_ed25519.pub. Απαιτείται με τον δικό σας διακομιστή."
+      },
+      "moonlightUrl": {
+        "label": "Διεύθυνση web Moonlight",
+        "description": "Ο διακομιστής Moonlight Web με τον οποίο επικοινωνεί το Termix για τη ροή μέσω Sunshine. Δείτε την τεκμηρίωση για να εκτελέσετε έναν.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Δημόσια διεύθυνση Moonlight Web",
+        "description": "Η διεύθυνση που ανοίγουν οι περιηγητές, αν διαφέρει από την παραπάνω. Απαιτείται HTTPS για τα χειριστήρια και την κλείδωση του πληκτρολογίου.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Όνομα χρήστη Moonlight Web",
+        "description": "Ένας σύνδεσμος διαχειριστή στο Moonlight Web. Το Termix το χρησιμοποιεί για να εμφανίζει, να προσθέτει και να συσχετίζει υπολογιστές."
+      },
+      "moonlightPassword": {
+        "label": "Κωδικός πρόσβασης Moonlight Web",
+        "description": "Ο κωδικός πρόσβασης για αυτή τη σύνδεση."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Αγνόηση πιστοποιητικού Moonlight Web",
+        "description": "Ενεργοποιήστε για αυτουπογεγραμμένο πιστοποιητικό στο Moonlight Web."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "Θύρα ARD"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "Θύρα άμεσης IP πρόσβασης RustDesk"
+      },
+      "rustdeskId": {
+        "label": "Αναγνωριστικό RustDesk"
+      },
+      "rustdeskDirect": {
+        "label": "Άμεση πρόσβαση IP RustDesk"
+      },
+      "rustdeskIdServer": {
+        "label": "Διακομιστής αναγνωριστικών RustDesk"
+      },
+      "rustdeskRelayServer": {
+        "label": "Διακομιστής μεσολάβησης RustDesk"
+      },
+      "rustdeskKey": {
+        "label": "Κλειδί διακομιστή RustDesk"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Θύρα Sunshine"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Εφαρμογή Moonlight"
+      },
+      "moonlightBitrate": {
+        "label": "Ρυθμός μετάδοσης Moonlight"
+      },
+      "moonlightFps": {
+        "label": "Ρυθμός καρέ Moonlight"
+      },
+      "moonlightTransport": {
+        "label": "Μεταφορά Moonlight"
+      },
+      "rdpAutoReconnect": {
+        "label": "Αυτόματη επανασύνδεση RDP",
+        "description": "Επανασύνδεση όταν χαθεί μια συνεδρία RDP. Απενεργοποιήστε για χειροκίνητη επανασύνδεση και αποφυγή διακοπής συνεδριών που άνοιξαν από άλλο πελάτη."
+      },
+      "rdpAutoResize": {
+        "label": "Αυτόματη αλλαγή μεγέθους RDP",
+        "description": "Προσαρμογή της απομακρυσμένης ανάλυσης όταν αλλάζει το μέγεθος του παραθύρου. Απενεργοποιήστε για να διατηρηθεί το μέγεθος που επιλέχθηκε κατά τη σύνδεση μέχρι την επανασύνδεση."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Σύνδεση με RDP",
     "connectVnc": "Σύνδεση με VNC",
     "connectTelnet": "Σύνδεση με Telnet",
-    "connectArd": "Σύνδεση με Apple Remote Desktop"
+    "connectArd": "Σύνδεση με Apple Remote Desktop",
+    "connectRustdesk": "Σύνδεση με RustDesk",
+    "connectMoonlight": "Σύνδεση με το Moonlight"
   },
   "permissions": {
     "sessions": {
       "title": "Κοινοποίηση συνεδριών απομακρυσμένης επιφάνειας εργασίας",
       "description": "Επιτρέψτε στη κοινοποίηση συνεδριών και στα δωμάτια συνεργασίας να εμφανίζουν τις συνεδρίες RDP, VNC και Telnet αυτού του χρήστη σε άλλους."
+    },
+    "monitor": {
+      "title": "Παρακολούθηση των απομακρυσμένων συνεδριών οθόνης όλων",
+      "description": "Επιτρέπει σε άλλες λειτουργίες, όπως η Εγγραφή Συνεδρίας, να εμφανίζει, παρακολουθεί και τερματίζει τις συνεδρίες RDP, VNC και Telnet όλων των χρηστών."
+    },
+    "moonlight": {
+      "title": "Ρύθμιση υπολογιστών Moonlight",
+      "description": "Προσθήκη υπολογιστών Sunshine στο Moonlight Web και ζευγάρωμά τους, χρησιμοποιώντας τις αποθηκευμένες πληροφορίες εισόδου του Moonlight Web."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Απομακρυσμένη επιφάνεια εργασίας",
     "description": "Συνεδρίες RDP, VNC και Telnet στον περιηγητή σας, με πρόχειρο, μεταφορά αρχείων, κοινή χρήση και εγγραφή."
+  },
+  "operations": {
+    "check": {
+      "title": "Έλεγχος θυρών απομακρυσμένης οθόνης"
+    },
+    "ports": {
+      "title": "Απομακρυσμένη οθόνη"
+    },
+    "sessions": {
+      "title": "Άνοιγμα απομακρυσμένων συνεδριών"
+    },
+    "session": {
+      "title": "Απομακρυσμένες συνεδρίες",
+      "protocol": "Τύπος",
+      "started": "Έναρξη"
+    }
+  },
+  "card": {
+    "title": "Απομακρυσμένες συνεδρίες",
+    "loading": "Φόρτωση...",
+    "empty": "Δεν υπάρχουν ανοιχτές απομακρυσμένες συνεδρίες"
   }
 }

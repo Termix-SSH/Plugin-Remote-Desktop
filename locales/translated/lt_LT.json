@@ -11,6 +11,8 @@
     "connectionError": "Prisijungimo klaida",
     "clipboardWaiting": "Tekstas nukopijuotas sesijoje. Spustelėkite arba paspauskite klavišą čia, kad įdėtumėte jį į iškarpinę. Atidarykite Termix per HTTPS, kad nukopijuotumėte iškart.",
     "failedToConnect": "Nepavyko gauti prisijungimo žetono",
+    "requestAccess": "Prašyti prieigos",
+    "verifyAccess": "Patvirtinti",
     "hostNotFound": "Mazgas nerastas",
     "noHostSelected": "Nepasirinktas mazgas",
     "guacdUnavailable": "Išorinis guacd neatsako. Įsitikinkite, kad jis veikia, arba nuimkite žymę „Naudoti išorinį guacd“ nuotolinio darbalaukio nustatymuose.",
@@ -81,14 +83,16 @@
         "macLock": "Užrakinti ekraną",
         "spotlight": "Spotlight",
         "logoff": "Atsijungti",
-        "record": "Įrašyti"
+        "record": "Įrašyti",
+        "monitors": "Monitoriai"
       },
       "hints": {
         "files": "Rodoma tik įjungus RDP diską",
         "touchMode": "Tik jutikliniuose ekranuose",
         "modifiers": "Ctrl, Alt, Shift ir sistemos klavišas laikomi nuspausti iki kito klavišo paspaudimo",
         "logoff": "Atsijungia nuo Windows, paleidžiant logoff iš Run langelio. Sesija turi būti atidaryta ir rodyti darbalaukį.",
-        "record": "Pradeda arba sustabdo šios sesijos įrašymą. Reikalingas Session Recording priedas ir integruota variklio sistema."
+        "record": "Pradeda arba sustabdo šios sesijos įrašymą. Reikalingas Session Recording priedas ir integruota variklio sistema.",
+        "monitors": "Perjungti tarp nuotolinių monitorių"
       },
       "option": "Option",
       "logoffConfirm": "Atsijungti nuo šios Windows sesijos? Neišsaugotas darbas bus prarastas.",
@@ -96,9 +100,22 @@
       "recordStop": "Sustabdyti įrašymą",
       "recordStarted": "Įrašymas pradėtas",
       "recordStopped": "Įrašymas išsaugotas Session Recording",
-      "recordFailed": "Nepavyko pakeisti įrašymo"
+      "recordFailed": "Nepavyko pakeisti įrašymo",
+      "recordRequired": "Administratorius šiam hostui nustatė privalomą įrašymą",
+      "recordRequiredLabel": "Įrašymas (privaloma)",
+      "monitor": "Monitorius {{number}}"
     },
-    "disabled": "Nuotolinis darbalaukis išjungtas. Administratorius gali jį įjungti „Nustatymuose“."
+    "disabled": "Nuotolinis darbalaukis išjungtas. Administratorius gali jį įjungti „Nustatymuose“.",
+    "rustdesk": {
+      "videoUnsupported": "Šis naršyklė negali atkurti RustDesk vaizdo. Naudokite naujausią Chrome, Edge, Firefox arba Safari.",
+      "passwordTitle": "RustDesk slaptažodis",
+      "passwordDescription": "Nuotoliniam įrenginiui reikia slaptažodžio. Jis naudojamas tik šiai sesijai ir nėra išsaugomas.",
+      "passwordWrong": "Šis slaptažodis nebuvo priimtas. Bandykite dar kartą.",
+      "codeTitle": "Dviejų faktorių kodas",
+      "codeDescription": "Nuotoliniam įrenginiui reikia kodo iš autentifikatoriaus programėlės.",
+      "codeWrong": "Šis kodas nebuvo priimtas. Bandykite dar kartą.",
+      "code": "Kodas"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Atidaryta „Windows Remote Desktop“",
@@ -142,6 +159,8 @@
       "serverLayout": "Serverio išdėstymas",
       "timezone": "Laiko juosta",
       "loadBalanceInfo": "Apkrovos balansavimo informacija / slapukas",
+      "kdcUrl": "Kerberos KDC adresas",
+      "kdcUrlDesc": "Kerberos prisijungimo domenų valdiklis, skirtas „Protected Users“ paskyroms. Reikia integruoto variklio, hosto, įvesto pagal DNS vardą, ir užpildyto domeno. Palikite tuščią NTLM atveju.",
       "loadBalanceInfoDesc": "RD Connection Broker slapukas RDS fermos apkrovos balansavimui (pvz., tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd tarpinis serveris (nebūtina)",
       "guacdHostname": "guacd serveris",
@@ -278,7 +297,75 @@
     "docsLink": "Peržiūrėti dokumentaciją",
     "connectionOriginGuacamoleNote": "RDP, VNC ir Telnet numatyta veikia šiame įrenginyje (kaip SSH). Jei norite, kad jie veiktų serveryje, pasirinkite Nuotolinis serveris.",
     "tabArd": "Apple nuotolinis darbalaukis",
-    "appleScreenSharing": "Mac ekrano bendrinimas"
+    "appleScreenSharing": "Mac ekrano bendrinimas",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Nuotolinis darbalaukis per RustDesk ID",
+    "rustdesk": {
+      "direct": "Tiesioginis IP prieiga",
+      "directDesc": "Jungtis prie hosto adreso, o ne ieškant RustDesk ID. Tiesioginė IP prieiga turi būti įjungta RustDesk tame įrenginyje.",
+      "port": "Tiesioginio IP prievadas",
+      "directNote": "Ryšys yra šifruotas, tačiau be ID serverio niekas negali patvirtinti, kuris įrenginys atsakė.",
+      "id": "RustDesk ID",
+      "idDesc": "ID, rodomas RustDesk nuotoliniame įrenginyje.",
+      "passwordDesc": "Pastovus arba vienkartinis slaptažodis, nustatytas RustDesk. Palikite tuščią, kad kas nors priimtų sesiją nuotoliniame įrenginyje.",
+      "server": "RustDesk serveris",
+      "serverDesc": "Palikite tuščią, kad būtų naudojamas serveris, nustatytas Nuotolinio darbalaukio administratoriaus nustatymuose, arba viešasis RustDesk serveris, jei niekas nenustatyta.",
+      "idServer": "ID serveris",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Tarpinis serveris",
+      "relayServerPlaceholder": "Toks pats kaip ID serveris",
+      "key": "Raktas",
+      "keyDesc": "Jūsų RustDesk serverio viešasis raktas, iš id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Mažo delsimo transliavimas iš Sunshine PC",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "Kompiuteris",
+      "pcDesc": "Sunshine kompiuteris, iš kurio transliuoti. Moonlight Web išsako visus žinomus kompiuterius.",
+      "choosePc": "Pasirinkti kompiuterį",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "susietas",
+      "notPaired": "nesusietas",
+      "offline": "neprisijungęs",
+      "refresh": "Atnaujinti",
+      "addPc": "Pridėti šį hostą prie Moonlight Web",
+      "addPcDesc": "Prideda {{address}} prievade {{port}}, dalijamasi su visais Moonlight Web naudotojais.",
+      "pair": "Susieti",
+      "pairDesc": "Šis kompiuteris turi būti susietas su Moonlight Web vieną kartą.",
+      "pairing": "Laukiama Sunshine",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "Atidarykite Sunshine web sąsają kompiuteryje, eikite į PIN ir įveskite šį PIN.",
+      "pairDone": "Kompiuteris susietas",
+      "pairFailed": "Susiejimas nepavyko. Patikrinkite PIN ir bandykite dar kartą.",
+      "pairExpired": "Susiejimo laikas baigėsi. Bandykite dar kartą.",
+      "noSetUpAccess": "Prašykite administratoriaus pridėti ir susieti šį kompiuterį.",
+      "stream": "Transliuoti",
+      "app": "Programa",
+      "appDesc": "Ką atidaryti kompiuteryje.",
+      "firstApp": "Pirmoji programa",
+      "bitrate": "Bitų srautas (kbps)",
+      "bitrateDesc": "Palikite 0, kad būtų naudojama numatytoji Moonlight Web reikšmė.",
+      "fps": "Kadrų dažnis",
+      "fpsDesc": "Palikite 0, kad būtų naudojama numatytoji Moonlight Web reikšmė.",
+      "transport": "Perdavimo protokolas",
+      "transportDesc": "WebRTC turi mažiausią delsą. WebSockets veikia tinkluose, kurie blokuoja WebRTC.",
+      "transportAuto": "Automatiškai",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "Administratorius turi sukonfigūruoti Moonlight Web serverį nuotolinio darbalaukio nustatymuose.",
+      "loading": "Ruomo paruošimas",
+      "signInNote": "Pirmą kartą prisijungus prie Moonlight Web bus paprašyta prisijungti.",
+      "openStream": "Atidaryti srautą",
+      "openInWindow": "Atidaryti naujame lange",
+      "noH264": "Šis naršyklė negali atkurti H.264 vaizdo. Jei srautas nepaleidžiamas, naudokite Chrome, Edge arba Termix darbalaukio programą, arba įjunkite HEVC arba AV1 Sunshine.",
+      "retry": "Bandyti dar kartą",
+      "errorRecordingRequired": "Šiam kompiuteriui įrašymas yra privalomas, tačiau Moonlight srautų įrašyti negalima.",
+      "errorNotLinked": "Nėra susietų kompiuterių. Pasirinkite vieną kompiuterio redaktoriuje.",
+      "errorNotPaired": "Šis kompiuteris dar nesuporuotas. Suporuokite jį kompiuterio redaktoriuje.",
+      "errorOffline": "Kompiuteris yra neprisijungęs arba Sunshine neveikia.",
+      "errorNoApps": "Sunshine šiame kompiuteryje neturi programų, kurias būtų galima atidaryti."
+    }
   },
   "onboarding": {
     "guacdTitle": "Sukonfigūruoti nuotolinį darbalaukį",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "Kiekvieno hosto guacd adresai perkelti"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID serveris",
+        "description": "Jūsų pats valdomas RustDesk ID serveris (hbbs), nurodomas kaip hostas arba hostas:portas. Palikite tuščią, kad būtų naudojamas viešasis RustDesk serveris. Hostai gali nustatyti savo.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk perdavimo serveris",
+        "description": "Jūsų RustDesk perdavimo serveris (hbbr). Palikite tuščią, kad būtų naudojama ID serverio nurodyta reikšmė.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk serverio raktas",
+        "description": "Jūsų RustDesk serverio viešasis raktas, iš id_ed25519.pub failo. Būtinas naudojant savo serverį."
+      },
+      "moonlightUrl": {
+        "label": "Moonlight Web adresas",
+        "description": "Moonlight Web serverio adresas, su kuriuo bendrauja Termix Sunshine srautiniam perdavimui. Kaip jį paleisti, žr. dokumentacijoje.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Moonlight Web viešasis adresas",
+        "description": "Adresas, kurį atidaro naršyklės, jei jis skiriasi nuo aukščiau nurodyto. Valdymo pultams ir klaviatūros užrakimui reikalingas HTTPS.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Moonlight Web vartotojo vardas",
+        "description": "Administratoriaus prisijungimas prie Moonlight Web. Termix jį naudoja kompiuteriams išvardinti, pridėti ir susieti."
+      },
+      "moonlightPassword": {
+        "label": "Moonlight Web slaptažodis",
+        "description": "Slaptažodis šiam prisijungimui."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Ignoruoti Moonlight Web sertifikatą",
+        "description": "Įjunkite, jei naudojamas saviparašytas sertifikatas Moonlight Web."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "ARD prievadas"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "Tiesioginio RustDesk IP prievadas"
+      },
+      "rustdeskId": {
+        "label": "RustDesk ID"
+      },
+      "rustdeskDirect": {
+        "label": "Tiesioginis RustDesk IP prisijungimas"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID serveris"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk perdavimo serveris"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk serverio raktas"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine prievadas"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight programėlė"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlight bitų srautas"
+      },
+      "moonlightFps": {
+        "label": "Moonlight kadrų dažnis"
+      },
+      "moonlightTransport": {
+        "label": "Moonlight perdavimo protokolas"
+      },
+      "rdpAutoReconnect": {
+        "label": "Automatiškai perkrauti RDP",
+        "description": "Perkrauti, kai RDP sesija nutrūksta. Išjunkite, norėdami perkrauti rankiniu būdu ir išvengti sesijų, atidarytų iš kito kliento, nutraukimo."
+      },
+      "rdpAutoResize": {
+        "label": "Automatiškai keisti RDP dydį",
+        "description": "Reguliuoti nuotolinę raišką, kai keičiasi lango dydis. Išjunkite, norėdami išlaikyti pasirinktą dydį nuo prisijungimo momento iki perkrovimo."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Prisijungti per RDP",
     "connectVnc": "Prisijungti per VNC",
     "connectTelnet": "Prisijungti per Telnet",
-    "connectArd": "Prisijungti per Apple Remote Desktop"
+    "connectArd": "Prisijungti per Apple Remote Desktop",
+    "connectRustdesk": "Prisijungti per RustDesk",
+    "connectMoonlight": "Prisijungti per Moonlight"
   },
   "permissions": {
     "sessions": {
       "title": "Bendrinti nuotolinio darbalaukio sesijas",
       "description": "Leisti sesijų bendrinimui ir bendradarbiavimo kambariams rodyti šio vartotojo RDP, VNC ir Telnet sesijas kitiems."
+    },
+    "monitor": {
+      "title": "Stebėti visų vartotojų nuotolinių darbalaukių sesijas",
+      "description": "Leisti kitoms funkcijoms, pvz., sesijų įrašymui, rodyti, stebėti ir baigti visų vartotojų RDP, VNC ir Telnet sesijas."
+    },
+    "moonlight": {
+      "title": "Sukonfigūruoti Moonlight kompiuterius",
+      "description": "Pridėti Sunshine kompiuterius prie Moonlight Web ir susieti juos, naudojant išsaugotus Moonlight Web prisijungimo duomenis."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Nuotolinis darbalaukis",
     "description": "RDP, VNC ir Telnet sesijos naršyklėje, su iškarpine, failų perdavimu, bendrinimu ir įrašymu."
+  },
+  "operations": {
+    "check": {
+      "title": "Patikrinti nuotolinių darbalaukių prievadus"
+    },
+    "ports": {
+      "title": "Nuotolinis darbalaukis"
+    },
+    "sessions": {
+      "title": "Atidaryti nuotolines sesijas"
+    },
+    "session": {
+      "title": "Nuotolinės sesijos",
+      "protocol": "Tipas",
+      "started": "Pradėta"
+    }
+  },
+  "card": {
+    "title": "Nuotolinės sesijos",
+    "loading": "Įkeliama...",
+    "empty": "Nėra atidarytų nuotolinių sesijų"
   }
 }

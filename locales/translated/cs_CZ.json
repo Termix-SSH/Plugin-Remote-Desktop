@@ -11,6 +11,8 @@
     "connectionError": "Chyba připojení",
     "clipboardWaiting": "Text byl zkopírován v relaci. Klikněte sem nebo stiskněte klávesu, aby se přenesl do schránky. Pro okamžité kopírování otevřete Termix přes HTTPS.",
     "failedToConnect": "Nepodařilo se získat token pro připojení",
+    "requestAccess": "Požádat o přístup",
+    "verifyAccess": "Ověřit",
     "hostNotFound": "Hostitel nebyl nalezen",
     "noHostSelected": "Nebyl vybrán žádný hostitel",
     "guacdUnavailable": "Externí služba guacd neodpovídá. Zkontrolujte, zda běží, nebo v nastavení Vzdálené plochy vypněte možnost Použít externí guacd.",
@@ -81,14 +83,16 @@
         "macLock": "Uzamknout obrazovku",
         "spotlight": "Spotlight",
         "logoff": "Odhlásit se",
-        "record": "Nahrávat"
+        "record": "Nahrávat",
+        "monitors": "Monitory"
       },
       "hints": {
         "files": "Zobrazí se, jakmile je RDP jednotka aktivní",
         "touchMode": "Pouze na dotykových obrazovkách",
         "modifiers": "Ctrl, Alt, Shift a systémová klávesa zůstávají stisknuty do další klávesy",
         "logoff": "Odhlásí uživatele z Windows spuštěním příkazu logoff z dialogu Spustit. Relace musí být otevřená a zobrazovat plochu.",
-        "record": "Spustí nebo zastaví nahrávání této relace. Vyžaduje plugin Session Recording a vestavěný engine."
+        "record": "Spustí nebo zastaví nahrávání této relace. Vyžaduje plugin Session Recording a vestavěný engine.",
+        "monitors": "Přepínání mezi vzdálenými monitory"
       },
       "option": "Option",
       "logoffConfirm": "Chcete se odhlásit z této relace Windows? Neuložená práce v ní bude ztracena.",
@@ -96,9 +100,22 @@
       "recordStop": "Zastavit nahrávání",
       "recordStarted": "Nahrávání spuštěno",
       "recordStopped": "Nahrávání uloženo do Session Recording",
-      "recordFailed": "Nepodařilo se změnit nahrávání"
+      "recordFailed": "Nepodařilo se změnit nahrávání",
+      "recordRequired": "Správce nastavil povinné nahrávání na tomto hostiteli",
+      "recordRequiredLabel": "Nahrávání (povinné)",
+      "monitor": "Monitor {{number}}"
     },
-    "disabled": "Vzdálená plocha je vypnutá. Administrátor ji může zapnout v Nastavení."
+    "disabled": "Vzdálená plocha je vypnutá. Administrátor ji může zapnout v Nastavení.",
+    "rustdesk": {
+      "videoUnsupported": "Tento prohlížeč neumí přehrávat video z RustDesk. Použijte nejnovější verzi Chrome, Edge, Firefox nebo Safari.",
+      "passwordTitle": "Heslo RustDesk",
+      "passwordDescription": "Vzdálené zařízení vyžaduje heslo. Použije se pouze pro tuto relaci a nebude uloženo.",
+      "passwordWrong": "Toto heslo nebylo přijato. Zkuste to znovu.",
+      "codeTitle": "Kód pro dvoufázové ověření",
+      "codeDescription": "Vzdálené zařízení vyžaduje kód z aplikace pro ověřování.",
+      "codeWrong": "Tento kód nebyl přijat. Zkuste to znovu.",
+      "code": "Kód"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Otevřeno ve Vzdálené ploše Windows",
@@ -142,6 +159,8 @@
       "serverLayout": "Rozložení serveru",
       "timezone": "Časové pásmo",
       "loadBalanceInfo": "Informace o vyvažování zátěže / Cookie",
+      "kdcUrl": "Adresa Kerberos KDC",
+      "kdcUrlDesc": "Doménový ovladač pro přihlášení přes Kerberos, pro účty v skupině Protected Users. Vyžaduje vestavěný engine, hostitele zadaný pomocí DNS jména a vyplněnou doménu. Nechte prázdné pro NTLM.",
       "loadBalanceInfoDesc": "Cookie pro vyvažování zátěže farmy RDS prostřednictvím RD Connection Broker (např. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "Proxy pro guacd (volitelné)",
       "guacdHostname": "Hostitel guacd",
@@ -278,7 +297,75 @@
     "docsLink": "Zobrazit dokumentaci",
     "connectionOriginGuacamoleNote": "RDP, VNC a Telnet se ve výchozím nastavení spouští na tomto zařízení, stejně jako SSH. Pokud je chcete spouštět na serveru, vyberte Vzdálený server.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Sdílení obrazovky Mac"
+    "appleScreenSharing": "Sdílení obrazovky Mac",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Vzdálená plocha pomocí ID RustDesk",
+    "rustdesk": {
+      "direct": "Přímý přístup přes IP adresu",
+      "directDesc": "Připojte se přímo k adrese hostitele místo vyhledávání RustDesk ID. Přímý přístup přes IP adresu musí být v aplikaci RustDesk na daném zařízení povolen.",
+      "port": "Port pro přímý přístup přes IP",
+      "directNote": "Spojení je šifrované, ale bez ID serveru není možné ověřit, které zařízení odpovědělo.",
+      "id": "RustDesk ID",
+      "idDesc": "ID zobrazené v aplikaci RustDesk na vzdáleném zařízení.",
+      "passwordDesc": "Trvalé nebo jednorázové heslo nastavené v aplikaci RustDesk. Nechte prázdné, pokud má někdo relaci na vzdáleném zařízení přijmout ručně.",
+      "server": "RustDesk server",
+      "serverDesc": "Nechte prázdné pro použití serveru nastaveného v administrativním nastavení Vzdálené plochy, nebo veřejného RustDesk serveru, pokud žádný není nastaven.",
+      "idServer": "ID server",
+      "idServerPlaceholder": "rustdesk.priklad.cz",
+      "relayServer": "Relay server",
+      "relayServerPlaceholder": "Stejný jako ID server",
+      "key": "Klíč",
+      "keyDesc": "Veřejný klíč vašeho RustDesk serveru, z id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Streamování s nízkou latencí z PC se Sunshine",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "PC",
+      "pcDesc": "PC se Sunshine ke streamování. Moonlight Web zobrazuje všechna známá PC.",
+      "choosePc": "Vyberte PC",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "spárováno",
+      "notPaired": "nenspárováno",
+      "offline": "offline",
+      "refresh": "Obnovit",
+      "addPc": "Přidat tohoto hostitele do Moonlight Web",
+      "addPcDesc": "Přidá {{address}} na portu {{port}}, sdíleno se všemi uživateli Moonlight Web.",
+      "pair": "Spárovat",
+      "pairDesc": "Tento počítač musí být jednou spárován s Moonlight Web.",
+      "pairing": "Čekání na Sunshine",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "Otevřete webové rozhraní Sunshine na PC, přejděte na PIN a zadejte tento PIN.",
+      "pairDone": "PC spárováno",
+      "pairFailed": "Spárování selhalo. Zkontrolujte PIN a zkuste to znovu.",
+      "pairExpired": "Časový limit spárování vypršel. Zkuste to znovu.",
+      "noSetUpAccess": "Požádejte administrátora, aby tento PC přidal a spároval.",
+      "stream": "Přenos",
+      "app": "Aplikace",
+      "appDesc": "Co otevřít na PC.",
+      "firstApp": "První aplikace",
+      "bitrate": "Rychlost přenosu (kbps)",
+      "bitrateDesc": "Nechte na 0 pro použití výchozí hodnoty Moonlight Web.",
+      "fps": "Snímková frekvence",
+      "fpsDesc": "Nechte na 0 pro použití výchozí hodnoty Moonlight Web.",
+      "transport": "Přenosový protokol",
+      "transportDesc": "WebRTC má nejnižší zpoždění. WebSockets fungují v sítích, které WebRTC blokují.",
+      "transportAuto": "Automaticky",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "Správce musí nakonfigurovat server Moonlight Web v nastavení vzdálené plochy.",
+      "loading": "Příprava streamu",
+      "signInNote": "Moonlight Web vás při prvním použití vyzve k přihlášení.",
+      "openStream": "Otevřít stream",
+      "openInWindow": "Otevřít v novém okně",
+      "noH264": "Tento prohlížeč nepodporuje přehrávání videa H.264. Pokud se stream nespustí, použijte Chrome, Edge nebo desktopovou aplikaci Termix, nebo v Sunshine povolte HEVC nebo AV1.",
+      "retry": "Zkusit znovu",
+      "errorRecordingRequired": "Na tomto hostiteli je vyžadováno nahrávání, ale streamy Moonlight nelze nahrávat.",
+      "errorNotLinked": "Žádný počítač není propojen. Vyberte jeden v editoru hostitele.",
+      "errorNotPaired": "Tento počítač ještě není spárován. Spárujte ho v editoru hostitele.",
+      "errorOffline": "Počítač je offline nebo aplikace Sunshine neběží.",
+      "errorNoApps": "Sunshine nemá na tomto počítači žádné aplikace, které by bylo možné otevřít."
+    }
   },
   "onboarding": {
     "guacdTitle": "Nastavit vzdálenou plochu",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "Adresy guacd pro jednotlivé hosty byly přesunuty"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID server",
+        "description": "Váš vlastní RustDesk ID server (hbbs) ve formátu hostitel nebo hostitel:port. Nechte prázdné pro použití veřejného RustDesk serveru. Hostitelé si mohou nastavit vlastní.",
+        "placeholder": "rustdesk.priklad.cz"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk relay server",
+        "description": "Váš RustDesk relay server (hbbr). Nechte prázdné pro použití hodnoty z ID serveru.",
+        "placeholder": "rustdesk.priklad.cz:21117"
+      },
+      "rustdeskKey": {
+        "label": "Klíč RustDesk serveru",
+        "description": "Veřejný klíč vašeho RustDesk serveru ze souboru id_ed25519.pub. Vyžadováno při použití vlastního serveru."
+      },
+      "moonlightUrl": {
+        "label": "Adresa Moonlight Web",
+        "description": "Adresa Moonlight Web serveru, se kterým Termix komunikuje pro streamování přes Sunshine. Podívejte se do dokumentace, jak jej spustit.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Veřejná adresa Moonlight Web",
+        "description": "Adresa, kterou otevřou prohlížeče, pokud se liší od té výše. Pro ovladače a zámek klávesnice je vyžadován HTTPS.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Uživatelské jméno Moonlight Web",
+        "description": "Přihlášení administrátora na Moonlight Web. Termix jej používá k výpisu, přidávání a párování PC."
+      },
+      "moonlightPassword": {
+        "label": "Heslo Moonlight Web",
+        "description": "Heslo pro toto přihlášení."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Ignorovat certifikát Moonlight Web",
+        "description": "Povolte pro samopodepsaný certifikát na Moonlight Web."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "Port ARD"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "Přímý IP port RustDesk"
+      },
+      "rustdeskId": {
+        "label": "ID RustDesk"
+      },
+      "rustdeskDirect": {
+        "label": "Přímý IP přístup RustDesk"
+      },
+      "rustdeskIdServer": {
+        "label": "ID server RustDesk"
+      },
+      "rustdeskRelayServer": {
+        "label": "Relay server RustDesk"
+      },
+      "rustdeskKey": {
+        "label": "Klíč serveru RustDesk"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Port Sunshine"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Aplikace Moonlight"
+      },
+      "moonlightBitrate": {
+        "label": "Přenosová rychlost Moonlight"
+      },
+      "moonlightFps": {
+        "label": "Snímková frekvence Moonlight"
+      },
+      "moonlightTransport": {
+        "label": "Přenosový protokol Moonlight"
+      },
+      "rdpAutoReconnect": {
+        "label": "Automaticky znovu připojit RDP",
+        "description": "Znovu připojit při ztrátě RDP relace. Vypněte pro ruční připojení a předejte přerušení relací otevřených z jiného klienta."
+      },
+      "rdpAutoResize": {
+        "label": "Automaticky měnit velikost RDP",
+        "description": "Přizpůsobit vzdálené rozlišení při změně velikosti okna. Vypněte pro zachování velikosti zvolené při připojení do dalšího připojení."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Připojit pomocí RDP",
     "connectVnc": "Připojit pomocí VNC",
     "connectTelnet": "Připojit pomocí Telnet",
-    "connectArd": "Připojit pomocí Apple Remote Desktop"
+    "connectArd": "Připojit pomocí Apple Remote Desktop",
+    "connectRustdesk": "Připojit pomocí RustDesk",
+    "connectMoonlight": "Připojit pomocí Moonlight"
   },
   "permissions": {
     "sessions": {
       "title": "Sdílet relace vzdálené plochy",
       "description": "Povolit, aby sdílení relací a místnosti pro spolupráci zobrazovaly relace RDP, VNC a Telnet tohoto uživatele ostatním."
+    },
+    "monitor": {
+      "title": "Sledovat vzdálené plochy všech uživatelů",
+      "description": "Umožňuje dalším funkcím, jako je nahrávání relací, zobrazovat, sledovat a ukončovat relace RDP, VNC a Telnet všech uživatelů."
+    },
+    "moonlight": {
+      "title": "Nastavit počítače Moonlight",
+      "description": "Přidat počítače Sunshine do Moonlight Web a spárovat je pomocí uloženého přihlášení do Moonlight Web."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Vzdálená plocha",
     "description": "RDP, VNC a Telnet relace ve vašem prohlížeči s podporou schránky, přenosu souborů, sdílení a nahrávání."
+  },
+  "operations": {
+    "check": {
+      "title": "Zkontrolovat porty vzdálené plochy"
+    },
+    "ports": {
+      "title": "Vzdálená plocha"
+    },
+    "sessions": {
+      "title": "Otevřít vzdálené relace"
+    },
+    "session": {
+      "title": "Vzdálené relace",
+      "protocol": "Typ",
+      "started": "Začátek"
+    }
+  },
+  "card": {
+    "title": "Vzdálené relace",
+    "loading": "Načítání...",
+    "empty": "Žádné otevřené vzdálené relace"
   }
 }

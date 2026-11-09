@@ -11,6 +11,8 @@
     "connectionError": "Error de connexió",
     "clipboardWaiting": "Text copiat a la sessió. Feu clic o premeu una tecla aquí per col·locar-lo al portapapers. Obriu Termix a través d'HTTPS per copiar-lo immediatament.",
     "failedToConnect": "No s'ha pogut obtenir el testimoni de connexió",
+    "requestAccess": "Sol·licitar accés",
+    "verifyAccess": "Verificar",
     "hostNotFound": "Amfitrió no trobat",
     "noHostSelected": "Cap amfitrió seleccionat",
     "guacdUnavailable": "El guacd extern no respon. Comproveu que s'està executant o desactiveu l'opció «Utilitza un guacd extern» a la configuració d'Escriptori remot.",
@@ -81,14 +83,16 @@
         "macLock": "Bloqueja la pantalla",
         "spotlight": "Spotlight",
         "logoff": "Tanca la sessió",
-        "record": "Enregistra"
+        "record": "Enregistra",
+        "monitors": "Monitors"
       },
       "hints": {
         "files": "Es mostra un cop s'activa la unitat RDP",
         "touchMode": "Només en pantalles tàctils",
         "modifiers": "Ctrl, Alt, Shift i la tecla del sistema es mantenen premudes fins a la següent tecla",
         "logoff": "Tanca la sessió de Windows executant logoff des de la caixa Executa. La sessió ha d'estar oberta i mostrar l'escriptori.",
-        "record": "Inicia o atura l'enregistrament d'aquesta sessió. Requereix el complement d'Enregistrament de sessions i el motor integrat."
+        "record": "Inicia o atura l'enregistrament d'aquesta sessió. Requereix el complement d'Enregistrament de sessions i el motor integrat.",
+        "monitors": "Canviar entre els monitors remots"
       },
       "option": "Opció",
       "logoffConfirm": "Voleu tancar la sessió d'aquesta sessió de Windows? Es perdrà la feina no desada.",
@@ -96,9 +100,22 @@
       "recordStop": "Atura l'enregistrament",
       "recordStarted": "Enregistrament iniciat",
       "recordStopped": "Enregistrament desat a Enregistrament de sessions",
-      "recordFailed": "No s'ha pogut modificar l'enregistrament"
+      "recordFailed": "No s'ha pogut modificar l'enregistrament",
+      "recordRequired": "Un administrador ha fet que la gravació sigui obligatòria en aquest host",
+      "recordRequiredLabel": "Gravació (obligatòria)",
+      "monitor": "Monitor {{number}}"
     },
-    "disabled": "L'escriptori remot està desactivat. Un administrador el pot activar a Configuració."
+    "disabled": "L'escriptori remot està desactivat. Un administrador el pot activar a Configuració.",
+    "rustdesk": {
+      "videoUnsupported": "Aquest navegador no pot reproduir vídeo de RustDesk. Utilitza una versió recent de Chrome, Edge, Firefox o Safari.",
+      "passwordTitle": "Contrasenya de RustDesk",
+      "passwordDescription": "El dispositiu remot necessita una contrasenya. S'utilitza només per a aquesta sessió i no es desa.",
+      "passwordWrong": "Aquesta contrasenya no ha estat acceptada. Torna-ho a intentar.",
+      "codeTitle": "Codi de dos factors",
+      "codeDescription": "El dispositiu remot necessita el codi de la seva aplicació d'autenticació.",
+      "codeWrong": "Aquest codi no ha estat acceptat. Torna-ho a intentar.",
+      "code": "Codi"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "S'ha obert a l'Escriptori remot de Windows",
@@ -142,6 +159,8 @@
       "serverLayout": "Distribució del servidor",
       "timezone": "Zona horària",
       "loadBalanceInfo": "Informació d'equilibratge de càrrega / Cookie",
+      "kdcUrl": "Adreça del KDC de Kerberos",
+      "kdcUrlDesc": "Controlador de domini per a l'inici de sessió de Kerberos, per a comptes d'Usuaris protegits. Requereix el motor integrat, l'host introduït pel seu nom DNS i el domini omplert. Deixa-ho buit per a NTLM.",
       "loadBalanceInfoDesc": "Cookie del Connection Broker RD per a l'equilibratge de càrrega de la granja RDS (p. ex., tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "Proxy de guacd (opcional)",
       "guacdHostname": "Amfitrió guacd",
@@ -278,7 +297,75 @@
     "docsLink": "Veure la documentació",
     "connectionOriginGuacamoleNote": "RDP, VNC i Telnet s'executen en aquest dispositiu per defecte, com SSH. Tria Servidor remot per executar-los al servidor en canvi.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Compartició de pantalla de Mac"
+    "appleScreenSharing": "Compartició de pantalla de Mac",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Escriptori remot per ID de RustDesk",
+    "rustdesk": {
+      "direct": "Accés directe per IP",
+      "directDesc": "Connecta a l'adreça de l'host en lloc de cercar un ID de RustDesk. L'accés directe per IP ha d'estar activat a RustDesk en aquest dispositiu.",
+      "port": "Port d'IP directa",
+      "directNote": "La connexió està xifrada, però sense un servidor d'ID no hi ha res que demostri quin dispositiu ha respost.",
+      "id": "ID de RustDesk",
+      "idDesc": "L'ID que es mostra a RustDesk en el dispositiu remot.",
+      "passwordDesc": "La contrasenya permanent o d'un sol ús configurada a RustDesk. Deixa-la buida perquè algú accepti la sessió en el dispositiu remot.",
+      "server": "Servidor de RustDesk",
+      "serverDesc": "Deixa-ho buit per utilitzar el servidor configurat a la configuració d'administració d'Escriptori remot, o el servidor públic de RustDesk si no n'hi ha cap configurat.",
+      "idServer": "Servidor d'ID",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Servidor de retransmissió",
+      "relayServerPlaceholder": "El mateix que el servidor d'ID",
+      "key": "Clau",
+      "keyDesc": "La clau pública del teu servidor de RustDesk, de id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Transmissió de baixa latència des d'un PC amb Sunshine",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "PC",
+      "pcDesc": "El PC amb Sunshine per transmetre. Moonlight Web llista tots els PC que coneix.",
+      "choosePc": "Tria un PC",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "aparellat",
+      "notPaired": "no aparellat",
+      "offline": "desconnectat",
+      "refresh": "Actualitza",
+      "addPc": "Afegeix aquest host a Moonlight Web",
+      "addPcDesc": "Afegeix {{address}} al port {{port}}, compartit amb tots els usuaris de Moonlight Web.",
+      "pair": "Aparella",
+      "pairDesc": "Aquest PC s'ha d'aparellar amb Moonlight Web una sola vegada.",
+      "pairing": "Esperant Sunshine",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "Obre la interfície web de Sunshine al PC, ves a PIN i introdueix aquest PIN.",
+      "pairDone": "PC aparellat",
+      "pairFailed": "L'aparellament ha fallat. Comprova el PIN i torna-ho a intentar.",
+      "pairExpired": "L'aparellament ha caducat. Torna-ho a intentar.",
+      "noSetUpAccess": "Demana a un administrador que afegeixi i aparelli aquest PC.",
+      "stream": "Transmet",
+      "app": "Aplicació",
+      "appDesc": "Què obrir al PC.",
+      "firstApp": "Primera aplicació",
+      "bitrate": "Taxa de bits (kbps)",
+      "bitrateDesc": "Deixeu-lo a 0 per utilitzar el valor predeterminat de Moonlight Web.",
+      "fps": "Freqüència d'images",
+      "fpsDesc": "Deixeu-lo a 0 per utilitzar el valor predeterminat de Moonlight Web.",
+      "transport": "Transport",
+      "transportDesc": "WebRTC té la latència més baixa. WebSockets funciona en xarxes que el bloquegen.",
+      "transportAuto": "Automàtic",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "Un administrador ha de configurar el servidor Moonlight Web a la configuració d'escriptori remot.",
+      "loading": "Preparant l'stream",
+      "signInNote": "Moonlight Web et demana iniciar sessió la primera vegada.",
+      "openStream": "Obrir l'stream",
+      "openInWindow": "Obrir en una finestra nova",
+      "noH264": "Aquest navegador no pot reproduir vídeo H.264. Si l'stream no s'inicia, utilitza Chrome, Edge o l'aplicació d'escriptori de Termix, o activa HEVC o AV1 a Sunshine.",
+      "retry": "Torna-ho a provar",
+      "errorRecordingRequired": "La gravació és obligatòria en aquest host i els streams de Moonlight no es poden gravar.",
+      "errorNotLinked": "No hi ha cap PC vinculat. N'has de triar un a l'editor d'hosts.",
+      "errorNotPaired": "Aquest PC encara no està aparellat. Aparella'l a l'editor d'hosts.",
+      "errorOffline": "El PC està fora de línia o Sunshine no s'està executant.",
+      "errorNoApps": "Sunshine no té cap aplicació per obrir en aquest ordinador."
+    }
   },
   "onboarding": {
     "guacdTitle": "Configurar l'escriptori remot",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "S'han mogut les adreces de guacd per amfitrió"
+      },
+      "rustdeskIdServer": {
+        "label": "Servidor d'ID de RustDesk",
+        "description": "El vostre servidor d'ID de RustDesk (hbbs), com a amfitrió o amfitrió:port. Deixeu-lo buit per utilitzar el servidor públic de RustDesk. Els amfitrions poden configurar el seu propi.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "Servidor de retransmissió de RustDesk",
+        "description": "El vostre servidor de retransmissió de RustDesk (hbbr). Deixeu-lo buit per utilitzar el que indiqui el servidor d'ID.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "Clau del servidor de RustDesk",
+        "description": "La clau pública del vostre servidor de RustDesk, de id_ed25519.pub. Necessària amb el vostre propi servidor."
+      },
+      "moonlightUrl": {
+        "label": "Adreça web de Moonlight",
+        "description": "El servidor web de Moonlight amb el qual Termix es comunica per a l'enviament de flux amb Sunshine. Consulta la documentació per executar-ne un.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Adreça pública de Moonlight Web",
+        "description": "L'adreça que obren els navegadors, si és diferent de la d'encima. Cal HTTPS per als mandos i el bloqueig del teclat.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Nom d'usuari de Moonlight Web",
+        "description": "Un inici de sessió d'administrador a Moonlight Web. Termix l'utilitza per llistar, afegir i emparellar ordinadors."
+      },
+      "moonlightPassword": {
+        "label": "Contrasenya de Moonlight Web",
+        "description": "La contrasenya d'aquest inici de sessió."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Ignora el certificat de Moonlight Web",
+        "description": "Activa-ho per utilitzar un certificat autofirmat a Moonlight Web."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "Port ARD"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "Port IP directe de RustDesk"
+      },
+      "rustdeskId": {
+        "label": "ID de RustDesk"
+      },
+      "rustdeskDirect": {
+        "label": "Accés IP directe de RustDesk"
+      },
+      "rustdeskIdServer": {
+        "label": "Servidor d'ID de RustDesk"
+      },
+      "rustdeskRelayServer": {
+        "label": "Servidor de retransmissió de RustDesk"
+      },
+      "rustdeskKey": {
+        "label": "Clau del servidor de RustDesk"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Port de Sunshine"
+      },
+      "moonlightHostId": {
+        "label": "PC Moonlight Web"
+      },
+      "moonlightAppId": {
+        "label": "Aplicació Moonlight"
+      },
+      "moonlightBitrate": {
+        "label": "Taxa de bits de Moonlight"
+      },
+      "moonlightFps": {
+        "label": "Freqüència d'images de Moonlight"
+      },
+      "moonlightTransport": {
+        "label": "Transport de Moonlight"
+      },
+      "rdpAutoReconnect": {
+        "label": "Tornar a connectar RDP automàticament",
+        "description": "Torna a connectar quan es perdi una sessió RDP. Desactiva-ho per tornar a connectar manualment i evitar interrompre sessions obertes des d'un altre client."
+      },
+      "rdpAutoResize": {
+        "label": "Redimensionar RDP automàticament",
+        "description": "Ajusta la resolució remota quan la finestra canviï de mida. Desactiva-ho per mantenir la mida triada en connectar fins que es torni a connectar."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Connecta amb RDP",
     "connectVnc": "Connecta amb VNC",
     "connectTelnet": "Connecta amb Telnet",
-    "connectArd": "Connecta amb Apple Remote Desktop"
+    "connectArd": "Connecta amb Apple Remote Desktop",
+    "connectRustdesk": "Connectar amb RustDesk",
+    "connectMoonlight": "Connecta amb Moonlight"
   },
   "permissions": {
     "sessions": {
       "title": "Comparteix sessions d'escriptori remot",
       "description": "Permet que el compartiment de sessions i les sales de col·laboració mostrin les sessions RDP, VNC i Telnet d'aquest usuari a altres."
+    },
+    "monitor": {
+      "title": "Visualitza les sessions d'escriptori remot de tothom",
+      "description": "Permet que altres funcions, com ara l'enregistrament de sessions, llistin, visualitzin i tanquin les sessions RDP, VNC i Telnet de tots els usuaris."
+    },
+    "moonlight": {
+      "title": "Configura els ordinadors de Moonlight",
+      "description": "Afegeix ordinadors Sunshine a Moonlight Web i aparella'ls, utilitzant les dades d'inici de sessió desades de Moonlight Web."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Escriptori remot",
     "description": "Sessions RDP, VNC i Telnet al vostre navegador, amb retallador, transferència de fitxers, compartició i gravació."
+  },
+  "operations": {
+    "check": {
+      "title": "Comprova els ports d'escriptori remot"
+    },
+    "ports": {
+      "title": "Escriptori remot"
+    },
+    "sessions": {
+      "title": "Obre sessions remotes"
+    },
+    "session": {
+      "title": "Sessions remotes",
+      "protocol": "Tipus",
+      "started": "Iniciada"
+    }
+  },
+  "card": {
+    "title": "Sessions remotes",
+    "loading": "S'està carregant...",
+    "empty": "No hi ha sessions remotes obertes"
   }
 }

@@ -11,6 +11,8 @@
     "connectionError": "Ralat sambungan",
     "clipboardWaiting": "Teks disalin dalam sesi. Klik atau tekan kekunci di sini untuk meletakkannya pada papan klip anda. Buka Termix melalui HTTPS untuk menyalin serta-merta.",
     "failedToConnect": "Gagal mendapatkan token sambungan",
+    "requestAccess": "Minta akses",
+    "verifyAccess": "Pengesahan",
     "hostNotFound": "Hos tidak dijumpai",
     "noHostSelected": "Tiada hos dipilih",
     "guacdUnavailable": "guacd luaran tidak menjawab. Pastikan ia sedang berjalan, atau matikan Gunakan guacd luaran dalam tetapan Meja Riba Jauh.",
@@ -81,14 +83,16 @@
         "macLock": "Kunci skrin",
         "spotlight": "Spotlight",
         "logoff": "Log keluar",
-        "record": "Rakam"
+        "record": "Rakam",
+        "monitors": "Monitor"
       },
       "hints": {
         "files": "Muncul sekali pemacu RDP dihidupkan",
         "touchMode": "Hanya pada skrin sentuh",
         "modifiers": "Ctrl, Alt, Shift dan kunci sistem kekal ditekan sehingga kekunci seterusnya",
         "logoff": "Log keluar dari Windows dengan menjalankan logoff dari kotak Run. Sesi mesti dibuka dan menunjukkan desktop.",
-        "record": "Memulakan atau menghentikan rakaman sesi ini. Memerlukan plugin Rakaman Sesi dan enjin terbina dalam."
+        "record": "Memulakan atau menghentikan rakaman sesi ini. Memerlukan plugin Rakaman Sesi dan enjin terbina dalam.",
+        "monitors": "Tukar antara monitor jauh"
       },
       "option": "Pilihan",
       "logoffConfirm": "Log keluar dari sesi Windows ini? Kerja yang belum disimpan akan hilang.",
@@ -96,9 +100,22 @@
       "recordStop": "Hentikan rakaman",
       "recordStarted": "Rakaman dimulakan",
       "recordStopped": "Rakaman disimpan ke Rakaman Sesi",
-      "recordFailed": "Tidak dapat mengubah rakaman"
+      "recordFailed": "Tidak dapat mengubah rakaman",
+      "recordRequired": "Pentadbir telah menetapkan rakaman sebagai wajib pada hos ini",
+      "recordRequiredLabel": "Rakaman (wajib)",
+      "monitor": "Monitor {{number}}"
     },
-    "disabled": "Remote Desktop dimatikan. Admin boleh menghidupkannya dalam Tetapan."
+    "disabled": "Remote Desktop dimatikan. Admin boleh menghidupkannya dalam Tetapan.",
+    "rustdesk": {
+      "videoUnsupported": "Pelayar ini tidak dapat memainkan video RustDesk. Gunakan Chrome, Edge, Firefox atau Safari terkini.",
+      "passwordTitle": "Kata laluan RustDesk",
+      "passwordDescription": "Peranti jauh memerlukan kata laluan. Ia hanya digunakan untuk sesi ini dan tidak disimpan.",
+      "passwordWrong": "Kata laluan tersebut tidak diterima. Cuba lagi.",
+      "codeTitle": "Kod dua faktor",
+      "codeDescription": "Peranti jauh memerlukan kod daripada aplikasi pengesah peranti.",
+      "codeWrong": "Kod tersebut tidak diterima. Cuba lagi.",
+      "code": "Kod"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Dibuka dalam Windows Remote Desktop",
@@ -142,6 +159,8 @@
       "serverLayout": "Susun Atur Pelayan",
       "timezone": "Zon masa",
       "loadBalanceInfo": "Maklumat Imbangan Beban / Kuki",
+      "kdcUrl": "Alamat KDC Kerberos",
+      "kdcUrlDesc": "Pelayan domain untuk log masuk Kerberos, untuk akaun dalam Pengguna Dilindungi. Memerlukan enjin terbina dalam, hos dimasukkan menggunakan nama DNS, dan domain diisi. Kosongkan untuk NTLM.",
       "loadBalanceInfoDesc": "Kuki RD Connection Broker untuk imbangan beban ladang RDS (cth. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "Proksi guacd (pilihan)",
       "guacdHostname": "Hos guacd",
@@ -278,7 +297,75 @@
     "docsLink": "Lihat dokumen",
     "connectionOriginGuacamoleNote": "RDP, VNC dan Telnet berjalan pada peranti ini secara lalai, seperti SSH. Pilih Pelayan Jauh untuk menjalankannya pada pelayan sebaliknya.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Kongsi Skrin Mac"
+    "appleScreenSharing": "Kongsi Skrin Mac",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Meja jauh melalui ID RustDesk",
+    "rustdesk": {
+      "direct": "Akses IP langsung",
+      "directDesc": "Sambung ke alamat hos daripada mencari ID RustDesk. Akses IP terus mesti dihidupkan dalam RustDesk pada peranti tersebut.",
+      "port": "Port IP terus",
+      "directNote": "Sambungan ini disulitkan, tetapi tanpa pelayan ID, tiada cara untuk membuktikan peranti mana yang menjawab.",
+      "id": "ID RustDesk",
+      "idDesc": "ID yang dipaparkan dalam RustDesk pada peranti jauh.",
+      "passwordDesc": "Kata laluan kekal atau sekali guna yang ditetapkan dalam RustDesk. Kosongkan jika mahu seseorang menerima sesi pada peranti jauh.",
+      "server": "Pelayan RustDesk",
+      "serverDesc": "Kosongkan untuk menggunakan pelayan yang ditetapkan dalam tetapan pentadbir Desktop Jauh, atau pelayan RustDesk awam jika tiada yang ditetapkan.",
+      "idServer": "Pelayan ID",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Pelayan relay",
+      "relayServerPlaceholder": "Sama seperti pelayan ID",
+      "key": "Kunci",
+      "keyDesc": "Kunci awam pelayan RustDesk anda, dari id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Penstriman latensi rendah dari PC Sunshine",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "PC",
+      "pcDesc": "PC Sunshine untuk distrim. Moonlight Web menyenaraikan setiap PC yang dikenali.",
+      "choosePc": "Pilih PC",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "berpasangan",
+      "notPaired": "belum berpasangan",
+      "offline": "luar talian",
+      "refresh": "Muat Semula",
+      "addPc": "Tambah hos ini ke Moonlight Web",
+      "addPcDesc": "Menambah {{address}} pada port {{port}}, dikongsi dengan semua pengguna Moonlight Web.",
+      "pair": "Pasangkan",
+      "pairDesc": "Komputer ini perlu dipasangkan dengan Moonlight Web sekali.",
+      "pairing": "Menunggu Sunshine",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "Buka UI web Sunshine pada PC, pergi ke PIN, dan masukkan PIN ini.",
+      "pairDone": "PC dipadankan",
+      "pairFailed": "Padanan gagal. Semak PIN dan cuba lagi.",
+      "pairExpired": "Padanan tamat masa. Cuba lagi.",
+      "noSetUpAccess": "Minta admin menambah dan memadankan PC ini.",
+      "stream": "Strim",
+      "app": "Aplikasi",
+      "appDesc": "Apa yang hendak dibuka pada PC.",
+      "firstApp": "Aplikasi pertama",
+      "bitrate": "Kadar bit (kbps)",
+      "bitrateDesc": "Biarkan pada 0 untuk menggunakan lalai Moonlight Web.",
+      "fps": "Kadar bingkai",
+      "fpsDesc": "Biarkan pada 0 untuk menggunakan lalai Moonlight Web.",
+      "transport": "Pengangkutan",
+      "transportDesc": "WebRTC mempunyai kelewatan terendah. WebSockets berfungsi pada rangkaian yang menyekatnya.",
+      "transportAuto": "Auto",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "Admin perlu menetapkan pelayan Moonlight Web dalam tetapan Meja Jauh.",
+      "loading": "Menyediakan aliran",
+      "signInNote": "Moonlight Web meminta anda log masuk pada kali pertama.",
+      "openStream": "Buka aliran",
+      "openInWindow": "Buka dalam tetingkap baru",
+      "noH264": "Pelayar ini tidak dapat memainkan video H.264. Jika aliran tidak bermula, gunakan Chrome, Edge atau aplikasi desktop Termix, atau hidupkan HEVC atau AV1 dalam Sunshine.",
+      "retry": "Cuba lagi",
+      "errorRecordingRequired": "Rakaman diperlukan pada hos ini, dan aliran Moonlight tidak boleh dirakam.",
+      "errorNotLinked": "Tiada PC dipaut. Pilih satu dalam penyunting hos.",
+      "errorNotPaired": "PC ini belum dipadankan. Padankan ia dalam penyunting hos.",
+      "errorOffline": "PC adalah luar talian, atau Sunshine tidak berjalan.",
+      "errorNoApps": "Sunshine tiada aplikasi untuk dibuka pada PC ini."
+    }
   },
   "onboarding": {
     "guacdTitle": "Sediakan meja kerja jauh",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "Alamat guacd setiap hos telah dipindahkan"
+      },
+      "rustdeskIdServer": {
+        "label": "Pelayan ID RustDesk",
+        "description": "Pelayan ID RustDesk anda sendiri (hbbs), sebagai hos atau hos:port. Biarkan kosong untuk menggunakan pelayan RustDesk awam. Hos boleh menetapkan sendiri.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "Pelayan relay RustDesk",
+        "description": "Pelayan relay RustDesk anda (hbbr). Biarkan kosong untuk menggunakan apa yang dinyatakan oleh pelayan ID.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "Kunci pelayan RustDesk",
+        "description": "Kunci awam pelayan RustDesk anda, dari id_ed25519.pub. Diperlukan dengan pelayan anda sendiri."
+      },
+      "moonlightUrl": {
+        "label": "Alamat Moonlight Web",
+        "description": "Pelayan Moonlight Web yang berinteraksi dengan Termix, untuk penstriman Sunshine. Lihat dokumen untuk menjalankan satu.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Alamat awam Moonlight Web",
+        "description": "Alamat yang dibuka oleh pelayar, jika berbeza daripada yang di atas. HTTPS diperlukan untuk gamepad dan kunci papan kekunci.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Nama pengguna Moonlight Web",
+        "description": "Log masuk admin pada Moonlight Web. Termix menggunakannya untuk menyenaraikan, menambah dan memadankan PC."
+      },
+      "moonlightPassword": {
+        "label": "Kata laluan Moonlight Web",
+        "description": "Kata laluan untuk log masuk tersebut."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Abaikan sijil Moonlight Web",
+        "description": "Hidupkan untuk sijil tandatangan sendiri pada Moonlight Web."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "Port ARD"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "Port IP terus RustDesk"
+      },
+      "rustdeskId": {
+        "label": "ID RustDesk"
+      },
+      "rustdeskDirect": {
+        "label": "Akses IP terus RustDesk"
+      },
+      "rustdeskIdServer": {
+        "label": "Pelayan ID RustDesk"
+      },
+      "rustdeskRelayServer": {
+        "label": "Pelayan relay RustDesk"
+      },
+      "rustdeskKey": {
+        "label": "Kunci pelayan RustDesk"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Port Sunshine"
+      },
+      "moonlightHostId": {
+        "label": "PC Moonlight Web"
+      },
+      "moonlightAppId": {
+        "label": "Aplikasi Moonlight"
+      },
+      "moonlightBitrate": {
+        "label": "Kadar bit Moonlight"
+      },
+      "moonlightFps": {
+        "label": "Kadar bingkai Moonlight"
+      },
+      "moonlightTransport": {
+        "label": "Pengangkutan Moonlight"
+      },
+      "rdpAutoReconnect": {
+        "label": "Sambung semula RDP secara automatik",
+        "description": "Sambung semula apabila sesi RDP hilang. Matikan untuk menyambung semula secara manual dan mengelakkan gangguan sesi yang dibuka dari klien lain."
+      },
+      "rdpAutoResize": {
+        "label": "Saiz semula RDP secara automatik",
+        "description": "Laraskan resolusi jauh apabila saiz tetingkap berubah. Matikan untuk mengekalkan saiz yang dipilih semasa sambungan sehingga menyambung semula."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Sambung dengan RDP",
     "connectVnc": "Sambung dengan VNC",
     "connectTelnet": "Sambung dengan Telnet",
-    "connectArd": "Sambung dengan Apple Remote Desktop"
+    "connectArd": "Sambung dengan Apple Remote Desktop",
+    "connectRustdesk": "Sambung dengan RustDesk",
+    "connectMoonlight": "Sambung dengan Moonlight"
   },
   "permissions": {
     "sessions": {
       "title": "Kongsi sesi meja kerja jauh",
       "description": "Benarkan perkongsian sesi dan bilik kolaborasi memaparkan sesi RDP, VNC dan Telnet pengguna ini kepada orang lain."
+    },
+    "monitor": {
+      "title": "Pantau sesi desktop jauh semua orang",
+      "description": "Membolehkan ciri lain, seperti Rakaman Sesi, menyenaraikan, memantau dan menghentikan sesi RDP, VNC dan Telnet setiap pengguna."
+    },
+    "moonlight": {
+      "title": "Sediakan PC Moonlight",
+      "description": "Tambah PC Sunshine ke Moonlight Web dan padankan mereka, menggunakan log masuk Moonlight Web yang disimpan."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Meja Kerja Jauh",
     "description": "Sesi RDP, VNC dan Telnet dalam pelayar anda, dengan papan klip, pemindahan fail, perkongsian dan rakaman."
+  },
+  "operations": {
+    "check": {
+      "title": "Semak port desktop jauh"
+    },
+    "ports": {
+      "title": "Desktop jauh"
+    },
+    "sessions": {
+      "title": "Buka sesi jauh"
+    },
+    "session": {
+      "title": "Sesi jauh",
+      "protocol": "Jenis",
+      "started": "Dimulakan"
+    }
+  },
+  "card": {
+    "title": "Sesi jauh",
+    "loading": "Memuatkan...",
+    "empty": "Tiada sesi jauh yang dibuka"
   }
 }

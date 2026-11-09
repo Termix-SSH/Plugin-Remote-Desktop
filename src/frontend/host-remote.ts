@@ -7,7 +7,10 @@ import type { GuacamoleConfig } from "./guacamole-config";
 
 export const PLUGIN_ID = "remote-desktop";
 
-export type Protocol = "rdp" | "vnc" | "ard" | "telnet";
+export type Protocol = "rdp" | "vnc" | "ard" | "telnet" | "rustdesk";
+
+/** Moonlight opens a Moonlight Web page, so it has no Guacamole session. */
+export type HostProtocol = Protocol | "moonlight";
 
 /** This plugin's host settings, as they arrive on host.pluginSettings. */
 export interface RemoteHostOptions {
@@ -15,12 +18,28 @@ export interface RemoteHostOptions {
   enableVnc: boolean;
   enableArd: boolean;
   enableTelnet: boolean;
+  enableRustdesk: boolean;
+  enableMoonlight: boolean;
   rdpPort: number;
   vncPort: number;
   ardPort: number;
   telnetPort: number;
+  rustdeskPort: number;
+  rustdeskId: string;
+  rustdeskDirect: boolean;
+  rustdeskIdServer: string;
+  rustdeskRelayServer: string;
+  rustdeskKey: string;
+  moonlightPort: number;
+  moonlightHostId: number;
+  moonlightAppId: number;
+  moonlightBitrate: number;
+  moonlightFps: number;
+  moonlightTransport: string;
   rdpSecurity: string;
   rdpIgnoreCert: boolean;
+  rdpAutoReconnect: boolean;
+  rdpAutoResize: boolean;
   guacamoleConfig: GuacamoleConfig;
   enableToolbar: boolean;
 }
@@ -30,20 +49,26 @@ export const ENABLE_KEY = {
   vnc: "enableVnc",
   ard: "enableArd",
   telnet: "enableTelnet",
-} as const satisfies Record<Protocol, keyof RemoteHostOptions>;
+  rustdesk: "enableRustdesk",
+  moonlight: "enableMoonlight",
+} as const satisfies Record<HostProtocol, keyof RemoteHostOptions>;
 
 export const PORT_KEY = {
   rdp: "rdpPort",
   vnc: "vncPort",
   ard: "ardPort",
   telnet: "telnetPort",
-} as const satisfies Record<Protocol, keyof RemoteHostOptions>;
+  rustdesk: "rustdeskPort",
+  moonlight: "moonlightPort",
+} as const satisfies Record<HostProtocol, keyof RemoteHostOptions>;
 
-export const DEFAULT_PORT: Record<Protocol, number> = {
+export const DEFAULT_PORT: Record<HostProtocol, number> = {
   rdp: 3389,
   vnc: 5900,
   ard: 5900,
   telnet: 23,
+  rustdesk: 21118,
+  moonlight: 47989,
 };
 
 /**
@@ -81,6 +106,15 @@ function port(value: unknown, fallback: number): number {
     : fallback;
 }
 
+function count(value: unknown): number {
+  const parsed = Number(value);
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : 0;
+}
+
+function text(value: unknown): string {
+  return typeof value === "string" ? value : "";
+}
+
 function parseGuacamoleConfig(value: unknown): GuacamoleConfig {
   if (!value) return {};
   if (typeof value === "string") {
@@ -103,13 +137,29 @@ export function remoteOptions(
     enableVnc: values.enableVnc === true,
     enableArd: values.enableArd === true,
     enableTelnet: values.enableTelnet === true,
+    enableRustdesk: values.enableRustdesk === true,
+    enableMoonlight: values.enableMoonlight === true,
     rdpPort: port(values.rdpPort, DEFAULT_PORT.rdp),
     vncPort: port(values.vncPort, DEFAULT_PORT.vnc),
     ardPort: port(values.ardPort, DEFAULT_PORT.ard),
     telnetPort: port(values.telnetPort, DEFAULT_PORT.telnet),
+    rustdeskPort: port(values.rustdeskPort, DEFAULT_PORT.rustdesk),
+    rustdeskId: text(values.rustdeskId),
+    rustdeskDirect: values.rustdeskDirect === true,
+    rustdeskIdServer: text(values.rustdeskIdServer),
+    rustdeskRelayServer: text(values.rustdeskRelayServer),
+    rustdeskKey: text(values.rustdeskKey),
+    moonlightPort: port(values.moonlightPort, DEFAULT_PORT.moonlight),
+    moonlightHostId: count(values.moonlightHostId),
+    moonlightAppId: count(values.moonlightAppId),
+    moonlightBitrate: count(values.moonlightBitrate),
+    moonlightFps: count(values.moonlightFps),
+    moonlightTransport: text(values.moonlightTransport) || "auto",
     rdpSecurity:
       typeof values.rdpSecurity === "string" ? values.rdpSecurity : "",
     rdpIgnoreCert: values.rdpIgnoreCert === true,
+    rdpAutoReconnect: values.rdpAutoReconnect !== false,
+    rdpAutoResize: values.rdpAutoResize !== false,
     guacamoleConfig: parseGuacamoleConfig(values.guacamoleConfig),
     enableToolbar: values.enableToolbar !== false,
   };
@@ -132,7 +182,7 @@ export function protocolEnabled(
     | PluginHostRecord
     | null
     | undefined,
-  protocol: Protocol,
+  protocol: HostProtocol,
 ): boolean {
   return hostRemoteOptions(host)[ENABLE_KEY[protocol]];
 }

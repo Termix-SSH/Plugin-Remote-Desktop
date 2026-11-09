@@ -11,6 +11,8 @@
     "connectionError": "Kapcsolati hiba",
     "clipboardWaiting": "Szöveg másolva a munkamenetben. Kattintson ide, vagy nyomjon meg egy billentyűt, hogy a vágólapra helyezze. Nyissa meg a Termixet HTTPS-en keresztül a azonnali másoláshoz.",
     "failedToConnect": "Nem sikerült megszerezni a kapcsolati tokent",
+    "requestAccess": "Hozzáférés kérése",
+    "verifyAccess": "Ellenőrzés",
     "hostNotFound": "A gazdagép nem található",
     "noHostSelected": "Nincs kiválasztva gazdagép",
     "guacdUnavailable": "A külső guacd nem válaszol. Ellenőrizze, hogy fut-e, vagy kapcsolja ki a Külső guacd használata opciót a Távoli asztal beállításaiban.",
@@ -81,14 +83,16 @@
         "macLock": "Képernyőzár",
         "spotlight": "Spotlight",
         "logoff": "Kijelentkezés",
-        "record": "Felvétel"
+        "record": "Felvétel",
+        "monitors": "Monitorok"
       },
       "hints": {
         "files": "Csak akkor jelenik meg, ha az RDP-meghajtó be van kapcsolva",
         "touchMode": "Csak érintőképernyőn",
         "modifiers": "A Ctrl, Alt, Shift és a rendszerbillentyű lenyomva marad a következő billentyűig",
         "logoff": "Kijelentkezik a Windowsból a logoff parancs futtatásával a Futtató ablakból. A munkamenetnek nyitottnak kell lennie, és meg kell jelenítenie az asztalt.",
-        "record": "Egy munkamenet-felvétel indítását vagy leállítását kezdeményezi. Szükséges a Session Recording bővítmény és a beépített motor."
+        "record": "Egy munkamenet-felvétel indítását vagy leállítását kezdeményezi. Szükséges a Session Recording bővítmény és a beépített motor.",
+        "monitors": "Váltás a távoli monitorok között"
       },
       "option": "Option",
       "logoffConfirm": "Kijelentkezik ebből a Windows munkamenetből? A mentetlen munka elveszik.",
@@ -96,9 +100,22 @@
       "recordStop": "Felvétel leállítása",
       "recordStarted": "Felvétel elindítva",
       "recordStopped": "Felvétel mentve a Session Recordingba",
-      "recordFailed": "Nem sikerült módosítani a felvételt"
+      "recordFailed": "Nem sikerült módosítani a felvételt",
+      "recordRequired": "Egy rendszergazda kötelezővé tette a felvételt ezen a hoszton",
+      "recordRequiredLabel": "Felvétel (kötelező)",
+      "monitor": "{{number}}. monitor"
     },
-    "disabled": "A Távoli asztal kikapcsolva van. Egy rendszergazda bekapcsolhatja a Beállításokban."
+    "disabled": "A Távoli asztal kikapcsolva van. Egy rendszergazda bekapcsolhatja a Beállításokban.",
+    "rustdesk": {
+      "videoUnsupported": "Ez a böngésző nem tudja lejátszani a RustDesk videót. Használjon friss Chrome, Edge, Firefox vagy Safari böngészőt.",
+      "passwordTitle": "RustDesk jelszó",
+      "passwordDescription": "A távoli eszköz jelszót igényel. Ez csak az aktuális munkamenetre érvényes, és nem kerül mentésre.",
+      "passwordWrong": "A jelszó nem lett elfogadva. Próbálja újra.",
+      "codeTitle": "Kétfaktoros kód",
+      "codeDescription": "A távoli eszköznek szüksége van a hitelesítő alkalmazásból származó kódra.",
+      "codeWrong": "A kód nem lett elfogadva. Próbálja újra.",
+      "code": "Kód"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Megnyitva a Windows Távoli asztalban",
@@ -142,6 +159,8 @@
       "serverLayout": "Szerver elrendezés",
       "timezone": "Időzóna",
       "loadBalanceInfo": "Terheléselosztási információ / Cookie",
+      "kdcUrl": "Kerberos KDC-cím",
+      "kdcUrlDesc": "Kerberos-bejelentkezéshez szükséges tartományvezérlő a Protected Users fiókokhoz. A beépített motor, a DNS-névvel megadott gazdagép és a kitöltött tartomány szükséges. Hagyja üresen NTLM esetén.",
       "loadBalanceInfoDesc": "RD Connection Broker cookie az RDS farm terheléselosztásához (pl. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd proxy (opcionális)",
       "guacdHostname": "guacd gazdagép",
@@ -278,7 +297,75 @@
     "docsLink": "Dokumentáció megtekintése",
     "connectionOriginGuacamoleNote": "Az RDP, VNC és Telnet alapértelmezetten ezen az eszközön fut, akárcsak az SSH. Ha a kiszolgálón szeretné futtatni őket, válassza a Távoli kiszolgáló lehetőséget.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Mac képernyőmegosztás"
+    "appleScreenSharing": "Mac képernyőmegosztás",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Távoli asztal RustDesk-azonosítóval",
+    "rustdesk": {
+      "direct": "Közvetlen IP-hozzáférés",
+      "directDesc": "Csatlakozás a gazdagép címéhez, nem pedig egy RustDesk-azonosító kereséséhez. A közvetlen IP-hozzáférésnek be kell lennie kapcsolva a RustDeskben az adott eszközön.",
+      "port": "Közvetlen IP-port",
+      "directNote": "A kapcsolat titkosított, de azonosítószerver nélkül nincs, ami igazolná, hogy melyik eszköz válaszolt.",
+      "id": "RustDesk-azonosító",
+      "idDesc": "Az azonosító, amely a távoli eszközön futó RustDeskben látható.",
+      "passwordDesc": "A RustDeskben beállított állandó vagy egyszeri jelszó. Hagyja üresen, ha valakinek a távoli eszközön kell elfogadnia a munkamenetet.",
+      "server": "RustDesk-szerver",
+      "serverDesc": "Hagyja üresen, ha a Távoli asztal adminisztrációs beállításaiban megadott szervert szeretné használni, vagy ha nincs beállítva, akkor a nyilvános RustDesk-szervert.",
+      "idServer": "Azonosítószerver",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Átjáró szerver",
+      "relayServerPlaceholder": "Azonos, mint az azonosító szerver",
+      "key": "Kulcs",
+      "keyDesc": "A RustDesk szerver nyilvános kulcsa, az id_ed25519.pub fájlból."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Alacsony késleltetésű streamelés Sunshine PC-ről",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "Számítógép",
+      "pcDesc": "A streamelni kívánt Sunshine számítógép. A Moonlight Web felsorolja az összes ismert számítógépet.",
+      "choosePc": "Válassz egy számítógépet",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "párosítva",
+      "notPaired": "nem párosítva",
+      "offline": "offline",
+      "refresh": "Frissítés",
+      "addPc": "Ez a gazdagép hozzáadása a Moonlight Webhez",
+      "addPcDesc": "A(z) {{address}} hozzáadása a {{port}}-os porton, megosztva minden Moonlight Web-felhasználóval.",
+      "pair": "Párosítás",
+      "pairDesc": "Ezt a számítógépet egyszer párosítani kell a Moonlight Webbal.",
+      "pairing": "Várakozás a Sunshine-ra",
+      "pinTitle": "PIN: {{pin}}",
+      "pinDesc": "Nyisd meg a Sunshine webes felületét a gépen, navigálj a PIN menüpontba, és add meg ezt a PIN-kódot.",
+      "pairDone": "A gép párosítva",
+      "pairFailed": "A párosítás sikertelen. Ellenőrizd a PIN-kódot, és próbáld újra.",
+      "pairExpired": "A párosítás időtúllépés miatt megszakadt. Próbáld újra.",
+      "noSetUpAccess": "Kérj egy rendszergazdát, hogy adja hozzá és párosítsa ezt a gépet.",
+      "stream": "Streamelés",
+      "app": "Alkalmazás",
+      "appDesc": "Mit nyissunk meg a gépen.",
+      "firstApp": "Első alkalmazás",
+      "bitrate": "Bitráta (kbps)",
+      "bitrateDesc": "Hagyja 0-on, ha a Moonlight Web alapértelmezett értékét szeretné használni.",
+      "fps": "Képkockasebesség",
+      "fpsDesc": "Hagyja 0-on, ha a Moonlight Web alapértelmezett értékét szeretné használni.",
+      "transport": "Átviteli protokoll",
+      "transportDesc": "A WebRTC a legalacsonyabb késleltetést biztosítja. A WebSockets olyan hálózatokon is működik, amelyek blokkolják azt.",
+      "transportAuto": "Automatikus",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "Egy rendszergazdának be kell állítania a Moonlight Web szervert a Távoli asztal beállításaiban.",
+      "loading": "A stream előkészítése",
+      "signInNote": "A Moonlight Web első használatkor bejelentkezést kér.",
+      "openStream": "Stream megnyitása",
+      "openInWindow": "Megnyitás új ablakban",
+      "noH264": "Ez a böngésző nem képes H.264-es videó lejátszására. Ha a stream nem indul el, használja a Chrome-ot, az Edge-et vagy a Termix asztali alkalmazást, vagy engedélyezze az HEVC-t vagy az AV1-et a Sunshine-ban.",
+      "retry": "Újrapróbál",
+      "errorRecordingRequired": "Ennek a hostnak a rögzítése kötelező, a Moonlight streamek azonban nem rögzíthetők.",
+      "errorNotLinked": "Nincs összekapcsolt számítógép. Válasszon egyet a host szerkesztőben.",
+      "errorNotPaired": "Ez a számítógép még nincs párosítva. Párosítsa a host szerkesztőben.",
+      "errorOffline": "A számítógép offline, vagy a Sunshine nem fut.",
+      "errorNoApps": "A Sunshine nem talált megnyitható alkalmazást ezen a gépen."
+    }
   },
   "onboarding": {
     "guacdTitle": "Távoli asztal beállítása",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "Hoszt-specifikus guacd címek áthelyezve"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk azonosító-szerver",
+        "description": "Saját RustDesk azonosító-szerver (hbbs), gazdagépként vagy gazdagép:port formátumban. Hagyd üresen a nyilvános RustDesk szerver használatához. A gazdagépek beállíthatják a sajátjukat.",
+        "placeholder": "rustdesk.pelda.hu"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk továbbító-szerver",
+        "description": "Saját RustDesk továbbító-szerver (hbbr). Hagyd üresen, ha az azonosító-szerver által megadottat szeretnéd használni.",
+        "placeholder": "rustdesk.pelda.hu:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk szerverkulcs",
+        "description": "A RustDesk szervered nyilvános kulcsa, az id_ed25519.pub fájlból. Saját szerver esetén szükséges."
+      },
+      "moonlightUrl": {
+        "label": "Moonlight Web-cím",
+        "description": "A Moonlight Web szerver, amivel a Termix kommunikál a Sunshine streaminghez. A futtatásához lásd a dokumentációt.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Moonlight Web nyilvános címe",
+        "description": "A böngészők által megnyitott cím, ha eltér a fentitől. HTTPS szükséges a gamepadekhez és a billentyűzet-zároláshoz.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Moonlight Web felhasználónév",
+        "description": "Egy adminisztrátor bejelentkezési adat a Moonlight Webon. A Termix ezt használja a számítógépek listázásához, hozzáadásához és párosításához."
+      },
+      "moonlightPassword": {
+        "label": "Moonlight Web jelszó",
+        "description": "A fenti bejelentkezés jelszava."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Moonlight Web tanúsítvány figyelmen kívül hagyása",
+        "description": "Kapcsold be, ha önállóan aláírt tanúsítványt szeretnél használni a Moonlight Webben."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "ARD-port"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "RustDesk közvetlen IP-port"
+      },
+      "rustdeskId": {
+        "label": "RustDesk-azonosító"
+      },
+      "rustdeskDirect": {
+        "label": "RustDesk közvetlen IP-hozzáférés"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk azonosító-szerver"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk továbbító szerver"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk szerverkulcs"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine-port"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight alkalmazás"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlight bitráta"
+      },
+      "moonlightFps": {
+        "label": "Moonlight képkockasebesség"
+      },
+      "moonlightTransport": {
+        "label": "Moonlight továbbítási mód"
+      },
+      "rdpAutoReconnect": {
+        "label": "RDP automatikus újracsatlakozás",
+        "description": "Újracsatlakozás, ha az RDP-munkamenet megszakad. Kapcsold ki, ha manuálisan szeretnél újracsatlakozni, és elkerülni, hogy megszakadjon egy másik klienstől megnyitott munkamenet."
+      },
+      "rdpAutoResize": {
+        "label": "RDP automatikus átméretezés",
+        "description": "A távoli felbontás igazítása az ablak méretének változásakor. Kapcsold ki, ha a csatlakozáskor választott méretet szeretnéd megtartani az újracsatlakozásig."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Csatlakozás RDP-vel",
     "connectVnc": "Csatlakozás VNC-vel",
     "connectTelnet": "Csatlakozás Telnet-tel",
-    "connectArd": "Csatlakozás Apple Remote Desktop segítségével"
+    "connectArd": "Csatlakozás Apple Remote Desktop segítségével",
+    "connectRustdesk": "Csatlakozás RustDeskkal",
+    "connectMoonlight": "Csatlakozás Moonlighttal"
   },
   "permissions": {
     "sessions": {
       "title": "Távoli asztal munkamenetek megosztása",
       "description": "Engedélyezi, hogy a munkamenet-megosztás és az együttműködési szobák megmutassák másoknak ennek a felhasználónak az RDP, VNC és Telnet munkameneteit."
+    },
+    "monitor": {
+      "title": "Mindenki távoli asztali munkameneteinek megtekintése",
+      "description": "Lehetővé teszi más funkciók számára, például a munkamenet-felvétel számára, hogy listázzák, megtekintsék és lezárják minden felhasználó RDP-, VNC- és Telnet-munkamenedeit."
+    },
+    "moonlight": {
+      "title": "Moonlight PC-k beállítása",
+      "description": "Sunshine PC-k hozzáadása a Moonlight Webhez és párosítása, a mentett Moonlight Web bejelentkezési adatok felhasználásával."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Távoli asztal",
     "description": "RDP-, VNC- és Telnet-munkamenetek a böngésződben, vágólap-, fájlátvitel-, megosztási és rögzítési funkciókkal."
+  },
+  "operations": {
+    "check": {
+      "title": "Távoli asztali portok ellenőrzése"
+    },
+    "ports": {
+      "title": "Távoli asztal"
+    },
+    "sessions": {
+      "title": "Távoli munkamenetek megnyitása"
+    },
+    "session": {
+      "title": "Távoli munkamenetek",
+      "protocol": "Típus",
+      "started": "Indítva"
+    }
+  },
+  "card": {
+    "title": "Távoli munkamenetek",
+    "loading": "Betöltés...",
+    "empty": "Nincsenek nyitott távoli munkamenetek"
   }
 }

@@ -11,6 +11,8 @@
     "connectionError": "Greška u povezivanju",
     "clipboardWaiting": "Tekst je kopiran u sesiji. Kliknite ili pritisnite tipku ovdje da ga postavite u međuspremnik. Otvorite Termix putem HTTPS-a za trenutno kopiranje.",
     "failedToConnect": "Neuspjelo dobivanje tokena za povezivanje",
+    "requestAccess": "Zatraži pristup",
+    "verifyAccess": "Potvrdi",
     "hostNotFound": "Host nije pronađen",
     "noHostSelected": "Nije odabran host",
     "guacdUnavailable": "Vanjski guacd ne odgovara. Provjerite je li pokrenut ili isključite opciju Korištenje vanjskog guacda u postavkama Udaljenog desktopa.",
@@ -81,14 +83,16 @@
         "macLock": "Zaključaj zaslon",
         "spotlight": "Spotlight",
         "logoff": "Odjava",
-        "record": "Snimanje"
+        "record": "Snimanje",
+        "monitors": "Monitori"
       },
       "hints": {
         "files": "Prikazuje se nakon uključivanja RDP pogona",
         "touchMode": "Samo na zaslonima osjetljivima na dodir",
         "modifiers": "Tipke Ctrl, Alt, Shift i sustavna tipka ostaju pritisnute do sljedeće tipke",
         "logoff": "Odjava iz Windowsa pokretanjem naredbe logoff iz dijaloškog okvira Run. Sesija mora biti otvorena i prikazivati radnu površinu.",
-        "record": "Pokreće ili zaustavlja snimanje ove sesije. Zahtijeva dodatak Session Recording i ugrađeni mehanizam."
+        "record": "Pokreće ili zaustavlja snimanje ove sesije. Zahtijeva dodatak Session Recording i ugrađeni mehanizam.",
+        "monitors": "Prebacivanje između udaljenih monitora"
       },
       "option": "Opcija",
       "logoffConfirm": "Odjaviti se iz ove Windows sesije? Nesavedeni rad u njoj bit će izgubljen.",
@@ -96,9 +100,22 @@
       "recordStop": "Zaustavi snimanje",
       "recordStarted": "Snimanje je započeto",
       "recordStopped": "Snimanje je spremljeno u Session Recording",
-      "recordFailed": "Nije moguće promijeniti snimanje"
+      "recordFailed": "Nije moguće promijeniti snimanje",
+      "recordRequired": "Administrator je postavio snimanje kao obavezno za ovaj host",
+      "recordRequiredLabel": "Snimanje (obavezno)",
+      "monitor": "Monitor {{number}}"
     },
-    "disabled": "Udaljeni radni stol je isključen. Administrator ga može uključiti u postavkama."
+    "disabled": "Udaljeni radni stol je isključen. Administrator ga može uključiti u postavkama.",
+    "rustdesk": {
+      "videoUnsupported": "Ovaj preglednik ne podržava RustDesk video. Koristi najnoviju verziju Chromea, Edgea, Firefoxa ili Safarija.",
+      "passwordTitle": "RustDesk lozinka",
+      "passwordDescription": "Udaljeni uređaj zahtijeva lozinku. Koristi se samo za ovu sesiju i ne sprema se.",
+      "passwordWrong": "Ta lozinka nije prihvaćena. Pokušaj ponovo.",
+      "codeTitle": "Dvofaktorski kod",
+      "codeDescription": "Udaljeni uređaj zahtijeva kod iz aplikacije za autentifikaciju.",
+      "codeWrong": "Taj kod nije prihvaćen. Pokušaj ponovo.",
+      "code": "Kod"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Otvoreno u Windows Remote Desktopu",
@@ -142,6 +159,8 @@
       "serverLayout": "Raspored poslužitelja",
       "timezone": "Vremenska zona",
       "loadBalanceInfo": "Informacije o uravnoteženju opterećenja / kolačić",
+      "kdcUrl": "Adresa Kerberos KDC-a",
+      "kdcUrlDesc": "Kontroler domene za Kerberos prijavu, za račune u Protected Users. Zahtijeva ugrađeni mehanizam, host unesen po DNS imenu i popunjenu domenu. Ostavi prazno za NTLM.",
       "loadBalanceInfoDesc": "RD Connection Broker kolačić za uravnoteženje opterećenja RDS farme (npr. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd posrednik (opcionalno)",
       "guacdHostname": "guacd poslužitelj",
@@ -278,7 +297,75 @@
     "docsLink": "Pogledajte dokumentaciju",
     "connectionOriginGuacamoleNote": "RDP, VNC i Telnet se prema zadanim postavkama izvršavaju na ovom uređaju, kao i SSH. Odaberite Udaljeni poslužitelj da se izvršavaju na poslužitelju.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Dijeljenje zaslona na Macu"
+    "appleScreenSharing": "Dijeljenje zaslona na Macu",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Udaljena radna površina putem RustDesk ID-a",
+    "rustdesk": {
+      "direct": "Izravan pristup putem IP adrese",
+      "directDesc": "Poveži se na adresu hosta umjesto traženja RustDesk ID-a. Izravan pristup putem IP adrese mora biti uključen u RustDesku na tom uređaju.",
+      "port": "Port za izravan IP pristup",
+      "directNote": "Veza je šifrirana, ali bez ID poslužitelja nema načina da se potvrdi koji je uređaj odgovorio.",
+      "id": "RustDesk ID",
+      "idDesc": "ID prikazan u RustDesku na udaljenom uređaju.",
+      "passwordDesc": "Trajna ili jednokratna lozinka postavljena u RustDesku. Ostavi prazno ako želiš da netko prihvati sesiju na udaljenom uređaju.",
+      "server": "RustDesk poslužitelj",
+      "serverDesc": "Ostavi prazno za korištenje poslužitelja postavljenog u postavkama administratora za udaljenu radnu površinu, ili javni RustDesk poslužitelj ako nije postavljen nijedan.",
+      "idServer": "ID poslužitelj",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Relay poslužitelj",
+      "relayServerPlaceholder": "Isto kao ID poslužitelj",
+      "key": "Ključ",
+      "keyDesc": "Javni ključ tvog RustDesk poslužitelja, iz id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Striming s niskom latencijom s Sunshine računala",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "Računalo",
+      "pcDesc": "Sunshine računalo za striming. Moonlight Web nabraja sva računala koja poznaje.",
+      "choosePc": "Odaberi računalo",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "upareno",
+      "notPaired": "nije upareno",
+      "offline": "offline",
+      "refresh": "Osvježi",
+      "addPc": "Dodaj ovaj host u Moonlight Web",
+      "addPcDesc": "Dodaje {{address}} na portu {{port}}, dijeljeno sa svim korisnicima Moonlight Weba.",
+      "pair": "Upari",
+      "pairDesc": "Ovo računalo mora biti upareno s Moonlight Webom jednom.",
+      "pairing": "Čekanje na Sunshine",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "Otvori Sunshine web sučelje na računalu, idi na PIN i unesi ovaj PIN.",
+      "pairDone": "Računalo upareno",
+      "pairFailed": "Uparivanje nije uspjelo. Provjeri PIN i pokušaj ponovo.",
+      "pairExpired": "Vrijeme za uparivanje je isteklo. Pokušaj ponovo.",
+      "noSetUpAccess": "Zatraži od administratora da doda i upari ovo računalo.",
+      "stream": "Strimaj",
+      "app": "Aplikacija",
+      "appDesc": "Što otvoriti na računalu.",
+      "firstApp": "Prva aplikacija",
+      "bitrate": "Brzina prijenosa (kbps)",
+      "bitrateDesc": "Ostavite na 0 za korištenje Moonlight Web zadanih postavki.",
+      "fps": "Brzina kadrova",
+      "fpsDesc": "Ostavite na 0 za korištenje Moonlight Web zadanih postavki.",
+      "transport": "Transport",
+      "transportDesc": "WebRTC ima najmanju kašnjenja. WebSockets rade na mrežama koje ga blokiraju.",
+      "transportAuto": "Automatski",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "Administrator mora postaviti Moonlight Web poslužitelj u postavkama Udaljenog radnog stola.",
+      "loading": "Priprema strujanja",
+      "signInNote": "Moonlight Web traži prijavu pri prvom korištenju.",
+      "openStream": "Otvori strujanje",
+      "openInWindow": "Otvori u novom prozoru",
+      "noH264": "Ovaj preglednik ne može reproducirati H.264 videozapise. Ako se strujanje ne pokrene, koristite Chrome, Edge ili Termix desktop aplikaciju, ili uključite HEVC ili AV1 u Sunshineu.",
+      "retry": "Pokušaj ponovno",
+      "errorRecordingRequired": "Snimanje je obavezno na ovom hostu, a Moonlight strujanja se ne mogu snimati.",
+      "errorNotLinked": "Nema povezanog računala. Odaberite ga u uređivaču hosta.",
+      "errorNotPaired": "Ovo računalo još nije upareno. Uparite ga u uređivaču hosta.",
+      "errorOffline": "Računalo je izvan mreže ili Sunshine ne radi.",
+      "errorNoApps": "Sunshine nema aplikacija za otvaranje na ovom računalu."
+    }
   },
   "onboarding": {
     "guacdTitle": "Postavite udaljeni desktop",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "Adrese guacd-a po hostu su premještene"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID poslužitelj",
+        "description": "Vaš vlastiti RustDesk ID poslužitelj (hbbs), kao domena ili domena:port. Ostavite prazno za korištenje javnog RustDesk poslužitelja. Poslužitelji mogu postaviti vlastite.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk relay poslužitelj",
+        "description": "Vaš RustDesk relay poslužitelj (hbbr). Ostavite prazno za korištenje onoga što ID poslužitelj navodi.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk ključ poslužitelja",
+        "description": "Javni ključ vašeg RustDesk poslužitelja, iz id_ed25519.pub. Potreban uz vlastiti poslužitelj."
+      },
+      "moonlightUrl": {
+        "label": "Moonlight Web adresa",
+        "description": "Moonlight Web poslužitelj s kojim Termix komunicira za Sunshine streaming. Pogledajte dokumentaciju za upute o pokretanju.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Javna adresa Moonlight Weba",
+        "description": "Adresu koju otvaraju preglednici, ako se razlikuje od one iznad. HTTPS je potreban za gamepadove i zaključavanje tipkovnice.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Korisničko ime za Moonlight Web",
+        "description": "Uloga administratora na Moonlight Webu. Termix je koristi za popise, dodavanje i uparivanje računala."
+      },
+      "moonlightPassword": {
+        "label": "Lozinka za Moonlight Web",
+        "description": "Lozinka za tu prijavu."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Zanemari Moonlight Web certifikat",
+        "description": "Uključite za samopotpisan certifikat na Moonlight Webu."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "ARD port"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "RustDesk izravan IP port"
+      },
+      "rustdeskId": {
+        "label": "RustDesk ID"
+      },
+      "rustdeskDirect": {
+        "label": "RustDesk izravan IP pristup"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID poslužitelj"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk relay poslužitelj"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk ključ poslužitelja"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine port"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight aplikacija"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlight bitrate"
+      },
+      "moonlightFps": {
+        "label": "Moonlight brzina okvira"
+      },
+      "moonlightTransport": {
+        "label": "Moonlight transport"
+      },
+      "rdpAutoReconnect": {
+        "label": "Automatski ponovno poveži RDP",
+        "description": "Ponovno se poveži kada se RDP sesija prekine. Isključite za ručno ponovno povezivanje kako biste izbjegli prekid sesija otvorenih iz drugog klijenta."
+      },
+      "rdpAutoResize": {
+        "label": "Automatski prilagodi veličinu RDP-a",
+        "description": "Prilagodi udaljenu rezoluciju kada se veličina prozora promijeni. Isključite da zadržite veličinu odabranu pri povezivanju do ponovnog povezivanja."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Poveži se putem RDP-a",
     "connectVnc": "Poveži se putem VNC-a",
     "connectTelnet": "Poveži se putem Telnet-a",
-    "connectArd": "Poveži se putem Apple Remote Desktopa"
+    "connectArd": "Poveži se putem Apple Remote Desktopa",
+    "connectRustdesk": "Poveži se putem RustDeska",
+    "connectMoonlight": "Poveži se putem Moonlighta"
   },
   "permissions": {
     "sessions": {
       "title": "Dijeli sesije udaljene radne površine",
       "description": "Dopusti da dijeljenje sesija i sobe za suradnju prikažu ove korisnikove RDP, VNC i Telnet sesije drugima."
+    },
+    "monitor": {
+      "title": "Pregledaj sve sesije udaljenog desktopa",
+      "description": "Omogućuje drugim značajkama, poput snimanja sesija, da nabrajaju, pregledavaju i završavaju RDP, VNC i Telnet sesije svih korisnika."
+    },
+    "moonlight": {
+      "title": "Postavi Moonlight računala",
+      "description": "Dodaj Sunshine računala u Moonlight Web i upari ih koristeći spremljene podatke za prijavu u Moonlight Web."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Udaljena radna površina",
     "description": "RDP, VNC i Telnet sesije u pregledniku, s podrškom za međuspremnik, prijenos datoteka, dijeljenje i snimanje."
+  },
+  "operations": {
+    "check": {
+      "title": "Provjeri portove za udaljeni desktop"
+    },
+    "ports": {
+      "title": "Udaljeni desktop"
+    },
+    "sessions": {
+      "title": "Otvori udaljene sesije"
+    },
+    "session": {
+      "title": "Udaljene sesije",
+      "protocol": "Vrsta",
+      "started": "Pokrenuto"
+    }
+  },
+  "card": {
+    "title": "Udaljene sesije",
+    "loading": "Učitavanje...",
+    "empty": "Nema otvorenih udaljenih sesija"
   }
 }

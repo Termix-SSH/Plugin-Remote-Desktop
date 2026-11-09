@@ -86,14 +86,18 @@ export function countFittingButtons(
   widths: number[],
   available: number,
   overflowWidth: number,
+  gap = 0,
 ): number {
-  const total = widths.reduce((sum, width) => sum + width, 0);
+  // The row puts a gap between items, the measured widths do not include it.
+  const total =
+    widths.reduce((sum, width) => sum + width, 0) +
+    gap * Math.max(0, widths.length - 1);
   if (total <= available) return widths.length;
   let used = overflowWidth;
   let count = 0;
   for (const width of widths) {
-    if (used + width > available) break;
-    used += width;
+    if (used + width + gap > available) break;
+    used += width + gap;
     count += 1;
   }
   return count;

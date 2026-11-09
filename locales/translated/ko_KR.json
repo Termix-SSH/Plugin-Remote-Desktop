@@ -11,6 +11,8 @@
     "connectionError": "연결 오류",
     "clipboardWaiting": "세션에서 텍스트가 복사되었습니다. 클립보드에 붙여넣으려면 여기를 클릭하거나 키를 누르세요. 즉시 복사하려면 HTTPS로 Termix를 열어주세요.",
     "failedToConnect": "연결 토큰을 가져오지 못했습니다",
+    "requestAccess": "접근 요청",
+    "verifyAccess": "확인",
     "hostNotFound": "호스트를 찾을 수 없습니다",
     "noHostSelected": "선택된 호스트가 없습니다",
     "guacdUnavailable": "외부 guacd가 응답하지 않습니다. guacd가 실행 중인지 확인하거나 원격 데스크톱 설정에서 '외부 guacd 사용'을 끄세요.",
@@ -81,14 +83,16 @@
         "macLock": "화면 잠금",
         "spotlight": "스포트라이트",
         "logoff": "로그아웃",
-        "record": "녹화"
+        "record": "녹화",
+        "monitors": "모니터"
       },
       "hints": {
         "files": "RDP 드라이브가 켜지면 표시됩니다",
         "touchMode": "터치스크린에서만 사용 가능",
         "modifiers": "Ctrl, Alt, Shift 및 시스템 키는 다음 키가 입력될 때까지 누른 상태로 유지됩니다",
         "logoff": "실행 상자에서 logoff를 실행하여 Windows에서 로그아웃합니다. 세션이 열려 있고 데스크톱이 표시되어야 합니다.",
-        "record": "이 세션의 녹화를 시작하거나 중지합니다. 세션 녹화 플러그인과 기본 엔진이 필요합니다."
+        "record": "이 세션의 녹화를 시작하거나 중지합니다. 세션 녹화 플러그인과 기본 엔진이 필요합니다.",
+        "monitors": "원격 모니터 간 전환"
       },
       "option": "Option",
       "logoffConfirm": "이 Windows 세션에서 로그아웃하시겠습니까? 저장되지 않은 작업은 손실됩니다.",
@@ -96,9 +100,22 @@
       "recordStop": "녹화 중지",
       "recordStarted": "녹화가 시작되었습니다",
       "recordStopped": "녹화가 세션 녹화에 저장되었습니다",
-      "recordFailed": "녹화를 변경할 수 없습니다"
+      "recordFailed": "녹화를 변경할 수 없습니다",
+      "recordRequired": "관리자가 이 호스트에서 녹화를 필수로 설정했습니다",
+      "recordRequiredLabel": "녹화 (필수)",
+      "monitor": "모니터 {{number}}"
     },
-    "disabled": "원격 데스크톱이 꺼져 있습니다. 관리자가 설정에서 켤 수 있습니다."
+    "disabled": "원격 데스크톱이 꺼져 있습니다. 관리자가 설정에서 켤 수 있습니다.",
+    "rustdesk": {
+      "videoUnsupported": "이 브라우저는 RustDesk 비디오를 재생할 수 없습니다. 최신 Chrome, Edge, Firefox 또는 Safari를 사용하세요.",
+      "passwordTitle": "RustDesk 비밀번호",
+      "passwordDescription": "원격 장치가 비밀번호를 필요로 합니다. 이 비밀번호는 현재 세션에서만 사용되며 저장되지 않습니다.",
+      "passwordWrong": "비밀번호가 거부되었습니다. 다시 시도하세요.",
+      "codeTitle": "2단계 인증 코드",
+      "codeDescription": "원격 장치는 인증 앱에서 생성한 코드가 필요합니다.",
+      "codeWrong": "코드가 거부되었습니다. 다시 시도하세요.",
+      "code": "코드"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Windows 원격 데스크톱에서 열렸습니다",
@@ -142,6 +159,8 @@
       "serverLayout": "서버 레이아웃",
       "timezone": "시간대",
       "loadBalanceInfo": "로드 밸런싱 정보 / 쿠키",
+      "kdcUrl": "Kerberos KDC 주소",
+      "kdcUrlDesc": "보호된 사용자 계정의 Kerberos 로그인을 위한 도메인 컨트롤러입니다. 내장 엔진, DNS 이름으로 입력된 호스트, 도메인 정보가 필요합니다. NTLM의 경우 비워두세요.",
       "loadBalanceInfoDesc": "RDS 팜 로드 밸런싱을 위한 RD 연결 브로커 쿠키 (예: tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd 프록시 (선택 사항)",
       "guacdHostname": "guacd 호스트",
@@ -278,7 +297,75 @@
     "docsLink": "문서 보기",
     "connectionOriginGuacamoleNote": "SSH와 마찬가지로 RDP, VNC 및 Telnet은 기본적으로 이 장치에서 실행됩니다. 대신 서버에서 실행하려면 원격 서버를 선택하세요.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Mac 화면 공유"
+    "appleScreenSharing": "Mac 화면 공유",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "RustDesk ID를 사용한 원격 데스크톱",
+    "rustdesk": {
+      "direct": "직접 IP 접근",
+      "directDesc": "RustDesk ID를 조회하는 대신 호스트 주소에 직접 연결합니다. 해당 장치의 RustDesk에서 직접 IP 액세스가 활성화되어 있어야 합니다.",
+      "port": "직접 IP 포트",
+      "directNote": "연결은 암호화되지만 ID 서버가 없으면 응답한 장치를 확인할 수 없습니다.",
+      "id": "RustDesk ID",
+      "idDesc": "원격 장치의 RustDesk에 표시된 ID입니다.",
+      "passwordDesc": "RustDesk에서 설정한 영구 비밀번호 또는 일회용 비밀번호입니다. 원격 장치에서 누군가가 세션을 수동으로 수락하도록 하려면 비워두세요.",
+      "server": "RustDesk 서버",
+      "serverDesc": "원격 데스크톱 관리자 설정에서 지정한 서버를 사용하려면 비워두세요. 설정이 없으면 공개 RustDesk 서버가 사용됩니다.",
+      "idServer": "ID 서버",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "릴레이 서버",
+      "relayServerPlaceholder": "ID 서버와 동일",
+      "key": "키",
+      "keyDesc": "id_ed25519.pub 파일에서 가져온 RustDesk 서버의 공개 키입니다."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Sunshine PC에서 저지연 스트리밍",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "PC",
+      "pcDesc": "스트리밍할 Sunshine PC를 선택하세요. Moonlight Web은 알려진 모든 PC를 목록에 표시합니다.",
+      "choosePc": "PC 선택",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "페어링됨",
+      "notPaired": "페어링 안됨",
+      "offline": "오프라인",
+      "refresh": "새로고침",
+      "addPc": "이 호스트를 Moonlight Web에 추가",
+      "addPcDesc": "{{address}}의 포트 {{port}}를 추가하며, 모든 Moonlight Web 사용자와 공유됩니다.",
+      "pair": "페어링",
+      "pairDesc": "이 PC는 Moonlight Web과 한 번 페어링해야 합니다.",
+      "pairing": "Sunshine 대기 중",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "PC에서 Sunshine 웹 UI를 열고 PIN 설정으로 이동한 후 이 PIN을 입력하세요.",
+      "pairDone": "PC 페어링 완료",
+      "pairFailed": "페어링에 실패했습니다. PIN을 확인하고 다시 시도하세요.",
+      "pairExpired": "페어링 시간이 초과되었습니다. 다시 시도하세요.",
+      "noSetUpAccess": "관리자에게 이 PC를 추가하고 페어링해 달라고 요청하세요.",
+      "stream": "스트리밍",
+      "app": "앱",
+      "appDesc": "PC에서 열 항목.",
+      "firstApp": "첫 번째 앱",
+      "bitrate": "비트레이트 (kbps)",
+      "bitrateDesc": "Moonlight Web 기본값을 사용하려면 0으로 두세요.",
+      "fps": "프레임 속도",
+      "fpsDesc": "Moonlight Web 기본값을 사용하려면 0으로 두세요.",
+      "transport": "전송 방식",
+      "transportDesc": "WebRTC의 지연 시간이 가장 짧습니다. WebSockets는 이를 차단하는 네트워크에서도 작동합니다.",
+      "transportAuto": "자동",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "관리자가 원격 데스크톱 설정에서 Moonlight Web 서버를 구성해야 합니다.",
+      "loading": "스트림 준비 중",
+      "signInNote": "첫 사용 시 Moonlight Web에서 로그인하라는 메시지가 표시됩니다.",
+      "openStream": "스트림 열기",
+      "openInWindow": "새 창에서 열기",
+      "noH264": "이 브라우저는 H.264 비디오를 재생할 수 없습니다. 스트림이 시작되지 않으면 Chrome, Edge 또는 Termix 데스크톱 앱을 사용하거나 Sunshine에서 HEVC 또는 AV1을 활성화하세요.",
+      "retry": "다시 시도",
+      "errorRecordingRequired": "이 호스트에서는 녹화가 필수이며, Moonlight 스트림은 녹화할 수 없습니다.",
+      "errorNotLinked": "연결된 PC가 없습니다. 호스트 편집기에서 선택하세요.",
+      "errorNotPaired": "이 PC는 아직 페어링되지 않았습니다. 호스트 편집기에서 페어링하세요.",
+      "errorOffline": "PC가 오프라인이거나 Sunshine이 실행 중이 아닙니다.",
+      "errorNoApps": "이 PC에서 열 수 있는 Sunshine 앱이 없습니다."
+    }
   },
   "onboarding": {
     "guacdTitle": "원격 데스크톱 설정",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "호스트별 guacd 주소 이동됨"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID 서버",
+        "description": "사용자 전용 RustDesk ID 서버(hbbs)를 호스트 또는 호스트:포트 형식으로 입력하세요. 공백으로 두면 공개 RustDesk 서버를 사용합니다. 호스트는 자체 서버를 설정할 수 있습니다.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk 중계 서버",
+        "description": "사용자 전용 RustDesk 중계 서버(hbbr)를 입력하세요. 공백으로 두면 ID 서버에서 제공하는 값을 사용합니다.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk 서버 키",
+        "description": "id_ed25519.pub에서 가져온 RustDesk 서버의 공개 키입니다. 자체 서버 사용 시 필요합니다."
+      },
+      "moonlightUrl": {
+        "label": "Moonlight Web 주소",
+        "description": "Sunshine 스트리밍을 위해 Termix가 통신하는 Moonlight Web 서버입니다. 서버 실행 방법은 문서를 참조하세요.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Moonlight Web 공개 주소",
+        "description": "위 주소와 다를 경우 브라우저에서 열리는 주소입니다. 게임패드 및 키보드 잠금 기능을 사용하려면 HTTPS가 필요합니다.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Moonlight Web 사용자 이름",
+        "description": "Moonlight Web의 관리자 로그인 정보입니다. Termix는 이를 사용하여 PC 목록을 확인하고 추가 및 페어링합니다."
+      },
+      "moonlightPassword": {
+        "label": "Moonlight Web 비밀번호",
+        "description": "해당 로그인에 대한 비밀번호입니다."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Moonlight Web 인증서 무시",
+        "description": "Moonlight Web에서 자체 서명된 인증서를 사용하려면 켜세요."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "ARD 포트"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "RustDesk 직접 IP 포트"
+      },
+      "rustdeskId": {
+        "label": "RustDesk ID"
+      },
+      "rustdeskDirect": {
+        "label": "RustDesk 직접 IP 액세스"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID 서버"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk 중계 서버"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk 서버 키"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine 포트"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight 앱"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlight 비트레이트"
+      },
+      "moonlightFps": {
+        "label": "Moonlight 프레임률"
+      },
+      "moonlightTransport": {
+        "label": "Moonlight 전송 방식"
+      },
+      "rdpAutoReconnect": {
+        "label": "RDP 자동 재연결",
+        "description": "RDP 세션이 끊겼을 때 자동으로 재연결합니다. 다른 클라이언트에서 열린 세션이 방해받지 않도록 수동으로 재연결하려면 이 옵션을 끄세요."
+      },
+      "rdpAutoResize": {
+        "label": "RDP 자동 크기 조정",
+        "description": "창 크기가 변경될 때 원격 해상도를 조정합니다. 재연결할 때까지 연결 시 선택한 크기를 유지하려면 이 옵션을 끄세요."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "RDP로 연결",
     "connectVnc": "VNC로 연결",
     "connectTelnet": "Telnet으로 연결",
-    "connectArd": "Apple Remote Desktop으로 연결"
+    "connectArd": "Apple Remote Desktop으로 연결",
+    "connectRustdesk": "RustDesk로 연결",
+    "connectMoonlight": "Moonlight로 연결"
   },
   "permissions": {
     "sessions": {
       "title": "원격 데스크톱 세션 공유",
       "description": "세션 공유 및 협업 방에서 이 사용자의 RDP, VNC 및 Telnet 세션을 다른 사용자에게 표시할 수 있도록 합니다."
+    },
+    "monitor": {
+      "title": "모든 사용자의 원격 데스크톱 세션 보기",
+      "description": "세션 녹화 등 다른 기능이 모든 사용자의 RDP, VNC 및 Telnet 세션을 목록으로 표시하고 모니터링하며 종료할 수 있습니다."
+    },
+    "moonlight": {
+      "title": "Moonlight PC 설정",
+      "description": "저장된 Moonlight Web 로그인 정보를 사용하여 Sunshine PC를 Moonlight Web에 추가하고 페어링합니다."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "원격 데스크톱",
     "description": "클립보드, 파일 전송, 공유 및 녹화가 가능한 브라우저 기반 RDP, VNC 및 Telnet 세션."
+  },
+  "operations": {
+    "check": {
+      "title": "원격 데스크톱 포트 확인"
+    },
+    "ports": {
+      "title": "원격 데스크톱"
+    },
+    "sessions": {
+      "title": "원격 세션 열기"
+    },
+    "session": {
+      "title": "원격 세션",
+      "protocol": "유형",
+      "started": "시작 시간"
+    }
+  },
+  "card": {
+    "title": "원격 세션",
+    "loading": "로딩 중...",
+    "empty": "열린 원격 세션이 없습니다"
   }
 }

@@ -15,7 +15,7 @@ export interface MetaKeyLabels {
  * Windows key is wrong, and the local device is the only OS we can see.
  */
 export function detectMetaKeyFamily(
-  protocol: "rdp" | "vnc" | "ard" | "telnet",
+  protocol: "rdp" | "vnc" | "ard" | "telnet" | "rustdesk",
   env: {
     platform?: string;
     userAgent?: string;
@@ -37,7 +37,7 @@ export function detectMetaKeyFamily(
 }
 
 export function detectRuntimeMetaKeyFamily(
-  protocol: "rdp" | "vnc" | "ard" | "telnet",
+  protocol: "rdp" | "vnc" | "ard" | "telnet" | "rustdesk",
 ): MetaKeyFamily {
   if (typeof navigator === "undefined") {
     return detectMetaKeyFamily(protocol);
@@ -138,56 +138,43 @@ const TOGGLE_KEYS: Record<string, number> = {
   HanjaMode: 0xff34,
 };
 const toggleKeysyms = new Set(Object.values(TOGGLE_KEYS));
-const togglesHeld = new Set<number>();
-const togglesSent = new Set<number>();
 
 /** Tracks whether the browser sees right Alt as Alt or as AltGraph. */
-export function watchRightAlt(target: HTMLElement): () => void {
+export function watchRightAlt(
+  target: HTMLElement,
+  onToggle?: (keysym: number) => void,
+): () => void {
   const onKey = (event: KeyboardEvent) => {
     if (event.code === "AltRight") rightAltIsPlain = event.key === "Alt";
     if (event.type !== "keyup") lastKeyCode = event.code;
     const toggle = TOGGLE_KEYS[event.key];
     if (toggle === undefined) return;
-    if (event.type === "keyup") {
-      togglesHeld.delete(toggle);
-    } else {
-      togglesHeld.add(toggle);
-      // A real press always goes through, even if a release got lost on blur.
-      if (!event.repeat) togglesSent.delete(toggle);
-    }
+    // Some Korean drivers never send a matching keyup. Keep these keys out
+    // of Guacamole's pressed table and software repeat timer entirely.
+    if (!onToggle) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    if (event.type === "keydown" && !event.repeat) onToggle(toggle);
   };
-  const onBlur = () => togglesHeld.clear();
   target.addEventListener("keydown", onKey, true);
   target.addEventListener("keyup", onKey, true);
   // A Mac browser reports what Option types on keypress, not keydown.
   target.addEventListener("keypress", onKey, true);
-  target.addEventListener("blur", onBlur);
   return () => {
     target.removeEventListener("keydown", onKey, true);
     target.removeEventListener("keyup", onKey, true);
     target.removeEventListener("keypress", onKey, true);
-    target.removeEventListener("blur", onBlur);
     rightAltIsPlain = false;
     rightAltSentAs = null;
-    togglesHeld.clear();
-    togglesSent.clear();
     optionsDown.clear();
     optionKeysSent.clear();
     lastKeyCode = "";
   };
 }
 
-/** False for a repeat of a toggle key: one press sends one down and one up. */
-export function shouldSendKey(keysym: number, down: boolean): boolean {
-  if (!toggleKeysyms.has(keysym)) return true;
-  if (down) {
-    if (togglesSent.has(keysym)) return false;
-    togglesSent.add(keysym);
-    return true;
-  }
-  if (togglesHeld.has(keysym)) return false;
-  togglesSent.delete(keysym);
-  return true;
+/** Toggle keys are sent as a single down/up pulse, never held remotely. */
+export function isToggleKey(keysym: number): boolean {
+  return toggleKeysyms.has(keysym);
 }
 
 /**
@@ -201,7 +188,7 @@ export function shouldSendKey(keysym: number, down: boolean): boolean {
  * instead, so the Mac types the character through its own layout.
  */
 export function remoteKeysym(
-  protocol: "rdp" | "vnc" | "ard" | "telnet" | undefined,
+  protocol: "rdp" | "vnc" | "ard" | "telnet" | "rustdesk" | undefined,
   keysym: number,
   down = true,
 ): number {

@@ -12,6 +12,7 @@ import {
   ScanSearch,
   Search,
   ToggleLeft,
+  MonitorSmartphone,
 } from "lucide-react";
 import {
   useSlotContributions,
@@ -22,7 +23,7 @@ export const REMOTE_DESKTOP_TOOLBAR_SLOT = "remote-desktop.toolbar";
 
 type Icon = ComponentType<{ className?: string }>;
 
-export type ToolbarProtocol = "rdp" | "vnc" | "ard" | "telnet";
+export type ToolbarProtocol = "rdp" | "vnc" | "ard" | "telnet" | "rustdesk";
 
 /** Keys a single press sends: pressed in order, released in reverse. */
 export interface KeyButton {
@@ -110,9 +111,11 @@ export interface ToolbarItemInfo {
   source: ToolbarItemSource;
 }
 
-const DESKTOP: ToolbarProtocol[] = ["rdp", "vnc", "ard"];
+const DESKTOP: ToolbarProtocol[] = ["rdp", "vnc", "ard", "rustdesk"];
 /** A Mac has its own system shortcuts instead of Ctrl+Alt+Del and Win+L. */
-const NOT_MAC: ToolbarProtocol[] = ["rdp", "vnc"];
+const NOT_MAC: ToolbarProtocol[] = ["rdp", "vnc", "rustdesk"];
+/** RustDesk video can not be recorded yet. */
+const RECORDABLE: ToolbarProtocol[] = ["rdp", "vnc", "ard"];
 
 /** The toolbar's own buttons, in their default order. */
 export const BUILTIN_ITEMS: ToolbarItemInfo[] = [
@@ -129,6 +132,14 @@ export const BUILTIN_ITEMS: ToolbarItemInfo[] = [
     titleKey: "remoteDesktop.toolbar.items.touchMode",
     icon: MousePointer,
     hintKey: "remoteDesktop.toolbar.hints.touchMode",
+    source: { kind: "builtin" },
+  },
+  {
+    id: "monitors",
+    titleKey: "remoteDesktop.toolbar.items.monitors",
+    icon: MonitorSmartphone,
+    hintKey: "remoteDesktop.toolbar.hints.monitors",
+    protocols: ["rustdesk"],
     source: { kind: "builtin" },
   },
   {
@@ -165,7 +176,7 @@ export const BUILTIN_ITEMS: ToolbarItemInfo[] = [
     titleKey: "remoteDesktop.toolbar.items.record",
     icon: Circle,
     hintKey: "remoteDesktop.toolbar.hints.record",
-    protocols: DESKTOP,
+    protocols: RECORDABLE,
     source: { kind: "builtin" },
   },
   {

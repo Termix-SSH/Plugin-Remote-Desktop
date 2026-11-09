@@ -81,6 +81,15 @@ export function HostEditorRdpTab({
               className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             />
           </div>
+          <SettingRow
+            label={t("settings.host.rdpAutoReconnect.label")}
+            description={t("settings.host.rdpAutoReconnect.description")}
+          >
+            <FakeSwitch
+              checked={form.rdpAutoReconnect}
+              onChange={(value) => setField("rdpAutoReconnect", value)}
+            />
+          </SettingRow>
         </div>
       </SectionCard>
       <GuacdProxyCard hostId={hostId} setGuacField={setGuacField} />
@@ -251,6 +260,19 @@ export function HostEditorRdpTab({
               {t("hosts.guac.loadBalanceInfoDesc")}
             </p>
           </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+              {t("hosts.guac.kdcUrl")}
+            </label>
+            <Input
+              placeholder="dc1.example.com"
+              value={(form.guacamoleConfig["kdc-url"] as string) ?? ""}
+              onChange={(e) => setGuacField("kdc-url", e.target.value)}
+            />
+            <p className="text-[10px] text-muted-foreground">
+              {t("hosts.guac.kdcUrlDesc")}
+            </p>
+          </div>
         </div>
       </SectionCard>
 
@@ -301,6 +323,15 @@ export function HostEditorRdpTab({
               />
             </div>
           </div>
+          <SettingRow
+            label={t("settings.host.rdpAutoResize.label")}
+            description={t("settings.host.rdpAutoResize.description")}
+          >
+            <FakeSwitch
+              checked={form.rdpAutoResize}
+              onChange={(value) => setField("rdpAutoResize", value)}
+            />
+          </SettingRow>
           <div className="flex flex-col gap-1.5">
             <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
               {t("hosts.guac.dpi")}

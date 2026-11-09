@@ -15,6 +15,7 @@ use ironrdp::connector::{
 use ironrdp::displaycontrol::client::DisplayControlClient;
 use ironrdp::displaycontrol::pdu::MonitorLayoutEntry;
 use ironrdp::dvc::DrdynvcClient;
+use ironrdp_egfx::client::{GraphicsPipelineClient, GraphicsPipelineHandler};
 use ironrdp::graphics::image_processing::PixelFormat;
 use ironrdp::pdu::gcc::KeyboardType;
 use ironrdp::pdu::input::fast_path::{FastPathInputEvent, KeyboardFlags, SynchronizeFlags};
@@ -36,6 +37,20 @@ use crate::drive::{DriveBackend, DriveHost};
 use crate::encode;
 use crate::rail::RailApp;
 use crate::sound::SoundBackend;
+
+// IronRDP's ActiveStage composites this channel into the session framebuffer.
+// No H.264 decoder is configured, so only non-AVC capabilities are advertised.
+struct GraphicsHandler;
+impl GraphicsPipelineHandler for GraphicsHandler {}
+
+fn dynamic_channels(display_control: bool) -> DrdynvcClient {
+    let mut channels = DrdynvcClient::new()
+        .with_dynamic_channel(GraphicsPipelineClient::new(Box::new(GraphicsHandler), None));
+    if display_control {
+        channels.attach_dynamic_channel(DisplayControlClient::new(|_| Ok(Vec::new())));
+    }
+    channels
+}
 
 #[derive(Deserialize, Default)]
 #[serde(rename_all = "camelCase", default)]
@@ -529,7 +544,7 @@ impl RdpClient {
             request_data: None,
             pointer_software_rendering: false,
             multitransport_flags: None,
-            support_dyn_vc_gfx_protocol: false,
+            support_dyn_vc_gfx_protocol: true,
             performance_flags: perf,
             desktop_scale_factor: if (100..=500).contains(&c.scale) { c.scale } else { 0 },
             hardware_id: None,
@@ -551,14 +566,16 @@ impl RdpClient {
         if !c.load_balance_info.is_empty() {
             connector = connector.with_load_balance_info(c.load_balance_info.clone());
         }
+        // Redirection is always offered; console also asks for session 0.
+        let mut redirection = ironrdp::pdu::gcc::RedirectionFlags::REDIRECTION_SUPPORTED;
         if c.console {
-            connector = connector.with_cluster_data(ironrdp::pdu::gcc::ClientClusterData {
-                flags: ironrdp::pdu::gcc::RedirectionFlags::REDIRECTION_SUPPORTED
-                    | ironrdp::pdu::gcc::RedirectionFlags::REDIRECTED_SESSION_FIELD_VALID,
-                redirection_version: ironrdp::pdu::gcc::RedirectionVersion::V6,
-                redirected_session_id: 0,
-            });
+            redirection |= ironrdp::pdu::gcc::RedirectionFlags::REDIRECTED_SESSION_FIELD_VALID;
         }
+        connector = connector.with_cluster_data(ironrdp::pdu::gcc::ClientClusterData {
+            flags: redirection,
+            redirection_version: ironrdp::pdu::gcc::RedirectionVersion::V6,
+            redirected_session_id: 0,
+        });
         if !c.remote_app.is_empty() {
             connector.attach_static_channel(RailApp::new(
                 c.remote_app.clone(),
@@ -597,11 +614,7 @@ impl RdpClient {
             }
             connector.attach_static_channel(rdpdr);
         }
-        if self.config.display_control {
-            connector.attach_static_channel(
-                DrdynvcClient::new().with_dynamic_channel(DisplayControlClient::new(|_| Ok(Vec::new()))),
-            );
-        }
+        connector.attach_static_channel(dynamic_channels(self.config.display_control));
         connector
     }
 
@@ -726,6 +739,9 @@ impl RdpClient {
             None => connector.step_no_input(&mut buf),
             Some(hint) => match self.take_frame(hint) {
                 Ok(Some(frame)) => {
+                    if self.redirected(&frame) {
+                        return false;
+                    }
                     if is_multitransport_during_licensing(&connector, &frame)
                         || is_unreadable_multitransport(&connector, &frame)
                     {
@@ -907,9 +923,20 @@ impl RdpClient {
             }
         };
         let frame: Vec<u8> = self.inbuf.drain(..info.length).collect();
+        if info.action == ironrdp::pdu::Action::X224 && self.redirected(&frame) {
+            return false;
+        }
         let Session { stage, image, .. } = &mut *session;
+        let previous_size = (image.width(), image.height());
         match stage.process(image, info.action, &frame) {
             Ok(outputs) => {
+                // GFX ResetGraphics can resize without a deactivation sequence.
+                if (image.width(), image.height()) != previous_size {
+                    let e = obj("resize");
+                    set(&e, "w", image.width());
+                    set(&e, "h", image.height());
+                    self.events.push(e.into());
+                }
                 let keep = self.handle_outputs(&mut session, outputs);
                 if keep {
                     self.phase = Phase::Active(session);
@@ -1189,6 +1216,24 @@ impl RdpClient {
         self.push_send(data);
     }
 
+    /// A Server Redirection PDU ends this connection; the host reconnects to
+    /// the new target.
+    fn redirected(&mut self, frame: &[u8]) -> bool {
+        let Some(r) = crate::redirect::parse_frame(frame) else {
+            return false;
+        };
+        let e = obj("redirect");
+        set(&e, "address", r.address);
+        set(&e, "fqdn", r.fqdn);
+        set(&e, "loadBalanceInfo", r.load_balance_info.iter().map(|b| *b as char).collect::<String>());
+        set(&e, "username", r.username);
+        set(&e, "domain", r.domain);
+        set(&e, "password", r.password);
+        self.events.push(e.into());
+        self.phase = Phase::Closed;
+        true
+    }
+
     fn fail(&mut self, kind: &str, message: &str) {
         let e = obj("error");
         set(&e, "kind", kind);
@@ -1256,3 +1301,7 @@ fn classify(error: &connector::ConnectorError) -> &'static str {
         _ => "protocol",
     }
 }
+
+#[cfg(test)]
+#[path = "rdp_graphics_tests.rs"]
+mod graphics_tests;

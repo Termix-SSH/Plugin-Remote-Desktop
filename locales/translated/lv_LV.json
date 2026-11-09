@@ -11,6 +11,8 @@
     "connectionError": "Savienojuma kļūda",
     "clipboardWaiting": "Teksts nokopēts sesijā. Noklikšķiniet vai nospiediet taustiņu šeit, lai ievietotu to starpliktuvē. Atveriet Termix pār HTTPS, lai nekavējoties nokopētu.",
     "failedToConnect": "Neizdevās iegūt savienojuma marķieri",
+    "requestAccess": "Pieprasīt piekļuvi",
+    "verifyAccess": "Apstiprināt",
     "hostNotFound": "Resursdators nav atrasts",
     "noHostSelected": "Nav izvēlēts resursdators",
     "guacdUnavailable": "Ārējais guacd neatbild. Pārbaudiet, vai tas darbojas, vai arī izslēdziet opciju \"Izmantot ārēju guacd\" attālinātā darbvirsmas iestatījumos.",
@@ -81,14 +83,16 @@
         "macLock": "Bloķēt ekrānu",
         "spotlight": "Spotlight",
         "logoff": "Izrakstīties",
-        "record": "Ierakstīt"
+        "record": "Ierakstīt",
+        "monitors": "Monitori"
       },
       "hints": {
         "files": "Parādās, kad RDP diskzīme ir ieslēgta",
         "touchMode": "Tikai skārienekrāniem",
         "modifiers": "Ctrl, Alt, Shift un sistēmas taustiņi tiek turēti nospiežami līdz nākamajam taustiņam",
         "logoff": "Izrakstās no Windows, izpildot logoff no Run lodziņa. Sesijai ir jābūt atvērtai un jāparāda darbvirsma.",
-        "record": "Sāk vai aptur šīs sesijas ierakstīšanu. Nepieciešama Session Recording spraudprogramma un iebūvētais dzinējs."
+        "record": "Sāk vai aptur šīs sesijas ierakstīšanu. Nepieciešama Session Recording spraudprogramma un iebūvētais dzinējs.",
+        "monitors": "Pārslēgties starp attālo monitoriem"
       },
       "option": "Opcija",
       "logoffConfirm": "Vai vēlaties izrakstīties no šīs Windows sesijas? Nesaglabātais darbs tajā tiks zaudēts.",
@@ -96,9 +100,22 @@
       "recordStop": "Apturēt ierakstīšanu",
       "recordStarted": "Ierakstīšana uzsākta",
       "recordStopped": "Ieraksts saglabāts Session Recording",
-      "recordFailed": "Neizdevās mainīt ierakstīšanu"
+      "recordFailed": "Neizdevās mainīt ierakstīšanu",
+      "recordRequired": "Šī hosta administrators ir noteicis, ka ierakstīšana ir obligāta",
+      "recordRequiredLabel": "Ierakstīšana (obligāti)",
+      "monitor": "Monitors {{number}}"
     },
-    "disabled": "Tālvadības darbvirsma ir izslēgta. Administrators to var ieslēgt Iestatījumos."
+    "disabled": "Tālvadības darbvirsma ir izslēgta. Administrators to var ieslēgt Iestatījumos.",
+    "rustdesk": {
+      "videoUnsupported": "Šis pārlūks neatbalsta RustDesk video atskaņošanu. Izmantojiet jaunu Chrome, Edge, Firefox vai Safari versiju.",
+      "passwordTitle": "RustDesk parole",
+      "passwordDescription": "Attālajai ierīcei ir nepieciešama parole. Tā tiek izmantota tikai šai sesijai un netiek saglabāta.",
+      "passwordWrong": "Šis parole netika pieņemta. Mēģiniet vēlreiz.",
+      "codeTitle": "Divu faktoru kods",
+      "codeDescription": "Attālinātajai ierīcei ir nepieciešams kods no autentifikatora lietotnes.",
+      "codeWrong": "Šis kods netika pieņemts. Mēģiniet vēlreiz.",
+      "code": "Kods"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Atvērts Windows tālvadības darbvirsmā",
@@ -142,6 +159,8 @@
       "serverLayout": "Servera izkārtojums",
       "timezone": "Laika josla",
       "loadBalanceInfo": "Aplādes izlīdzināšanas informācija / sīkdatne",
+      "kdcUrl": "Kerberos KDC adrese",
+      "kdcUrlDesc": "Kerberos pieteikšanās domēna kontrolieris kontiem, kas atrodas aizsargāto lietotāju grupā. Nepieciešams iebūvētais dzinējs, rādītājs, kas ievadīts ar DNS nosaukumu, un aizpildīts domēns. Atstājiet tukšu NTLM gadījumā.",
       "loadBalanceInfoDesc": "RD savienojuma brokeris sīkdatne RDS ferma aplādes izlīdzināšanai (piem., tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd starpniekserveris (neobligāts)",
       "guacdHostname": "guacd hosts",
@@ -278,7 +297,75 @@
     "docsLink": "Apskatīt dokumentāciju",
     "connectionOriginGuacamoleNote": "RDP, VNC un Telnet pēc noklusējuma darbojas šajā ierīcē, tāpat kā SSH. Izvēlieties Attālais serveris, lai palaistu tos uz servera.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Mac ekrāna koplietošana"
+    "appleScreenSharing": "Mac ekrāna koplietošana",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Attālināta darbvirsma ar RustDesk ID",
+    "rustdesk": {
+      "direct": "Tieša IP piekļuve",
+      "directDesc": "Savienojieties ar hosta adresi, nevis meklējot RustDesk ID. Lai tas darbotos, ierīcē ir jābūt ieslēgtam tiešajam IP piekļuves režīmam RustDesk.",
+      "port": "Tiešās IP piekļuves ports",
+      "directNote": "Savienojums ir šifrēts, taču, ja nav ID servera, nav iespējams pierādīt, kura ierīce atbildēja.",
+      "id": "RustDesk ID",
+      "idDesc": "ID, kas parādīts RustDesk attālinātajā ierīcē.",
+      "passwordDesc": "Pastāvīgā vai vienreizējā parole, kas iestatīta RustDesk. Atstājiet tukšu, lai kāds pieņemtu sesiju attālinātajā ierīcē.",
+      "server": "RustDesk serveris",
+      "serverDesc": "Atstājiet tukšu, lai izmantotu serveri, kas iestatīts Tālvadības darbvirsmas administratora iestatījumos, vai publisko RustDesk serveri, ja nav iestatīts neviens.",
+      "idServer": "ID serveris",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Pārraides serveris",
+      "relayServerPlaceholder": "Tāds pats kā ID serveris",
+      "key": "Atslēga",
+      "keyDesc": "Jūsu RustDesk servera publiskā atslēga no id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Zema aizkaves straumēšana no Sunshine PC",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "Dators",
+      "pcDesc": "Sunshine dators, no kura straumēt. Moonlight Web uzskaita visus zināmos datorus.",
+      "choosePc": "Izvēlieties datoru",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "sasaistīts",
+      "notPaired": "nesasaistīts",
+      "offline": "bezsaistē",
+      "refresh": "Atsvaidzināt",
+      "addPc": "Pievienot šo hostu Moonlight Web",
+      "addPcDesc": "Pievieno {{address}} uz porta {{port}}, kas ir kopīgs visiem Moonlight Web lietotājiem.",
+      "pair": "Sasaistīt",
+      "pairDesc": "Šis dators ir jāsaista ar Moonlight Web vienreiz.",
+      "pairing": "Gaida Sunshine",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "Atveriet Sunshine tīmekļa saskarni datorā, dodieties uz PIN un ievadiet šo PIN.",
+      "pairDone": "Dators ir saistīts",
+      "pairFailed": "Saistīšana neizdevās. Pārbaudiet PIN un mēģiniet vēlreiz.",
+      "pairExpired": "Saistīšanas laiks ir beidzies. Mēģiniet vēlreiz.",
+      "noSetUpAccess": "Lūdziet administratoru pievienot un saistīt šo datoru.",
+      "stream": "Straumēt",
+      "app": "Lietotne",
+      "appDesc": "Ko atvērt datorā.",
+      "firstApp": "Pirmā lietotne",
+      "bitrate": "Bitu ātrums (kbps)",
+      "bitrateDesc": "Atstājiet 0, lai izmantotu Moonlight Web noklusējumu.",
+      "fps": "Kadru ātrums",
+      "fpsDesc": "Atstājiet 0, lai izmantotu Moonlight Web noklusējumu.",
+      "transport": "Pārraides protokols",
+      "transportDesc": "WebRTC nodrošina vismazāko aizkavi. WebSockets darbojas tīklos, kas bloķē WebRTC.",
+      "transportAuto": "Automātiski",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "Administratoram ir jāiestata Moonlight Web serveris Tālvadības darbvirsmas iestatījumos.",
+      "loading": "Sagatavo straumi",
+      "signInNote": "Pirmo reizi Moonlight Web lūgs pieteikties.",
+      "openStream": "Atvērt straumi",
+      "openInWindow": "Atvērt jaunā logā",
+      "noH264": "Šis pārlūks nespēj atskaņot H.264 video. Ja straume nesaistās, izmantojiet Chrome, Edge vai Termix darbvirsmas lietotni, vai ieslēdziet HEVC vai AV1 Sunshine.",
+      "retry": "Mēģināt vēlreiz",
+      "errorRecordingRequired": "Šajā datorā ir obligāta ierakstīšana, bet Moonlight straumes nevar ierakstīt.",
+      "errorNotLinked": "Nav saistīts neviens dators. Izvēlieties vienu datoru redaktora logā.",
+      "errorNotPaired": "Šis dators vēl nav saistīts. Saistiet to datoru redaktora logā.",
+      "errorOffline": "Dators ir bezsaistē vai Sunshine nedarbojas.",
+      "errorNoApps": "Sunshine šajā datorā nav nevienas lietojumprogrammas, ko atvērt."
+    }
   },
   "onboarding": {
     "guacdTitle": "Iestatīt attālo darbvirsma",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "guacd adreses katram hostam ir pārvietotas"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID serveris",
+        "description": "Jūsu paša RustDesk ID serveris (hbbs), kā rīkotājs vai rīkotājs:ports. Atstājiet tukšu, lai izmantotu publisko RustDesk serveri. Rīkotāji var iestatīt savējo.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk relay serveris",
+        "description": "Jūsu RustDesk relay serveris (hbbr). Atstājiet tukšu, lai izmantotu to, ko norāda ID serveris.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk servera atslēga",
+        "description": "Jūsu RustDesk servera publiskā atslēga no id_ed25519.pub. Nepieciešama, ja izmantojat savu serveri."
+      },
+      "moonlightUrl": {
+        "label": "Moonlight Web adrese",
+        "description": "Moonlight Web serveris, ar kuru Termix sazinās, lai strīmētu ar Sunshine. Skatiet dokumentāciju, lai to palaistu.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Moonlight Web publiskā adrese",
+        "description": "Adrese, ko pārlūkprogrammas atver, ja tā atšķiras no augstāk norādītās. HTTPS ir nepieciešams spēļu kontrolieriem un tastatūras bloķēšanai.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Moonlight Web lietotājvārds",
+        "description": "Administratora pieteikšanās Moonlight Web. Termix to izmanto datoru sarakstīšanai, pievienošanai un sinhronizēšanai."
+      },
+      "moonlightPassword": {
+        "label": "Moonlight Web parole",
+        "description": "Parole šim pieteikumam."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Ignorēt Moonlight Web sertifikātu",
+        "description": "Ieslēdziet, lai Moonlight Web izmantotu pašparakstītu sertifikātu."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "ARD ports"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "RustDesk tiešā IP ports"
+      },
+      "rustdeskId": {
+        "label": "RustDesk ID"
+      },
+      "rustdeskDirect": {
+        "label": "RustDesk tiešā IP piekļuve"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID serveris"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk relay serveris"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk servera atslēga"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine ports"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight lietotne"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlight bitu ātrums"
+      },
+      "moonlightFps": {
+        "label": "Moonlight kadru ātrums"
+      },
+      "moonlightTransport": {
+        "label": "Moonlight pārraides protokols"
+      },
+      "rdpAutoReconnect": {
+        "label": "Automātiski atkārtoti izveidot RDP savienojumu",
+        "description": "Atkārtoti izveidot savienojumu, ja RDP sesija tiek pārtraukta. Izslēdziet, lai savienojumu izveidotu manuāli un izvairītos no sesiju pārtraukšanas, kuras tika atvērtas no cita klienta."
+      },
+      "rdpAutoResize": {
+        "label": "Automātiski mainīt RDP izmēru",
+        "description": "Pielāgot attālo izšķirtspēju, kad loga izmērs mainās. Izslēdziet, lai saglabātu savienojuma izveides brīdī izvēlēto izmēru līdz nākamajam savienojumam."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Savienoties ar RDP",
     "connectVnc": "Savienoties ar VNC",
     "connectTelnet": "Savienoties ar Telnet",
-    "connectArd": "Savienot ar Apple Remote Desktop"
+    "connectArd": "Savienot ar Apple Remote Desktop",
+    "connectRustdesk": "Savienoties ar RustDesk",
+    "connectMoonlight": "Savienot ar Moonlight"
   },
   "permissions": {
     "sessions": {
       "title": "Koplietot attālās darbvirsmas sesijas",
       "description": "Ļaut sesiju koplietošanai un sadarbības telpām parādīt šī lietotāja RDP, VNC un Telnet sesijas citiem."
+    },
+    "monitor": {
+      "title": "Apskatīt visu attālināto darbvietu sesijas",
+      "description": "Ļauj citām funkcijām, piemēram, Sesijas ierakstīšanai, uzskaitīt, apskatīt un izbeigt visu lietotāju RDP, VNC un Telnet sesijas."
+    },
+    "moonlight": {
+      "title": "Iestatīt Moonlight datorus",
+      "description": "Pievienot Sunshine datorus Moonlight Web un tos sapārot, izmantojot saglabātos Moonlight Web pieteikšanās datus."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Attālā darbvirsmas",
     "description": "RDP, VNC un Telnet sesijas pārlūkprogrammā, ar starpliku, failu pārsūtīšanu, koplietošanu un ierakstīšanu."
+  },
+  "operations": {
+    "check": {
+      "title": "Pārbaudīt attālināto darbvietu portus"
+    },
+    "ports": {
+      "title": "Attālinātā darbviete"
+    },
+    "sessions": {
+      "title": "Atvērt attālinātās sesijas"
+    },
+    "session": {
+      "title": "Attālinātās sesijas",
+      "protocol": "Tips",
+      "started": "Sākta"
+    }
+  },
+  "card": {
+    "title": "Attālinātās sesijas",
+    "loading": "Ielādē...",
+    "empty": "Nav atvērtu attālināto sesiju"
   }
 }

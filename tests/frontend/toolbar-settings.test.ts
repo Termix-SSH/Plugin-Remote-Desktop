@@ -50,4 +50,10 @@ describe("toolbar settings", () => {
     expect(countFittingButtons([10, 10, 10], 29, 8)).toBe(2);
     expect(countFittingButtons([10, 10, 10], 5, 8)).toBe(0);
   });
+
+  it("counts the gap between buttons", () => {
+    // 3 buttons and 2 gaps of 2 make 34, so 30 no longer fits them all.
+    expect(countFittingButtons([10, 10, 10], 34, 8, 2)).toBe(3);
+    expect(countFittingButtons([10, 10, 10], 30, 8, 2)).toBe(1);
+  });
 });

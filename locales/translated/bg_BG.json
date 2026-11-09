@@ -11,6 +11,8 @@
     "connectionError": "Грешка при свързване",
     "clipboardWaiting": "Текстът е копиран в сесията. Кликнете или натиснете клавиш тук, за да го поставите в клипборда. Отворете Termix през HTTPS, за да копирате веднага.",
     "failedToConnect": "Неуспешно получаване на токен за връзка",
+    "requestAccess": "Заявяване на достъп",
+    "verifyAccess": "Потвърждаване",
     "hostNotFound": "Хостът не е намерен",
     "noHostSelected": "Не е избран хост",
     "guacdUnavailable": "Външният guacd не отговаря. Проверете дали работи или изключете опцията \"Използване на външен guacd\" в настройките за Remote Desktop.",
@@ -81,14 +83,16 @@
         "macLock": "Заключване на екрана",
         "spotlight": "Spotlight",
         "logoff": "Изход",
-        "record": "Запис"
+        "record": "Запис",
+        "monitors": "Монитори"
       },
       "hints": {
         "files": "Показва се, когато RDP дискът е включен",
         "touchMode": "Само на екрани с тъчскрийн",
         "modifiers": "Ctrl, Alt, Shift и системният клавиш остават натиснати до следващия клавиш",
         "logoff": "Извършва изход от Windows чрез изпълнение на logoff от полето Run. Сесията трябва да е отворена и да показва работния плот.",
-        "record": "Стартира или спира запис на тази сесия. Изисква плъгина Session Recording и вградения двигател."
+        "record": "Стартира или спира запис на тази сесия. Изисква плъгина Session Recording и вградения двигател.",
+        "monitors": "Превключване между отдалечените монитори"
       },
       "option": "Option",
       "logoffConfirm": "Да излезете от тази Windows сесия? Несохранената работа в нея ще се загуби.",
@@ -96,9 +100,22 @@
       "recordStop": "Спиране на запис",
       "recordStarted": "Записът започна",
       "recordStopped": "Записът е запазен в Session Recording",
-      "recordFailed": "Неуспешна промяна на записа"
+      "recordFailed": "Неуспешна промяна на записа",
+      "recordRequired": "Администраторът е наложил задължително записване на този хост",
+      "recordRequiredLabel": "Записване (задължително)",
+      "monitor": "Монитор {{number}}"
     },
-    "disabled": "Remote Desktop е изключен. Администратор може да го включи в Настройките."
+    "disabled": "Remote Desktop е изключен. Администратор може да го включи в Настройките.",
+    "rustdesk": {
+      "videoUnsupported": "Този браузър не поддържа видео от RustDesk. Използвайте последна версия на Chrome, Edge, Firefox или Safari.",
+      "passwordTitle": "Парола за RustDesk",
+      "passwordDescription": "Отдалеченото устройство изисква парола. Тя се използва само за тази сесия и не се запазва.",
+      "passwordWrong": "Това пароле не беше прието. Опитайте отново.",
+      "codeTitle": "Двустепенен код",
+      "codeDescription": "Удаленото устройство се нуждае от кода от приложението за автентикация.",
+      "codeWrong": "Този код не беше приет. Опитайте отново.",
+      "code": "Код"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Отворено в Windows Remote Desktop",
@@ -142,6 +159,8 @@
       "serverLayout": "Подредба на сървъра",
       "timezone": "Часова зона",
       "loadBalanceInfo": "Информация за балансиране на натоварването / Бисквитка",
+      "kdcUrl": "Адрес на Kerberos KDC",
+      "kdcUrlDesc": "Контролер на домейна за влизане с Kerberos, за акаунти в Protected Users. Изисква вградения двигател, хостът да бъде въведен чрез DNS името си и домейнът да бъде попълнен. Оставете празно за NTLM.",
       "loadBalanceInfoDesc": "Бисквитка на RD Connection Broker за балансиране на натоварването в RDS ферма (напр. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd прокси (по избор)",
       "guacdHostname": "guacd хост",
@@ -278,7 +297,75 @@
     "docsLink": "Преглед на документацията",
     "connectionOriginGuacamoleNote": "RDP, VNC и Telnet се изпълняват на това устройство по подразбиране, както при SSH. Изберете Отдалечен сървър, за да се изпълняват на сървъра.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Споделяне на екран на Mac"
+    "appleScreenSharing": "Споделяне на екран на Mac",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Удален плот чрез RustDesk ID",
+    "rustdesk": {
+      "direct": "Директен достъп чрез IP",
+      "directDesc": "Свържете се директно с адреса на хоста, вместо да търсите RustDesk ID. Директният достъп чрез IP трябва да е включен в RustDesk на това устройство.",
+      "port": "Порт за директен IP достъп",
+      "directNote": "Връзката е криптирана, но без ID сървър няма как да се потвърди кое устройство отговаря.",
+      "id": "RustDesk ID",
+      "idDesc": "ID, показан в RustDesk на отдалеченото устройство.",
+      "passwordDesc": "Постоянната или еднократната парола, зададена в RustDesk. Оставете празно, за да приеме сесията някой на отдалеченото устройство.",
+      "server": "RustDesk сървър",
+      "serverDesc": "Оставете празно, за да използвате сървъра, зададен в настройките за администриране на Remote Desktop, или публичния RustDesk сървър, ако не е зададен такъв.",
+      "idServer": "ID сървър",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Релей сървър",
+      "relayServerPlaceholder": "Същият като ID сървъра",
+      "key": "Ключ",
+      "keyDesc": "Публичният ключ на вашия RustDesk сървър, от id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Стрийминг с ниска латентност от Sunshine PC",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "PC",
+      "pcDesc": "Sunshine PC за стрийминг. Moonlight Web изброява всеки известен му PC.",
+      "choosePc": "Изберете PC",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "свързан",
+      "notPaired": "несвързан",
+      "offline": "офлайн",
+      "refresh": "Опресняване",
+      "addPc": "Добавете този хост към Moonlight Web",
+      "addPcDesc": "Добавя {{address}} на порт {{port}}, споделен с всеки потребител на Moonlight Web.",
+      "pair": "Свързване",
+      "pairDesc": "Този компютър трябва да бъде свързан с Moonlight Web веднъж.",
+      "pairing": "Изчакване на Sunshine",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "Отворете уеб интерфейса на Sunshine на компютъра, отидете до раздела PIN и въведете този код.",
+      "pairDone": "Компютърът е свързан",
+      "pairFailed": "Свързването неуспешно. Проверете PIN кода и опитайте отново.",
+      "pairExpired": "Времето за свързване изтече. Опитайте отново.",
+      "noSetUpAccess": "Попитайте администратор да добави и свърже този компютър.",
+      "stream": "Предаване",
+      "app": "Приложение",
+      "appDesc": "Какво да се отвори на компютъра.",
+      "firstApp": "Първо приложение",
+      "bitrate": "Битрейт (kbps)",
+      "bitrateDesc": "Оставете 0, за да използвате стойността по подразбиране на Moonlight Web.",
+      "fps": "Честота на кадрите",
+      "fpsDesc": "Оставете 0, за да използвате стойността по подразбиране на Moonlight Web.",
+      "transport": "Протокол за предаване",
+      "transportDesc": "WebRTC осигурява най-ниска забавяне. WebSockets работят в мрежи, които блокират WebRTC.",
+      "transportAuto": "Автоматично",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "Администраторът трябва да конфигурира сървъра Moonlight Web в настройките за Remote Desktop.",
+      "loading": "Подготовка на потока",
+      "signInNote": "Moonlight Web изисква вписване при първо използване.",
+      "openStream": "Отвори потока",
+      "openInWindow": "Отвори в нов прозорец",
+      "noH264": "Този браузър не поддържа видео H.264. Ако потокът не стартира, използвайте Chrome, Edge или десктоп приложението на Termix, или включете HEVC или AV1 в Sunshine.",
+      "retry": "Опитайте отново",
+      "errorRecordingRequired": "Записът е задължителен за този хост, а потоците на Moonlight не могат да се записват.",
+      "errorNotLinked": "Няма свързан компютър. Изберете един в редактора на хоста.",
+      "errorNotPaired": "Този компютър все още не е свързан. Свържете го в редактора на хоста.",
+      "errorOffline": "Компютърът е извън линия или Sunshine не работи.",
+      "errorNoApps": "Sunshine няма приложения за отваряне на този компютър."
+    }
   },
   "onboarding": {
     "guacdTitle": "Настройка на отдалечен работен плот",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "Адресите на guacd за всеки хост са преместени"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID сървър",
+        "description": "Вашият собствен RustDesk ID сървър (hbbs), като хост или хост:порт. Оставете празно, за да използвате публичния RustDesk сървър. Хостовете могат да зададат свой собствен.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk relay сървър",
+        "description": "Вашият RustDesk relay сървър (hbbr). Оставете празно, за да използвате това, което посочва ID сървърът.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "Ключ на RustDesk сървъра",
+        "description": "Публичният ключ на вашия RustDesk сървър, от id_ed25519.pub. Необходим при използване на собствен сървър."
+      },
+      "moonlightUrl": {
+        "label": "Адрес на Moonlight Web",
+        "description": "Уеб сървърът Moonlight, с който Termix комуникира за стрийминг чрез Sunshine. Вижте документацията, за да стартирате такъв.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Публичен адрес на Moonlight Web",
+        "description": "Адресът, който браузърите отварят, ако се различава от горния. HTTPS е необходим за геймпадове и заключване на клавиатурата.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Потребителско име за Moonlight Web",
+        "description": "Административен вход в Moonlight Web. Termix го използва за изброяване, добавяне и свързване на компютри."
+      },
+      "moonlightPassword": {
+        "label": "Парола за Moonlight Web",
+        "description": "Паролата за този вход."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Игнориране на сертификата на Moonlight Web",
+        "description": "Включете за самоподписан сертификат в Moonlight Web."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "Порт за ARD"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "Порт за директен IP достъп на RustDesk"
+      },
+      "rustdeskId": {
+        "label": "RustDesk ID"
+      },
+      "rustdeskDirect": {
+        "label": "Директен IP достъп на RustDesk"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID сървър"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk релей сървър"
+      },
+      "rustdeskKey": {
+        "label": "Ключ на RustDesk сървъра"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine порт"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight приложение"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlight битрейт"
+      },
+      "moonlightFps": {
+        "label": "Moonlight честота на кадрите"
+      },
+      "moonlightTransport": {
+        "label": "Moonlight транспорт"
+      },
+      "rdpAutoReconnect": {
+        "label": "Автоматично повторно свързване на RDP",
+        "description": "Повторно свързване при загуба на RDP сесия. Изключете, за да се свързвате ръчно и да избягвате прекъсване на сесии, отворени от друг клиент."
+      },
+      "rdpAutoResize": {
+        "label": "Автоматично променяне на размера на RDP",
+        "description": "Настройте отдалеченото разделително състояние при промяна на размера на прозореца. Изключете, за да запазите размера, избран при свързване, докато не се свържете отново."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Свързване чрез RDP",
     "connectVnc": "Свързване чрез VNC",
     "connectTelnet": "Свързване чрез Telnet",
-    "connectArd": "Свързване чрез Apple Remote Desktop"
+    "connectArd": "Свързване чрез Apple Remote Desktop",
+    "connectRustdesk": "Свързване с RustDesk",
+    "connectMoonlight": "Свързване с Moonlight"
   },
   "permissions": {
     "sessions": {
       "title": "Споделяне на сесии за отдалечен работен плот",
       "description": "Позволете на споделянето на сесии и стаите за сътрудничество да показват сесиите RDP, VNC и Telnet на този потребител на други."
+    },
+    "monitor": {
+      "title": "Наблюдение на сесиите за отдалечен работен плот на всички потребители",
+      "description": "Позволява на други функции, като запис на сесии, да изброяват, наблюдават и приключват RDP, VNC и Telnet сесиите на всеки потребител."
+    },
+    "moonlight": {
+      "title": "Настройване на Moonlight компютри",
+      "description": "Добавяне на Sunshine компютри към Moonlight Web и свързване с тях, използвайки запазените данни за вход в Moonlight Web."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Отдалечен работен плот",
     "description": "Сесии RDP, VNC и Telnet в браузъра ви, с поддръжка на клипборд, прехвърляне на файлове, споделяне и запис."
+  },
+  "operations": {
+    "check": {
+      "title": "Проверка на портовете за отдалечен работен плот"
+    },
+    "ports": {
+      "title": "Отдалечен работен плот"
+    },
+    "sessions": {
+      "title": "Отваряне на отдалечени сесии"
+    },
+    "session": {
+      "title": "Отдалечени сесии",
+      "protocol": "Тип",
+      "started": "Стартирана"
+    }
+  },
+  "card": {
+    "title": "Отдалечени сесии",
+    "loading": "Зареждане...",
+    "empty": "Няма отворени отдалечени сесии"
   }
 }

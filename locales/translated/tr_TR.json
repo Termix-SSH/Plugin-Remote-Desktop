@@ -11,6 +11,8 @@
     "connectionError": "Bağlantı hatası",
     "clipboardWaiting": "Oturumda metin kopyalandı. Panonuza yapıştırmak için buraya tıklayın veya bir tuşa basın. Hemen kopyalamak için Termix'i HTTPS üzerinden açın.",
     "failedToConnect": "Bağlantı jetonu alınamadı",
+    "requestAccess": "Erişim iste",
+    "verifyAccess": "Doğrula",
     "hostNotFound": "Ana bilgisayar bulunamadı",
     "noHostSelected": "Hiçbir ana bilgisayar seçilmedi",
     "guacdUnavailable": "Harici guacd yanıt vermiyor. Çalıştığından emin olun veya Uzaktan Masaüstü ayarlarında Harici guacd kullan seçeneğini kapatın.",
@@ -81,14 +83,16 @@
         "macLock": "Ekranı kilitle",
         "spotlight": "Spotlight",
         "logoff": "Oturumu kapat",
-        "record": "Kaydet"
+        "record": "Kaydet",
+        "monitors": "Monitörler"
       },
       "hints": {
         "files": "RDP sürücüsü açıldığında görünür",
         "touchMode": "Yalnızca dokunmatik ekranlarda",
         "modifiers": "Ctrl, Alt, Shift ve sistem tuşu bir sonraki tuşa basılana kadar basılı tutulur",
         "logoff": "Çalıştır kutusundan logoff komutunu çalıştırarak Windows oturumunu kapatır. Oturumun açık ve masaüstünün görünür olması gerekir.",
-        "record": "Bu oturumun kaydını başlatır veya durdurur. Oturum Kaydı eklentisi ve yerleşik motor gerektirir."
+        "record": "Bu oturumun kaydını başlatır veya durdurur. Oturum Kaydı eklentisi ve yerleşik motor gerektirir.",
+        "monitors": "Uzaktaki monitörler arasında geçiş yap"
       },
       "option": "Seçenek",
       "logoffConfirm": "Bu Windows oturumundan çıkış yapılsın mı? Kaydedilmemiş işler kaybolacak.",
@@ -96,9 +100,22 @@
       "recordStop": "Kaydı durdur",
       "recordStarted": "Kayıt başladı",
       "recordStopped": "Kayıt Oturum Kaydı'na kaydedildi",
-      "recordFailed": "Kayıt değiştirilemedi"
+      "recordFailed": "Kayıt değiştirilemedi",
+      "recordRequired": "Bir yönetici bu ana makinede kaydı zorunlu kıldı",
+      "recordRequiredLabel": "Kayıt (zorunlu)",
+      "monitor": "Monitör {{number}}"
     },
-    "disabled": "Uzak Masaüstü kapalı. Bir yönetici bunu Ayarlar'dan açabilir."
+    "disabled": "Uzak Masaüstü kapalı. Bir yönetici bunu Ayarlar'dan açabilir.",
+    "rustdesk": {
+      "videoUnsupported": "Bu tarayıcı RustDesk videosunu oynatamıyor. Güncel bir Chrome, Edge, Firefox veya Safari kullanın.",
+      "passwordTitle": "RustDesk şifresi",
+      "passwordDescription": "Uzaktaki cihazın bir şifreye ihtiyacı var. Bu şifre yalnızca bu oturum için kullanılır ve kaydedilmez.",
+      "passwordWrong": "Bu şifre kabul edilmedi. Tekrar deneyin.",
+      "codeTitle": "İki faktörlü kod",
+      "codeDescription": "Uzaktaki cihazın doğrulayıcı uygulamasından gelen koda ihtiyacı var.",
+      "codeWrong": "Bu kod kabul edilmedi. Tekrar deneyin.",
+      "code": "Kod"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Windows Uzak Masaüstü'nde açıldı",
@@ -142,6 +159,8 @@
       "serverLayout": "Sunucu Düzeni",
       "timezone": "Saat Dilimi",
       "loadBalanceInfo": "Yük Dengeleme Bilgisi / Çerez",
+      "kdcUrl": "Kerberos KDC Adresi",
+      "kdcUrlDesc": "Korunan Kullanıcılar'daki hesaplar için Kerberos oturum açma işleminin etki alanı denetleyicisi. Yerleşik motoru, ana makinenin DNS adı ile girilmesini ve etki alanının doldurulmasını gerektirir. NTLM için boş bırakın.",
       "loadBalanceInfoDesc": "RDS çiftliği yük dengeleme için RD Bağlantı Aracı çerezi (ör. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd Proxy (isteğe bağlı)",
       "guacdHostname": "guacd Sunucusu",
@@ -278,7 +297,75 @@
     "docsLink": "Dokümanları görüntüle",
     "connectionOriginGuacamoleNote": "SSH gibi, RDP, VNC ve Telnet varsayılan olarak bu cihazda çalışır. Bunun yerine bunları sunucuda çalıştırmak için Uzak sunucu seçeneğini belirleyin.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Mac Ekran Paylaşımı"
+    "appleScreenSharing": "Mac Ekran Paylaşımı",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "RustDesk Kimliği ile uzaktan masaüstü",
+    "rustdesk": {
+      "direct": "Doğrudan IP erişimi",
+      "directDesc": "Bir RustDesk Kimliği aramak yerine ana makine adresine bağlanın. O cihazda RustDesk'te Doğrudan IP erişimi açık olmalıdır.",
+      "port": "Doğrudan IP bağlantı noktası",
+      "directNote": "Bağlantı şifrelenmiştir, ancak kimlik sunucusu olmadığı için hangi cihazın yanıt verdiğini kanıtlayacak bir şey yoktur.",
+      "id": "RustDesk Kimliği",
+      "idDesc": "Uzaktaki cihazda RustDesk'te gösterilen kimlik.",
+      "passwordDesc": "RustDesk'te ayarlanan kalıcı veya tek kullanımlık şifre. Uzaktaki cihazda birinin oturumu kabul etmesini sağlamak için boş bırakın.",
+      "server": "RustDesk sunucusu",
+      "serverDesc": "Hiçbiri ayarlanmadığında Uzaktan Masaüstü yönetici ayarlarında ayarlanan sunucuyu veya genel RustDesk sunucusunu kullanmak için boş bırakın.",
+      "idServer": "Kimlik sunucusu",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Yönlendirme sunucusu",
+      "relayServerPlaceholder": "Kimlik sunucusu ile aynı",
+      "key": "Anahtar",
+      "keyDesc": "id_ed25519.pub dosyasından RustDesk sunucunuzun genel anahtarı."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Sunshine PC'den düşük gecikmeli akış",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "PC",
+      "pcDesc": "Akışı alınacak Sunshine PC. Moonlight Web bildiği her PC'yi listeler.",
+      "choosePc": "Bir PC seçin",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "eşleşmiş",
+      "notPaired": "eşleşmemiş",
+      "offline": "çevrimdışı",
+      "refresh": "Yenile",
+      "addPc": "Bu ana makineyi Moonlight Web'e ekleyin",
+      "addPcDesc": "{{port}} bağlantı noktasındaki {{address}} adresini, tüm Moonlight Web kullanıcılarıyla paylaşılacak şekilde ekler.",
+      "pair": "Eşleştir",
+      "pairDesc": "Bu PC'nin Moonlight Web ile bir kez eşleştirilmesi gerekir.",
+      "pairing": "Sunshine bekleniyor",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "PC'de Sunshine web arayüzünü açın, PIN bölümüne gidin ve bu PIN'i girin.",
+      "pairDone": "PC eşleştirildi",
+      "pairFailed": "Eşleştirme başarısız oldu. PIN'i kontrol edin ve tekrar deneyin.",
+      "pairExpired": "Eşleştirme zaman aşımına uğradı. Tekrar deneyin.",
+      "noSetUpAccess": "Bu PC'yi eklemesini ve eşleştirmesini bir yöneticiden isteyin.",
+      "stream": "Akış",
+      "app": "Uygulama",
+      "appDesc": "PC'de ne açılacağı.",
+      "firstApp": "İlk uygulama",
+      "bitrate": "Bit hızı (kbps)",
+      "bitrateDesc": "Moonlight Web varsayılanını kullanmak için 0 olarak bırakın.",
+      "fps": "Kare hızı",
+      "fpsDesc": "Moonlight Web varsayılanını kullanmak için 0 olarak bırakın.",
+      "transport": "Taşıma protokolü",
+      "transportDesc": "WebRTC en düşük gecikmeyi sağlar. WebSockets, bunu engelleyen ağlarda çalışır.",
+      "transportAuto": "Otomatik",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "Bir yöneticinin Uzaktan Masa Ayarları'nda Moonlight Web sunucusunu kurması gerekir.",
+      "loading": "Yayın hazırlanıyor",
+      "signInNote": "Moonlight Web ilk kez giriş yapmanızı ister.",
+      "openStream": "Yayını aç",
+      "openInWindow": "Yeni pencerede aç",
+      "noH264": "Bu tarayıcı H.264 video oynatamıyor. Yayın başlamazsa Chrome, Edge veya Termix masaüstü uygulamasını kullanın veya Sunshine'da HEVC veya AV1'i açın.",
+      "retry": "Tekrar dene",
+      "errorRecordingRequired": "Bu ana bilgisayarda kayıt zorunludur ve Moonlight yayınları kaydedilemez.",
+      "errorNotLinked": "Hiçbir bilgisayar bağlı değil. Ana bilgisayar düzenleyicisinden birini seçin.",
+      "errorNotPaired": "Bu bilgisayar henüz eşleştirilmedi. Ana bilgisayar düzenleyicisinde eşleştirin.",
+      "errorOffline": "Bilgisayar çevrimdışı veya Sunshine çalışmıyor.",
+      "errorNoApps": "Sunshine, bu bilgisayarda açılacak uygulamaya sahip değil."
+    }
   },
   "onboarding": {
     "guacdTitle": "Uzaktan masaüstünü kurun",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "Sunucu başına guacd adresleri taşındı"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID sunucusu",
+        "description": "Kendi RustDesk ID sunucunuz (hbbs), ana bilgisayar veya ana bilgisayar:port olarak. Halka açık RustDesk sunucusunu kullanmak için boş bırakın. Ana bilgisayarlar kendi sunucularını ayarlayabilir.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk iletim sunucusu",
+        "description": "RustDesk iletim sunucunuz (hbbr). ID sunucusunun belirttiğini kullanmak için boş bırakın.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk sunucu anahtarı",
+        "description": "id_ed25519.pub dosyasından alınan RustDesk sunucunuzun genel anahtarı. Kendi sunucunuzla kullanıldığında gereklidir."
+      },
+      "moonlightUrl": {
+        "label": "Moonlight Web adresi",
+        "description": "Sunshine yayını için Termix'in iletişim kurduğu Moonlight Web sunucusu. Bir tane çalıştırmak için belgelere bakın.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Moonlight Web genel adresi",
+        "description": "Yukarıdakinden farklıysa tarayıcıların açtığı adres. Oyun kumandaları ve klavye kilidi için HTTPS gereklidir.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Moonlight Web kullanıcı adı",
+        "description": "Moonlight Web'de bir yönetici girişi. Termix, bilgisayarları listelemek, eklemek ve eşleştirmek için bunu kullanır."
+      },
+      "moonlightPassword": {
+        "label": "Moonlight Web şifresi",
+        "description": "Bu giriş için şifre."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Moonlight Web sertifikasını yoksay",
+        "description": "Moonlight Web'de kendi imzalı sertifikası varsa açın."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "ARD bağlantı noktası"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "RustDesk doğrudan IP bağlantı noktası"
+      },
+      "rustdeskId": {
+        "label": "RustDesk ID"
+      },
+      "rustdeskDirect": {
+        "label": "RustDesk doğrudan IP erişimi"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID sunucusu"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk iletim sunucusu"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk sunucu anahtarı"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine bağlantı noktası"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight uygulaması"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlight bit hızı"
+      },
+      "moonlightFps": {
+        "label": "Moonlight kare hızı"
+      },
+      "moonlightTransport": {
+        "label": "Moonlight taşıma protokolü"
+      },
+      "rdpAutoReconnect": {
+        "label": "RDP'yi otomatik olarak yeniden bağla",
+        "description": "Bir RDP oturumu kaybolduğunda yeniden bağlanın. Başka bir istemciden açılan oturumları kesintiye uğratmamak için manuel yeniden bağlanmayı tercih ediyorsanız kapatın."
+      },
+      "rdpAutoResize": {
+        "label": "RDP boyutunu otomatik olarak ayarla",
+        "description": "Pencere boyutu değiştiğinde uzaktan çözünürlüğü ayarlayın. Yeniden bağlanana kadar bağlantıda seçilen boyutu korumak için kapatın."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "RDP ile Bağlan",
     "connectVnc": "VNC ile Bağlan",
     "connectTelnet": "Telnet ile Bağlan",
-    "connectArd": "Apple Remote Desktop ile bağlan"
+    "connectArd": "Apple Remote Desktop ile bağlan",
+    "connectRustdesk": "RustDesk ile bağlan",
+    "connectMoonlight": "Moonlight ile Bağlan"
   },
   "permissions": {
     "sessions": {
       "title": "Uzak masaüstü oturumlarını paylaş",
       "description": "Oturum paylaşımı ve işbirliği odalarının, bu kullanıcının RDP, VNC ve Telnet oturumlarını diğerlerine göstermesine izin ver."
+    },
+    "monitor": {
+      "title": "Tüm kullanıcıların uzaktan masaüstü oturumlarını izle",
+      "description": "Oturum Kaydı gibi diğer özelliklerin, tüm kullanıcıların RDP, VNC ve Telnet oturumlarını listelemesine, izlemesine ve sonlandırmasına olanak tanır."
+    },
+    "moonlight": {
+      "title": "Moonlight PC'lerini yapılandır",
+      "description": "Kaydedilmiş Moonlight Web oturum bilgilerini kullanarak Sunshine PC'lerini Moonlight Web'e ekle ve eşleştir."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Uzak Masaüstü",
     "description": "Panodan kopyalama, dosya aktarımı, paylaşım ve kayıt özellikleriyle tarayıcınızda RDP, VNC ve Telnet oturumları."
+  },
+  "operations": {
+    "check": {
+      "title": "Uzaktan masaüstü bağlantı noktalarını kontrol et"
+    },
+    "ports": {
+      "title": "Uzaktan masaüstü"
+    },
+    "sessions": {
+      "title": "Açık uzaktan oturumlar"
+    },
+    "session": {
+      "title": "Uzaktan oturumlar",
+      "protocol": "Tür",
+      "started": "Başlangıç"
+    }
+  },
+  "card": {
+    "title": "Uzaktan oturumlar",
+    "loading": "Yükleniyor...",
+    "empty": "Açık uzaktan oturum yok"
   }
 }

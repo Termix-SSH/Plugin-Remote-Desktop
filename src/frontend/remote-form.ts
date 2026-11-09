@@ -13,7 +13,7 @@ import {
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 /**
- * The host editor fields the RDP, VNC, ARD and Telnet tabs edit. The logins are
+ * The host editor fields the RDP, VNC, ARD, RustDesk and Telnet tabs edit. The logins are
  * core's, under form.protocolAuth (this plugin declares the protocols in its
  * manifest); the options (ports, security, guacd settings) are this plugin's
  * host settings. Both are presented here under the names the tabs use.
@@ -23,9 +23,22 @@ export interface RemoteDesktopForm {
   security: string;
   ignoreCert: boolean;
   rdpPort: number;
+  rdpAutoReconnect: boolean;
+  rdpAutoResize: boolean;
   vncPort: number;
   ardPort: number;
   telnetPort: number;
+  rustdeskPort: number;
+  rustdeskId: string;
+  rustdeskDirect: boolean;
+  rustdeskIdServer: string;
+  rustdeskRelayServer: string;
+  rustdeskKey: string;
+  moonlightHostId: number;
+  moonlightAppId: number;
+  moonlightBitrate: number;
+  moonlightFps: number;
+  moonlightTransport: string;
   guacamoleConfig: Record<string, any>;
   enableToolbar: boolean;
   toolbarPosition: ToolbarPosition;
@@ -47,6 +60,9 @@ export interface RemoteDesktopForm {
   telnetCredentialId: string;
   telnetUser: string;
   telnetPassword: string;
+  rustdeskAuthType: "direct" | "credential";
+  rustdeskCredentialId: string;
+  rustdeskPassword: string;
 }
 
 export type RemoteFormSetField = <K extends keyof RemoteDesktopForm>(
@@ -57,9 +73,22 @@ export type RemoteFormSetField = <K extends keyof RemoteDesktopForm>(
 /** Tab field name to this plugin's host setting key. */
 const SETTING_FOR_FIELD: Partial<Record<keyof RemoteDesktopForm, string>> = {
   rdpPort: "rdpPort",
+  rdpAutoReconnect: "rdpAutoReconnect",
+  rdpAutoResize: "rdpAutoResize",
   vncPort: "vncPort",
   ardPort: "ardPort",
   telnetPort: "telnetPort",
+  rustdeskPort: "rustdeskPort",
+  rustdeskId: "rustdeskId",
+  rustdeskDirect: "rustdeskDirect",
+  rustdeskIdServer: "rustdeskIdServer",
+  rustdeskRelayServer: "rustdeskRelayServer",
+  rustdeskKey: "rustdeskKey",
+  moonlightHostId: "moonlightHostId",
+  moonlightAppId: "moonlightAppId",
+  moonlightBitrate: "moonlightBitrate",
+  moonlightFps: "moonlightFps",
+  moonlightTransport: "moonlightTransport",
   security: "rdpSecurity",
   ignoreCert: "rdpIgnoreCert",
   enableToolbar: "enableToolbar",
@@ -91,6 +120,9 @@ const LOGIN_FOR_FIELD: Partial<
   telnetCredentialId: ["telnet", "credentialId"],
   telnetUser: ["telnet", "username"],
   telnetPassword: ["telnet", "password"],
+  rustdeskAuthType: ["rustdesk", "authType"],
+  rustdeskCredentialId: ["rustdesk", "credentialId"],
+  rustdeskPassword: ["rustdesk", "password"],
 };
 
 type PluginSettingsBag = Record<string, Record<string, unknown>>;
@@ -152,11 +184,25 @@ export function remoteDesktopForm(props: HostEditorSectionProps): {
   const vnc = loginOf(logins, "vnc");
   const ard = loginOf(logins, "ard");
   const telnet = loginOf(logins, "telnet");
+  const rustdesk = loginOf(logins, "rustdesk");
   const form: RemoteDesktopForm = {
     rdpPort: options.rdpPort,
+    rdpAutoReconnect: options.rdpAutoReconnect,
+    rdpAutoResize: options.rdpAutoResize,
     vncPort: options.vncPort,
     ardPort: options.ardPort,
     telnetPort: options.telnetPort,
+    rustdeskPort: options.rustdeskPort,
+    rustdeskId: options.rustdeskId,
+    rustdeskDirect: options.rustdeskDirect,
+    rustdeskIdServer: options.rustdeskIdServer,
+    rustdeskRelayServer: options.rustdeskRelayServer,
+    rustdeskKey: options.rustdeskKey,
+    moonlightHostId: options.moonlightHostId,
+    moonlightAppId: options.moonlightAppId,
+    moonlightBitrate: options.moonlightBitrate,
+    moonlightFps: options.moonlightFps,
+    moonlightTransport: options.moonlightTransport,
     security: options.rdpSecurity,
     ignoreCert: options.rdpIgnoreCert,
     guacamoleConfig: options.guacamoleConfig as Record<string, any>,
@@ -181,6 +227,10 @@ export function remoteDesktopForm(props: HostEditorSectionProps): {
     telnetCredentialId: telnet.credentialId,
     telnetUser: telnet.username,
     telnetPassword: telnet.password,
+    rustdeskAuthType:
+      rustdesk.authType === "credential" ? "credential" : "direct",
+    rustdeskCredentialId: rustdesk.credentialId,
+    rustdeskPassword: rustdesk.password,
   };
 
   const setField: RemoteFormSetField = (key, value) => {

@@ -20,6 +20,26 @@ declare module "guacamole-common-js" {
         | ((stream: InputStream, mimetype: string, filename: string) => void)
         | null;
       onfilesystem: ((filesystem: Object, name: string) => void) | null;
+      onvideo:
+        | ((
+            stream: InputStream,
+            layer: Layer,
+            mimetype: string,
+          ) => VideoPlayer | null)
+        | null;
+      onargv:
+        ((stream: InputStream, mimetype: string, name: string) => void) | null;
+      createArgumentValueStream(mimetype: string, name: string): OutputStream;
+    }
+
+    class Layer {
+      getCanvas(): HTMLCanvasElement;
+      width: number;
+      height: number;
+    }
+
+    interface VideoPlayer {
+      sync(): void;
     }
 
     // Mirrors Guacamole.Object: a named collection of streams. Within this
@@ -36,6 +56,10 @@ declare module "guacamole-common-js" {
       onbody: ((stream: InputStream, mimetype: string) => void) | null;
       onundefine: (() => void) | null;
     }
+
+    const AudioContextFactory: {
+      getAudioContext(): AudioContext | null;
+    };
 
     class AudioPlayer {
       static getInstance(
@@ -153,6 +177,7 @@ declare module "guacamole-common-js" {
     }
 
     class Keyboard {
+      pressed: Record<number, boolean>;
       constructor(element: Document | HTMLElement);
       reset(): void;
       onkeydown: ((keysym: number) => void) | null;

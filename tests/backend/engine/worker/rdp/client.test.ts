@@ -1,9 +1,18 @@
 import crypto from "node:crypto";
-import { describe, expect, it } from "vitest";
+import fs from "node:fs";
+import net from "node:net";
+import tls from "node:tls";
+import { describe, expect, it, vi } from "vitest";
 import {
+  CLIPBOARD_KEY_HOLD_MS,
+  RSA_KEY_EXCHANGE,
+  RdpClient,
+  retryWithRsaKeyExchange,
   nextSize,
+  normalizeKdcUrl,
   printFile,
   rdpConfig,
+  redirectTarget,
   scaleFromDpi,
   subjectPublicKey,
   timezoneBias,
@@ -86,6 +95,23 @@ describe("rdpConfig", () => {
   });
 });
 
+describe("normalizeKdcUrl", () => {
+  it("adds the scheme and port", () => {
+    expect(normalizeKdcUrl("dc1.example.com")).toBe("tcp://dc1.example.com:88");
+    expect(normalizeKdcUrl(" dc1.example.com:8888 ")).toBe(
+      "tcp://dc1.example.com:8888",
+    );
+    expect(normalizeKdcUrl("udp://10.0.0.5")).toBe("udp://10.0.0.5:88");
+  });
+
+  it("keeps a proxy url and drops junk", () => {
+    expect(normalizeKdcUrl("https://proxy.example.com/KdcProxy")).toBe(
+      "https://proxy.example.com/KdcProxy",
+    );
+    expect(normalizeKdcUrl("")).toBe("");
+  });
+});
+
 describe("helpers", () => {
   it("turns dpi into a scale factor", () => {
     expect(scaleFromDpi(96)).toBe(100);
@@ -126,5 +152,159 @@ describe("nextSize", () => {
   it("skips tiny and unchanged sizes", () => {
     expect(nextSize(current, 100, 720, 0)).toBeNull();
     expect(nextSize(current, 1280, 720, 0)).toBeNull();
+  });
+});
+
+describe("redirectTarget", () => {
+  const event = {
+    address: "10.0.0.5",
+    fqdn: "",
+    loadBalanceInfo: "Cookie: msts=abc\r\n",
+    username: "bob",
+    domain: "",
+    password: "",
+  };
+
+  it("follows the address and strips the cookie wrapper", () => {
+    const t = redirectTarget(event, "gnome.lan", 3389, 0);
+    expect(t).toMatchObject({
+      host: "10.0.0.5",
+      port: 3389,
+      loadBalanceInfo: "abc",
+    });
+    expect(t?.username).toBe("bob");
+  });
+
+  it("uses the same host when the server sends only a token", () => {
+    const t = redirectTarget({ ...event, address: "" }, "gnome.lan", 3389, 0);
+    expect(t?.host).toBe("gnome.lan");
+  });
+
+  it("stops after three hops", () => {
+    expect(redirectTarget(event, "gnome.lan", 3389, 3)).toBeNull();
+  });
+
+  it("refuses a jump to loopback or link local", () => {
+    expect(
+      redirectTarget({ ...event, address: "127.0.0.1" }, "gnome.lan", 3389, 0),
+    ).toBeNull();
+    expect(
+      redirectTarget(
+        { ...event, address: "169.254.169.254" },
+        "gnome.lan",
+        3389,
+        0,
+      ),
+    ).toBeNull();
+  });
+});
+
+describe("paste after a clipboard update", () => {
+  function client() {
+    const calls: string[] = [];
+    const rdp = {
+      clipboard_set: (text: string) => calls.push(`clip:${text}`),
+      key: (code: number, down: boolean) => calls.push(`key:${code}:${down}`),
+      unicode: (code: number, down: boolean) =>
+        calls.push(`uni:${code}:${down}`),
+      take_events: () => [],
+    };
+    const c = new RdpClient({ settings: new Settings({}) } as never);
+    Object.assign(c as unknown as Record<string, unknown>, {
+      rdp,
+      connected: true,
+    });
+    return { c, calls };
+  }
+
+  it("holds keys until the server has had time to take the new clipboard (#29)", () => {
+    vi.useFakeTimers();
+    try {
+      const { c, calls } = client();
+      c.clipboard("new text");
+      c.key(0xffe3, true);
+      c.key(0x76, true);
+      c.key(0x76, false);
+      c.key(0xffe3, false);
+      expect(calls).toEqual(["clip:new text"]);
+      vi.advanceTimersByTime(CLIPBOARD_KEY_HOLD_MS);
+      expect(calls[0]).toBe("clip:new text");
+      expect(calls.slice(1)).toHaveLength(4);
+      expect(calls[1]).toMatch(/:true$/);
+      expect(calls.at(-1)).toMatch(/:false$/);
+      // Later keys go straight through again.
+      c.key(0x61, true);
+      expect(calls).toHaveLength(6);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("drops held keys when the session stops", () => {
+    vi.useFakeTimers();
+    try {
+      const { c, calls } = client();
+      c.clipboard("x");
+      c.key(0x61, true);
+      Object.assign(c as unknown as Record<string, unknown>, {
+        connected: false,
+      });
+      vi.advanceTimersByTime(CLIPBOARD_KEY_HOLD_MS);
+      expect(calls).toEqual(["clip:x"]);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});
+
+describe("certificates without the Digital Signature use", () => {
+  const dir = new URL("./fixtures/", import.meta.url);
+  const key = fs.readFileSync(new URL("no-signature-key.pem", dir));
+  const cert = fs.readFileSync(new URL("no-signature-cert.pem", dir));
+
+  it("retries once, and only with certificate checks off", () => {
+    const error = new Error(
+      "error:1000012e:SSL routines:KEY_USAGE_BIT_INCORRECT",
+    );
+    expect(retryWithRsaKeyExchange(error, false, false)).toBe(true);
+    expect(retryWithRsaKeyExchange(error, false, true)).toBe(false);
+    expect(retryWithRsaKeyExchange(error, true, false)).toBe(false);
+    expect(retryWithRsaKeyExchange(new Error("other"), false, false)).toBe(
+      false,
+    );
+  });
+
+  it("connects with plain RSA key exchange, which only needs Key Encipherment", async () => {
+    const server = tls.createServer({ key, cert, minVersion: "TLSv1" }, (s) =>
+      s.end(),
+    );
+    await new Promise<void>((resolve) =>
+      server.listen(0, "127.0.0.1", resolve),
+    );
+    try {
+      const cipher = await new Promise<tls.CipherNameAndProtocol>(
+        (resolve, reject) => {
+          const socket = tls.connect(
+            {
+              host: "127.0.0.1",
+              port: (server.address() as net.AddressInfo).port,
+              rejectUnauthorized: false,
+              minVersion: "TLSv1",
+              ...RSA_KEY_EXCHANGE,
+            },
+            () => {
+              resolve(socket.getCipher());
+              socket.destroy();
+            },
+          );
+          socket.on("error", reject);
+        },
+      );
+      expect(cipher.version).toBe("TLSv1.2");
+      // No ECDHE or DHE: the key exchange is plain RSA.
+      expect(cipher.standardName).toMatch(/^TLS_RSA_WITH_/);
+    } finally {
+      await new Promise<void>((resolve) => server.close(() => resolve()));
+    }
   });
 });

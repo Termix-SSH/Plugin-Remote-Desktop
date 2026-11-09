@@ -11,6 +11,8 @@
     "connectionError": "Forbindelsesfejl",
     "clipboardWaiting": "Tekst kopieret i sessionen. Klik eller tryk på en tast her for at indsætte den i din udklipsholder. Åbn Termix over HTTPS for at kopiere med det samme.",
     "failedToConnect": "Kunne ikke hente forbindelsestoken",
+    "requestAccess": "Anmod om adgang",
+    "verifyAccess": "Bekræft",
     "hostNotFound": "Vært ikke fundet",
     "noHostSelected": "Ingen vært valgt",
     "guacdUnavailable": "Den eksterne guacd svarer ikke. Tjek, at den kører, eller slå Brug en ekstern guacd fra i indstillingerne for fjernskrivebord.",
@@ -81,14 +83,16 @@
         "macLock": "Lås skærm",
         "spotlight": "Spotlight",
         "logoff": "Log ud",
-        "record": "Optag"
+        "record": "Optag",
+        "monitors": "Skærme"
       },
       "hints": {
         "files": "Vises, når RDP-drevet er aktiveret",
         "touchMode": "Kun på skærme med touch",
         "modifiers": "Ctrl, Alt, Shift og systemtasten holdes nede, indtil næste tast trykkes",
         "logoff": "Logger ud af Windows ved at køre logoff fra Kør-boksen. Sessionen skal være åben og vise skrivebordet.",
-        "record": "Starter eller stopper optagelse af denne session. Kræver Session Recording-pluginet og den indbyggede motor."
+        "record": "Starter eller stopper optagelse af denne session. Kræver Session Recording-pluginet og den indbyggede motor.",
+        "monitors": "Skift mellem de fjerne skærme"
       },
       "option": "Option",
       "logoffConfirm": "Vil du logge ud af denne Windows-session? Ugemte ændringer i den går tabt.",
@@ -96,9 +100,22 @@
       "recordStop": "Stop optagelse",
       "recordStarted": "Optagelse startet",
       "recordStopped": "Optagelse gemt i Session Recording",
-      "recordFailed": "Kunne ikke ændre optagelsen"
+      "recordFailed": "Kunne ikke ændre optagelsen",
+      "recordRequired": "En administrator har gjort optagelse påkrævet på denne vært",
+      "recordRequiredLabel": "Optagelse (påkrævet)",
+      "monitor": "Skærm {{number}}"
     },
-    "disabled": "Remote Desktop er slået fra. En administrator kan slå det til i Indstillinger."
+    "disabled": "Remote Desktop er slået fra. En administrator kan slå det til i Indstillinger.",
+    "rustdesk": {
+      "videoUnsupported": "Denne browser kan ikke afspille RustDesk-video. Brug en nyere version af Chrome, Edge, Firefox eller Safari.",
+      "passwordTitle": "RustDesk-adgangskode",
+      "passwordDescription": "Den fjerne enhed kræver en adgangskode. Den bruges kun for denne session og gemmes ikke.",
+      "passwordWrong": "Den adgangskode blev ikke accepteret. Prøv igen.",
+      "codeTitle": "To-faktor kode",
+      "codeDescription": "Den eksterne enhed har brug for koden fra dens autentifikator-app.",
+      "codeWrong": "Den kode blev ikke accepteret. Prøv igen.",
+      "code": "Kode"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Åbnet i Windows Remote Desktop",
@@ -142,6 +159,8 @@
       "serverLayout": "Serverlayout",
       "timezone": "Tidszone",
       "loadBalanceInfo": "Load Balance Info / Cookie",
+      "kdcUrl": "Kerberos KDC-adresse",
+      "kdcUrlDesc": "Domænecontroller til Kerberos-login, til konti i Beskyttede brugere. Kræver den indbyggede motor, at værten er indtastet med sit DNS-navn, og at domænet er udfyldt. Lad være tomt til NTLM.",
       "loadBalanceInfoDesc": "RD Connection Broker-cookie til load balancing af RDS-farm (f.eks. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd-proxy (valgfrit)",
       "guacdHostname": "guacd-vært",
@@ -278,7 +297,75 @@
     "docsLink": "Se dokumentation",
     "connectionOriginGuacamoleNote": "RDP, VNC og Telnet kører som standard på denne enhed, ligesom SSH. Vælg Fjernserver for i stedet at køre dem på serveren.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Mac-skærmdeling"
+    "appleScreenSharing": "Mac-skærmdeling",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Ekstern skrivebord via RustDesk-ID",
+    "rustdesk": {
+      "direct": "Direkte IP-adgang",
+      "directDesc": "Forbind til værtsadressen i stedet for at slå et RustDesk-ID op. Direkte IP-adgang skal være aktiveret i RustDesk på den pågældende enhed.",
+      "port": "Port for direkte IP",
+      "directNote": "Forbindelsen er krypteret, men uden en ID-server er der ingen måde at verificere, hvilken enhed der har svaret.",
+      "id": "RustDesk-ID",
+      "idDesc": "Det ID, der vises i RustDesk på den fjernstyrede enhed.",
+      "passwordDesc": "Den permanente eller engangskode, der er indstillet i RustDesk. Lad feltet være tomt, hvis nogen skal godkende sessionen på den fjernstyrede enhed.",
+      "server": "RustDesk-server",
+      "serverDesc": "Lad feltet være tomt for at bruge serveren, der er indstillet i indstillingerne for fjernskrivebordets administration, eller den offentlige RustDesk-server, hvis ingen er indstillet.",
+      "idServer": "ID-server",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Relæserver",
+      "relayServerPlaceholder": "Samme som ID-serveren",
+      "key": "Nøgle",
+      "keyDesc": "Den offentlige nøgle til din RustDesk-server, fra id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Streaming med lav forsinkelse fra en Sunshine-PC",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "PC",
+      "pcDesc": "Den Sunshine-PC, der skal streames. Moonlight Web viser alle kendte PC'er.",
+      "choosePc": "Vælg en PC",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "parret",
+      "notPaired": "ikke parret",
+      "offline": "offline",
+      "refresh": "Opdater",
+      "addPc": "Tilføj denne vært til Moonlight Web",
+      "addPcDesc": "Tilføjer {{address}} på port {{port}}, delt med alle Moonlight Web-brugere.",
+      "pair": "Par",
+      "pairDesc": "Denne PC skal pares med Moonlight Web én gang.",
+      "pairing": "Venter på Sunshine",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "Åbn Sunshine-webgrænsefladen på PC'en, gå til PIN, og indtast denne PIN-kode.",
+      "pairDone": "PC'er parret",
+      "pairFailed": "Parret mislykkedes. Tjek PIN-koden og prøv igen.",
+      "pairExpired": "Parret udløb. Prøv igen.",
+      "noSetUpAccess": "Bed en administrator om at tilføje og parre denne PC.",
+      "stream": "Stream",
+      "app": "App",
+      "appDesc": "Hvad der skal åbnes på PC'en.",
+      "firstApp": "Første app",
+      "bitrate": "Bitrate (kbps)",
+      "bitrateDesc": "Lad være med at ændre fra 0 for at bruge Moonlight Web-standarden.",
+      "fps": "Billedfrekvens",
+      "fpsDesc": "Lad være med at ændre fra 0 for at bruge Moonlight Web-standarden.",
+      "transport": "Transport",
+      "transportDesc": "WebRTC har den laveste forsinkelse. WebSockets fungerer på netværk, der blokerer det.",
+      "transportAuto": "Automatisk",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "En administrator skal opsætte Moonlight Web-serveren i indstillingerne for fjernskrivebord.",
+      "loading": "Streamer klar",
+      "signInNote": "Moonlight Web beder dig logge ind første gang.",
+      "openStream": "Åbn stream",
+      "openInWindow": "Åbn i nyt vindue",
+      "noH264": "Denne browser kan ikke afspille H.264-video. Hvis streamen ikke starter, skal du bruge Chrome, Edge eller Termix-skrivebordsappen, eller slå HEVC eller AV1 til i Sunshine.",
+      "retry": "Prøv igen",
+      "errorRecordingRequired": "Optagelse er påkrævet på denne vært, og Moonlight-streams kan ikke optages.",
+      "errorNotLinked": "Ingen PC er linket. Vælg en i værreditoren.",
+      "errorNotPaired": "Denne PC er ikke parret endnu. Par den i værreditoren.",
+      "errorOffline": "PC'en er offline, eller Sunshine kører ikke.",
+      "errorNoApps": "Sunshine har ingen apps, der kan åbnes på denne PC."
+    }
   },
   "onboarding": {
     "guacdTitle": "Opsæt fjernskrivebord",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "guacd-adresser pr. vært flyttet"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID-server",
+        "description": "Din egen RustDesk ID-server (hbbs), som værtsnavn eller værtsnavn:port. Lad feltet være tomt for at bruge den offentlige RustDesk-server. Værter kan indstille deres egen.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk relay-server",
+        "description": "Din RustDesk relay-server (hbbr). Lad feltet være tomt for at bruge det, som ID-serveren angiver.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk servernøgle",
+        "description": "Den offentlige nøgle til din RustDesk-server, fra id_ed25519.pub. Påkrævet, når du bruger din egen server."
+      },
+      "moonlightUrl": {
+        "label": "Moonlight Web-adresse",
+        "description": "Moonlight Web-serveren, som Termix kommunikerer med for Sunshine-streaming. Se dokumentationen for at sætte en op.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Moonlight Web offentlig adresse",
+        "description": "Adressen, der åbnes i browsere, hvis den afviger fra den ovenfor. HTTPS er påkrævet for gamepads og tastaturlås.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Moonlight Web brugernavn",
+        "description": "En admin-login på Moonlight Web. Termix bruger den til at liste, tilføje og parre PC'er."
+      },
+      "moonlightPassword": {
+        "label": "Moonlight Web adgangskode",
+        "description": "Adgangskoden til denne login."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Ignorer Moonlight Web-certifikat",
+        "description": "Aktivér for et selvsigneret certifikat på Moonlight Web."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "ARD-port"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "RustDesk direkte IP-port"
+      },
+      "rustdeskId": {
+        "label": "RustDesk-ID"
+      },
+      "rustdeskDirect": {
+        "label": "RustDesk direkte IP-adgang"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID-server"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk relay-server"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk servernøgle"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine-port"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight-app"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlight-bitrate"
+      },
+      "moonlightFps": {
+        "label": "Moonlight-billedrate"
+      },
+      "moonlightTransport": {
+        "label": "Moonlight-transport"
+      },
+      "rdpAutoReconnect": {
+        "label": "Genopret RDP-forbindelse automatisk",
+        "description": "Genopret forbindelsen, når en RDP-session afbrydes. Slå fra for at genoprette manuelt og undgå at afbryde sessioner åbnet fra en anden klient."
+      },
+      "rdpAutoResize": {
+        "label": "Juster RDP-størrelse automatisk",
+        "description": "Juster den fjerne opløsning, når vinduet ændrer størrelse. Slå fra for at beholde den valgte størrelse fra forbindelsen, indtil du genopretter forbindelsen."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Forbind med RDP",
     "connectVnc": "Forbind med VNC",
     "connectTelnet": "Forbind med Telnet",
-    "connectArd": "Forbind med Apple Remote Desktop"
+    "connectArd": "Forbind med Apple Remote Desktop",
+    "connectRustdesk": "Forbind med RustDesk",
+    "connectMoonlight": "Forbind med Moonlight"
   },
   "permissions": {
     "sessions": {
       "title": "Del fjernskrivebordssessioner",
       "description": "Lad deling af sessioner og samarbejdsværelser vise denne brugers RDP-, VNC- og Telnet-sessioner til andre."
+    },
+    "monitor": {
+      "title": "Overvåg alle brugeres fjernskrivebords-sessioner",
+      "description": "Gør det muligt for andre funktioner, såsom Sessionsoptagelse, at liste, overvåge og afslutte RDP-, VNC- og Telnet-sessioner for alle brugere."
+    },
+    "moonlight": {
+      "title": "Opsæt Moonlight PC'er",
+      "description": "Tilføj Sunshine PC'er til Moonlight Web og par dem, ved hjælp af de gemte Moonlight Web-loginoplysninger."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Fjernskrivebord",
     "description": "RDP-, VNC- og Telnet-sessioner i din browser med udklipsholder, filoverførsel, deling og optagelse."
+  },
+  "operations": {
+    "check": {
+      "title": "Tjek fjernskrivebordsporte"
+    },
+    "ports": {
+      "title": "Fjernskrivebord"
+    },
+    "sessions": {
+      "title": "Åbn fjernsessioner"
+    },
+    "session": {
+      "title": "Fjernsessioner",
+      "protocol": "Type",
+      "started": "Startet"
+    }
+  },
+  "card": {
+    "title": "Fjernsessioner",
+    "loading": "Indlæser...",
+    "empty": "Ingen åbne fjernsessioner"
   }
 }

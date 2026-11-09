@@ -11,6 +11,8 @@
     "connectionError": "连接错误",
     "clipboardWaiting": "文本已在会话中复制。在此处点击或按键将其放入剪贴板。通过 HTTPS 打开 Termix 可立即复制。",
     "failedToConnect": "获取连接令牌失败",
+    "requestAccess": "请求访问",
+    "verifyAccess": "验证",
     "hostNotFound": "未找到主机",
     "noHostSelected": "未选择主机",
     "guacdUnavailable": "外部 guacd 无响应。请检查其是否正在运行，或在远程桌面设置中关闭“使用外部 guacd”。",
@@ -81,14 +83,16 @@
         "macLock": "锁定屏幕",
         "spotlight": "聚焦搜索",
         "logoff": "注销",
-        "record": "录制"
+        "record": "录制",
+        "monitors": "显示器"
       },
       "hints": {
         "files": "启用 RDP 驱动器后显示",
         "touchMode": "仅限触摸屏",
         "modifiers": "Ctrl、Alt、Shift 和系统键将保持按下状态，直到按下下一个键",
         "logoff": "通过运行“运行”对话框中的 logoff 命令来注销 Windows。会话必须处于打开状态并显示桌面。",
-        "record": "开始或停止录制此会话。需要会话录制插件和内置引擎。"
+        "record": "开始或停止录制此会话。需要会话录制插件和内置引擎。",
+        "monitors": "在远程显示器之间切换"
       },
       "option": "Option",
       "logoffConfirm": "要注销此 Windows 会话吗？其中未保存的工作将会丢失。",
@@ -96,9 +100,22 @@
       "recordStop": "停止录制",
       "recordStarted": "录制已开始",
       "recordStopped": "录制已保存到会话录制",
-      "recordFailed": "无法更改录制状态"
+      "recordFailed": "无法更改录制状态",
+      "recordRequired": "管理员已在此主机上强制要求录制",
+      "recordRequiredLabel": "录制（强制）",
+      "monitor": "显示器 {{number}}"
     },
-    "disabled": "远程桌面已关闭。管理员可以在设置中将其开启。"
+    "disabled": "远程桌面已关闭。管理员可以在设置中将其开启。",
+    "rustdesk": {
+      "videoUnsupported": "此浏览器无法播放 RustDesk 视频。请使用最新版的 Chrome、Edge、Firefox 或 Safari。",
+      "passwordTitle": "RustDesk 密码",
+      "passwordDescription": "远程设备需要密码。该密码仅用于本次会话，不会被保存。",
+      "passwordWrong": "密码未被接受。请重试。",
+      "codeTitle": "双因素验证码",
+      "codeDescription": "远程设备需要其身份验证器应用中的验证码。",
+      "codeWrong": "验证码未被接受。请重试。",
+      "code": "验证码"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "已在 Windows 远程桌面中打开",
@@ -142,6 +159,8 @@
       "serverLayout": "服务器布局",
       "timezone": "时区",
       "loadBalanceInfo": "负载均衡信息 / Cookie",
+      "kdcUrl": "Kerberos KDC 地址",
+      "kdcUrlDesc": "用于 Kerberos 登录的域控制器，适用于受保护用户组中的账户。需要使用内置引擎，通过 DNS 名称输入主机，并填写域名。若使用 NTLM 请留空。",
       "loadBalanceInfoDesc": "用于 RDS 农场负载均衡的 RD 连接代理 cookie（例如 tsv://MS Terminal Services Plugin.1.CollectionName）",
       "guacdProxy": "guacd 代理（可选）",
       "guacdHostname": "guacd 主机",
@@ -278,7 +297,75 @@
     "docsLink": "查看文档",
     "connectionOriginGuacamoleNote": "RDP、VNC 和 Telnet 默认在此设备上运行，就像 SSH 一样。选择“远程服务器”以在服务器上运行它们。",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Mac 屏幕共享"
+    "appleScreenSharing": "Mac 屏幕共享",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "通过 RustDesk ID 进行远程桌面连接",
+    "rustdesk": {
+      "direct": "直接 IP 访问",
+      "directDesc": "直接连接到主机地址，而不是查找 RustDesk ID。该设备上的 RustDesk 必须启用直接 IP 访问。",
+      "port": "直接 IP 端口",
+      "directNote": "连接已加密，但由于没有 ID 服务器，无法验证响应的是哪台设备。",
+      "id": "RustDesk ID",
+      "idDesc": "远程设备上 RustDesk 显示的 ID。",
+      "passwordDesc": "在 RustDesk 中设置的永久密码或一次性密码。留空则需有人在远程设备上接受会话。",
+      "server": "RustDesk 服务器",
+      "serverDesc": "留空则使用远程桌面管理设置中配置的服务器，若未配置则使用公共 RustDesk 服务器。",
+      "idServer": "ID 服务器",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "中继服务器",
+      "relayServerPlaceholder": "与 ID 服务器相同",
+      "key": "密钥",
+      "keyDesc": "您的 RustDesk 服务器的公钥，来自 id_ed25519.pub。"
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "从 Sunshine PC 进行低延迟串流",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "PC",
+      "pcDesc": "要串流的 Sunshine PC。Moonlight Web 会列出所有已知的 PC。",
+      "choosePc": "选择一台 PC",
+      "pcLabel": "{{name}}（{{state}}）",
+      "paired": "已配对",
+      "notPaired": "未配对",
+      "offline": "离线",
+      "refresh": "刷新",
+      "addPc": "将此主机添加到 Moonlight Web",
+      "addPcDesc": "添加 {{address}}（端口 {{port}}），所有 Moonlight Web 用户均可共享。",
+      "pair": "配对",
+      "pairDesc": "此 PC 需要与 Moonlight Web 配对一次。",
+      "pairing": "等待 Sunshine",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "在 PC 上打开 Sunshine Web UI，进入 PIN 设置，并输入此 PIN。",
+      "pairDone": "PC 已配对",
+      "pairFailed": "配对失败。请检查 PIN 并重试。",
+      "pairExpired": "配对超时。请重试。",
+      "noSetUpAccess": "请管理员添加并配对此 PC。",
+      "stream": "串流",
+      "app": "应用",
+      "appDesc": "在 PC 上打开的内容。",
+      "firstApp": "首选应用",
+      "bitrate": "比特率 (kbps)",
+      "bitrateDesc": "保留为 0 以使用 Moonlight Web 默认值。",
+      "fps": "帧率",
+      "fpsDesc": "保留为 0 以使用 Moonlight Web 默认值。",
+      "transport": "传输协议",
+      "transportDesc": "WebRTC 延迟最低。WebSockets 适用于阻止 WebRTC 的网络。",
+      "transportAuto": "自动",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "管理员需要在远程桌面设置中配置 Moonlight Web 服务器。",
+      "loading": "正在准备流媒体",
+      "signInNote": "首次使用时，Moonlight Web 会要求您登录。",
+      "openStream": "打开流媒体",
+      "openInWindow": "在新窗口中打开",
+      "noH264": "此浏览器无法播放 H.264 视频。如果流媒体无法启动，请使用 Chrome、Edge 或 Termix 桌面应用，或在 Sunshine 中启用 HEVC 或 AV1。",
+      "retry": "重试",
+      "errorRecordingRequired": "此主机要求录制，但 Moonlight 流媒体无法录制。",
+      "errorNotLinked": "未链接任何 PC。请在主机编辑器中选择一个。",
+      "errorNotPaired": "此 PC 尚未配对。请在主机编辑器中进行配对。",
+      "errorOffline": "PC 离线，或 Sunshine 未运行。",
+      "errorNoApps": "Sunshine 在此 PC 上没有可打开的应用。"
+    }
   },
   "onboarding": {
     "guacdTitle": "设置远程桌面",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "每台主机的 guacd 地址已迁移"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID 服务器",
+        "description": "您自己的 RustDesk ID 服务器 (hbbs)，格式为主机或主机:端口。留空以使用公共 RustDesk 服务器。主机可以设置自己的服务器。",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk 中继服务器",
+        "description": "您的 RustDesk 中继服务器 (hbbr)。留空以使用 ID 服务器指定的值。",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk 服务器密钥",
+        "description": "您 RustDesk 服务器的公钥，来自 id_ed25519.pub。使用自有服务器时需要。"
+      },
+      "moonlightUrl": {
+        "label": "Moonlight Web 地址",
+        "description": "Termix 用于 Sunshine 流媒体的 Moonlight Web 服务器地址。请参阅文档以运行一个。",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Moonlight Web 公共地址",
+        "description": "浏览器打开的地址，如果与上述地址不同。需要 HTTPS 才能支持游戏手柄和键盘锁定。",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Moonlight Web 用户名",
+        "description": "Moonlight Web 的管理员登录名。Termix 使用它来列出、添加和配对 PC。"
+      },
+      "moonlightPassword": {
+        "label": "Moonlight Web 密码",
+        "description": "该登录名的密码。"
+      },
+      "moonlightIgnoreCert": {
+        "label": "忽略 Moonlight Web 证书",
+        "description": "如果 Moonlight Web 使用自签名证书，请启用此选项。"
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "ARD 端口"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "RustDesk 直连 IP 端口"
+      },
+      "rustdeskId": {
+        "label": "RustDesk ID"
+      },
+      "rustdeskDirect": {
+        "label": "RustDesk 直连 IP 访问"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID 服务器"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk 中继服务器"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk 服务器密钥"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine 端口"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight 应用"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlight 比特率"
+      },
+      "moonlightFps": {
+        "label": "Moonlight 帧率"
+      },
+      "moonlightTransport": {
+        "label": "Moonlight 传输协议"
+      },
+      "rdpAutoReconnect": {
+        "label": "自动重连 RDP",
+        "description": "RDP 会话断开后自动重连。关闭后需要手动重连，可避免打断从其他客户端打开的会话。"
+      },
+      "rdpAutoResize": {
+        "label": "自动调整 RDP 分辨率",
+        "description": "窗口大小变化时调整远端分辨率。关闭后保留连接时的尺寸，直到重新连接。"
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "使用 RDP 连接",
     "connectVnc": "使用 VNC 连接",
     "connectTelnet": "使用 Telnet 连接",
-    "connectArd": "使用 Apple Remote Desktop 连接"
+    "connectArd": "使用 Apple Remote Desktop 连接",
+    "connectRustdesk": "使用 RustDesk 连接",
+    "connectMoonlight": "使用 Moonlight 连接"
   },
   "permissions": {
     "sessions": {
       "title": "共享远程桌面会话",
       "description": "允许会话共享和协作房间向其他用户显示此用户的 RDP、VNC 和 Telnet 会话。"
+    },
+    "monitor": {
+      "title": "监视所有人的远程桌面会话",
+      "description": "允许其他功能（如会话录制）列出、监视和结束所有用户的 RDP、VNC 和 Telnet 会话。"
+    },
+    "moonlight": {
+      "title": "设置 Moonlight PC",
+      "description": "使用保存的 Moonlight Web 登录凭据，将 Sunshine PC 添加到 Moonlight Web 并进行配对。"
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "远程桌面",
     "description": "在浏览器中进行 RDP、VNC 和 Telnet 会话，支持剪贴板、文件传输、共享和录制。"
+  },
+  "operations": {
+    "check": {
+      "title": "检查远程桌面端口"
+    },
+    "ports": {
+      "title": "远程桌面"
+    },
+    "sessions": {
+      "title": "打开远程会话"
+    },
+    "session": {
+      "title": "远程会话",
+      "protocol": "类型",
+      "started": "开始时间"
+    }
+  },
+  "card": {
+    "title": "远程会话",
+    "loading": "加载中...",
+    "empty": "没有打开的远程会话"
   }
 }

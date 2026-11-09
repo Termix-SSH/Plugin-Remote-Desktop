@@ -1,8 +1,8 @@
 {
   "id": "remote-desktop",
   "name": "Remote Desktop",
-  "version": "1.3.1",
-  "description": "RDP, VNC, Apple Remote Desktop and Telnet sessions in your browser, with clipboard, file transfer, sharing and recording.",
+  "version": "1.4.0",
+  "description": "RDP, VNC, Apple Remote Desktop, RustDesk and Telnet sessions in your browser, with clipboard, file transfer, sharing and recording.",
   "author": {
     "name": "Termix"
   },
@@ -14,6 +14,7 @@
   "icon": "Monitor",
   "features": [
     "RDP, VNC, Apple Remote Desktop and Telnet from any browser, with nothing else to install",
+    "RustDesk devices by ID through your own or the public RustDesk server, or by direct IP",
     "Tabs and split screen like any other session",
     "Clipboard sync, audio, printing and file transfer through RDP drives",
     "Jump host support",
@@ -71,7 +72,7 @@
     }
   ],
   "engine": {
-    "termix": ">=26.10.3",
+    "termix": ">=26.11.1-0",
     "api": "^1.5"
   },
   "capabilities": [
@@ -82,7 +83,8 @@
     "network:serve",
     "desktop:local",
     "ui:surface",
-    "users:impersonate"
+    "users:impersonate",
+    "operations:provide"
   ],
   "optionalDependencies": {
     "session-recording": "^1.0.0",
@@ -91,9 +93,14 @@
   "provides": [
     {
       "service": "sessions.live",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "permission": "remote-desktop.sessions",
-      "names": ["rdp", "vnc", "ard", "telnet"]
+      "names": ["rdp", "vnc", "ard", "telnet", "rustdesk"]
+    },
+    {
+      "service": "remote-desktop.console",
+      "version": "1.0.0",
+      "permission": "remote-desktop.sessions"
     }
   ],
   "requires": [
@@ -126,6 +133,18 @@
         "id": "ard",
         "titleKey": "hosts.tabArd",
         "icon": "ScreenShare",
+        "openFrom": ["host-context-menu", "palette"]
+      },
+      {
+        "id": "rustdesk",
+        "titleKey": "hosts.tabRustdesk",
+        "icon": "Radio",
+        "openFrom": ["host-context-menu", "palette"]
+      },
+      {
+        "id": "moonlight",
+        "titleKey": "hosts.tabMoonlight",
+        "icon": "Gamepad2",
         "openFrom": ["host-context-menu", "palette"]
       },
       {
@@ -163,6 +182,16 @@
         "hostLoginFallback": ["username", "password"]
       },
       {
+        "id": "rustdesk",
+        "defaultPort": 21118,
+        "hostLoginFallback": ["password"]
+      },
+      {
+        "id": "moonlight",
+        "defaultPort": 47989,
+        "hostLoginFallback": []
+      },
+      {
         "id": "telnet",
         "defaultPort": 23,
         "hostLoginFallback": ["password"]
@@ -175,6 +204,18 @@
         "titleKey": "permissions.sessions.title",
         "descriptionKey": "permissions.sessions.description",
         "defaultRoles": ["admin", "user"]
+      },
+      {
+        "name": "monitor",
+        "titleKey": "permissions.monitor.title",
+        "descriptionKey": "permissions.monitor.description",
+        "defaultRoles": ["admin"]
+      },
+      {
+        "name": "moonlight",
+        "titleKey": "permissions.moonlight.title",
+        "descriptionKey": "permissions.moonlight.description",
+        "defaultRoles": ["admin"]
       }
     ],
     "settings": {
@@ -202,6 +243,73 @@
           "placeholderKey": "settings.admin.guacdUrl.placeholder",
           "requires": "useGuacd",
           "default": ""
+        },
+        {
+          "key": "rustdeskIdServer",
+          "type": "string",
+          "labelKey": "settings.admin.rustdeskIdServer.label",
+          "descriptionKey": "settings.admin.rustdeskIdServer.description",
+          "placeholderKey": "settings.admin.rustdeskIdServer.placeholder",
+          "requires": "enabled",
+          "default": ""
+        },
+        {
+          "key": "rustdeskRelayServer",
+          "type": "string",
+          "labelKey": "settings.admin.rustdeskRelayServer.label",
+          "descriptionKey": "settings.admin.rustdeskRelayServer.description",
+          "placeholderKey": "settings.admin.rustdeskRelayServer.placeholder",
+          "requires": "enabled",
+          "default": ""
+        },
+        {
+          "key": "rustdeskKey",
+          "type": "string",
+          "labelKey": "settings.admin.rustdeskKey.label",
+          "descriptionKey": "settings.admin.rustdeskKey.description",
+          "requires": "enabled",
+          "default": ""
+        },
+        {
+          "key": "moonlightUrl",
+          "type": "string",
+          "labelKey": "settings.admin.moonlightUrl.label",
+          "descriptionKey": "settings.admin.moonlightUrl.description",
+          "placeholderKey": "settings.admin.moonlightUrl.placeholder",
+          "requires": "enabled",
+          "default": ""
+        },
+        {
+          "key": "moonlightPublicUrl",
+          "type": "string",
+          "labelKey": "settings.admin.moonlightPublicUrl.label",
+          "descriptionKey": "settings.admin.moonlightPublicUrl.description",
+          "placeholderKey": "settings.admin.moonlightPublicUrl.placeholder",
+          "requires": "enabled",
+          "default": ""
+        },
+        {
+          "key": "moonlightUsername",
+          "type": "string",
+          "labelKey": "settings.admin.moonlightUsername.label",
+          "descriptionKey": "settings.admin.moonlightUsername.description",
+          "requires": "enabled",
+          "default": ""
+        },
+        {
+          "key": "moonlightPassword",
+          "type": "secret",
+          "labelKey": "settings.admin.moonlightPassword.label",
+          "descriptionKey": "settings.admin.moonlightPassword.description",
+          "requires": "enabled"
+        },
+        {
+          "key": "moonlightIgnoreCert",
+          "type": "boolean",
+          "labelKey": "settings.admin.moonlightIgnoreCert.label",
+          "descriptionKey": "settings.admin.moonlightIgnoreCert.description",
+          "requires": "enabled",
+          "default": false
         },
         {
           "key": "hostGuacd",
@@ -253,6 +361,22 @@
             "defaultable": false
           },
           {
+            "key": "enableRustdesk",
+            "type": "boolean",
+            "labelKey": "settings.host.enableRustdesk.label",
+            "default": false,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "enableMoonlight",
+            "type": "boolean",
+            "labelKey": "settings.host.enableMoonlight.label",
+            "default": false,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
             "key": "rdpPort",
             "type": "number",
             "labelKey": "settings.host.rdpPort.label",
@@ -293,10 +417,123 @@
             "defaultable": false
           },
           {
+            "key": "rustdeskPort",
+            "type": "number",
+            "labelKey": "settings.host.rustdeskPort.label",
+            "min": 1,
+            "max": 65535,
+            "default": 21118,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "rustdeskId",
+            "type": "string",
+            "labelKey": "settings.host.rustdeskId.label",
+            "default": "",
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "rustdeskDirect",
+            "type": "boolean",
+            "labelKey": "settings.host.rustdeskDirect.label",
+            "default": false,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "moonlightPort",
+            "type": "number",
+            "labelKey": "settings.host.moonlightPort.label",
+            "min": 1,
+            "max": 65535,
+            "default": 47989,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "moonlightHostId",
+            "type": "number",
+            "labelKey": "settings.host.moonlightHostId.label",
+            "default": 0,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "moonlightAppId",
+            "type": "number",
+            "labelKey": "settings.host.moonlightAppId.label",
+            "default": 0,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "moonlightBitrate",
+            "type": "number",
+            "labelKey": "settings.host.moonlightBitrate.label",
+            "default": 0,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "moonlightFps",
+            "type": "number",
+            "labelKey": "settings.host.moonlightFps.label",
+            "default": 0,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "moonlightTransport",
+            "type": "string",
+            "labelKey": "settings.host.moonlightTransport.label",
+            "default": "auto",
+            "hidden": true,
+            "defaultable": false
+          },
+          {
+            "key": "rustdeskIdServer",
+            "type": "string",
+            "labelKey": "settings.host.rustdeskIdServer.label",
+            "default": "",
+            "hidden": true
+          },
+          {
+            "key": "rustdeskRelayServer",
+            "type": "string",
+            "labelKey": "settings.host.rustdeskRelayServer.label",
+            "default": "",
+            "hidden": true
+          },
+          {
+            "key": "rustdeskKey",
+            "type": "string",
+            "labelKey": "settings.host.rustdeskKey.label",
+            "default": "",
+            "hidden": true
+          },
+          {
             "key": "rdpSecurity",
             "type": "string",
             "labelKey": "settings.host.rdpSecurity.label",
             "default": "",
+            "hidden": true
+          },
+          {
+            "key": "rdpAutoReconnect",
+            "type": "boolean",
+            "labelKey": "settings.host.rdpAutoReconnect.label",
+            "descriptionKey": "settings.host.rdpAutoReconnect.description",
+            "default": true,
+            "hidden": true
+          },
+          {
+            "key": "rdpAutoResize",
+            "type": "boolean",
+            "labelKey": "settings.host.rdpAutoResize.label",
+            "descriptionKey": "settings.host.rdpAutoResize.description",
+            "default": true,
             "hidden": true
           },
           {
@@ -624,7 +861,75 @@
         ]
       }
     },
-    "uses": ["session.remoteDisplay", "wakeOnLan.macAddress"]
+    "uses": ["session.remoteDisplay", "wakeOnLan.macAddress"],
+    "operations": {
+      "actions": [
+        {
+          "id": "remote-desktop.check-ports",
+          "titleKey": "operations.check.title",
+          "icon": "MonitorCheck",
+          "scope": "host",
+          "risk": "read",
+          "permission": "sessions",
+          "hostAccess": "connect",
+          "surfaces": {
+            "assistant": true,
+            "mcp": true
+          }
+        },
+        {
+          "id": "remote-desktop.sessions",
+          "titleKey": "operations.sessions.title",
+          "icon": "Monitor",
+          "scope": "host",
+          "risk": "read",
+          "permission": "sessions",
+          "hostAccess": "connect",
+          "surfaces": {
+            "assistant": true,
+            "mcp": true,
+            "palette": false
+          }
+        }
+      ],
+      "signals": [
+        {
+          "id": "remote-desktop.ports",
+          "titleKey": "operations.ports.title",
+          "read": "remote-desktop.check-ports",
+          "scope": "host",
+          "kind": "status",
+          "refreshSec": 600
+        }
+      ],
+      "resources": [
+        {
+          "id": "remote-desktop.session",
+          "titleKey": "operations.session.title",
+          "icon": "Monitor",
+          "list": "remote-desktop.sessions",
+          "key": "id",
+          "name": "name",
+          "columns": [
+            {
+              "key": "protocol",
+              "titleKey": "operations.session.protocol"
+            },
+            {
+              "key": "started",
+              "titleKey": "operations.session.started"
+            }
+          ]
+        }
+      ]
+    },
+    "dashboardCards": [
+      {
+        "id": "remote-sessions",
+        "titleKey": "card.title",
+        "icon": "Monitor"
+      }
+    ]
   },
   "locales": "locales",
   "platforms": ["linux", "win32", "darwin"]

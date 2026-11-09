@@ -3,7 +3,6 @@ import {
   detectMetaKeyFamily,
   metaKeyLabels,
   remoteKeysym,
-  shouldSendKey,
   watchRightAlt,
 } from "../../src/frontend/guacamole-meta-key.js";
 
@@ -106,44 +105,6 @@ describe("right Alt", () => {
     const stop = watchRightAlt(el);
     press(el, "keydown", "Alt");
     expect(remoteKeysym("vnc", 0xfe03, true)).toBe(0xfe03);
-    stop();
-  });
-});
-
-describe("toggle key repeat", () => {
-  const HANGUL = 0xff31;
-  const press = (target: HTMLElement, type: string, repeat = false) =>
-    target.dispatchEvent(
-      new KeyboardEvent(type, { key: "HangulMode", repeat, bubbles: true }),
-    );
-
-  it("sends one down and one up however long the key is held", () => {
-    const target = document.createElement("div");
-    const stop = watchRightAlt(target);
-    press(target, "keydown");
-    expect(shouldSendKey(HANGUL, true)).toBe(true);
-    // The library's own repeat while the key is still down.
-    expect(shouldSendKey(HANGUL, false)).toBe(false);
-    expect(shouldSendKey(HANGUL, true)).toBe(false);
-    press(target, "keydown", true);
-    expect(shouldSendKey(HANGUL, true)).toBe(false);
-    press(target, "keyup");
-    expect(shouldSendKey(HANGUL, false)).toBe(true);
-    // The next tap goes through again.
-    press(target, "keydown");
-    expect(shouldSendKey(HANGUL, true)).toBe(true);
-    stop();
-  });
-
-  it("releases on focus loss and never filters other keys", () => {
-    const target = document.createElement("div");
-    const stop = watchRightAlt(target);
-    press(target, "keydown");
-    shouldSendKey(HANGUL, true);
-    target.dispatchEvent(new FocusEvent("blur"));
-    expect(shouldSendKey(HANGUL, false)).toBe(true);
-    expect(shouldSendKey(0x61, true)).toBe(true);
-    expect(shouldSendKey(0x61, true)).toBe(true);
     stop();
   });
 });

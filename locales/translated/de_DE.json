@@ -11,6 +11,8 @@
     "connectionError": "Verbindungsfehler",
     "clipboardWaiting": "Text in der Sitzung kopiert. Klicken Sie hier oder drücken Sie eine Taste, um ihn in die Zwischenablage zu übernehmen. Öffnen Sie Termix über HTTPS, um sofort zu kopieren.",
     "failedToConnect": "Verbindungstoken konnte nicht abgerufen werden",
+    "requestAccess": "Zugriff anfordern",
+    "verifyAccess": "Bestätigen",
     "hostNotFound": "Host nicht gefunden",
     "noHostSelected": "Kein Host ausgewählt",
     "guacdUnavailable": "Der externe guacd antwortet nicht. Stellen Sie sicher, dass er läuft, oder deaktivieren Sie „Externen guacd verwenden“ in den Einstellungen für Remote Desktop.",
@@ -81,14 +83,16 @@
         "macLock": "Bildschirm sperren",
         "spotlight": "Spotlight",
         "logoff": "Abmelden",
-        "record": "Aufnahme"
+        "record": "Aufnahme",
+        "monitors": "Monitore"
       },
       "hints": {
         "files": "Wird angezeigt, sobald das RDP-Laufwerk aktiv ist",
         "touchMode": "Nur auf Touchscreens",
         "modifiers": "Strg, Alt, Shift und die Systemtaste bleiben gedrückt, bis die nächste Taste betätigt wird",
         "logoff": "Meldet sich von Windows ab, indem logoff über das Ausführen-Dialogfeld ausgeführt wird. Die Sitzung muss geöffnet sein und den Desktop anzeigen.",
-        "record": "Startet oder stoppt die Aufnahme dieser Sitzung. Erfordert das Plugin „Session Recording“ und die integrierte Engine."
+        "record": "Startet oder stoppt die Aufnahme dieser Sitzung. Erfordert das Plugin „Session Recording“ und die integrierte Engine.",
+        "monitors": "Zwischen den entfernten Monitoren wechseln"
       },
       "option": "Option",
       "logoffConfirm": "Von dieser Windows-Sitzung abmelden? Nicht gespeicherte Arbeit geht dabei verloren.",
@@ -96,9 +100,22 @@
       "recordStop": "Aufnahme stoppen",
       "recordStarted": "Aufnahme gestartet",
       "recordStopped": "Aufnahme in „Session Recording“ gespeichert",
-      "recordFailed": "Aufnahme konnte nicht geändert werden"
+      "recordFailed": "Aufnahme konnte nicht geändert werden",
+      "recordRequired": "Ein Administrator hat die Aufzeichnung für diesen Host als obligatorisch festgelegt",
+      "recordRequiredLabel": "Aufzeichnung (obligatorisch)",
+      "monitor": "Monitor {{number}}"
     },
-    "disabled": "Remote Desktop ist deaktiviert. Ein Administrator kann es in den Einstellungen aktivieren."
+    "disabled": "Remote Desktop ist deaktiviert. Ein Administrator kann es in den Einstellungen aktivieren.",
+    "rustdesk": {
+      "videoUnsupported": "Dieser Browser kann RustDesk-Video nicht abspielen. Verwenden Sie einen aktuellen Chrome, Edge, Firefox oder Safari.",
+      "passwordTitle": "RustDesk-Passwort",
+      "passwordDescription": "Das entfernte Gerät benötigt ein Passwort. Es wird nur für diese Sitzung verwendet und nicht gespeichert.",
+      "passwordWrong": "Das Passwort wurde nicht akzeptiert. Versuchen Sie es erneut.",
+      "codeTitle": "Zwei-Faktor-Code",
+      "codeDescription": "Das entfernte Gerät benötigt den Code aus der Authentifizierungs-App.",
+      "codeWrong": "Der Code wurde nicht akzeptiert. Versuchen Sie es erneut.",
+      "code": "Code"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "In Windows Remote Desktop geöffnet",
@@ -142,6 +159,8 @@
       "serverLayout": "Server-Layout",
       "timezone": "Zeitzone",
       "loadBalanceInfo": "Lastverteilungsinformationen / Cookie",
+      "kdcUrl": "Kerberos-KDC-Adresse",
+      "kdcUrlDesc": "Domänencontroller für die Kerberos-Anmeldung, für Konten in „Geschützte Benutzer“. Erfordert die integrierte Engine, den Host, der über seinen DNS-Namen eingegeben wurde, und den ausgefüllten Domänennamen. Leer lassen für NTLM.",
       "loadBalanceInfoDesc": "RD Connection Broker-Cookie für die Lastverteilung in RDS-Farms (z. B. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd-Proxy (optional)",
       "guacdHostname": "guacd-Host",
@@ -278,7 +297,75 @@
     "docsLink": "Dokumentation anzeigen",
     "connectionOriginGuacamoleNote": "RDP, VNC und Telnet werden standardmäßig auf diesem Gerät ausgeführt, genau wie SSH. Wählen Sie „Remote-Server“, um sie stattdessen auf dem Server auszuführen.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Mac-Bildschirmfreigabe"
+    "appleScreenSharing": "Mac-Bildschirmfreigabe",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Remotedesktop über RustDesk-ID",
+    "rustdesk": {
+      "direct": "Direkter IP-Zugriff",
+      "directDesc": "Verbinden Sie sich direkt mit der Host-Adresse, anstatt eine RustDesk-ID aufzulösen. Der direkte IP-Zugriff muss in RustDesk auf diesem Gerät aktiviert sein.",
+      "port": "Direkter IP-Port",
+      "directNote": "Die Verbindung ist verschlüsselt, aber ohne ID-Server kann nicht verifiziert werden, welches Gerät geantwortet hat.",
+      "id": "RustDesk-ID",
+      "idDesc": "Die ID, die in RustDesk auf dem entfernten Gerät angezeigt wird.",
+      "passwordDesc": "Das permanente oder einmalige Passwort, das in RustDesk festgelegt wurde. Lassen Sie es leer, damit jemand die Sitzung auf dem entfernten Gerät manuell akzeptiert.",
+      "server": "RustDesk-Server",
+      "serverDesc": "Lassen Sie dies leer, um den in den Remote-Desktop-Admin-Einstellungen konfigurierten Server zu verwenden, oder den öffentlichen RustDesk-Server, falls keiner festgelegt ist.",
+      "idServer": "ID-Server",
+      "idServerPlaceholder": "rustdesk.beispiel.de",
+      "relayServer": "Relay-Server",
+      "relayServerPlaceholder": "Wie der ID-Server",
+      "key": "Schlüssel",
+      "keyDesc": "Der öffentliche Schlüssel Ihres RustDesk-Servers, aus id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Streaming mit niedriger Latenz von einem Sunshine-PC",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "PC",
+      "pcDesc": "Der Sunshine-PC, der gestreamt werden soll. Moonlight Web listet alle bekannten PCs auf.",
+      "choosePc": "PC auswählen",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "gekoppelt",
+      "notPaired": "nicht gekoppelt",
+      "offline": "offline",
+      "refresh": "Aktualisieren",
+      "addPc": "Diesen Host zu Moonlight Web hinzufügen",
+      "addPcDesc": "Fügt {{address}} am Port {{port}} hinzu, der mit allen Moonlight Web-Nutzern geteilt wird.",
+      "pair": "Koppeln",
+      "pairDesc": "Dieser PC muss einmal mit Moonlight Web gekoppelt werden.",
+      "pairing": "Warte auf Sunshine",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "Öffnen Sie die Sunshine-Weboberfläche auf dem PC, gehen Sie zu PIN und geben Sie diesen PIN ein.",
+      "pairDone": "PC gekoppelt",
+      "pairFailed": "Kopplung fehlgeschlagen. Überprüfen Sie den PIN und versuchen Sie es erneut.",
+      "pairExpired": "Die Kopplung ist abgelaufen. Versuchen Sie es erneut.",
+      "noSetUpAccess": "Bitten Sie einen Administrator, diesen PC hinzuzufügen und zu koppeln.",
+      "stream": "Stream",
+      "app": "App",
+      "appDesc": "Was auf dem PC geöffnet werden soll.",
+      "firstApp": "Erste App",
+      "bitrate": "Bitrate (kbps)",
+      "bitrateDesc": "Auf 0 belassen, um den Standardwert von Moonlight Web zu verwenden.",
+      "fps": "Bildrate",
+      "fpsDesc": "Auf 0 belassen, um den Standardwert von Moonlight Web zu verwenden.",
+      "transport": "Transport",
+      "transportDesc": "WebRTC hat die geringste Latenz. WebSockets funktionieren in Netzwerken, die WebRTC blockieren.",
+      "transportAuto": "Automatisch",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "Ein Administrator muss den Moonlight Web-Server in den Einstellungen für Remote Desktop einrichten.",
+      "loading": "Stream wird vorbereitet",
+      "signInNote": "Moonlight Web fordert beim ersten Mal zur Anmeldung auf.",
+      "openStream": "Stream öffnen",
+      "openInWindow": "In neuem Fenster öffnen",
+      "noH264": "Dieser Browser kann keine H.264-Videos abspielen. Wenn der Stream nicht startet, verwende Chrome, Edge oder die Termix-Desktop-App, oder aktiviere HEVC oder AV1 in Sunshine.",
+      "retry": "Erneut versuchen",
+      "errorRecordingRequired": "Auf diesem Host ist die Aufzeichnung erforderlich, Moonlight-Streams können jedoch nicht aufgezeichnet werden.",
+      "errorNotLinked": "Kein PC verknüpft. Wähle einen im Host-Editor aus.",
+      "errorNotPaired": "Dieser PC ist noch nicht gekoppelt. Koppeln im Host-Editor.",
+      "errorOffline": "Der PC ist offline oder Sunshine läuft nicht.",
+      "errorNoApps": "Sunshine hat keine Apps, die auf diesem PC geöffnet werden können."
+    }
   },
   "onboarding": {
     "guacdTitle": "Remotedesktop einrichten",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "guacd-Adressen pro Host wurden verschoben"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk-ID-Server",
+        "description": "Ihr eigener RustDesk-ID-Server (hbbs) als Host oder Host:Port. Leer lassen, um den öffentlichen RustDesk-Server zu verwenden. Hosts können ihren eigenen festlegen.",
+        "placeholder": "rustdesk.beispiel.de"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk-Relay-Server",
+        "description": "Ihr RustDesk-Relay-Server (hbbr). Leer lassen, um die Angabe des ID-Servers zu verwenden.",
+        "placeholder": "rustdesk.beispiel.de:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk-Server-Schlüssel",
+        "description": "Der öffentliche Schlüssel Ihres RustDesk-Servers, aus id_ed25519.pub. Erforderlich bei Verwendung eines eigenen Servers."
+      },
+      "moonlightUrl": {
+        "label": "Moonlight-Web-Adresse",
+        "description": "Der Moonlight-Webserver, mit dem Termix für das Sunshine-Streaming kommuniziert. Siehe die Dokumentation, um einen auszuführen.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Öffentliche Adresse von Moonlight Web",
+        "description": "Die Adresse, die Browser öffnen, falls sie sich von der oben genannten unterscheidet. HTTPS ist für Gamepads und die Tastatursperre erforderlich.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Moonlight Web-Benutzername",
+        "description": "Ein Admin-Login für Moonlight Web. Termix nutzt ihn, um PCs aufzulisten, hinzuzufügen und zu koppeln."
+      },
+      "moonlightPassword": {
+        "label": "Moonlight Web-Passwort",
+        "description": "Das Passwort für diesen Login."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Moonlight Web-Zertifikat ignorieren",
+        "description": "Aktivieren, um ein selbstsigniertes Zertifikat für Moonlight Web zu verwenden."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "ARD-Port"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "RustDesk-Direkt-IP-Port"
+      },
+      "rustdeskId": {
+        "label": "RustDesk-ID"
+      },
+      "rustdeskDirect": {
+        "label": "RustDesk-Direkt-IP-Zugriff"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk-ID-Server"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk-Relay-Server"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk-Server-Schlüssel"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine-Port"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web-PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight-App"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlight-Bitrate"
+      },
+      "moonlightFps": {
+        "label": "Moonlight-Bildwiederholrate"
+      },
+      "moonlightTransport": {
+        "label": "Moonlight-Transport"
+      },
+      "rdpAutoReconnect": {
+        "label": "RDP automatisch wiederherstellen",
+        "description": "Verbindung bei einem RDP-Verbindungsabbruch automatisch wiederherstellen. Deaktivieren, um manuell neu zu verbinden und Unterbrechungen von Sitzungen zu vermeiden, die von einem anderen Client aus geöffnet wurden."
+      },
+      "rdpAutoResize": {
+        "label": "RDP automatisch anpassen",
+        "description": "Die Remote-Auflösung anpassen, wenn sich die Fenstergröße ändert. Deaktivieren, um die bei der Verbindung gewählte Größe bis zur nächsten Neuverbindung beizubehalten."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Mit RDP verbinden",
     "connectVnc": "Mit VNC verbinden",
     "connectTelnet": "Mit Telnet verbinden",
-    "connectArd": "Mit Apple Remote Desktop verbinden"
+    "connectArd": "Mit Apple Remote Desktop verbinden",
+    "connectRustdesk": "Mit RustDesk verbinden",
+    "connectMoonlight": "Mit Moonlight verbinden"
   },
   "permissions": {
     "sessions": {
       "title": "Remote-Desktop-Sitzungen teilen",
       "description": "Erlaube, dass Sitzungs-Sharing und Kollaborationsräume die RDP-, VNC- und Telnet-Sitzungen dieses Benutzers anderen anzeigen."
+    },
+    "monitor": {
+      "title": "Remote-Desktop-Sitzungen aller Benutzer beobachten",
+      "description": "Ermöglicht anderen Funktionen wie der Sitzungsprotokollierung, die RDP-, VNC- und Telnet-Sitzungen aller Benutzer aufzulisten, zu beobachten und zu beenden."
+    },
+    "moonlight": {
+      "title": "Moonlight-PCs einrichten",
+      "description": "Sunshine-PCs zu Moonlight Web hinzufügen und koppeln, unter Verwendung der gespeicherten Moonlight Web-Anmeldeinformationen."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Remote Desktop",
     "description": "RDP-, VNC- und Telnet-Sitzungen in Ihrem Browser mit Zwischenablage, Dateiübertragung, Freigabe und Aufzeichnung."
+  },
+  "operations": {
+    "check": {
+      "title": "Remote-Desktop-Ports überprüfen"
+    },
+    "ports": {
+      "title": "Remote-Desktop"
+    },
+    "sessions": {
+      "title": "Offene Remote-Sitzungen"
+    },
+    "session": {
+      "title": "Remote-Sitzungen",
+      "protocol": "Typ",
+      "started": "Gestartet"
+    }
+  },
+  "card": {
+    "title": "Remote-Sitzungen",
+    "loading": "Wird geladen...",
+    "empty": "Keine offenen Remote-Sitzungen"
   }
 }

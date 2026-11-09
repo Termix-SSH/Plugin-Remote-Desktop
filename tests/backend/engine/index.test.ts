@@ -207,7 +207,9 @@ describe("BuiltinEngine", () => {
     expect(instance.recordingState("$c-1", "user 1")).toEqual({
       ok: true,
       recording: false,
+      hostId: 7,
     });
+    expect(instance.isRecordingSession("$c-1")).toBe(false);
 
     const started = instance.setRecording("$c-1", "user 1", true);
     await vi.waitFor(() =>
@@ -218,7 +220,9 @@ describe("BuiltinEngine", () => {
     expect(instance.recordingState("$c-1", "user 1")).toEqual({
       ok: true,
       recording: true,
+      hostId: 7,
     });
+    expect(instance.isRecordingSession("$c-1")).toBe(true);
 
     await expect(
       instance.setRecording("$c-1", "user 1", false),

@@ -11,6 +11,8 @@
     "connectionError": "Lỗi kết nối",
     "clipboardWaiting": "Đã sao chép văn bản trong phiên làm việc. Nhấp chuột hoặc nhấn phím ở đây để dán vào bộ nhớ tạm của bạn. Mở Termix qua HTTPS để sao chép ngay lập tức.",
     "failedToConnect": "Không thể lấy mã thông báo kết nối",
+    "requestAccess": "Yêu cầu quyền truy cập",
+    "verifyAccess": "Xác minh",
     "hostNotFound": "Không tìm thấy máy chủ",
     "noHostSelected": "Chưa chọn máy chủ",
     "guacdUnavailable": "Dịch vụ guacd bên ngoài không phản hồi. Vui lòng kiểm tra xem nó có đang chạy không, hoặc tắt tùy chọn \"Sử dụng guacd bên ngoài\" trong cài đặt Màn hình từ xa.",
@@ -81,14 +83,16 @@
         "macLock": "Khóa màn hình",
         "spotlight": "Spotlight",
         "logoff": "Đăng xuất",
-        "record": "Ghi lại"
+        "record": "Ghi lại",
+        "monitors": "Màn hình"
       },
       "hints": {
         "files": "Hiển thị khi ổ RDP đã bật",
         "touchMode": "Chỉ trên màn hình cảm ứng",
         "modifiers": "Ctrl, Alt, Shift và phím hệ thống sẽ được giữ nguyên cho đến khi nhấn phím tiếp theo",
         "logoff": "Đăng xuất khỏi Windows bằng cách chạy lệnh logoff từ hộp Run. Phiên làm việc phải đang mở và hiển thị màn hình desktop.",
-        "record": "Bắt đầu hoặc dừng ghi lại phiên làm việc này. Cần có plugin Session Recording và công cụ ghi tích hợp."
+        "record": "Bắt đầu hoặc dừng ghi lại phiên làm việc này. Cần có plugin Session Recording và công cụ ghi tích hợp.",
+        "monitors": "Chuyển đổi giữa các màn hình từ xa"
       },
       "option": "Tùy chọn",
       "logoffConfirm": "Đăng xuất khỏi phiên Windows này? Các công việc chưa lưu sẽ bị mất.",
@@ -96,9 +100,22 @@
       "recordStop": "Dừng ghi lại",
       "recordStarted": "Đã bắt đầu ghi lại",
       "recordStopped": "Đã lưu bản ghi vào Session Recording",
-      "recordFailed": "Không thể thay đổi bản ghi"
+      "recordFailed": "Không thể thay đổi bản ghi",
+      "recordRequired": "Quản trị viên đã yêu cầu ghi lại phiên trên máy chủ này",
+      "recordRequiredLabel": "Đang ghi (bắt buộc)",
+      "monitor": "Màn hình {{number}}"
     },
-    "disabled": "Màn hình từ xa đang bị tắt. Quản trị viên có thể bật tính năng này trong Cài đặt."
+    "disabled": "Màn hình từ xa đang bị tắt. Quản trị viên có thể bật tính năng này trong Cài đặt.",
+    "rustdesk": {
+      "videoUnsupported": "Trình duyệt này không thể phát video RustDesk. Hãy dùng Chrome, Edge, Firefox hoặc Safari phiên bản mới nhất.",
+      "passwordTitle": "Mật khẩu RustDesk",
+      "passwordDescription": "Thiết bị từ xa yêu cầu mật khẩu. Mật khẩu này chỉ dùng cho phiên hiện tại và sẽ không được lưu lại.",
+      "passwordWrong": "Mật khẩu không được chấp nhận. Vui lòng thử lại.",
+      "codeTitle": "Mã xác thực hai yếu tố",
+      "codeDescription": "Thiết bị từ xa yêu cầu mã từ ứng dụng xác thực của nó.",
+      "codeWrong": "Mã không được chấp nhận. Vui lòng thử lại.",
+      "code": "Mã"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Đã mở trong Windows Remote Desktop",
@@ -142,6 +159,8 @@
       "serverLayout": "Bố cục máy chủ",
       "timezone": "Múi giờ",
       "loadBalanceInfo": "Thông tin cân bằng tải / Cookie",
+      "kdcUrl": "Địa chỉ KDC Kerberos",
+      "kdcUrlDesc": "Máy chủ kiểm soát miền để đăng nhập Kerberos, dành cho tài khoản trong nhóm Protected Users. Cần sử dụng công cụ tích hợp, nhập máy chủ bằng tên DNS và điền đầy đủ tên miền. Để trống nếu dùng NTLM.",
       "loadBalanceInfoDesc": "Cookie của RD Connection Broker để cân bằng tải cho cụm RDS (ví dụ: tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "Máy chủ trung gian guacd (tùy chọn)",
       "guacdHostname": "Máy chủ guacd",
@@ -278,7 +297,75 @@
     "docsLink": "Xem tài liệu",
     "connectionOriginGuacamoleNote": "RDP, VNC và Telnet mặc định chạy trên thiết bị này, giống như SSH. Chọn Máy chủ từ xa để chạy chúng trên máy chủ thay thế.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Chia sẻ màn hình Mac"
+    "appleScreenSharing": "Chia sẻ màn hình Mac",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Màn hình từ xa qua ID RustDesk",
+    "rustdesk": {
+      "direct": "Truy cập IP trực tiếp",
+      "directDesc": "Kết nối đến địa chỉ máy chủ thay vì tra cứu ID RustDesk. Tính năng truy cập IP trực tiếp phải được bật trong RustDesk trên thiết bị đó.",
+      "port": "Cổng IP trực tiếp",
+      "directNote": "Kết nối được mã hóa, nhưng khi không có máy chủ ID thì không có cách nào xác minh thiết bị nào đang phản hồi.",
+      "id": "ID RustDesk",
+      "idDesc": "ID hiển thị trong RustDesk trên thiết bị từ xa.",
+      "passwordDesc": "Mật khẩu cố định hoặc dùng một lần được đặt trong RustDesk. Để trống nếu muốn người dùng chấp nhận phiên trên thiết bị từ xa.",
+      "server": "Máy chủ RustDesk",
+      "serverDesc": "Để trống để dùng máy chủ đã cấu hình trong cài đặt quản trị Màn hình từ xa, hoặc dùng máy chủ công cộng của RustDesk nếu chưa cấu hình.",
+      "idServer": "Máy chủ ID",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Máy chủ trung gian",
+      "relayServerPlaceholder": "Giống như máy chủ ID",
+      "key": "Khóa",
+      "keyDesc": "Khóa công khai của máy chủ RustDesk, lấy từ file id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Truyền phát độ trễ thấp từ PC chạy Sunshine",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "PC",
+      "pcDesc": "PC chạy Sunshine để truyền phát. Moonlight Web liệt kê tất cả các PC mà nó biết.",
+      "choosePc": "Chọn một PC",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "đã ghép nối",
+      "notPaired": "chưa ghép nối",
+      "offline": "ngoại tuyến",
+      "refresh": "Làm mới",
+      "addPc": "Thêm máy chủ này vào Moonlight Web",
+      "addPcDesc": "Thêm {{address}} trên cổng {{port}}, chia sẻ với mọi người dùng Moonlight Web.",
+      "pair": "Ghép nối",
+      "pairDesc": "PC này cần được ghép nối với Moonlight Web một lần.",
+      "pairing": "Đang chờ Sunshine",
+      "pinTitle": "Mã PIN {{pin}}",
+      "pinDesc": "Mở giao diện web của Sunshine trên PC, vào mục PIN và nhập mã PIN này.",
+      "pairDone": "Đã ghép nối PC",
+      "pairFailed": "Ghép nối thất bại. Vui lòng kiểm tra mã PIN và thử lại.",
+      "pairExpired": "Hết thời gian ghép nối. Vui lòng thử lại.",
+      "noSetUpAccess": "Yêu cầu quản trị viên thêm và ghép nối PC này.",
+      "stream": "Truyền phát",
+      "app": "Ứng dụng",
+      "appDesc": "Ứng dụng sẽ mở trên PC.",
+      "firstApp": "Ứng dụng đầu tiên",
+      "bitrate": "Tốc độ bit (kbps)",
+      "bitrateDesc": "Để ở 0 để sử dụng mặc định của Moonlight Web.",
+      "fps": "Tốc độ khung hình",
+      "fpsDesc": "Để ở 0 để sử dụng mặc định của Moonlight Web.",
+      "transport": "Giao thức truyền tải",
+      "transportDesc": "WebRTC có độ trễ thấp nhất. WebSockets hoạt động trên các mạng chặn WebRTC.",
+      "transportAuto": "Tự động",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "Quản trị viên cần thiết lập máy chủ Moonlight Web trong cài đặt Remote Desktop.",
+      "loading": "Đang chuẩn bị luồng phát",
+      "signInNote": "Moonlight Web yêu cầu bạn đăng nhập lần đầu tiên.",
+      "openStream": "Mở luồng phát",
+      "openInWindow": "Mở trong cửa sổ mới",
+      "noH264": "Trình duyệt này không thể phát video H.264. Nếu luồng không khởi động được, hãy dùng Chrome, Edge hoặc ứng dụng Termix trên máy tính, hoặc bật HEVC hoặc AV1 trong Sunshine.",
+      "retry": "Thử lại",
+      "errorRecordingRequired": "Việc ghi lại là bắt buộc trên host này, và luồng Moonlight không thể được ghi lại.",
+      "errorNotLinked": "Chưa liên kết với PC nào. Hãy chọn một trong trình chỉnh sửa host.",
+      "errorNotPaired": "PC này chưa được ghép đôi. Hãy ghép đôi nó trong trình chỉnh sửa host.",
+      "errorOffline": "PC đang ngoại tuyến, hoặc Sunshine không chạy.",
+      "errorNoApps": "Sunshine không có ứng dụng nào để mở trên PC này."
+    }
   },
   "onboarding": {
     "guacdTitle": "Cài đặt màn hình từ xa",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "Địa chỉ guacd cho từng máy chủ đã được di chuyển"
+      },
+      "rustdeskIdServer": {
+        "label": "Máy chủ ID RustDesk",
+        "description": "Máy chủ ID RustDesk (hbbs) của bạn, dưới dạng host hoặc host:port. Để trống để sử dụng máy chủ RustDesk công cộng. Host có thể đặt máy chủ riêng của chúng.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "Máy chủ trung chuyển RustDesk",
+        "description": "Máy chủ trung chuyển RustDesk (hbbr) của bạn. Để trống để sử dụng thông tin từ máy chủ ID.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "Khóa máy chủ RustDesk",
+        "description": "Khóa công khai của máy chủ RustDesk của bạn, từ id_ed25519.pub. Cần thiết khi sử dụng máy chủ riêng."
+      },
+      "moonlightUrl": {
+        "label": "Địa chỉ Moonlight Web",
+        "description": "Máy chủ Moonlight Web mà Termix giao tiếp, để phát luồng Sunshine. Xem tài liệu để chạy một máy chủ.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Địa chỉ công khai của Moonlight Web",
+        "description": "Địa chỉ trình duyệt mở, nếu khác với địa chỉ ở trên. Cần HTTPS cho tay cầm game và khóa bàn phím.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Tên đăng nhập Moonlight Web",
+        "description": "Tài khoản quản trị viên trên Moonlight Web. Termix sử dụng nó để liệt kê, thêm và ghép đôi PC."
+      },
+      "moonlightPassword": {
+        "label": "Mật khẩu Moonlight Web",
+        "description": "Mật khẩu cho tài khoản đó."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Bỏ qua chứng chỉ Moonlight Web",
+        "description": "Bật lên nếu Moonlight Web sử dụng chứng chỉ tự ký."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "Cổng ARD"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "Cổng IP trực tiếp RustDesk"
+      },
+      "rustdeskId": {
+        "label": "ID RustDesk"
+      },
+      "rustdeskDirect": {
+        "label": "Truy cập IP trực tiếp RustDesk"
+      },
+      "rustdeskIdServer": {
+        "label": "Máy chủ ID RustDesk"
+      },
+      "rustdeskRelayServer": {
+        "label": "Máy chủ trung chuyển RustDesk"
+      },
+      "rustdeskKey": {
+        "label": "Khóa máy chủ RustDesk"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Cổng Sunshine"
+      },
+      "moonlightHostId": {
+        "label": "PC Moonlight Web"
+      },
+      "moonlightAppId": {
+        "label": "Ứng dụng Moonlight"
+      },
+      "moonlightBitrate": {
+        "label": "Tốc độ bit Moonlight"
+      },
+      "moonlightFps": {
+        "label": "Tốc độ khung hình Moonlight"
+      },
+      "moonlightTransport": {
+        "label": "Giao thức truyền tải Moonlight"
+      },
+      "rdpAutoReconnect": {
+        "label": "Tự động kết nối lại RDP",
+        "description": "Kết nối lại khi phiên RDP bị mất. Tắt để kết nối lại thủ công và tránh làm gián đoạn các phiên được mở từ máy khách khác."
+      },
+      "rdpAutoResize": {
+        "label": "Tự động thay đổi kích thước RDP",
+        "description": "Điều chỉnh độ phân giải từ xa khi cửa sổ thay đổi kích thước. Tắt để giữ nguyên kích thước đã chọn khi kết nối cho đến khi kết nối lại."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Kết nối với RDP",
     "connectVnc": "Kết nối với VNC",
     "connectTelnet": "Kết nối với Telnet",
-    "connectArd": "Kết nối với Apple Remote Desktop"
+    "connectArd": "Kết nối với Apple Remote Desktop",
+    "connectRustdesk": "Kết nối với RustDesk",
+    "connectMoonlight": "Kết nối với Moonlight"
   },
   "permissions": {
     "sessions": {
       "title": "Chia sẻ phiên máy tính từ xa",
       "description": "Cho phép chia sẻ phiên và phòng cộng tác hiển thị các phiên RDP, VNC và Telnet của người dùng này cho người khác."
+    },
+    "monitor": {
+      "title": "Giám sát các phiên máy tính từ xa của mọi người",
+      "description": "Cho phép các tính năng khác, chẳng hạn như Ghi lại phiên, liệt kê, xem và kết thúc các phiên RDP, VNC và Telnet của tất cả người dùng."
+    },
+    "moonlight": {
+      "title": "Thiết lập máy tính Moonlight",
+      "description": "Thêm máy tính Sunshine vào Moonlight Web và ghép nối chúng, sử dụng thông tin đăng nhập Moonlight Web đã lưu."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Máy tính từ xa",
     "description": "Phiên RDP, VNC và Telnet trong trình duyệt của bạn, hỗ trợ clipboard, chuyển tệp, chia sẻ và ghi lại."
+  },
+  "operations": {
+    "check": {
+      "title": "Kiểm tra cổng máy tính từ xa"
+    },
+    "ports": {
+      "title": "Máy tính từ xa"
+    },
+    "sessions": {
+      "title": "Mở phiên từ xa"
+    },
+    "session": {
+      "title": "Phiên từ xa",
+      "protocol": "Loại",
+      "started": "Bắt đầu"
+    }
+  },
+  "card": {
+    "title": "Phiên từ xa",
+    "loading": "Đang tải...",
+    "empty": "Không có phiên từ xa đang mở"
   }
 }

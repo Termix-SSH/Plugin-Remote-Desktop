@@ -11,6 +11,8 @@
     "connectionError": "Connection error",
     "clipboardWaiting": "Text copied in the session. Click or press a key here to put it on your clipboard. Open Termix over HTTPS to copy right away.",
     "failedToConnect": "Failed to get connection token",
+    "requestAccess": "Request access",
+    "verifyAccess": "Verify",
     "hostNotFound": "Host not found",
     "noHostSelected": "No host selected",
     "guacdUnavailable": "The external guacd is not answering. Check that it is running, or turn off Use an external guacd in the Remote Desktop settings.",
@@ -81,14 +83,16 @@
         "macLock": "Lock screen",
         "spotlight": "Spotlight",
         "logoff": "Sign out",
-        "record": "Record"
+        "record": "Record",
+        "monitors": "Monitors"
       },
       "hints": {
         "files": "Shows once the RDP drive is on",
         "touchMode": "Only on touch screens",
         "modifiers": "Ctrl, Alt, Shift and the system key stay held until the next key",
         "logoff": "Signs out of Windows by running logoff from the Run box. The session must be open and showing the desktop.",
-        "record": "Starts or stops a recording of this session. Needs the Session Recording plugin and the built-in engine."
+        "record": "Starts or stops a recording of this session. Needs the Session Recording plugin and the built-in engine.",
+        "monitors": "Switch between the remote monitors"
       },
       "option": "Option",
       "logoffConfirm": "Sign out of this Windows session? Unsaved work in it is lost.",
@@ -96,9 +100,22 @@
       "recordStop": "Stop recording",
       "recordStarted": "Recording started",
       "recordStopped": "Recording saved to Session Recording",
-      "recordFailed": "Could not change the recording"
+      "recordFailed": "Could not change the recording",
+      "recordRequired": "An admin made recording required on this host",
+      "recordRequiredLabel": "Recording (required)",
+      "monitor": "Monitor {{number}}"
     },
-    "disabled": "Remote Desktop is turned off. An admin can turn it on in Settings."
+    "disabled": "Remote Desktop is turned off. An admin can turn it on in Settings.",
+    "rustdesk": {
+      "videoUnsupported": "This browser can not play RustDesk video. Use a recent Chrome, Edge, Firefox or Safari.",
+      "passwordTitle": "RustDesk password",
+      "passwordDescription": "The remote device needs a password. It is used for this session only and is not saved.",
+      "passwordWrong": "That password was not accepted. Try again.",
+      "codeTitle": "Two factor code",
+      "codeDescription": "The remote device needs the code from its authenticator app.",
+      "codeWrong": "That code was not accepted. Try again.",
+      "code": "Code"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Opened in Windows Remote Desktop",
@@ -142,6 +159,8 @@
       "serverLayout": "Server Layout",
       "timezone": "Timezone",
       "loadBalanceInfo": "Load Balance Info / Cookie",
+      "kdcUrl": "Kerberos KDC Address",
+      "kdcUrlDesc": "Domain controller for Kerberos sign in, for accounts in Protected Users. Needs the built-in engine, the host entered by its DNS name and the domain filled in. Leave empty for NTLM.",
       "loadBalanceInfoDesc": "RD Connection Broker cookie for RDS farm load balancing (e.g. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd Proxy (optional)",
       "guacdHostname": "guacd Host",
@@ -278,7 +297,75 @@
     "docsLink": "View docs",
     "connectionOriginGuacamoleNote": "RDP, VNC and Telnet run on this device by default, like SSH. Pick Remote server to run them on the server instead.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Mac Screen Sharing"
+    "appleScreenSharing": "Mac Screen Sharing",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Remote desktop by RustDesk ID",
+    "rustdesk": {
+      "direct": "Direct IP access",
+      "directDesc": "Connect to the host address instead of looking up a RustDesk ID. Direct IP access must be on in RustDesk on that device.",
+      "port": "Direct IP port",
+      "directNote": "The connection is encrypted, but with no ID server there is nothing to prove which device answered.",
+      "id": "RustDesk ID",
+      "idDesc": "The ID shown in RustDesk on the remote device.",
+      "passwordDesc": "The permanent or one time password set in RustDesk. Leave it empty to have someone accept the session on the remote device.",
+      "server": "RustDesk server",
+      "serverDesc": "Leave empty to use the server set in the Remote Desktop admin settings, or the public RustDesk server when none is set.",
+      "idServer": "ID server",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Relay server",
+      "relayServerPlaceholder": "Same as the ID server",
+      "key": "Key",
+      "keyDesc": "The public key of your RustDesk server, from id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Low latency streaming from a Sunshine PC",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "PC",
+      "pcDesc": "The Sunshine PC to stream. Moonlight Web lists every PC it knows.",
+      "choosePc": "Choose a PC",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "paired",
+      "notPaired": "not paired",
+      "offline": "offline",
+      "refresh": "Refresh",
+      "addPc": "Add this host to Moonlight Web",
+      "addPcDesc": "Adds {{address}} on port {{port}}, shared with every Moonlight Web user.",
+      "pair": "Pair",
+      "pairDesc": "This PC has to be paired with Moonlight Web once.",
+      "pairing": "Waiting for Sunshine",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "Open the Sunshine web UI on the PC, go to PIN, and enter this PIN.",
+      "pairDone": "PC paired",
+      "pairFailed": "Pairing failed. Check the PIN and try again.",
+      "pairExpired": "Pairing timed out. Try again.",
+      "noSetUpAccess": "Ask an admin to add and pair this PC.",
+      "stream": "Stream",
+      "app": "App",
+      "appDesc": "What to open on the PC.",
+      "firstApp": "First app",
+      "bitrate": "Bitrate (kbps)",
+      "bitrateDesc": "Leave at 0 to use the Moonlight Web default.",
+      "fps": "Frame rate",
+      "fpsDesc": "Leave at 0 to use the Moonlight Web default.",
+      "transport": "Transport",
+      "transportDesc": "WebRTC has the lowest delay. WebSockets work on networks that block it.",
+      "transportAuto": "Auto",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "An admin has to set up the Moonlight Web server in the Remote Desktop settings.",
+      "loading": "Getting the stream ready",
+      "signInNote": "Moonlight Web asks you to sign in the first time.",
+      "openStream": "Open stream",
+      "openInWindow": "Open in new window",
+      "noH264": "This browser can't play H.264 video. If the stream won't start, use Chrome, Edge or the Termix desktop app, or turn on HEVC or AV1 in Sunshine.",
+      "retry": "Try again",
+      "errorRecordingRequired": "Recording is required on this host, and Moonlight streams can't be recorded.",
+      "errorNotLinked": "No PC is linked. Pick one in the host editor.",
+      "errorNotPaired": "This PC is not paired yet. Pair it in the host editor.",
+      "errorOffline": "The PC is offline, or Sunshine is not running.",
+      "errorNoApps": "Sunshine has no apps to open on this PC."
+    }
   },
   "onboarding": {
     "guacdTitle": "Set up remote desktop",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "Per-host guacd addresses moved"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID server",
+        "description": "Your own RustDesk ID server (hbbs), as host or host:port. Leave empty to use the public RustDesk server. Hosts can set their own.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk relay server",
+        "description": "Your RustDesk relay server (hbbr). Leave empty to use what the ID server says.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk server key",
+        "description": "The public key of your RustDesk server, from id_ed25519.pub. Needed with your own server."
+      },
+      "moonlightUrl": {
+        "label": "Moonlight Web address",
+        "description": "The Moonlight Web server Termix talks to, for Sunshine streaming. See the docs to run one.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Moonlight Web public address",
+        "description": "The address browsers open, if it differs from the one above. HTTPS is needed for gamepads and keyboard lock.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Moonlight Web username",
+        "description": "An admin login on Moonlight Web. Termix uses it to list, add and pair PCs."
+      },
+      "moonlightPassword": {
+        "label": "Moonlight Web password",
+        "description": "The password for that login."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Ignore Moonlight Web certificate",
+        "description": "Turn on for a self-signed certificate on Moonlight Web."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "ARD port"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "RustDesk direct IP port"
+      },
+      "rustdeskId": {
+        "label": "RustDesk ID"
+      },
+      "rustdeskDirect": {
+        "label": "RustDesk direct IP access"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID server"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk relay server"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk server key"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine port"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight app"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlight bitrate"
+      },
+      "moonlightFps": {
+        "label": "Moonlight frame rate"
+      },
+      "moonlightTransport": {
+        "label": "Moonlight transport"
+      },
+      "rdpAutoReconnect": {
+        "label": "Automatically reconnect RDP",
+        "description": "Reconnect when an RDP session is lost. Turn off to reconnect manually and avoid interrupting sessions opened from another client."
+      },
+      "rdpAutoResize": {
+        "label": "Automatically resize RDP",
+        "description": "Adjust the remote resolution when the window changes size. Turn off to keep the size chosen at connection until reconnecting."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Connect with RDP",
     "connectVnc": "Connect with VNC",
     "connectTelnet": "Connect with Telnet",
-    "connectArd": "Connect with Apple Remote Desktop"
+    "connectArd": "Connect with Apple Remote Desktop",
+    "connectRustdesk": "Connect with RustDesk",
+    "connectMoonlight": "Connect with Moonlight"
   },
   "permissions": {
     "sessions": {
       "title": "Share remote desktop sessions",
       "description": "Let session sharing and collab rooms show this user's RDP, VNC and Telnet sessions to others."
+    },
+    "monitor": {
+      "title": "Watch everyone's remote desktop sessions",
+      "description": "Lets other features, such as Session Recording, list, watch and end the RDP, VNC and Telnet sessions of every user."
+    },
+    "moonlight": {
+      "title": "Set up Moonlight PCs",
+      "description": "Add Sunshine PCs to Moonlight Web and pair them, using the saved Moonlight Web login."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Remote Desktop",
     "description": "RDP, VNC and Telnet sessions in your browser, with clipboard, file transfer, sharing and recording."
+  },
+  "operations": {
+    "check": {
+      "title": "Check remote desktop ports"
+    },
+    "ports": {
+      "title": "Remote desktop"
+    },
+    "sessions": {
+      "title": "Open remote sessions"
+    },
+    "session": {
+      "title": "Remote sessions",
+      "protocol": "Type",
+      "started": "Started"
+    }
+  },
+  "card": {
+    "title": "Remote sessions",
+    "loading": "Loading...",
+    "empty": "No open remote sessions"
   }
 }

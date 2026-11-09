@@ -90,13 +90,20 @@ export async function listDirectory(
     throw new Error(`${path} is not a directory`);
   }
 
-  const json = await new Promise<string>((resolve) => {
+  const json = await new Promise<string>((resolve, reject) => {
+    const timeout = setTimeout(
+      () => reject(new Error(`Timed out reading ${path}`)),
+      REQUEST_TIMEOUT_MS,
+    );
     const reader = new Guacamole.StringReader(stream);
     let text = "";
     reader.ontext = (chunk: string) => {
       text += chunk;
     };
-    reader.onend = () => resolve(text);
+    reader.onend = () => {
+      clearTimeout(timeout);
+      resolve(text);
+    };
   });
 
   return parseDirectoryIndex(json, path);

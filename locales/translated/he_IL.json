@@ -11,6 +11,8 @@
     "connectionError": "שגיאת חיבור",
     "clipboardWaiting": "הטקסט הועתק בתוך הפעולה. לחץ או הקש מקש כאן כדי להעתיק אותו ללוח. פתח את Termix דרך HTTPS כדי להעתיק מיד.",
     "failedToConnect": "השגת אסימון החיבור נכשלה",
+    "requestAccess": "בקש גישה",
+    "verifyAccess": "אמת",
     "hostNotFound": "המארח לא נמצא",
     "noHostSelected": "לא נבחר מארח",
     "guacdUnavailable": "השירות החיצוני guacd לא מגיב. ודא שהוא פועל, או כבה את האפשרות \"השתמש ב-guacd חיצוני\" בהגדרות שולחן העבודה המרוחק.",
@@ -81,14 +83,16 @@
         "macLock": "נעילת מסך",
         "spotlight": "Spotlight",
         "logoff": "התנתק",
-        "record": "הקלט"
+        "record": "הקלט",
+        "monitors": "מסכים"
       },
       "hints": {
         "files": "מוצג לאחר הפעלת כונן RDP",
         "touchMode": "רק במסכי מגע",
         "modifiers": "מקשי Ctrl, Alt, Shift ומקש המערכת נשארים לחוצים עד להקשת המקש הבא",
         "logoff": "מתנתק מ-Windows על ידי הפעלת הפקודה logoff מתוך תיבת הרצה. הפעלה חייבת להיות פתוחה ולהציג את שולחן העבודה.",
-        "record": "מתחיל או עוצר הקלטה של הפעלה זו. דורש את התוסף Session Recording ואת המנוע המובנה."
+        "record": "מתחיל או עוצר הקלטה של הפעלה זו. דורש את התוסף Session Recording ואת המנוע המובנה.",
+        "monitors": "החלף בין מסכים מרוחקים"
       },
       "option": "Option",
       "logoffConfirm": "להתנתק מהפעלה זו של Windows? עבודה שלא נשמרה בה תאבד.",
@@ -96,9 +100,22 @@
       "recordStop": "עצור הקלטה",
       "recordStarted": "ההקלטה התחילה",
       "recordStopped": "ההקלטה נשמרה ב-Session Recording",
-      "recordFailed": "לא ניתן היה לשנות את ההקלטה"
+      "recordFailed": "לא ניתן היה לשנות את ההקלטה",
+      "recordRequired": "מנהל הגדיר הקלטת חובה במארח זה",
+      "recordRequiredLabel": "הקלטה (חובה)",
+      "monitor": "מסך {{number}}"
     },
-    "disabled": "שולחן עבודה מרוחק כבוי. מנהל מערכת יכול להפעיל אותו בהגדרות."
+    "disabled": "שולחן עבודה מרוחק כבוי. מנהל מערכת יכול להפעיל אותו בהגדרות.",
+    "rustdesk": {
+      "videoUnsupported": "דפדפן זה אינו תומך בשידור וידאו של RustDesk. השתמש בגרסה עדכנית של Chrome, Edge, Firefox או Safari.",
+      "passwordTitle": "סיסמת RustDesk",
+      "passwordDescription": "המכשיר המרוחק דורש סיסמה. היא משמשת להפעלה הנוכחית בלבד ואינה נשמרת.",
+      "passwordWrong": "הסיסמה הזו לא התקבלה. נסה שוב.",
+      "codeTitle": "קוד אימות דו-שלבי",
+      "codeDescription": "המכשיד המרוחק זקוק לקוד מאפליקציית האימות שלו.",
+      "codeWrong": "הקוד הזה לא התקבל. נסה שוב.",
+      "code": "קוד"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "נפתח בשולחן עבודה מרוחק של Windows",
@@ -142,6 +159,8 @@
       "serverLayout": "פריסת שרת",
       "timezone": "אזור זמן",
       "loadBalanceInfo": "מידע איזון עומסים / עוגיה",
+      "kdcUrl": "כתובת KDC של Kerberos",
+      "kdcUrlDesc": "בקר דומיין לכניסה עם Kerberos, עבור חשבונות ב-Protected Users. דורש את המנוע המובנה, הזנת המארח לפי שם ה-DNS שלו ומילוי הדומיין. השאר ריק עבור NTLM.",
       "loadBalanceInfoDesc": "עוגיית RD Connection Broker לאיזון עומסים בחוות RDS (למשל tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "פרוקסי guacd (אופציונלי)",
       "guacdHostname": "מארח guacd",
@@ -278,7 +297,75 @@
     "docsLink": "צפה בתיעוד",
     "connectionOriginGuacamoleNote": "חיבורי RDP, VNC ו-Telnet מופעלים על המכשיר הזה כברירת מחדל, כמו SSH. בחר שרת מרוחק כדי להפעיל אותם על השרת במקום.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "שיתוף מסך ב-Mac"
+    "appleScreenSharing": "שיתוף מסך ב-Mac",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "שולחן עבודה מרוחק באמצעות מזהה RustDesk",
+    "rustdesk": {
+      "direct": "גישה ישירה דרך IP",
+      "directDesc": "התחבר לכתובת המארח במקום לחפש מזהה RustDesk. יש להפעיל גישה ישירה דרך IP ב-RustDesk במכשיר זה.",
+      "port": "פורט IP ישיר",
+      "directNote": "החיבור מוצפן, אך ללא שרת מזהה אין דרך לאמת איזה מכשיר הגיב.",
+      "id": "מזהה RustDesk",
+      "idDesc": "המזהה המוצג ב-RustDesk במכשיר המרוחק.",
+      "passwordDesc": "הסיסמה הקבועה או חד-פעמית שהוגדרה ב-RustDesk. השאר ריק כדי לאפשר למישהו לקבל את הפעולה במכשיר המרוחק.",
+      "server": "שרת RustDesk",
+      "serverDesc": "השאר ריק כדי להשתמש בשרת שהוגדר בהגדרות ניהול של שולחן העבודה המרוחק, או בשרת הציבורי של RustDesk אם לא הוגדר שרת.",
+      "idServer": "שרת מזהה",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "שרת ממסר",
+      "relayServerPlaceholder": "זהה לשרת המזהה",
+      "key": "מפתח",
+      "keyDesc": "המפתח הציבורי של שרת RustDesk שלך, מקובץ id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "שידור בזמן אמת עם השהייה נמוכה מ-PC עם Sunshine",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "מחשב",
+      "pcDesc": "מחשב ה-Sunshine לשידור ממנו. Moonlight Web מציג את כל המחשבים שהוא מכיר.",
+      "choosePc": "בחר מחשב",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "מזווג",
+      "notPaired": "לא מזווג",
+      "offline": "לא מקוון",
+      "refresh": "רענון",
+      "addPc": "הוסף את המארח הזה ל-Moonlight Web",
+      "addPcDesc": "מוסיף את {{address}} בפורט {{port}}, משותף לכל משתמש ב-Moonlight Web.",
+      "pair": "זיווג",
+      "pairDesc": "יש לזווג את המחשב הזה עם Moonlight Web פעם אחת.",
+      "pairing": "ממתין ל-Sunshine",
+      "pinTitle": "קוד PIN {{pin}}",
+      "pinDesc": "פתח את ממשק האינטרנט של Sunshine במחשב, עבור ל-PIN והזן את קוד ה-PIN הזה.",
+      "pairDone": "המחשב מזווג",
+      "pairFailed": "הזיווג נכשל. בדוק את קוד ה-PIN ונסה שוב.",
+      "pairExpired": "פג תוקף הזיווג. נסה שוב.",
+      "noSetUpAccess": "בקש ממנהל מערכת להוסיף ולזווג את המחשב הזה.",
+      "stream": "שידור",
+      "app": "אפליקציה",
+      "appDesc": "מה לפתוח במחשב.",
+      "firstApp": "אפליקציה ראשונה",
+      "bitrate": "קצב סיביות (kbps)",
+      "bitrateDesc": "השאר 0 כדי להשתמש בהגדרת ברירת המחדל של Moonlight Web.",
+      "fps": "קצב פריימים",
+      "fpsDesc": "השאר 0 כדי להשתמש בהגדרת ברירת המחדל של Moonlight Web.",
+      "transport": "פרוטוקול העברה",
+      "transportDesc": "ל-WebRTC יש את השהייה הנמוכה ביותר. WebSockets עובדים ברשתות החוסמות אותו.",
+      "transportAuto": "אוטומטי",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "מנהל מערכת צריך להגדיר את שרת Moonlight Web בהגדרות שולחן העבודה המרוחק.",
+      "loading": "הזרמה מוכנה",
+      "signInNote": "Moonlight Web מבקש התחברות בפעם הראשונה.",
+      "openStream": "פתח הזרמה",
+      "openInWindow": "פתח בחלון חדש",
+      "noH264": "דפדפן זה אינו תומך בשחזור וידאו H.264. אם ההזרמה לא תתחיל, השתמש ב-Chrome, Edge או באפליקציית Termix לשולחן העבודה, או הפעל HEVC או AV1 ב-Sunshine.",
+      "retry": "נסה שוב",
+      "errorRecordingRequired": "הקלטה נדרשת במארח זה, והזרמות Moonlight אינן ניתנות להקלטה.",
+      "errorNotLinked": "לא מחובר למחשב. בחר אחד בעורך המארח.",
+      "errorNotPaired": "מחשב זה עדיין לא מזווג. בצע זיווג בעורך המארח.",
+      "errorOffline": "המחשב לא מחובר, או ש-Sunshine לא פועל.",
+      "errorNoApps": "ל-Sunshine אין אפליקציות לפתיחה במחשב זה."
+    }
   },
   "onboarding": {
     "guacdTitle": "הגדר שולחן עבודה מרוחק",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "כתובות guacd לכל שרת הועברו"
+      },
+      "rustdeskIdServer": {
+        "label": "שרת מזהה של RustDesk",
+        "description": "שרת המזהה (hbbs) הפרטי שלך של RustDesk, כמארח או כמארח:פורט. השאר ריק כדי להשתמש בשרת הציבורי של RustDesk. מארחים יכולים להגדיר את שלהם.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "שרת ה-relay של RustDesk",
+        "description": "שרת ה-relay (hbbr) שלך של RustDesk. השאר ריק כדי להשתמש במה ששרת המזהה מציינת.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "מפתח שרת של RustDesk",
+        "description": "המפתח הציבורי של שרת ה-RustDesk שלך, מקובץ id_ed25519.pub. נדרש עם שרת פרטי."
+      },
+      "moonlightUrl": {
+        "label": "כתובת אינטרנט של Moonlight Web",
+        "description": "שרת Moonlight Web שאליו Termix מתחבר, לשידור Sunshine. ראה את התיעוד להפעלת אחד כזה.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "כתובת ציבורית של Moonlight Web",
+        "description": "הכתובת שדפדפנים פותחים, אם היא שונה מזו למעלה. HTTPS נדרש לשליטה במכשירי קלט ובנעילת מקלדת.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "שם משתמש של Moonlight Web",
+        "description": "התחברות מנהל ב-Moonlight Web. Termix משתמש בה כדי להציג, להוסיף ולזווג מחשבים."
+      },
+      "moonlightPassword": {
+        "label": "סיסמה של Moonlight Web",
+        "description": "הסיסמה להתחברות זו."
+      },
+      "moonlightIgnoreCert": {
+        "label": "התעלם מאישור של Moonlight Web",
+        "description": "הפעל עבור תעודה עצמית-חתומה ב-Moonlight Web."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "פורט ARD"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "פורט IP ישיר של RustDesk"
+      },
+      "rustdeskId": {
+        "label": "מזהה RustDesk"
+      },
+      "rustdeskDirect": {
+        "label": "גישה ישירה ל-IP של RustDesk"
+      },
+      "rustdeskIdServer": {
+        "label": "שרת מזהה של RustDesk"
+      },
+      "rustdeskRelayServer": {
+        "label": "שרת ממסר של RustDesk"
+      },
+      "rustdeskKey": {
+        "label": "מפתח שרת של RustDesk"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "פורט של Sunshine"
+      },
+      "moonlightHostId": {
+        "label": "מחשב Moonlight Web"
+      },
+      "moonlightAppId": {
+        "label": "אפליקציית Moonlight"
+      },
+      "moonlightBitrate": {
+        "label": "קצב סיביות של Moonlight"
+      },
+      "moonlightFps": {
+        "label": "קצב פריימים של Moonlight"
+      },
+      "moonlightTransport": {
+        "label": "פרוטוקול העברה של Moonlight"
+      },
+      "rdpAutoReconnect": {
+        "label": "חיבור מחדש אוטומטי ל-RDP",
+        "description": "מתחבר מחדש כאשר הפעלת RDP נופלת. כבה כדי להתחבר מחדש ידנית ולהימנע מהפסקת הפעלות שנפתחו מלקוח אחר."
+      },
+      "rdpAutoResize": {
+        "label": "שינוי גודל אוטומטי של RDP",
+        "description": "מתאים את הרזולוציה המרוחקת כאשר גודל החלון משתנה. כבה כדי לשמור על הגודל שנבחר בעת החיבור עד לחיבור מחדש."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "התחבר באמצעות RDP",
     "connectVnc": "התחבר באמצעות VNC",
     "connectTelnet": "התחבר באמצעות Telnet",
-    "connectArd": "התחבר באמצעות Apple Remote Desktop"
+    "connectArd": "התחבר באמצעות Apple Remote Desktop",
+    "connectRustdesk": "התחבר באמצעות RustDesk",
+    "connectMoonlight": "התחבר באמצעות Moonlight"
   },
   "permissions": {
     "sessions": {
       "title": "שתף הפעלות שולחן עבודה רחוק",
       "description": "אפשר לשתף הפעלות וחדרי שיתוף פעולה להציג את הפעלות ה-RDP, VNC ו-Telnet של המשתמש הזה לאחרים."
+    },
+    "monitor": {
+      "title": "צפה בהפעלות שולחן עבודה מרוחק של כל המשתמשים",
+      "description": "מאפשר לתכונות אחרות, כמו הקלטת הפעלה, להציג, לצפות ולסגור הפעלות RDP, VNC ו-Telnet של כל המשתמשים."
+    },
+    "moonlight": {
+      "title": "הגדרת מחשבים ל-Moonlight",
+      "description": "הוספת מחשבי Sunshine ל-Moonlight Web ויצירת זיווג ביניהם, באמצעות פרטי ההתחברות השמורים של Moonlight Web."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "שולחן עבודה רחוק",
     "description": "הפעלות RDP, VNC ו-Telnet בדפדפן שלך, עם לוח גזירים, העברת קבצים, שיתוף והקלטה."
+  },
+  "operations": {
+    "check": {
+      "title": "בדיקת פורטי שולחן עבודה מרוחק"
+    },
+    "ports": {
+      "title": "שולחן עבודה מרוחק"
+    },
+    "sessions": {
+      "title": "הפעלות מרוחקות פתוחות"
+    },
+    "session": {
+      "title": "הפעלות מרוחקות",
+      "protocol": "סוג",
+      "started": "התחיל"
+    }
+  },
+  "card": {
+    "title": "הפעלות מרוחקות",
+    "loading": "טוען...",
+    "empty": "אין הפעלות מרוחקות פתוחות"
   }
 }

@@ -13,6 +13,15 @@ import { DriveCallbacks } from "./drive.js";
 type RdpEvent =
   | { k: "send"; data: Uint8Array }
   | { k: "tls" }
+  | {
+      k: "redirect";
+      address: string;
+      fqdn: string;
+      loadBalanceInfo: string;
+      username: string;
+      domain: string;
+      password: string;
+    }
   | { k: "connected"; w: number; h: number }
   | { k: "resize"; w: number; h: number }
   | { k: "dirty"; x: number; y: number; w: number; h: number }
@@ -84,8 +93,101 @@ export function scaleFromDpi(dpi: number): number {
   return Math.min(500, Math.round((dpi * 100) / 96));
 }
 
+/** A KDC as host, host:port or a full URL, to a URL with a scheme and port. */
+export function normalizeKdcUrl(raw: string): string {
+  const value = raw.trim();
+  if (!value) return "";
+  const withScheme = /^[a-z]+:\/\//i.test(value) ? value : `tcp://${value}`;
+  try {
+    const url = new URL(withScheme);
+    if (!url.hostname) return "";
+    const port = url.port || (url.protocol === "https:" ? "" : "88");
+    return `${url.protocol}//${url.hostname.includes(":") ? `[${url.hostname}]` : url.hostname}${port ? `:${port}` : ""}${url.pathname === "/" ? "" : url.pathname}`;
+  } catch {
+    return "";
+  }
+}
+
 function on(s: Settings, name: string, fallback: boolean): boolean {
   return s.bool(name, fallback);
+}
+
+export interface RedirectTarget {
+  host: string;
+  port: number;
+  loadBalanceInfo: string;
+  username: string;
+  domain: string;
+  password: string;
+}
+
+export const MAX_REDIRECTS = 3;
+/**
+ * Windows often makes RDP certificates with only Key Encipherment. BoringSSL,
+ * which the desktop app's Node uses, refuses those for ECDHE key exchange, but
+ * plain RSA key exchange only needs Key Encipherment (Plugin-Remote-Desktop#32).
+ */
+export const RSA_KEY_EXCHANGE = {
+  maxVersion: "TLSv1.2",
+  ciphers:
+    "AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA",
+} as const;
+
+/** Only when the user turned off certificate checks, and only once. */
+export function retryWithRsaKeyExchange(
+  error: Error,
+  verify: boolean,
+  alreadyTried: boolean,
+): boolean {
+  return (
+    !verify && !alreadyTried && /KEY_USAGE_BIT_INCORRECT/.test(error.message)
+  );
+}
+
+/** How long keys wait after a clipboard update, so Ctrl+V pastes the new text. */
+export const CLIPBOARD_KEY_HOLD_MS = 250;
+
+function privateJump(address: string): boolean {
+  return (
+    /^(127\.|169\.254\.|0\.)/.test(address) ||
+    address === "::1" ||
+    /^fe80:/i.test(address) ||
+    address.toLowerCase() === "localhost"
+  );
+}
+
+/** Where a Server Redirection PDU sends us, or null when it is not safe. */
+export function redirectTarget(
+  event: {
+    address: string;
+    fqdn: string;
+    loadBalanceInfo: string;
+    username: string;
+    domain: string;
+    password: string;
+  },
+  host: string,
+  port: number,
+  hops: number,
+): RedirectTarget | null {
+  if (hops >= MAX_REDIRECTS) return null;
+  // The address is the direct way; the name only when none was sent.
+  const wanted = (event.address || event.fqdn || host).trim();
+  if (!wanted || /[\s/]/.test(wanted)) return null;
+  // A server may not bounce us to this machine or its link local range.
+  if (wanted !== host && privateJump(wanted) && !privateJump(host)) return null;
+  // The token is sent as "Cookie: msts=<token>"; the engine adds the prefix.
+  const token = event.loadBalanceInfo
+    .replace(/^Cookie:\s*msts=/i, "")
+    .replace(/[\r\n]+$/, "");
+  return {
+    host: wanted,
+    port,
+    loadBalanceInfo: token,
+    username: event.username,
+    domain: event.domain,
+    password: event.password,
+  };
 }
 
 /** guacd's RDP parameters to the engine's config. */
@@ -123,7 +225,7 @@ export function rdpConfig(s: Settings, layoutId: number, drive: boolean) {
     loadBalanceInfo: s.get("load-balance-info"),
     timezoneBias: timezoneBias(timezone),
     timezoneName: timezone,
-    kdcUrl: s.get("kdc-url"),
+    kdcUrl: normalizeKdcUrl(s.get("kdc-url")),
     preconnectionId: s.has("preconnection-id")
       ? s.int("preconnection-id", 0)
       : null,
@@ -253,9 +355,16 @@ export class RdpClient implements RemoteClient, PixelSource {
   private drive: DriveCallbacks | null = null;
   private timer: NodeJS.Timeout | null = null;
   private resizeTimer: NodeJS.Timeout | null = null;
+  /** Keys that wait for the server to take a new clipboard. */
+  private heldKeys: Array<[number, boolean]> | null = null;
+  private holdTimer: NodeJS.Timeout | null = null;
   private connected = false;
   private stopped = false;
   private reconnecting = false;
+  private redirect: RedirectTarget | null = null;
+  private hops = 0;
+  /** Set after a certificate without the Digital Signature use was refused. */
+  private rsaKeyExchange = false;
   private size = { width: 0, height: 0, dpi: 96 };
   width = 0;
   height = 0;
@@ -305,6 +414,14 @@ export class RdpClient implements RemoteClient, PixelSource {
       );
       config.security = "tls";
     }
+    const target = this.redirect;
+    if (target) {
+      config.host = target.host;
+      config.loadBalanceInfo = target.loadBalanceInfo;
+      if (target.username) config.username = target.username;
+      if (target.domain) config.domain = target.domain;
+      if (target.password) config.password = target.password;
+    }
     config.width = this.size.width;
     config.height = this.size.height;
     config.scale = scaleFromDpi(this.size.dpi);
@@ -319,8 +436,8 @@ export class RdpClient implements RemoteClient, PixelSource {
     this.rdp = new this.host.wasm.RdpClient(JSON.stringify(config), callbacks);
 
     const raw = net.connect({
-      host: s.get("hostname"),
-      port: s.int("port", 3389),
+      host: target?.host ?? s.get("hostname"),
+      port: target?.port ?? s.int("port", 3389),
     });
     raw.setNoDelay(true);
     this.raw = raw;
@@ -383,7 +500,7 @@ export class RdpClient implements RemoteClient, PixelSource {
     const raw = this.raw;
     if (!raw) return;
     const s = this.host.settings;
-    const hostname = s.get("hostname");
+    const hostname = this.redirect?.host ?? s.get("hostname");
     const verify = !s.bool("ignore-cert");
     raw.off("data", this.onPlainData);
     const secure = tls.connect({
@@ -394,16 +511,28 @@ export class RdpClient implements RemoteClient, PixelSource {
         : { servername: hostname, host: hostname }),
       // RDP servers often only offer old TLS versions.
       minVersion: "TLSv1",
+      ...(this.rsaKeyExchange ? RSA_KEY_EXCHANGE : {}),
     });
     this.socket = secure;
     secure.on("data", (chunk: Buffer) => this.feed(chunk));
     secure.on("error", (error: Error) => {
       if (this.stopped || this.reconnecting) return;
       if (!this.connected) {
+        if (retryWithRsaKeyExchange(error, verify, this.rsaKeyExchange)) {
+          this.rsaKeyExchange = true;
+          this.host.log(
+            "warn",
+            "RDP certificate lacks the Digital Signature use, retrying with RSA key exchange",
+          );
+          this.reconnect();
+          return;
+        }
         this.host.fail(
-          verify
-            ? `The server certificate was refused: ${error.message}`
-            : `TLS failed: ${error.message}`,
+          verify && /KEY_USAGE_BIT_INCORRECT/.test(error.message)
+            ? "The server certificate is not made for signing. Turn on Ignore certificate errors for this host, or make a new RDP certificate on the server"
+            : verify
+              ? `The server certificate was refused: ${error.message}`
+              : `TLS failed: ${error.message}`,
           Status.UPSTREAM_ERROR,
         );
       }
@@ -448,6 +577,9 @@ export class RdpClient implements RemoteClient, PixelSource {
         break;
       case "tls":
         this.upgradeTls();
+        break;
+      case "redirect":
+        this.follow(event);
         break;
       case "connected":
         this.connected = true;
@@ -538,6 +670,14 @@ export class RdpClient implements RemoteClient, PixelSource {
 
   key(keysym: number, pressed: boolean): void {
     if (!this.connected || this.host.settings.bool("read-only")) return;
+    if (this.heldKeys) {
+      this.heldKeys.push([keysym, pressed]);
+      return;
+    }
+    this.sendKey(keysym, pressed);
+  }
+
+  private sendKey(keysym: number, pressed: boolean): void {
     for (const out of this.keyboard.key(keysym, pressed)) {
       if ("scancode" in out) this.rdp?.key(out.scancode, out.down);
       else this.rdp?.unicode(out.unicode, out.down);
@@ -567,6 +707,30 @@ export class RdpClient implements RemoteClient, PixelSource {
     }, 400);
   }
 
+  /** Server redirection (GNOME Remote Login): reconnect to the new target. */
+  private follow(event: Extract<RdpEvent, { k: "redirect" }>): void {
+    if (this.stopped) return;
+    const s = this.host.settings;
+    const next = redirectTarget(
+      event,
+      s.get("hostname"),
+      s.int("port", 3389),
+      this.hops,
+    );
+    if (!next) {
+      this.host.log("warn", "RDP redirect refused");
+      this.host.fail(
+        "The server asked for a redirect that was refused",
+        Status.UPSTREAM_ERROR,
+      );
+      return;
+    }
+    this.hops += 1;
+    this.redirect = next;
+    this.host.log("info", "RDP redirect followed", { hop: this.hops });
+    this.reconnect();
+  }
+
   /** guacd's "reconnect" resize: a fresh connection at the new size. */
   private reconnect(): void {
     this.reconnecting = true;
@@ -585,6 +749,23 @@ export class RdpClient implements RemoteClient, PixelSource {
   clipboard(text: string): void {
     this.rdp?.clipboard_set(text);
     this.pump();
+    // Windows has to take the new format list before a Ctrl+V reaches it,
+    // or it pastes the old clipboard (#29). Keys wait a moment, in order.
+    this.heldKeys ??= [];
+    if (this.holdTimer) clearTimeout(this.holdTimer);
+    this.holdTimer = setTimeout(
+      () => this.releaseKeys(),
+      CLIPBOARD_KEY_HOLD_MS,
+    );
+  }
+
+  private releaseKeys(): void {
+    const keys = this.heldKeys ?? [];
+    this.heldKeys = null;
+    this.holdTimer = null;
+    if (!this.connected || this.stopped) return;
+    for (const [keysym, pressed] of keys) this.sendKey(keysym, pressed);
+    this.pump();
   }
 
   stop(): void {
@@ -592,6 +773,7 @@ export class RdpClient implements RemoteClient, PixelSource {
     this.stopped = true;
     if (this.timer) clearInterval(this.timer);
     if (this.resizeTimer) clearTimeout(this.resizeTimer);
+    if (this.holdTimer) clearTimeout(this.holdTimer);
     try {
       this.rdp?.shutdown();
       this.pump();

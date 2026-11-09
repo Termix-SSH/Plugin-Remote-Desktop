@@ -11,6 +11,8 @@
     "connectionError": "接続エラー",
     "clipboardWaiting": "セッション内でテキストがコピーされました。ここをクリックするかキーを押してクリップボードに貼り付けてください。Termix を HTTPS で開くと、すぐにコピーできます。",
     "failedToConnect": "接続トークンの取得に失敗しました",
+    "requestAccess": "アクセスをリクエスト",
+    "verifyAccess": "確認",
     "hostNotFound": "ホストが見つかりません",
     "noHostSelected": "ホストが選択されていません",
     "guacdUnavailable": "外部 guacd に応答がありません。実行中であることを確認するか、[リモートデスクトップ] 設定で「外部 guacd を使用する」をオフにしてください。",
@@ -81,14 +83,16 @@
         "macLock": "画面ロック",
         "spotlight": "Spotlight",
         "logoff": "サインアウト",
-        "record": "録画"
+        "record": "録画",
+        "monitors": "モニター"
       },
       "hints": {
         "files": "RDP ドライブが有効になると表示されます",
         "touchMode": "タッチスクリーンでのみ利用可能",
         "modifiers": "Ctrl、Alt、Shift、システムキーは、次のキーが押されるまで押し下げられた状態を維持します",
         "logoff": "実行ダイアログから logoff を実行して Windows からサインアウトします。セッションが開いていてデスクトップが表示されている必要があります。",
-        "record": "このセッションの録画を開始または停止します。Session Recording プラグインと組み込みエンジンが必要です。"
+        "record": "このセッションの録画を開始または停止します。Session Recording プラグインと組み込みエンジンが必要です。",
+        "monitors": "リモートモニターを切り替えます"
       },
       "option": "Option",
       "logoffConfirm": "この Windows セッションからサインアウトしますか？保存されていない作業は失われます。",
@@ -96,9 +100,22 @@
       "recordStop": "録画を停止",
       "recordStarted": "録画を開始しました",
       "recordStopped": "録画が Session Recording に保存されました",
-      "recordFailed": "録画を変更できませんでした"
+      "recordFailed": "録画を変更できませんでした",
+      "recordRequired": "管理者がこのホストで録画を必須に設定しています",
+      "recordRequiredLabel": "録画（必須）",
+      "monitor": "モニター {{number}}"
     },
-    "disabled": "リモートデスクトップは無効化されています。管理者が設定で有効化できます。"
+    "disabled": "リモートデスクトップは無効化されています。管理者が設定で有効化できます。",
+    "rustdesk": {
+      "videoUnsupported": "このブラウザは RustDesk のビデオを再生できません。最新の Chrome、Edge、Firefox、または Safari を使用してください。",
+      "passwordTitle": "RustDesk パスワード",
+      "passwordDescription": "リモートデバイスにはパスワードが必要です。このパスワードは現在のセッションでのみ使用され、保存されません。",
+      "passwordWrong": "そのパスワードは受け入れられませんでした。もう一度お試しください。",
+      "codeTitle": "二段階認証コード",
+      "codeDescription": "リモートデバイスには、認証アプリから取得したコードが必要です。",
+      "codeWrong": "そのコードは受け入れられませんでした。もう一度お試しください。",
+      "code": "コード"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Windows リモートデスクトップで開きました",
@@ -142,6 +159,8 @@
       "serverLayout": "サーバーレイアウト",
       "timezone": "タイムゾーン",
       "loadBalanceInfo": "ロードバランシング情報 / クッキー",
+      "kdcUrl": "Kerberos KDC アドレス",
+      "kdcUrlDesc": "Protected Users 内のアカウント用 Kerberos サインインのドメインコントローラー。組み込みエンジン、DNS 名で入力されたホスト、および入力済みのドメインが必要です。NTLM の場合は空のままにしてください。",
       "loadBalanceInfoDesc": "RDS ファームのロードバランシング用 RD 接続ブローカークッキー（例：tsv://MS Terminal Services Plugin.1.CollectionName）",
       "guacdProxy": "guacd プロキシ（オプション）",
       "guacdHostname": "guacd ホスト",
@@ -278,7 +297,75 @@
     "docsLink": "ドキュメントを表示",
     "connectionOriginGuacamoleNote": "RDP、VNC、Telnet はデフォルトで SSH と同様にこのデバイス上で実行されます。代わりにサーバー上で実行するには [リモートサーバー] を選択してください。",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Mac スクリーン共有"
+    "appleScreenSharing": "Mac スクリーン共有",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "RustDesk ID によるリモートデスクトップ",
+    "rustdesk": {
+      "direct": "直接 IP アクセス",
+      "directDesc": "RustDesk ID を検索する代わりに、ホストアドレスに接続します。そのデバイス上の RustDesk で直接 IP アクセスが有効になっている必要があります。",
+      "port": "直接 IP ポート",
+      "directNote": "接続は暗号化されていますが、ID サーバーがないため、応答したデバイスが何であるかを証明するものはありません。",
+      "id": "RustDesk ID",
+      "idDesc": "リモートデバイス上の RustDesk で表示される ID です。",
+      "passwordDesc": "RustDesk で設定された永続パスワードまたはワンタイムパスワードです。空のままにすると、リモートデバイスで誰かがセッションを受け入れる必要があります。",
+      "server": "RustDesk サーバー",
+      "serverDesc": "空のままにすると、リモートデスクトップの管理者設定で設定されたサーバー、または設定がない場合はパブリック RustDesk サーバーが使用されます。",
+      "idServer": "ID サーバー",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "リレーサーバー",
+      "relayServerPlaceholder": "ID サーバーと同じ",
+      "key": "キー",
+      "keyDesc": "id_ed25519.pub からの RustDesk サーバーの公開鍵です。"
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Sunshine PC からの低遅延ストリーミング",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "PC",
+      "pcDesc": "ストリーミングする Sunshine PC です。Moonlight Web は、認識しているすべての PC を一覧表示します。",
+      "choosePc": "PC を選択",
+      "pcLabel": "{{name}}（{{state}}）",
+      "paired": "ペアリング済み",
+      "notPaired": "ペアリング未完了",
+      "offline": "オフライン",
+      "refresh": "更新",
+      "addPc": "このホストを Moonlight Web に追加",
+      "addPcDesc": "ポート {{port}} の {{address}} を追加し、すべての Moonlight Web ユーザーと共有します。",
+      "pair": "ペアリング",
+      "pairDesc": "この PC は一度だけ Moonlight Web とペアリングする必要があります。",
+      "pairing": "Sunshine を待機中",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "PC で Sunshine の Web UI を開き、PIN に移動して、この PIN を入力してください。",
+      "pairDone": "PC がペアリングされました",
+      "pairFailed": "ペアリングに失敗しました。PIN を確認してもう一度お試しください。",
+      "pairExpired": "ペアリングがタイムアウトしました。もう一度お試しください。",
+      "noSetUpAccess": "管理者にこの PC の追加とペアリングを依頼してください。",
+      "stream": "ストリーム",
+      "app": "アプリ",
+      "appDesc": "PC で開く対象です。",
+      "firstApp": "最初のアプリ",
+      "bitrate": "ビットレート (kbps)",
+      "bitrateDesc": "Moonlight Web のデフォルト値を使用するには 0 のままにしてください。",
+      "fps": "フレームレート",
+      "fpsDesc": "Moonlight Web のデフォルト値を使用するには 0 のままにしてください。",
+      "transport": "トランスポート",
+      "transportDesc": "WebRTC が最も遅延が低いです。WebSockets は WebRTC がブロックされているネットワークでも動作します。",
+      "transportAuto": "自動",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "管理者がリモートデスクトップ設定で Moonlight Web サーバーを設定する必要があります。",
+      "loading": "ストリームの準備中",
+      "signInNote": "初回起動時に Moonlight Web でサインインを求められます。",
+      "openStream": "ストリームを開く",
+      "openInWindow": "新しいウィンドウで開く",
+      "noH264": "このブラウザは H.264 動画を再生できません。ストリームが開始されない場合は、Chrome、Edge、または Termix デスクトップアプリを使用するか、Sunshine で HEVC または AV1 を有効にしてください。",
+      "retry": "再試行",
+      "errorRecordingRequired": "このホストでは録画が必須ですが、Moonlight ストリームは録画できません。",
+      "errorNotLinked": "リンクされた PC がありません。ホストエディタで選択してください。",
+      "errorNotPaired": "この PC はまだペアリングされていません。ホストエディタでペアリングしてください。",
+      "errorOffline": "PC がオフラインか、Sunshine が実行されていません。",
+      "errorNoApps": "Sunshine には、この PC で開くアプリがありません。"
+    }
   },
   "onboarding": {
     "guacdTitle": "リモートデスクトップの設定",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "ホストごとの guacd アドレスが移動されました"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID サーバー",
+        "description": "独自の RustDesk ID サーバー (hbbs) をホストまたは host:port 形式で指定します。空欄のままにすると、パブリック RustDesk サーバーが使用されます。ホストごとに独自のサーバーを設定できます。",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk リレーサーバー",
+        "description": "独自の RustDesk リレーサーバー (hbbr) を指定します。空欄のままにすると、ID サーバーが示す値が使用されます。",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk サーバーキー",
+        "description": "id_ed25519.pub から取得した、独自の RustDesk サーバーの公開キーです。独自のサーバーを使用する際に必要です。"
+      },
+      "moonlightUrl": {
+        "label": "Moonlight Web アドレス",
+        "description": "Sunshine ストリーミングのために Termix が通信する Moonlight Web サーバーのアドレスです。サーバーの起動方法についてはドキュメントを参照してください。",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Moonlight Web 公開アドレス",
+        "description": "上記のアドレスと異なる場合、ブラウザが開くアドレスです。ゲームパッドやキーボードロックを使用するには HTTPS が必要です。",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Moonlight Web ユーザー名",
+        "description": "Moonlight Web の管理者ログイン用ユーザー名です。Termix はこれを使用して PC の一覧表示、追加、ペアリングを行います。"
+      },
+      "moonlightPassword": {
+        "label": "Moonlight Web パスワード",
+        "description": "上記のログイン用のパスワードです。"
+      },
+      "moonlightIgnoreCert": {
+        "label": "Moonlight Web 証明書を無視する",
+        "description": "Moonlight Web で自己署名証明書を使用している場合は有効にしてください。"
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "ARD ポート"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "RustDesk 直接 IP ポート"
+      },
+      "rustdeskId": {
+        "label": "RustDesk ID"
+      },
+      "rustdeskDirect": {
+        "label": "RustDesk 直接 IP アクセス"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID サーバー"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk リレーサーバー"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk サーバーキー"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine ポート"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight アプリ"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlight ビットレート"
+      },
+      "moonlightFps": {
+        "label": "Moonlight フレームレート"
+      },
+      "moonlightTransport": {
+        "label": "Moonlight トランスポート"
+      },
+      "rdpAutoReconnect": {
+        "label": "RDP を自動的に再接続する",
+        "description": "RDP セッションが切断された場合に再接続します。手動で再接続し、他のクライアントから開かれたセッションを中断しないようにするには、オフにしてください。"
+      },
+      "rdpAutoResize": {
+        "label": "RDP のサイズを自動的に調整する",
+        "description": "ウィンドウのサイズ変更時にリモート解像度を調整します。再接続するまで接続時に選択したサイズを維持するには、オフにしてください。"
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "RDP で接続",
     "connectVnc": "VNC で接続",
     "connectTelnet": "Telnet で接続",
-    "connectArd": "Apple Remote Desktop で接続"
+    "connectArd": "Apple Remote Desktop で接続",
+    "connectRustdesk": "RustDesk で接続",
+    "connectMoonlight": "Moonlight で接続"
   },
   "permissions": {
     "sessions": {
       "title": "リモートデスクトップセッションの共有",
       "description": "セッション共有とコラボレーションルームで、このユーザーの RDP、VNC、Telnet セッションを他のユーザーに表示できるようにします。"
+    },
+    "monitor": {
+      "title": "すべてのユーザーのリモートデスクトップセッションを監視",
+      "description": "セッション録画などの他の機能で、すべてのユーザーの RDP、VNC、Telnet セッションを一覧表示、監視、終了できるようにします。"
+    },
+    "moonlight": {
+      "title": "Moonlight PC の設定",
+      "description": "保存された Moonlight Web のログイン情報を使用して、Sunshine PC を Moonlight Web に追加し、ペアリングします。"
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "リモートデスクトップ",
     "description": "クリップボード、ファイル転送、共有、録画機能を備えたブラウザ上の RDP、VNC、Telnet セッション。"
+  },
+  "operations": {
+    "check": {
+      "title": "リモートデスクトップポートの確認"
+    },
+    "ports": {
+      "title": "リモートデスクトップ"
+    },
+    "sessions": {
+      "title": "リモートセッションを開く"
+    },
+    "session": {
+      "title": "リモートセッション",
+      "protocol": "種類",
+      "started": "開始時刻"
+    }
+  },
+  "card": {
+    "title": "リモートセッション",
+    "loading": "読み込み中...",
+    "empty": "開いているリモートセッションはありません"
   }
 }

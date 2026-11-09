@@ -11,6 +11,8 @@
     "connectionError": "連線錯誤",
     "clipboardWaiting": "文字已在會話中複製。在此處按一下或按任意鍵以貼上至剪貼簿。透過 HTTPS 開啟 Termix 即可立即複製。",
     "failedToConnect": "無法取得連線權杖",
+    "requestAccess": "請求存取權限",
+    "verifyAccess": "驗證",
     "hostNotFound": "找不到主機",
     "noHostSelected": "未選取主機",
     "guacdUnavailable": "外部 guacd 沒有回應。請確認它正在執行，或在遠端桌面設定中關閉「使用外部 guacd」。",
@@ -81,14 +83,16 @@
         "macLock": "鎖定畫面",
         "spotlight": "聚焦搜尋",
         "logoff": "登出",
-        "record": "錄製"
+        "record": "錄製",
+        "monitors": "顯示器"
       },
       "hints": {
         "files": "啟用 RDP 磁碟機後顯示",
         "touchMode": "僅限觸控螢幕",
         "modifiers": "Ctrl、Alt、Shift 與系統鍵會持續按住，直到按下下一個鍵",
         "logoff": "透過執行「執行」視窗中的 logoff 命令來登出 Windows。會話必須處於開啟狀態並顯示桌面。",
-        "record": "開始或停止錄製此會話。需要會話錄製外掛程式與內建引擎。"
+        "record": "開始或停止錄製此會話。需要會話錄製外掛程式與內建引擎。",
+        "monitors": "切換遠端顯示器"
       },
       "option": "選項",
       "logoffConfirm": "要登出此 Windows 會話嗎？未儲存的作業將會遺失。",
@@ -96,9 +100,22 @@
       "recordStop": "停止錄製",
       "recordStarted": "已開始錄製",
       "recordStopped": "錄製內容已儲存至會話錄製",
-      "recordFailed": "無法變更錄製狀態"
+      "recordFailed": "無法變更錄製狀態",
+      "recordRequired": "管理員已在此主機上強制要求錄製",
+      "recordRequiredLabel": "錄製（強制）",
+      "monitor": "顯示器 {{number}}"
     },
-    "disabled": "遠端桌面已關閉。管理員可在設定中開啟。"
+    "disabled": "遠端桌面已關閉。管理員可在設定中開啟。",
+    "rustdesk": {
+      "videoUnsupported": "此瀏覽器無法播放 RustDesk 影片。請使用最新版的 Chrome、Edge、Firefox 或 Safari。",
+      "passwordTitle": "RustDesk 密碼",
+      "passwordDescription": "遠端裝置需要密碼。此密碼僅供本次會話使用，不會被儲存。",
+      "passwordWrong": "密碼不正確，請再試一次。",
+      "codeTitle": "雙因素驗證碼",
+      "codeDescription": "遠端裝置需要驗證器應用程式中的驗證碼。",
+      "codeWrong": "驗證碼不正確，請再試一次。",
+      "code": "驗證碼"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "已在 Windows 遠端桌面中開啟",
@@ -142,6 +159,8 @@
       "serverLayout": "伺服器配置",
       "timezone": "時區",
       "loadBalanceInfo": "負載平衡資訊 / Cookie",
+      "kdcUrl": "Kerberos KDC 位址",
+      "kdcUrlDesc": "用於 Kerberos 登入的網域控制器，適用於受保護使用者帳戶。需使用內建引擎、以 DNS 名稱輸入主機並填寫網域。若使用 NTLM 則留空。",
       "loadBalanceInfoDesc": "用於 RDS 叢集負載平衡的 RD 連線中介 Cookie（例如 tsv://MS Terminal Services Plugin.1.CollectionName）",
       "guacdProxy": "guacd 代理（選填）",
       "guacdHostname": "guacd 主機",
@@ -278,7 +297,75 @@
     "docsLink": "檢視說明文件",
     "connectionOriginGuacamoleNote": "RDP、VNC 和 Telnet 預設會在此裝置上執行（與 SSH 相同）。若要改為在伺服器上執行，請選擇「遠端伺服器」。",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Mac 螢幕共用"
+    "appleScreenSharing": "Mac 螢幕共用",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "透過 RustDesk ID 進行遠端桌面連線",
+    "rustdesk": {
+      "direct": "直接 IP 存取",
+      "directDesc": "直接連線至主機位址，而非查詢 RustDesk ID。該裝置上的 RustDesk 必須啟用直接 IP 存取功能。",
+      "port": "直接 IP 連接埠",
+      "directNote": "連線已加密，但由於沒有 ID 伺服器，無法驗證回應的裝置身分。",
+      "id": "RustDesk ID",
+      "idDesc": "遠端裝置上 RustDesk 顯示的 ID。",
+      "passwordDesc": "在 RustDesk 中設定的永久密碼或一次性密碼。留空則需由遠端裝置使用者手動接受會話。",
+      "server": "RustDesk 伺服器",
+      "serverDesc": "留空則使用遠端桌面管理設定中的伺服器，若未設定則使用公開的 RustDesk 伺服器。",
+      "idServer": "ID 伺服器",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "中繼伺服器",
+      "relayServerPlaceholder": "與 ID 伺服器相同",
+      "key": "金鑰",
+      "keyDesc": "您的 RustDesk 伺服器的公鑰，來自 id_ed25519.pub。"
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "從 Sunshine PC 進行低延遲串流",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "PC",
+      "pcDesc": "要串流的 Sunshine PC。Moonlight Web 會列出所有已知的 PC。",
+      "choosePc": "選擇一台 PC",
+      "pcLabel": "{{name}}（{{state}}）",
+      "paired": "已配對",
+      "notPaired": "未配對",
+      "offline": "離線",
+      "refresh": "重新整理",
+      "addPc": "將此主機新增至 Moonlight Web",
+      "addPcDesc": "新增 {{address}}（連接埠 {{port}}），並與所有 Moonlight Web 使用者共用。",
+      "pair": "配對",
+      "pairDesc": "此 PC 必須先與 Moonlight Web 配對一次。",
+      "pairing": "等待 Sunshine 回應",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "在 PC 上開啟 Sunshine 網頁介面，前往 PIN 設定，並輸入此 PIN。",
+      "pairDone": "PC 已配對",
+      "pairFailed": "配對失敗。請檢查 PIN 並再試一次。",
+      "pairExpired": "配對逾時。請再試一次。",
+      "noSetUpAccess": "請管理員新增並配對此 PC。",
+      "stream": "串流",
+      "app": "應用程式",
+      "appDesc": "要在 PC 上開啟的內容。",
+      "firstApp": "第一個應用程式",
+      "bitrate": "位元率 (kbps)",
+      "bitrateDesc": "保留為 0 以使用 Moonlight Web 的預設值。",
+      "fps": "幀率",
+      "fpsDesc": "保留為 0 以使用 Moonlight Web 的預設值。",
+      "transport": "傳輸協定",
+      "transportDesc": "WebRTC 的延遲最低。WebSockets 適用於封鎖 WebRTC 的網路環境。",
+      "transportAuto": "自動",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "管理員必須在遠端桌面設定中設定 Moonlight Web 伺服器。",
+      "loading": "正在準備串流",
+      "signInNote": "Moonlight Web 會在首次使用時要求您登入。",
+      "openStream": "開啟串流",
+      "openInWindow": "在新視窗中開啟",
+      "noH264": "此瀏覽器無法播放 H.264 影片。如果串流無法啟動，請使用 Chrome、Edge 或 Termix 桌面應用程式，或在 Sunshine 中啟用 HEVC 或 AV1。",
+      "retry": "重試",
+      "errorRecordingRequired": "此主機要求錄製，但 Moonlight 串流無法錄製。",
+      "errorNotLinked": "未連結任何電腦。請在主機編輯器中選擇一台。",
+      "errorNotPaired": "此電腦尚未配對。請在主機編輯器中進行配對。",
+      "errorOffline": "電腦離線，或 Sunshine 未執行。",
+      "errorNoApps": "Sunshine 在此電腦上沒有可開啟的應用程式。"
+    }
   },
   "onboarding": {
     "guacdTitle": "設定遠端桌面",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "各主機的 guacd 位址已移動"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID 伺服器",
+        "description": "您自己的 RustDesk ID 伺服器 (hbbs)，格式為主機或主機:連接埠。留空則使用公開的 RustDesk 伺服器。主機可設定自己的伺服器。",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk 中繼伺服器",
+        "description": "您的 RustDesk 中繼伺服器 (hbbr)。留空則使用 ID 伺服器指定的設定。",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk 伺服器金鑰",
+        "description": "您 RustDesk 伺服器的公開金鑰，來自 id_ed25519.pub。使用自有伺服器時需要。"
+      },
+      "moonlightUrl": {
+        "label": "Moonlight Web 網址",
+        "description": "Termix 用於 Sunshine 串流的 Moonlight Web 伺服器位址。請參閱文件以了解如何執行。",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Moonlight Web 公開位址",
+        "description": "瀏覽器開啟的位址（若與上方不同）。需使用 HTTPS 才能支援遊戲手把與鍵盤鎖定功能。",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Moonlight Web 使用者名稱",
+        "description": "Moonlight Web 的管理員登入帳號。Termix 會使用它來列出、新增與配對電腦。"
+      },
+      "moonlightPassword": {
+        "label": "Moonlight Web 密碼",
+        "description": "該登入帳號的密碼。"
+      },
+      "moonlightIgnoreCert": {
+        "label": "忽略 Moonlight Web 憑證",
+        "description": "若 Moonlight Web 使用自簽憑證，請開啟此選項。"
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "ARD 通訊埠"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "RustDesk 直接連線 IP 埠號"
+      },
+      "rustdeskId": {
+        "label": "RustDesk ID"
+      },
+      "rustdeskDirect": {
+        "label": "RustDesk 直接 IP 連線"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID 伺服器"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk 中繼伺服器"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk 伺服器金鑰"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine 埠號"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight 應用程式"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlight 位元率"
+      },
+      "moonlightFps": {
+        "label": "Moonlight 幀率"
+      },
+      "moonlightTransport": {
+        "label": "Moonlight 傳輸協定"
+      },
+      "rdpAutoReconnect": {
+        "label": "自動重新連線 RDP",
+        "description": "RDP 工作階段中斷後自動重新連線。關閉後需手動重新連線，可避免中斷從其他用戶端開啟的工作階段。"
+      },
+      "rdpAutoResize": {
+        "label": "自動調整 RDP 解析度",
+        "description": "視窗大小變化時調整遠端解析度。關閉後保留連線時的尺寸，直到重新連線。"
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "使用 RDP 連線",
     "connectVnc": "使用 VNC 連線",
     "connectTelnet": "使用 Telnet 連線",
-    "connectArd": "使用 Apple Remote Desktop 連線"
+    "connectArd": "使用 Apple Remote Desktop 連線",
+    "connectRustdesk": "使用 RustDesk 連線",
+    "connectMoonlight": "使用 Moonlight 連線"
   },
   "permissions": {
     "sessions": {
       "title": "共用遠端桌面工作階段",
       "description": "允許工作階段共用與協作室將此使用者的 RDP、VNC 和 Telnet 工作階段顯示給其他人。"
+    },
+    "monitor": {
+      "title": "監控所有使用者的遠端桌面工作階段",
+      "description": "允許其他功能（例如工作階段錄製）列出、監控並結束所有使用者的 RDP、VNC 和 Telnet 工作階段。"
+    },
+    "moonlight": {
+      "title": "設定 Moonlight PC",
+      "description": "使用已儲存的 Moonlight Web 登入資訊，將 Sunshine PC 新增至 Moonlight Web 並進行配對。"
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "遠端桌面",
     "description": "在瀏覽器中進行 RDP、VNC 和 Telnet 工作階段，支援剪貼簿、檔案傳輸、共享和錄製。"
+  },
+  "operations": {
+    "check": {
+      "title": "檢查遠端桌面埠"
+    },
+    "ports": {
+      "title": "遠端桌面"
+    },
+    "sessions": {
+      "title": "開啟遠端工作階段"
+    },
+    "session": {
+      "title": "遠端工作階段",
+      "protocol": "類型",
+      "started": "已啟動"
+    }
+  },
+  "card": {
+    "title": "遠端工作階段",
+    "loading": "載入中...",
+    "empty": "沒有開啟的遠端工作階段"
   }
 }

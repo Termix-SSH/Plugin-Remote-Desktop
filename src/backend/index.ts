@@ -17,15 +17,19 @@ import {
   normalizeImportedHost,
   PORT_KEY,
   readHostSettings,
+  REMOTE_PROTOCOLS,
 } from "./host-settings.js";
 import { createLogger } from "./log.js";
 import { migrateGuacdHosts } from "./guacd-host.js";
+import { registerOperations } from "./operations.js";
+import { createConsoleService } from "./console-service.js";
 
 export async function activate(ctx: PluginContext) {
   const log = createLogger(ctx.log);
   const tokens = new GuacamoleTokenService(log);
   const sessions = new RemoteSessions();
   ctx.disposables.add(() => sessions.clear());
+  registerOperations(ctx, sessions);
 
   // The admin setting, unless GUACD_URL / GUACD_HOST / GUACD_PORT override it.
   let guacdUrl = (await ctx.settings.get<string>("guacdUrl")) ?? "";
@@ -123,6 +127,11 @@ export async function activate(ctx: PluginContext) {
       ),
   });
 
+  ctx.services.provide(
+    "remote-desktop.console",
+    createConsoleService({ ctx, log, tokens, sessions, guacd, engineMode }),
+  );
+
   // Both engines own their WebSocketServer, so they take the raw upgrade.
   // Public because a display authenticates with the encrypted, single-use
   // token minted by an authenticated route, not with a session JWT.
@@ -143,11 +152,13 @@ export async function activate(ctx: PluginContext) {
     { public: true },
   );
 
-  for (const protocol of ["rdp", "vnc", "ard", "telnet"] as const) {
+  for (const protocol of REMOTE_PROTOCOLS) {
     ctx.services.provide(
       "sessions.live",
       createLiveSessions(protocol, {
+        ctx,
         sessions,
+        isRecording: (id) => engine.isRecordingSession(id),
         tokens,
         endSession,
         disconnectShare,
@@ -163,12 +174,18 @@ export async function activate(ctx: PluginContext) {
   ctx.registry.provide("remote-desktop.hostPayloadLegacy", hostPayloadLegacy);
 
   // Core's status dot pings these hosts on the protocol's own port.
-  for (const protocol of ["rdp", "vnc", "ard", "telnet"] as const) {
+  for (const protocol of REMOTE_PROTOCOLS) {
     ctx.hosts.status.registerPort(protocol, async (hostId) => {
       const settings = await readHostSettings(ctx, hostId);
+      // A RustDesk ID has no port of its own to ping.
+      if (protocol === "rustdesk" && !settings.rustdeskDirect) return undefined;
       return settings[PORT_KEY[protocol]] as number;
     });
   }
+  ctx.hosts.status.registerPort(
+    "moonlight",
+    async (hostId) => (await readHostSettings(ctx, hostId)).moonlightPort,
+  );
 }
 
 export async function deactivate() {}

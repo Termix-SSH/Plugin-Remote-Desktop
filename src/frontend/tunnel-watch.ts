@@ -2,7 +2,7 @@
 const OPEN = 1;
 const CLOSED = 2;
 
-/** How long a page back from hiding waits for anything from the server. It sends a nop every 5 s. */
+/** How long after a page comes back before the tunnel state is checked again. */
 export const ALIVE_CHECK_MS = 8000;
 
 /** Reconnects in a row before the error shows instead. */
@@ -24,7 +24,7 @@ export interface TunnelWatch {
  * Guacamole.Client never hears that its tunnel closed, so a socket the server
  * dropped while the tab was hidden left a frozen screen where only the local
  * cursor moved (issue #104). This wraps the tunnel's own handlers and reports
- * a closed tunnel, or one that stays silent after the page comes back.
+ * a closed tunnel, also when the page was hidden while it closed.
  */
 export function watchTunnel(
   tunnel: WatchedTunnel,
@@ -32,7 +32,6 @@ export function watchTunnel(
   opts: { checkMs?: number } = {},
 ): TunnelWatch {
   const checkMs = opts.checkMs ?? ALIVE_CHECK_MS;
-  let received = 0;
   let stopped = false;
   let timer: ReturnType<typeof setTimeout> | null = null;
 
@@ -45,7 +44,6 @@ export function watchTunnel(
 
   const clientInstruction = tunnel.oninstruction;
   tunnel.oninstruction = (opcode, args) => {
-    received++;
     clientInstruction?.call(tunnel, opcode, args);
   };
   const clientState = tunnel.onstatechange;
@@ -61,10 +59,12 @@ export function watchTunnel(
         lost("stale");
         return;
       }
-      const before = received;
+      // A quiet desktop sends nothing, so silence alone is not a dead socket.
+      // The tunnel's own ping closes it when the socket is really gone.
       if (timer) clearTimeout(timer);
       timer = setTimeout(() => {
-        if (received === before) lost("stale");
+        if (typeof tunnel.state === "number" && tunnel.state !== OPEN)
+          lost("stale");
       }, checkMs);
     },
     stop() {

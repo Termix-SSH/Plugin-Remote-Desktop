@@ -11,6 +11,8 @@
     "connectionError": "Yhteysvirhe",
     "clipboardWaiting": "Teksti kopioitiin istunnossa. Napsauta tai paina näppäintä täällä lisätäksesi sen leikepöydällesi. Avaa Termix HTTPS-yhteydellä kopioidaksesi heti.",
     "failedToConnect": "Yhteysavaimen haku epäonnistui",
+    "requestAccess": "Pyydä pääsyä",
+    "verifyAccess": "Vahvista",
     "hostNotFound": "Isäntää ei löydy",
     "noHostSelected": "Isäntää ei ole valittu",
     "guacdUnavailable": "Ulkoinen guacd ei vastaa. Varmista, että se on käynnissä, tai poista käytöstä vaihtoehto \"Käytä ulkoista guacd:ta\" Etätyöpöytä-asetuksissa.",
@@ -81,14 +83,16 @@
         "macLock": "Lukitse näyttö",
         "spotlight": "Spotlight",
         "logoff": "Kirjaudu ulos",
-        "record": "Nauhoita"
+        "record": "Nauhoita",
+        "monitors": "Näytöt"
       },
       "hints": {
         "files": "Näytetään, kun RDP-levy on käytössä",
         "touchMode": "Vain kosketusnäytöissä",
         "modifiers": "Ctrl, Alt, Shift ja järjestelmänäppäin pysyvät painettuina seuraavaan näppäimeen asti",
         "logoff": "Kirjautuu Windowsista ulos suorittamalla logoff-käskyn Suorita-ruudusta. Istunnon on oltava auki ja työpöydän näkyvissä.",
-        "record": "Aloittaa tai lopettaa tämän istunnon nauhoituksen. Vaatii Session Recording -liitännäisen ja sisäänrakennetun moottorin."
+        "record": "Aloittaa tai lopettaa tämän istunnon nauhoituksen. Vaatii Session Recording -liitännäisen ja sisäänrakennetun moottorin.",
+        "monitors": "Vaihda etänäytön näyttöjen välillä"
       },
       "option": "Option",
       "logoffConfirm": "Kirjaudu ulos tästä Windows-istunnosta? Tallentamaton työ istunnossa menetetään.",
@@ -96,9 +100,22 @@
       "recordStop": "Lopeta nauhoitus",
       "recordStarted": "Nauhoitus aloitettu",
       "recordStopped": "Nauhoitus tallennettu Session Recordingiin",
-      "recordFailed": "Nauhoituksen muuttaminen epäonnistui"
+      "recordFailed": "Nauhoituksen muuttaminen epäonnistui",
+      "recordRequired": "Ylläpitäjä on vaatinut tallennuksen tälle palvelimelle",
+      "recordRequiredLabel": "Tallennus (pakollinen)",
+      "monitor": "Näyttö {{number}}"
     },
-    "disabled": "Etätyöpöytä on poissa käytöstä. Ylläpitäjä voi ottaa sen käyttöön Asetuksista."
+    "disabled": "Etätyöpöytä on poissa käytöstä. Ylläpitäjä voi ottaa sen käyttöön Asetuksista.",
+    "rustdesk": {
+      "videoUnsupported": "Tämä selain ei tue RustDeskin videota. Käytä uusinta Chromea, Edgeta, Firefoxia tai Safariä.",
+      "passwordTitle": "RustDeskin salasana",
+      "passwordDescription": "Etälaitteelta vaaditaan salasana. Sitä käytetään vain tämän istunnon aikana, eikä sitä tallenneta.",
+      "passwordWrong": "Salasanaa ei hyväksytty. Yritä uudelleen.",
+      "codeTitle": "Kaksivaiheinen koodi",
+      "codeDescription": "Kohdelaitteen tarvitsee koodin todennussovelluksesta.",
+      "codeWrong": "Koodia ei hyväksytty. Yritä uudelleen.",
+      "code": "Koodi"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Avattu Windowsin etätyöpöydässä",
@@ -142,6 +159,8 @@
       "serverLayout": "Palvelimen asettelu",
       "timezone": "Aikavyöhyke",
       "loadBalanceInfo": "Kuormantasainformaatio / Eväste",
+      "kdcUrl": "Kerberos KDC -osoite",
+      "kdcUrlDesc": "Kerberos-merkinnän domain-ohjain Protected Users -tilien käyttäjiä varten. Vaatii sisäänrakennetun moottorin, isäntänimen DNS-nimellä ja täytetyn domainin. Jätä tyhjäksi NTLM:n käytössä.",
       "loadBalanceInfoDesc": "RD Connection Broker -eväste RDS-farmin kuormantasapalvelua varten (esim. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd-välityspalvelin (valinnainen)",
       "guacdHostname": "guacd-palvelin",
@@ -278,7 +297,75 @@
     "docsLink": "Näytä dokumentaatio",
     "connectionOriginGuacamoleNote": "RDP-, VNC- ja Telnet-yhteydet suoritetaan oletuksena tällä laitteella kuten SSH. Valitse Etäpalvelin, jos haluat suorittaa ne palvelimella.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Macin näytön jakaminen"
+    "appleScreenSharing": "Macin näytön jakaminen",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Etätyöpöytä RustDesk-tunnuksella",
+    "rustdesk": {
+      "direct": "Suora IP-yhteys",
+      "directDesc": "Yhdistä suoraan isäntäosoitteeseen RustDesk-tunnuksen sijasta. Suora IP-yhteys on oltava käytössä RustDeskissä kyseisellä laitteella.",
+      "port": "Suora IP-portti",
+      "directNote": "Yhteys on salattu, mutta ilman tunnuspalvelinta ei voida varmistaa, mikä laite vastasi.",
+      "id": "RustDesk-tunnus",
+      "idDesc": "Tunnus, joka näkyy RustDeskissä etälaitteella.",
+      "passwordDesc": "RustDeskissä määritetty pysyvä tai kertakäyttöinen salasana. Jätä tyhjäksi, jotta joku voi hyväksyä istunnon etälaitteella.",
+      "server": "RustDesk-palvelin",
+      "serverDesc": "Jätä tyhjäksi käyttääksesi Etätyöpöytä-asetuksissa määritettyä palvelinta tai julkista RustDesk-palvelinta, jos palvelinta ei ole määritetty.",
+      "idServer": "Tunnuspalvelin",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Välityspalvelin",
+      "relayServerPlaceholder": "Sama kuin ID-palvelin",
+      "key": "Avain",
+      "keyDesc": "RustDesk-palvelimesi julkinen avain, tiedostosta id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Matalan viiveen suoratoisto Sunshine-tietokoneelta",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "Tietokone",
+      "pcDesc": "Suoratoistettava Sunshine-tietokone. Moonlight Web näyttää kaikki tuntemansa tietokoneet.",
+      "choosePc": "Valitse tietokone",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "yhdistetty",
+      "notPaired": "ei yhdistetty",
+      "offline": "poissa päältä",
+      "refresh": "Päivitä",
+      "addPc": "Lisää tämä isäntä Moonlight Webiin",
+      "addPcDesc": "Lisää osoitteen {{address}} portin {{port}} kautta, jaettu kaikille Moonlight Web -käyttäjille.",
+      "pair": "Yhdistä",
+      "pairDesc": "Tämä tietokone on yhdistettävä Moonlight Webiin kerran.",
+      "pairing": "Odottaa Sunshinea",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "Avaa Sunshine-verkkokäyttöliittymä tietokoneella, siirry PIN-koodiin ja syötä tämä PIN-koodi.",
+      "pairDone": "Tietokone paritettu",
+      "pairFailed": "Paritus epäonnistui. Tarkista PIN-koodi ja yritä uudelleen.",
+      "pairExpired": "Paritus aikakatkaistiin. Yritä uudelleen.",
+      "noSetUpAccess": "Pyydä järjestelmänvalvojaa lisäämään ja parittamaan tämä tietokone.",
+      "stream": "Virtaa",
+      "app": "Sovellus",
+      "appDesc": "Mitä avataan tietokoneella.",
+      "firstApp": "Ensimmäinen sovellus",
+      "bitrate": "Bitinopeus (kbps)",
+      "bitrateDesc": "Jätä arvoksi 0 käyttääksesi Moonlight Webin oletusasetusta.",
+      "fps": "Kuvataajuus",
+      "fpsDesc": "Jätä arvoksi 0 käyttääksesi Moonlight Webin oletusasetusta.",
+      "transport": "Siirtotapa",
+      "transportDesc": "WebRTC:llä on pienin viive. WebSockets toimii verkoissa, joissa WebRTC on estetty.",
+      "transportAuto": "Automaattinen",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "Ylläpitäjän on määritettävä Moonlight Web -palvelin Etätyöpöytä-asetuksissa.",
+      "loading": "Virtuaalivirtaa valmistellaan",
+      "signInNote": "Moonlight Web pyytää kirjautumaan sisään ensimmäisellä kerralla.",
+      "openStream": "Avaa virtuaalivirta",
+      "openInWindow": "Avaa uudessa ikkunassa",
+      "noH264": "Tämä selain ei tue H.264-videota. Jos virtuaalivirta ei käynnisty, käytä Chromea, Edgetä tai Termix-työpöytäsovellusta, tai ota HEVC tai AV1 käyttöön Sunshine-ohjelmassa.",
+      "retry": "Yritä uudelleen",
+      "errorRecordingRequired": "Tälle palvelimelle tallennus on pakollinen, mutta Moonlight-virtuaalivirtoja ei voi tallentaa.",
+      "errorNotLinked": "Yhtään tietokonetta ei ole linkitetty. Valitse yksi palvelinmuokkaimesta.",
+      "errorNotPaired": "Tätä tietokonetta ei ole vielä paritettu. Parita se palvelinmuokkaimessa.",
+      "errorOffline": "Tietokone on poissa päältä tai Sunshine ei ole käynnissä.",
+      "errorNoApps": "Sunshinella ei ole sovelluksia, joita voitaisiin avata tällä tietokoneella."
+    }
   },
   "onboarding": {
     "guacdTitle": "Määritä etätyöpöytä",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "Palvelinakohtaiset guacd-osoitteet siirretty"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk-ID-palvelin",
+        "description": "Oma RustDesk-ID-palvelimesi (hbbs) isäntänä tai isäntä:portti. Jätä tyhjäksi käyttääksesi julkista RustDesk-palvelinta. Isännät voivat määrittää oman.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk-välityspalvelin",
+        "description": "RustDesk-välityspalvelimesi (hbbr). Jätä tyhjäksi käyttääksesi ID-palvelimen määrittämää.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk-palvelimen avain",
+        "description": "RustDesk-palvelimesi julkinen avain, tiedostosta id_ed25519.pub. Tarvitaan oman palvelimen käytössä."
+      },
+      "moonlightUrl": {
+        "label": "Moonlight Web -osoite",
+        "description": "Moonlight Web -palvelin, johon Termix yhdistää Sunshine-virtauksen kautta. Katso dokumentaatio saadaksesi ohjeet palvelimen käynnistämiseen.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Moonlight Webin julkinen osoite",
+        "description": "Osoite, jonka selaimet avaavat, jos se poikkeaa yllä olevasta. HTTPS vaaditaan peliohjainten ja näppäimistön lukituksen käytössä.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Moonlight Webin käyttäjätunnus",
+        "description": "Ylläpitäjän kirjautumistunnus Moonlight Webiin. Termix käyttää sitä tietokoneiden listaukseen, lisäämiseen ja parittamiseen."
+      },
+      "moonlightPassword": {
+        "label": "Moonlight Webin salasana",
+        "description": "Salasana kyseiseen kirjautumistunnukseen."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Ohita Moonlight Webin varmenne",
+        "description": "Ota käyttöön, jos Moonlight Webissä käytetään itseallekirjoitettua sertifikaattia."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "ARD-portti"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "RustDeskin suora IP-portti"
+      },
+      "rustdeskId": {
+        "label": "RustDesk-tunnus"
+      },
+      "rustdeskDirect": {
+        "label": "RustDeskin suora IP-yhteys"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk-tunnuspalvelin"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk-välityspalvelin"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk-palvelimen avain"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshinen portti"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight-sovellus"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlightin bittinopeus"
+      },
+      "moonlightFps": {
+        "label": "Moonlightin kuvataajuus"
+      },
+      "moonlightTransport": {
+        "label": "Moonlightin siirtotapa"
+      },
+      "rdpAutoReconnect": {
+        "label": "Yhdistä RDP uudelleen automaattisesti",
+        "description": "Yhdistä uudelleen, kun RDP-istunto katkeaa. Ota pois käytöstä, jos haluat yhdistää manuaalisesti ja välttää keskeyttämään toisesta asiakasohjelmasta avatut istunnot."
+      },
+      "rdpAutoResize": {
+        "label": "Muuta RDP:n kokoa automaattisesti",
+        "description": "Säädä etäresoluutiota, kun ikkunan koko muuttuu. Ota pois käytöstä, jos haluat säilyttää yhteyden muodostamisen yhteydessä valitun koon seuraavaan uudelleenyhdistämiseen asti."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Yhdistä RDP:llä",
     "connectVnc": "Yhdistä VNC:llä",
     "connectTelnet": "Yhdistä Telnetillä",
-    "connectArd": "Yhdistä Apple Remote Desktopilla"
+    "connectArd": "Yhdistä Apple Remote Desktopilla",
+    "connectRustdesk": "Yhdistä RustDeskin kautta",
+    "connectMoonlight": "Yhdistä Moonlightilla"
   },
   "permissions": {
     "sessions": {
       "title": "Jaa etätyöpöytäistuntoja",
       "description": "Salli istuntojen jakaminen ja yhteistyöhuoneet näyttää tämän käyttäjän RDP-, VNC- ja Telnet-istunnot muille."
+    },
+    "monitor": {
+      "title": "Valvo kaikkien etätyöpöytäistuntoja",
+      "description": "Mahdollistaa muiden ominaisuuksien, kuten istuntotallenteen, listata, valvoa ja lopettaa kaikkien käyttäjien RDP-, VNC- ja Telnet-istunnot."
+    },
+    "moonlight": {
+      "title": "Määritä Moonlight-tietokoneet",
+      "description": "Lisää Sunshine-tietokoneet Moonlight Webiin ja parita ne tallennetun Moonlight Web -kirjautumistiedon avulla."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Etätyöpöytä",
     "description": "RDP-, VNC- ja Telnet-istunnot selaimessasi leikepöydän, tiedostonsiirron, jakamisen ja tallennuksen tuella."
+  },
+  "operations": {
+    "check": {
+      "title": "Tarkista etätyöpöytäportit"
+    },
+    "ports": {
+      "title": "Etätyöpöytä"
+    },
+    "sessions": {
+      "title": "Avoinna olevat etäistunnot"
+    },
+    "session": {
+      "title": "Etäistunnot",
+      "protocol": "Tyyppi",
+      "started": "Aloitettu"
+    }
+  },
+  "card": {
+    "title": "Etäistunnot",
+    "loading": "Ladataan...",
+    "empty": "Ei avoimia etäistuntoja"
   }
 }

@@ -11,6 +11,8 @@
     "connectionError": "Ошибка подключения",
     "clipboardWaiting": "Текст скопирован в сессии. Нажмите здесь или клавишу, чтобы поместить его в буфер обмена. Откройте Termix через HTTPS, чтобы скопировать сразу.",
     "failedToConnect": "Не удалось получить токен подключения",
+    "requestAccess": "Запросить доступ",
+    "verifyAccess": "Подтвердить",
     "hostNotFound": "Хост не найден",
     "noHostSelected": "Хост не выбран",
     "guacdUnavailable": "Внешний guacd не отвечает. Убедитесь, что он запущен, или отключите опцию «Использовать внешний guacd» в настройках удалённого рабочего стола.",
@@ -81,14 +83,16 @@
         "macLock": "Заблокировать экран",
         "spotlight": "Spotlight",
         "logoff": "Выйти",
-        "record": "Запись"
+        "record": "Запись",
+        "monitors": "Мониторы"
       },
       "hints": {
         "files": "Появляется, когда включён RDP-диск",
         "touchMode": "Только на сенсорных экранах",
         "modifiers": "Ctrl, Alt, Shift и системная клавиша остаются нажатыми до нажатия следующей клавиши",
         "logoff": "Выход из Windows выполняется через команду logoff в окне «Выполнить». Сессия должна быть открыта и отображать рабочий стол.",
-        "record": "Запускает или останавливает запись этой сессии. Требуется плагин Session Recording и встроенный движок."
+        "record": "Запускает или останавливает запись этой сессии. Требуется плагин Session Recording и встроенный движок.",
+        "monitors": "Переключение между удаленными мониторами"
       },
       "option": "Option",
       "logoffConfirm": "Выйти из этой сессии Windows? Несохранённые данные будут потеряны.",
@@ -96,9 +100,22 @@
       "recordStop": "Остановить запись",
       "recordStarted": "Запись начата",
       "recordStopped": "Запись сохранена в Session Recording",
-      "recordFailed": "Не удалось изменить запись"
+      "recordFailed": "Не удалось изменить запись",
+      "recordRequired": "Администратор включил обязательную запись для этого хоста",
+      "recordRequiredLabel": "Запись (обязательно)",
+      "monitor": "Монитор {{number}}"
     },
-    "disabled": "Удалённый рабочий стол отключён. Администратор может включить его в настройках."
+    "disabled": "Удалённый рабочий стол отключён. Администратор может включить его в настройках.",
+    "rustdesk": {
+      "videoUnsupported": "Этот браузер не поддерживает видео RustDesk. Используйте последнюю версию Chrome, Edge, Firefox или Safari.",
+      "passwordTitle": "Пароль RustDesk",
+      "passwordDescription": "Удаленному устройству требуется пароль. Он используется только для этой сессии и не сохраняется.",
+      "passwordWrong": "Этот пароль не принят. Попробуйте еще раз.",
+      "codeTitle": "Код двухфакторной аутентификации",
+      "codeDescription": "Удаленному устройству требуется код из приложения-аутентификатора.",
+      "codeWrong": "Этот код не принят. Попробуйте еще раз.",
+      "code": "Код"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Открыто в Windows Remote Desktop",
@@ -142,6 +159,8 @@
       "serverLayout": "Раскладка сервера",
       "timezone": "Часовой пояс",
       "loadBalanceInfo": "Информация о балансировке нагрузки / Cookie",
+      "kdcUrl": "Адрес KDC Kerberos",
+      "kdcUrlDesc": "Контроллер домена для входа через Kerberos, для учетных записей в группе Protected Users. Требуется встроенный движок, хост, указанный по DNS-имени, и заполненное поле домена. Оставьте пустым для NTLM.",
       "loadBalanceInfoDesc": "Cookie брокера подключений RD для балансировки нагрузки в ферме RDS (например, tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "Прокси guacd (необязательно)",
       "guacdHostname": "Хост guacd",
@@ -278,7 +297,75 @@
     "docsLink": "Просмотреть документацию",
     "connectionOriginGuacamoleNote": "По умолчанию RDP, VNC и Telnet запускаются на этом устройстве, как SSH. Выберите «Удалённый сервер», чтобы запускать их на сервере.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Общий доступ к экрану Mac"
+    "appleScreenSharing": "Общий доступ к экрану Mac",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Удаленный рабочий стол по ID RustDesk",
+    "rustdesk": {
+      "direct": "Прямой доступ по IP",
+      "directDesc": "Подключение к адресу хоста вместо поиска по ID RustDesk. Прямой доступ по IP должен быть включен в настройках RustDesk на этом устройстве.",
+      "port": "Порт прямого доступа по IP",
+      "directNote": "Соединение зашифровано, но без сервера ID нет способа проверить, какое именно устройство ответило.",
+      "id": "ID RustDesk",
+      "idDesc": "ID, отображаемый в RustDesk на удаленном устройстве.",
+      "passwordDesc": "Постоянный или одноразовый пароль, установленный в RustDesk. Оставьте пустым, чтобы кто-то принял сессию на удаленном устройстве.",
+      "server": "Сервер RustDesk",
+      "serverDesc": "Оставьте пустым, чтобы использовать сервер, указанный в настройках администратора удаленного рабочего стола, или публичный сервер RustDesk, если ничего не указано.",
+      "idServer": "ID-сервер",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Релейный сервер",
+      "relayServerPlaceholder": "Тот же, что и ID-сервер",
+      "key": "Ключ",
+      "keyDesc": "Публичный ключ вашего сервера RustDesk, из файла id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Потоковая передача с низкой задержкой с ПК Sunshine",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "ПК",
+      "pcDesc": "ПК Sunshine для потоковой передачи. Moonlight Web отображает все известные ПК.",
+      "choosePc": "Выберите ПК",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "привязан",
+      "notPaired": "не привязан",
+      "offline": "не в сети",
+      "refresh": "Обновить",
+      "addPc": "Добавить этот хост в Moonlight Web",
+      "addPcDesc": "Добавляет {{address}} на порт {{port}}, доступный всем пользователям Moonlight Web.",
+      "pair": "Привязать",
+      "pairDesc": "Этот ПК нужно привязать к Moonlight Web один раз.",
+      "pairing": "Ожидание Sunshine",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "Откройте веб-интерфейс Sunshine на ПК, перейдите в раздел PIN и введите этот PIN.",
+      "pairDone": "ПК привязан",
+      "pairFailed": "Привязка не удалась. Проверьте PIN и попробуйте еще раз.",
+      "pairExpired": "Время ожидания привязки истекло. Попробуйте еще раз.",
+      "noSetUpAccess": "Попросите администратора добавить и привязать этот ПК.",
+      "stream": "Поток",
+      "app": "Приложение",
+      "appDesc": "Что открыть на ПК.",
+      "firstApp": "Первое приложение",
+      "bitrate": "Битрейт (кбит/с)",
+      "bitrateDesc": "Оставьте 0, чтобы использовать значение по умолчанию Moonlight Web.",
+      "fps": "Частота кадров",
+      "fpsDesc": "Оставьте 0, чтобы использовать значение по умолчанию Moonlight Web.",
+      "transport": "Протокол передачи",
+      "transportDesc": "WebRTC обеспечивает наименьшую задержку. WebSockets работают в сетях, блокирующих WebRTC.",
+      "transportAuto": "Авто",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "Администратор должен настроить сервер Moonlight Web в параметрах удалённого рабочего стола.",
+      "loading": "Подготовка потока",
+      "signInNote": "При первом запуске Moonlight Web попросит вас войти в систему.",
+      "openStream": "Открыть поток",
+      "openInWindow": "Открыть в новом окне",
+      "noH264": "Этот браузер не поддерживает видео H.264. Если поток не запускается, используйте Chrome, Edge или настольное приложение Termix, либо включите HEVC или AV1 в Sunshine.",
+      "retry": "Попробовать снова",
+      "errorRecordingRequired": "На этом хосте требуется запись, но потоки Moonlight нельзя записывать.",
+      "errorNotLinked": "Компьютер не связан. Выберите его в редакторе хоста.",
+      "errorNotPaired": "Этот компьютер ещё не связан. Свяжите его в редакторе хоста.",
+      "errorOffline": "Компьютер недоступен или Sunshine не запущен.",
+      "errorNoApps": "В Sunshine нет приложений для запуска на этом компьютере."
+    }
   },
   "onboarding": {
     "guacdTitle": "Настройка удаленного рабочего стола",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "Адреса guacd для каждого хоста перемещены"
+      },
+      "rustdeskIdServer": {
+        "label": "Сервер ID RustDesk",
+        "description": "Ваш собственный сервер ID RustDesk (hbbs), в формате хост или хост:порт. Оставьте пустым, чтобы использовать публичный сервер RustDesk. Хосты могут задать свои собственные.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "Сервер ретрансляции RustDesk",
+        "description": "Ваш сервер ретрансляции RustDesk (hbbr). Оставьте пустым, чтобы использовать значение, указанное сервером ID.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "Ключ сервера RustDesk",
+        "description": "Публичный ключ вашего сервера RustDesk из файла id_ed25519.pub. Необходим при использовании собственного сервера."
+      },
+      "moonlightUrl": {
+        "label": "Адрес Moonlight Web",
+        "description": "Адрес сервера Moonlight Web, с которым взаимодействует Termix для потоковой передачи Sunshine. См. документацию для запуска.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Публичный адрес Moonlight Web",
+        "description": "Адрес, который открывают браузеры, если он отличается от указанного выше. HTTPS необходим для поддержки геймпадов и блокировки клавиатуры.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Имя пользователя Moonlight Web",
+        "description": "Логин администратора в Moonlight Web. Termix использует его для просмотра, добавления и связывания компьютеров."
+      },
+      "moonlightPassword": {
+        "label": "Пароль Moonlight Web",
+        "description": "Пароль для этого входа."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Игнорировать сертификат Moonlight Web",
+        "description": "Включите, если на Moonlight Web используется самоподписанный сертификат."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "Порт ARD"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "Порт прямого IP-доступа RustDesk"
+      },
+      "rustdeskId": {
+        "label": "ID RustDesk"
+      },
+      "rustdeskDirect": {
+        "label": "Прямой IP-доступ RustDesk"
+      },
+      "rustdeskIdServer": {
+        "label": "Сервер ID RustDesk"
+      },
+      "rustdeskRelayServer": {
+        "label": "Сервер ретрансляции RustDesk"
+      },
+      "rustdeskKey": {
+        "label": "Ключ сервера RustDesk"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Порт Sunshine"
+      },
+      "moonlightHostId": {
+        "label": "Компьютер в Moonlight Web"
+      },
+      "moonlightAppId": {
+        "label": "Приложение Moonlight"
+      },
+      "moonlightBitrate": {
+        "label": "Битрейт Moonlight"
+      },
+      "moonlightFps": {
+        "label": "Частота кадров Moonlight"
+      },
+      "moonlightTransport": {
+        "label": "Протокол передачи Moonlight"
+      },
+      "rdpAutoReconnect": {
+        "label": "Автоматическое переподключение RDP",
+        "description": "Переподключаться при потере RDP-сессии. Отключите, чтобы переподключаться вручную и не прерывать сессии, открытые из другого клиента."
+      },
+      "rdpAutoResize": {
+        "label": "Автоматическое изменение размера RDP",
+        "description": "Подстраивать удалённое разрешение при изменении размера окна. Отключите, чтобы сохранять размер, выбранный при подключении, до следующего переподключения."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Подключиться через RDP",
     "connectVnc": "Подключиться через VNC",
     "connectTelnet": "Подключиться через Telnet",
-    "connectArd": "Подключиться через Apple Remote Desktop"
+    "connectArd": "Подключиться через Apple Remote Desktop",
+    "connectRustdesk": "Подключиться через RustDesk",
+    "connectMoonlight": "Подключиться через Moonlight"
   },
   "permissions": {
     "sessions": {
       "title": "Общий доступ к сессиям удалённого рабочего стола",
       "description": "Разрешить показывать сессии RDP, VNC и Telnet этого пользователя другим пользователям при общем доступе к сессиям и в комнатах совместной работы."
+    },
+    "monitor": {
+      "title": "Просмотр удалённых сессий всех пользователей",
+      "description": "Позволяет другим функциям, таким как запись сессий, просматривать список, наблюдать за сессиями RDP, VNC и Telnet всех пользователей и завершать их."
+    },
+    "moonlight": {
+      "title": "Настройка ПК для Moonlight",
+      "description": "Добавление ПК с Sunshine в Moonlight Web и их сопряжение с использованием сохранённых учётных данных Moonlight Web."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Удалённый рабочий стол",
     "description": "Сессии RDP, VNC и Telnet в вашем браузере с поддержкой буфера обмена, передачи файлов, совместного использования и записи."
+  },
+  "operations": {
+    "check": {
+      "title": "Проверка портов удалённого рабочего стола"
+    },
+    "ports": {
+      "title": "Удалённый рабочий стол"
+    },
+    "sessions": {
+      "title": "Открыть удалённые сессии"
+    },
+    "session": {
+      "title": "Удалённые сессии",
+      "protocol": "Тип",
+      "started": "Начало"
+    }
+  },
+  "card": {
+    "title": "Удалённые сессии",
+    "loading": "Загрузка...",
+    "empty": "Нет открытых удалённых сессий"
   }
 }

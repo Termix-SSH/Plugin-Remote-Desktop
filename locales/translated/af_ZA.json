@@ -11,6 +11,8 @@
     "connectionError": "Verbindingsfout",
     "clipboardWaiting": "Teks is in die sessie gekopieer. Klik of druk 'n sleutel hier om dit op jou knipbord te plaas. Open Termix oor HTTPS om dadelik te kopieer.",
     "failedToConnect": "Kon nie verbindingskenmerk kry nie",
+    "requestAccess": "Vra toegang aan",
+    "verifyAccess": "Verifieer",
     "hostNotFound": "Gasheer nie gevind nie",
     "noHostSelected": "Geen gasheer gekies nie",
     "guacdUnavailable": "Die eksterne guacd reageer nie. Kontroleer of dit loop, of skakel Gebruik 'n eksterne guacd af in die Afgeleerde Skerm-instellings.",
@@ -81,14 +83,16 @@
         "macLock": "Vergrendel skerm",
         "spotlight": "Spotlight",
         "logoff": "Teken uit",
-        "record": "Neem op"
+        "record": "Neem op",
+        "monitors": "Monitors"
       },
       "hints": {
         "files": "Verskyn eers wanneer die RDP-stoor is aangeskakel",
         "touchMode": "Slegs op aanraakskerm",
         "modifiers": "Ctrl, Alt, Shift en die stelselsleutel bly ingedruk tot die volgende sleutel",
         "logoff": "Teken uit van Windows deur logoff uit die Run-boks te hardloop. Die sessie moet oop wees en die bureblad wys.",
-        "record": "Begin of stop 'n opname van hierdie sessie. Vereis die Session Recording-plug-in en die ingeboude enjin."
+        "record": "Begin of stop 'n opname van hierdie sessie. Vereis die Session Recording-plug-in en die ingeboude enjin.",
+        "monitors": "Skakel tussen die afgeleë monitors"
       },
       "option": "Opsie",
       "logoffConfirm": "Teken uit van hierdie Windows-sessie? Ongespaarde werk daarin gaan verlore.",
@@ -96,9 +100,22 @@
       "recordStop": "Stop opname",
       "recordStarted": "Opname begin",
       "recordStopped": "Opname gestoor na Session Recording",
-      "recordFailed": "Kon nie die opname verander nie"
+      "recordFailed": "Kon nie die opname verander nie",
+      "recordRequired": "'n Admin het opname verpligtend gemaak op hierdie gasheer",
+      "recordRequiredLabel": "Opname (verpligtend)",
+      "monitor": "Monitor {{number}}"
     },
-    "disabled": "Afgeleë Bureaublad is afgeskakel. 'n Admin kan dit in Instellings aanskakel."
+    "disabled": "Afgeleë Bureaublad is afgeskakel. 'n Admin kan dit in Instellings aanskakel.",
+    "rustdesk": {
+      "videoUnsupported": "Hierdie blaaier kan nie RustDesk-video speel nie. Gebruik 'n onlangse weergawe van Chrome, Edge, Firefox of Safari.",
+      "passwordTitle": "RustDesk-wagwoord",
+      "passwordDescription": "Die afgeleë toestel benodig 'n wagwoord. Dit word slegs vir hierdie sessie gebruik en word nie gestoor nie.",
+      "passwordWrong": "Daardie wagwoord is nie aanvaar nie. Probeer weer.",
+      "codeTitle": "Twee-faktor kode",
+      "codeDescription": "Die afgeleë toestel benodig die kode van sy autentikator-toepassing.",
+      "codeWrong": "Daardie kode is nie aanvaar nie. Probeer weer.",
+      "code": "Kode"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Oopgemaak in Windows Afgeleë Bureaublad",
@@ -142,6 +159,8 @@
       "serverLayout": "Bediener-lêer",
       "timezone": "Tydsone",
       "loadBalanceInfo": "Laaibalanseer-inligting / Koekie",
+      "kdcUrl": "Kerberos KDC-adres",
+      "kdcUrlDesc": "Domeinbeheerder vir Kerberos-aanmelding, vir rekeninge in Protected Users. Vereis die ingeboude enjin, die gasheer ingevul met sy DNS-naam en die domein ingevul. Laat leeg vir NTLM.",
       "loadBalanceInfoDesc": "RD-Verbindingsmakelaar-koekie vir RDS-boerdery laaibalanseering (bv. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd-deurvoerder (opsioneel)",
       "guacdHostname": "guacd-bedienaar",
@@ -278,7 +297,75 @@
     "docsLink": "Beskou dokumentasie",
     "connectionOriginGuacamoleNote": "RDP, VNC en Telnet word by verstek op hierdie toestel uitgevoer, soos SSH. Kies Verre bediener om dit op die bediener uit te voer.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Mac-skermdeeling"
+    "appleScreenSharing": "Mac-skermdeeling",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Afgeleë bureaublad deur RustDesk-ID",
+    "rustdesk": {
+      "direct": "Direkte IP-toegang",
+      "directDesc": "Maak verbinding met die gasheeradres in plaas daarvan om 'n RustDesk-ID op te soek. Direkte IP-toegang moet ingeskakel wees in RustDesk op daardie toestel.",
+      "port": "Direkte IP-poort",
+      "directNote": "Die verbinding is versleutel, maar sonder 'n ID-bedienaar is daar niks om te bewys watter toestel geantwoord het nie.",
+      "id": "RustDesk-ID",
+      "idDesc": "Die ID wat in RustDesk op die afgeleë toestel vertoon word.",
+      "passwordDesc": "Die permanente of eenmalige wagwoord wat in RustDesk gestel is. Laat dit leeg sodat iemand die sessie op die afgeleë toestel kan aanvaar.",
+      "server": "RustDesk-bedienaar",
+      "serverDesc": "Laat leeg om die bedienaar te gebruik wat in die Afgeleë Bureaublad-admin-instellings gestel is, of die openbare RustDesk-bedienaar as geen gestel is nie.",
+      "idServer": "ID-bedienaar",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Relaisbedienaar",
+      "relayServerPlaceholder": "Dieselfde as die ID-bedienaar",
+      "key": "Sleutel",
+      "keyDesc": "Die openbare sleutel van jou RustDesk-bedienaar, uit id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Laag-latensie stroom van 'n Sunshine-PC",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "PC",
+      "pcDesc": "Die Sunshine-PC om te stroom. Moonlight Web lys elke PC wat dit ken.",
+      "choosePc": "Kies 'n PC",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "gepaar",
+      "notPaired": "nie gepaar nie",
+      "offline": "vanlyn",
+      "refresh": "Verfris",
+      "addPc": "Voeg hierdie gasheer by Moonlight Web",
+      "addPcDesc": "Voeg {{address}} op poort {{port}} by, gedeel met elke Moonlight Web-gebruiker.",
+      "pair": "Paar",
+      "pairDesc": "Hierdie PC moet een keer met Moonlight Web gepaar word.",
+      "pairing": "Wag vir Sunshine",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "Open die Sunshine-webkoppelvlak op die PC, gaan na PIN, en voer hierdie PIN in.",
+      "pairDone": "PC gepaar",
+      "pairFailed": "Paar het misluk. Kontroleer die PIN en probeer weer.",
+      "pairExpired": "Paar het oortyd. Probeer weer.",
+      "noSetUpAccess": "Vra 'n admin om hierdie PC by te voeg en te paar.",
+      "stream": "Stroom",
+      "app": "Toepassing",
+      "appDesc": "Wat om op die PC oop te maak.",
+      "firstApp": "Eerste toepassing",
+      "bitrate": "Bitrate (kbps)",
+      "bitrateDesc": "Laat op 0 om die Moonlight Web-verstekking te gebruik.",
+      "fps": "Vlakfrekwensie",
+      "fpsDesc": "Laat op 0 om die Moonlight Web-verstekking te gebruik.",
+      "transport": "Vervoer",
+      "transportDesc": "WebRTC het die laagste vertraging. WebSockets werk op netwerke wat dit blokkeer.",
+      "transportAuto": "Outo",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "'n Admin moet die Moonlight Web-bediener in die Afstandse Skerm-instellings opstel.",
+      "loading": "Stroom word gereedgemaak",
+      "signInNote": "Moonlight Web vra jou om die eerste keer aan te meld.",
+      "openStream": "Maak stroom oop",
+      "openInWindow": "Maak in nuwe venster oop",
+      "noH264": "Hierdie blaaier kan nie H.264-video speel nie. As die stroom nie begin nie, gebruik Chrome, Edge of die Termix-bureaubladprogram, of skakel HEVC of AV1 in Sunshine aan.",
+      "retry": "Probeer weer",
+      "errorRecordingRequired": "Opname is op hierdie gasheer vereis, en Moonlight-strome kan nie opgeneem word nie.",
+      "errorNotLinked": "Geen rekenaar is gekoppel nie. Kies een in die gasheer-redigeerder.",
+      "errorNotPaired": "Hierdie rekenaar is nog nie gepaar nie. Paar dit in die gasheer-redigeerder.",
+      "errorOffline": "Die rekenaar is aflyn, of Sunshine loop nie.",
+      "errorNoApps": "Sunshine het geen programme om op hierdie rekenaar oop te maak nie."
+    }
   },
   "onboarding": {
     "guacdTitle": "Stel afgeleë bureaublad op",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "Per-gasheer guacd-adresse verskuif"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk-ID-bedienaar",
+        "description": "Jou eie RustDesk-ID-bedienaar (hbbs), as gasheer of gasheer:poort. Laat leeg om die openbare RustDesk-bedienaar te gebruik. Gasheer kan hul eie stel.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk-relaisbedienaar",
+        "description": "Jou RustDesk-relaisbedienaar (hbbr). Laat leeg om te gebruik wat die ID-bedienaar sê.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk-bedienaar sleutel",
+        "description": "Die openbare sleutel van jou RustDesk-bedienaar, van id_ed25519.pub. Benodig met jou eie bedienaar."
+      },
+      "moonlightUrl": {
+        "label": "Moonlight Web-adres",
+        "description": "Die Moonlight Web-bediener waarmee Termix kommunikeer, vir Sunshine-stroom. Sien die dokumentasie om een uit te voer.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Moonlight Web openbare adres",
+        "description": "Die adres wat blaaiers oopmaak, as dit verskil van die een hierbo. HTTPS is nodig vir gamepads en toetsbord-sluiting.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Moonlight Web-gebruikersnaam",
+        "description": "'n Admin-aanmelding op Moonlight Web. Termix gebruik dit om rekenaars te lys, by te voeg en te paar."
+      },
+      "moonlightPassword": {
+        "label": "Moonlight Web-wagwoord",
+        "description": "Die wagwoord vir daardie aanmelding."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Negeer Moonlight Web-sertifikaat",
+        "description": "Skakel aan vir 'n self-ondertekende sertifikaat op Moonlight Web."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "ARD-poort"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "RustDesk direkte IP-poort"
+      },
+      "rustdeskId": {
+        "label": "RustDesk-ID"
+      },
+      "rustdeskDirect": {
+        "label": "RustDesk direkte IP-toegang"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk-ID-bedienaar"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk-relaisbedienaar"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk-bedienaar sleutel"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine-poort"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight-toepassing"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlight-bitkoers"
+      },
+      "moonlightFps": {
+        "label": "Moonlight-beeldkoers"
+      },
+      "moonlightTransport": {
+        "label": "Moonlight-oordrag"
+      },
+      "rdpAutoReconnect": {
+        "label": "Skakel outomaties weer aan met RDP",
+        "description": "Skakel weer aan wanneer 'n RDP-sessie verlore gaan. Skakel dit af om handmatig weer aan te skakel en om te verhoed dat sessies wat vanaf 'n ander kliënt oopgemaak is, onderbreek word."
+      },
+      "rdpAutoResize": {
+        "label": "Pas RDP outomaties aan",
+        "description": "Pas die afgeleë resolusie aan wanneer die venster se grootte verander. Skakel dit af om die grootte wat by die verbinding gekies is, te behou tot daar weer aan geskakel word."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Verbind met RDP",
     "connectVnc": "Verbind met VNC",
     "connectTelnet": "Verbind met Telnet",
-    "connectArd": "Maak verbinding met Apple Remote Desktop"
+    "connectArd": "Maak verbinding met Apple Remote Desktop",
+    "connectRustdesk": "Maak verbinding met RustDesk",
+    "connectMoonlight": "Verbind met Moonlight"
   },
   "permissions": {
     "sessions": {
       "title": "Deel afstandsburebladsessies",
       "description": "Laat sessiedeling en samewerkingskamers hierdie gebruiker se RDP-, VNC- en Telnet-sessies vir ander sien."
+    },
+    "monitor": {
+      "title": "Besig almal se afgeleë bureaussessies",
+      "description": "Laat ander funksies, soos Sessie-opname, die RDP-, VNC- en Telnet-sessies van elke gebruiker lys, besigtig en beëindig."
+    },
+    "moonlight": {
+      "title": "Stel Moonlight-rekenaars op",
+      "description": "Voeg Sunshine-rekenaars by Moonlight Web en paar hulle, deur die gestoorde Moonlight Web-aanmelding te gebruik."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Afstandsbureblad",
     "description": "RDP-, VNC- en Telnet-sessies in jou blaaier, met knipbord, lêeroordrag, deel en opname."
+  },
+  "operations": {
+    "check": {
+      "title": "Kontroleer afgeleë bureaupoorte"
+    },
+    "ports": {
+      "title": "Afgeleë bureaublad"
+    },
+    "sessions": {
+      "title": "Maak afgeleë sessies oop"
+    },
+    "session": {
+      "title": "Afgeleë sessies",
+      "protocol": "Tipe",
+      "started": "Begin"
+    }
+  },
+  "card": {
+    "title": "Afgeleë sessies",
+    "loading": "Laai tans...",
+    "empty": "Geen oop afgeleë sessies nie"
   }
 }

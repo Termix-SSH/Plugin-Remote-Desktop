@@ -32,17 +32,39 @@ export function setRemoteDesktopApp(next: Pick<TermixApp, "apiFor"> | null) {
  * silently sent a missed call site to the remote server, which fails with a
  * bare network error on a desktop that has none configured.
  */
-function guacamoleApi(origin: ConnectionOrigin): PluginApiClient {
+export function guacamoleApi(origin: ConnectionOrigin): PluginApiClient {
   if (!app) throw new Error("Remote Desktop is not active");
   return app.apiFor(origin);
 }
 
-function apiError(error: unknown, action: string): Error {
-  return new Error(errorMessage(error, `Failed to ${action}`));
+/** An Error that keeps the server's code, such as "access-required". */
+export interface RemoteApiError extends Error {
+  code?: string;
+  requestTab?: string | null;
+  requestKind?: string | null;
+}
+
+export function apiError(error: unknown, action: string): RemoteApiError {
+  const wrapped: RemoteApiError = new Error(
+    errorMessage(error, `Failed to ${action}`),
+  );
+  const data = (
+    error as {
+      response?: {
+        data?: { code?: unknown; requestTab?: unknown; requestKind?: unknown };
+      };
+    }
+  )?.response?.data;
+  if (typeof data?.code === "string") wrapped.code = data.code;
+  if (typeof data?.requestTab === "string")
+    wrapped.requestTab = data.requestTab;
+  if (typeof data?.requestKind === "string")
+    wrapped.requestKind = data.requestKind;
+  return wrapped;
 }
 
 export interface GuacamoleTokenRequest {
-  protocol: "rdp" | "vnc" | "ard" | "telnet";
+  protocol: "rdp" | "vnc" | "ard" | "telnet" | "rustdesk";
   hostname: string;
   port?: number;
   username?: string;
@@ -195,7 +217,7 @@ export async function getGuacamoleToken(
 export async function getGuacamoleTokenFromHost(
   hostId: number,
   origin: ConnectionOrigin,
-  protocol?: "rdp" | "vnc" | "ard" | "telnet",
+  protocol?: "rdp" | "vnc" | "ard" | "telnet" | "rustdesk",
   promptedCredentials?: {
     username?: string;
     password?: string;
@@ -203,6 +225,7 @@ export async function getGuacamoleTokenFromHost(
   },
   syncId?: string | null,
   tabInstanceId?: string,
+  rustdesk?: { code?: string; codecs?: string },
 ): Promise<GuacamoleTokenResponse> {
   try {
     // A locally-originated session is served by the embedded backend, which
@@ -229,6 +252,8 @@ export async function getGuacamoleTokenFromHost(
         ...(promptedCredentials
           ? { promptedDomain: promptedCredentials.domain ?? "" }
           : {}),
+        ...(rustdesk?.code ? { promptedCode: rustdesk.code } : {}),
+        ...(rustdesk?.codecs ? { rustdeskCodecs: rustdesk.codecs } : {}),
       },
     );
     return response.data;
@@ -251,7 +276,7 @@ export async function getGuacdStatus(
   options: {
     probe?: boolean;
     hostId?: number;
-    protocol?: "rdp" | "vnc" | "ard" | "telnet";
+    protocol?: "rdp" | "vnc" | "ard" | "telnet" | "rustdesk";
     syncId?: string | null;
   } = {},
 ): Promise<RemoteDesktopStatus> {

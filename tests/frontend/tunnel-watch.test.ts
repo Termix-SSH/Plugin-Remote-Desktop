@@ -29,7 +29,7 @@ describe("watchTunnel", () => {
     expect(onLost).toHaveBeenCalledWith("closed");
   });
 
-  it("after the page comes back, silence means the socket is dead", () => {
+  it("a quiet desktop after the page comes back is not a dead socket", () => {
     vi.useFakeTimers();
     const t = tunnel();
     const onLost = vi.fn();
@@ -43,6 +43,10 @@ describe("watchTunnel", () => {
 
     watch.checkAlive();
     vi.advanceTimersByTime(8000);
+    expect(onLost).not.toHaveBeenCalled();
+
+    t.state = 2;
+    watch.checkAlive();
     expect(onLost).toHaveBeenCalledWith("stale");
   });
 
@@ -70,7 +74,7 @@ describe("watchTunnel", () => {
     const watch = watchTunnel(bare, onLost, { checkMs: 100 });
     watch.checkAlive();
     vi.advanceTimersByTime(100);
-    expect(onLost).toHaveBeenCalledWith("stale");
+    expect(onLost).not.toHaveBeenCalled();
     bare.onstatechange?.(2);
     expect(onLost).toHaveBeenCalledTimes(1);
   });

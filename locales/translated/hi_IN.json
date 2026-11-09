@@ -11,6 +11,8 @@
     "connectionError": "कनेक्शन त्रुटि",
     "clipboardWaiting": "सत्र में टेक्स्ट कॉपी किया गया। इसे अपने क्लिपबोर्ड पर रखने के लिए यहाँ क्लिक करें या कोई कुंजी दबाएँ। तुरंत कॉपी करने के लिए HTTPS के माध्यम से Termix खोलें।",
     "failedToConnect": "कनेक्शन टोकन प्राप्त करने में विफल",
+    "requestAccess": "पहुंच का अनुरोध करें",
+    "verifyAccess": "सत्यापित करें",
     "hostNotFound": "होस्ट नहीं मिला",
     "noHostSelected": "कोई होस्ट चयनित नहीं है",
     "guacdUnavailable": "बाहरी guacd जवाब नहीं दे रहा है। जांचें कि यह चल रहा है, या रिमोट डेस्कटॉप सेटिंग्स में 'Use an external guacd' बंद कर दें।",
@@ -81,14 +83,16 @@
         "macLock": "Lock screen",
         "spotlight": "Spotlight",
         "logoff": "साइन आउट",
-        "record": "रिकॉर्ड करें"
+        "record": "रिकॉर्ड करें",
+        "monitors": "मॉनिटर"
       },
       "hints": {
         "files": "Shows once the RDP drive is on",
         "touchMode": "Only on touch screens",
         "modifiers": "Ctrl, Alt, Shift and the system key stay held until the next key",
         "logoff": "रन बॉक्स से logoff चलाकर Windows से साइन आउट करता है। सत्र खुला होना चाहिए और डेस्कटॉप दिखा रहा होना चाहिए।",
-        "record": "इस सत्र की रिकॉर्डिंग शुरू या बंद करता है। इसके लिए Session Recording प्लगइन और बिल्ट-इन इंजन की आवश्यकता होती है।"
+        "record": "इस सत्र की रिकॉर्डिंग शुरू या बंद करता है। इसके लिए Session Recording प्लगइन और बिल्ट-इन इंजन की आवश्यकता होती है।",
+        "monitors": "रिमोट मॉनिटर के बीच स्विच करें"
       },
       "option": "Option",
       "logoffConfirm": "क्या आप इस Windows सत्र से साइन आउट करना चाहते हैं? इसमें असहेज काम खो जाएगा।",
@@ -96,9 +100,22 @@
       "recordStop": "रिकॉर्डिंग बंद करें",
       "recordStarted": "रिकॉर्डिंग शुरू हो गई",
       "recordStopped": "रिकॉर्डिंग Session Recording में सेव हो गई",
-      "recordFailed": "रिकॉर्डिंग बदलने में असमर्थ"
+      "recordFailed": "रिकॉर्डिंग बदलने में असमर्थ",
+      "recordRequired": "एक एडमिन ने इस होस्ट पर रिकॉर्डिंग अनिवार्य कर दी है",
+      "recordRequiredLabel": "रिकॉर्डिंग (अनिवार्य)",
+      "monitor": "मॉनिटर {{number}}"
     },
-    "disabled": "रिमोट डेस्कटॉप बंद है। एक एडमिन सेटिंग्स में इसे चालू कर सकता है।"
+    "disabled": "रिमोट डेस्कटॉप बंद है। एक एडमिन सेटिंग्स में इसे चालू कर सकता है।",
+    "rustdesk": {
+      "videoUnsupported": "यह ब्राउज़र RustDesk वीडियो नहीं चला सकता। नवीनतम Chrome, Edge, Firefox या Safari का उपयोग करें।",
+      "passwordTitle": "RustDesk पासवर्ड",
+      "passwordDescription": "रिमोट डिवाइस को पासवर्ड की आवश्यकता है। इसका उपयोग केवल इस सत्र के लिए किया जाता है और इसे सेव नहीं किया जाता।",
+      "passwordWrong": "वह पासवर्ड स्वीकार नहीं किया गया। पुनः प्रयास करें।",
+      "codeTitle": "दो-कारक कोड",
+      "codeDescription": "रिमोट डिवाइस को अपने ऑथेंटिकेटर ऐप से कोड की आवश्यकता है।",
+      "codeWrong": "वह कोड स्वीकार नहीं किया गया। पुनः प्रयास करें।",
+      "code": "कोड"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Windows Remote Desktop में खोला गया",
@@ -142,6 +159,8 @@
       "serverLayout": "सर्वर लेआउट",
       "timezone": "समय क्षेत्र",
       "loadBalanceInfo": "लोड बैलेंस जानकारी / कुकी",
+      "kdcUrl": "केरबरोस KDC पता",
+      "kdcUrlDesc": "प्रोटेक्टेड यूजर्स में खातों के लिए केरबरोस साइन-इन के लिए डोमेन कंट्रोलर। इसके लिए बिल्ट-इन इंजन की आवश्यकता होती है, होस्ट को उसके DNS नाम से दर्ज करना होता है और डोमेन भरना होता है। NTLM के लिए खाली छोड़ दें।",
       "loadBalanceInfoDesc": "RDS फार्म लोड बैलेंसिंग के लिए RD कनेक्शन ब्रोकर कुकी (उदा. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd Proxy (optional)",
       "guacdHostname": "guacd होस्ट",
@@ -278,7 +297,75 @@
     "docsLink": "दस्तावेज़ देखें",
     "connectionOriginGuacamoleNote": "RDP, VNC और Telnet डिफ़ॉल्ट रूप से इस डिवाइस पर चलते हैं, जैसे SSH। उन्हें सर्वर पर चलाने के लिए दूरस्थ सर्वर चुनें।",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Mac स्क्रीन शेयरिंग"
+    "appleScreenSharing": "Mac स्क्रीन शेयरिंग",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "RustDesk ID द्वारा रिमोट डेस्कटॉप",
+    "rustdesk": {
+      "direct": "प्रत्यक्ष IP एक्सेस",
+      "directDesc": "RustDesk ID खोजने के बजाय होस्ट पते से कनेक्ट करें। उस डिवाइस पर RustDesk में सीधा IP एक्सेस चालू होना चाहिए।",
+      "port": "सीधा IP पोर्ट",
+      "directNote": "कनेक्शन एन्क्रिप्टेड है, लेकिन ID सर्वर के बिना यह सत्यापित नहीं किया जा सकता कि किस डिवाइस ने जवाब दिया।",
+      "id": "RustDesk ID",
+      "idDesc": "रिमोट डिवाइस पर RustDesk में दिखाई देने वाली ID।",
+      "passwordDesc": "RustDesk में सेट की गई स्थायी या एक-समय पासवर्ड। रिमोट डिवाइस पर किसी को सत्र स्वीकार करने के लिए इसे खाली छोड़ दें।",
+      "server": "RustDesk सर्वर",
+      "serverDesc": "रिमोट डेस्कटॉप एडमिन सेटिंग्स में सेट सर्वर का उपयोग करने के लिए, या जब कोई सेट न हो तो सार्वजनिक RustDesk सर्वर का उपयोग करने के लिए इसे खाली छोड़ दें।",
+      "idServer": "ID सर्वर",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "रिले सर्वर",
+      "relayServerPlaceholder": "आईडी सर्वर के समान",
+      "key": "की",
+      "keyDesc": "आपके RustDesk सर्वर की सार्वजनिक कुंजी, id_ed25519.pub से।"
+    },
+    "tabMoonlight": "मूनलाइट",
+    "moonlightDescription": "सनशाइन पीसी से कम विलंबता स्ट्रीमिंग",
+    "moonlight": {
+      "server": "मूनलाइट वेब",
+      "pc": "पीसी",
+      "pcDesc": "स्ट्रीम करने के लिए सनशाइन पीसी। मूनलाइट वेब हर उस पीसी को सूचीबद्ध करता है जिसे वह जानता है।",
+      "choosePc": "एक पीसी चुनें",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "जोड़ा गया",
+      "notPaired": "जोड़ा नहीं गया",
+      "offline": "ऑफ़लाइन",
+      "refresh": "रिफ़्रेश करें",
+      "addPc": "इस होस्ट को Moonlight Web में जोड़ें",
+      "addPcDesc": "{{address}} को पोर्ट {{port}} पर जोड़ता है, जो हर Moonlight Web उपयोगकर्ता के साथ साझा होता है।",
+      "pair": "जोड़ें",
+      "pairDesc": "इस पीसी को Moonlight Web के साथ एक बार जोड़ना होगा।",
+      "pairing": "Sunshine की प्रतीक्षा कर रहा है",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "PC पर Sunshine वेब UI खोलें, PIN पर जाएं, और यह PIN दर्ज करें।",
+      "pairDone": "PC जोड़ा गया",
+      "pairFailed": "जोड़ने में विफलता। PIN की जाँच करें और पुनः प्रयास करें।",
+      "pairExpired": "जोड़ने का समय समाप्त हो गया। पुनः प्रयास करें।",
+      "noSetUpAccess": "इस PC को जोड़ने और जोड़ने के लिए किसी प्रशासक से कहें।",
+      "stream": "स्ट्रीम",
+      "app": "ऐप",
+      "appDesc": "PC पर क्या खोलना है।",
+      "firstApp": "पहली ऐप",
+      "bitrate": "बिटरेट (kbps)",
+      "bitrateDesc": "Moonlight Web डिफ़ॉल्ट का उपयोग करने के लिए इसे 0 पर छोड़ें।",
+      "fps": "फ़्रेम रेट",
+      "fpsDesc": "Moonlight Web डिफ़ॉल्ट का उपयोग करने के लिए इसे 0 पर छोड़ें।",
+      "transport": "ट्रांसपोर्ट",
+      "transportDesc": "WebRTC में सबसे कम विलंबता होती है। वेबसॉकेट उन नेटवर्क पर काम करते हैं जो इसे ब्लॉक करते हैं।",
+      "transportAuto": "स्वचालित",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "वेबसॉकेट",
+      "notConfigured": "एक प्रशासक को रिमोट डेस्कटॉप सेटिंग्स में Moonlight Web सर्वर की स्थापना करनी होगी।",
+      "loading": "स्ट्रीम तैयार हो रही है",
+      "signInNote": "Moonlight Web पहली बार साइन इन करने के लिए कहता है।",
+      "openStream": "स्ट्रीम खोलें",
+      "openInWindow": "नई विंडो में खोलें",
+      "noH264": "यह ब्राउज़र H.264 वीडियो नहीं चला सकता। यदि स्ट्रीम शुरू नहीं होती है, तो Chrome, Edge या Termix डेस्कटॉप ऐप का उपयोग करें, या Sunshine में HEVC या AV1 चालू करें।",
+      "retry": "पुनः प्रयास करें",
+      "errorRecordingRequired": "इस होस्ट पर रिकॉर्डिंग आवश्यक है, और Moonlight स्ट्रीम्स को रिकॉर्ड नहीं किया जा सकता।",
+      "errorNotLinked": "कोई पीसी लिंक नहीं है। होस्ट एडिटर में एक चुनें।",
+      "errorNotPaired": "यह पीसी अभी तक पेयर नहीं हुआ है। इसे होस्ट एडिटर में पेयर करें।",
+      "errorOffline": "पीसी ऑफ़लाइन है, या Sunshine चल नहीं रहा है।",
+      "errorNoApps": "इस पीसी पर खोलने के लिए Sunshine के पास कोई ऐप नहीं है।"
+    }
   },
   "onboarding": {
     "guacdTitle": "रिमोट डेस्कटॉप सेट करें",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "प्रति-होस्ट guacd पते स्थानांतरित"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk आईडी सर्वर",
+        "description": "आपका अपना RustDesk आईडी सर्वर (hbbs), होस्ट या होस्ट:पोर्ट के रूप में। सार्वजनिक RustDesk सर्वर का उपयोग करने के लिए इसे खाली छोड़ दें। होस्ट अपना सेट कर सकते हैं।",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk रिले सर्वर",
+        "description": "आपका RustDesk रिले सर्वर (hbbr)। आईडी सर्वर द्वारा बताए गए का उपयोग करने के लिए इसे खाली छोड़ दें।",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk सर्वर कुंजी",
+        "description": "आपके RustDesk सर्वर की सार्वजनिक कुंजी, id_ed25519.pub से। अपने सर्वर के साथ आवश्यक है।"
+      },
+      "moonlightUrl": {
+        "label": "Moonlight Web पता",
+        "description": "वह Moonlight Web सर्वर जिससे Termix Sunshine स्ट्रीमिंग के लिए बात करता है। एक चलाने के लिए दस्तावेज़ देखें।",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Moonlight Web सार्वजनिक पता",
+        "description": "ब्राउज़र द्वारा खोला जाने वाला पता, यदि यह ऊपर दिए गए पते से अलग है। गेमपैड और कीबोर्ड लॉक के लिए HTTPS की आवश्यकता होती है।",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Moonlight Web उपयोगकर्ता नाम",
+        "description": "Moonlight Web पर एक प्रशासनिक लॉगिन। Termix इसका उपयोग पीसी की सूची बनाने, जोड़ने और जोड़ी बनाने के लिए करता है।"
+      },
+      "moonlightPassword": {
+        "label": "Moonlight Web पासवर्ड",
+        "description": "उस लॉगिन के लिए पासवर्ड।"
+      },
+      "moonlightIgnoreCert": {
+        "label": "Moonlight Web प्रमाणपत्र नज़रअंदाज़ करें",
+        "description": "Moonlight Web पर सेल्फ-साइन्ड सर्टिफिकेट के लिए चालू करें।"
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "ARD पोर्ट"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "RustDesk प्रत्यक्ष IP पोर्ट"
+      },
+      "rustdeskId": {
+        "label": "RustDesk ID"
+      },
+      "rustdeskDirect": {
+        "label": "RustDesk प्रत्यक्ष IP एक्सेस"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID सर्वर"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk रिले सर्वर"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk सर्वर कुंजी"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine पोर्ट"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight ऐप"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlight बिटरेट"
+      },
+      "moonlightFps": {
+        "label": "Moonlight फ्रेम रेट"
+      },
+      "moonlightTransport": {
+        "label": "Moonlight ट्रांसपोर्ट"
+      },
+      "rdpAutoReconnect": {
+        "label": "RDP को स्वचालित रूप से पुनः कनेक्ट करें",
+        "description": "जब RDP सत्र खो जाए तो पुनः कनेक्ट करें। किसी अन्य क्लाइंट से खोले गए सत्रों को बाधित करने से बचने और मैन्युअल रूप से पुनः कनेक्ट करने के लिए इसे बंद करें।"
+      },
+      "rdpAutoResize": {
+        "label": "RDP का आकार स्वचालित रूप से समायोजित करें",
+        "description": "जब विंडो का आकार बदलता है तो रिमोट रिज़ॉल्यूशन को समायोजित करें। पुनः कनेक्ट होने तक कनेक्शन पर चुने गए आकार को बनाए रखने के लिए इसे बंद करें।"
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "RDP के साथ कनेक्ट करें",
     "connectVnc": "VNC के साथ कनेक्ट करें",
     "connectTelnet": "Telnet के साथ कनेक्ट करें",
-    "connectArd": "Apple Remote Desktop से कनेक्ट करें"
+    "connectArd": "Apple Remote Desktop से कनेक्ट करें",
+    "connectRustdesk": "RustDesk के साथ कनेक्ट करें",
+    "connectMoonlight": "Moonlight के साथ कनेक्ट करें"
   },
   "permissions": {
     "sessions": {
       "title": "रिमोट डेस्कटॉप सत्र साझा करें",
       "description": "सत्र साझाकरण और सहयोग कक्षों को इस उपयोगकर्ता के RDP, VNC और Telnet सत्रों को अन्य लोगों को दिखाने दें।"
+    },
+    "monitor": {
+      "title": "सभी उपयोगकर्ताओं की रिमोट डेस्कटॉप सत्र देखें",
+      "description": "सत्र रिकॉर्डिंग जैसे अन्य फीचर्स को हर उपयोगकर्ता के RDP, VNC और Telnet सत्रों की सूची देखने, निगरानी करने और समाप्त करने की अनुमति देता है।"
+    },
+    "moonlight": {
+      "title": "Moonlight PCs सेटअप करें",
+      "description": "सहेजे गए Moonlight Web लॉगिन का उपयोग करके Moonlight Web में Sunshine PCs जोड़ें और उन्हें पेयर करें।"
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "रिमोट डेस्कटॉप",
     "description": "ब्राउज़र में RDP, VNC और Telnet सत्र, क्लिपबोर्ड, फ़ाइल ट्रांसफर, शेयरिंग और रिकॉर्डिंग के साथ।"
+  },
+  "operations": {
+    "check": {
+      "title": "रिमोट डेस्कटॉप पोर्ट्स की जाँच करें"
+    },
+    "ports": {
+      "title": "रिमोट डेस्कटॉप"
+    },
+    "sessions": {
+      "title": "खुले रिमोट सत्र"
+    },
+    "session": {
+      "title": "रिमोट सत्र",
+      "protocol": "प्रकार",
+      "started": "शुरू हुआ"
+    }
+  },
+  "card": {
+    "title": "रिमोट सत्र",
+    "loading": "लोड हो रहा है...",
+    "empty": "कोई खुला रिमोट सत्र नहीं"
   }
 }

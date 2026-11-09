@@ -11,6 +11,8 @@
     "connectionError": "Ühendusviga",
     "clipboardWaiting": "Tekst on sessioonis kopeeritud. Klõpsa siin või vajuta klahvi, et see lõikelauale kanda. Kohe kopeerimiseks ava Termix HTTPS-i kaudu.",
     "failedToConnect": "Ühendustokeni hankimine ebaõnnestus",
+    "requestAccess": "Taotle ligipääsu",
+    "verifyAccess": "Kinnita",
     "hostNotFound": "Peremeesmasinat ei leitud",
     "noHostSelected": "Ühtegi peremeesmasinat ei ole valitud",
     "guacdUnavailable": "Väline guacd ei vasta. Veendu, et see töötab, või lülita Kaugtöölaua seadetes välja kasutusvalik \"Kasuta välist guacd\".",
@@ -81,14 +83,16 @@
         "macLock": "Kuvakee lukustamine",
         "spotlight": "Spotlight",
         "logoff": "Logi välja",
-        "record": "Salvesta"
+        "record": "Salvesta",
+        "monitors": "Monitorid"
       },
       "hints": {
         "files": "Näidatakse, kui RDP draiv on sisse lülitatud",
         "touchMode": "Ainult puuteekraanidel",
         "modifiers": "Ctrl, Alt, Shift ja süsteemiklahv hoitakse all kuni järgmise klahvinõusuni",
         "logoff": "Logib Windowsist välja, käivitades käsu logoff käivitusaknast. Sessioon peab olema avatud ja töölaud nähtav.",
-        "record": "Alustab või peatab selle sessiooni salvestamist. Vajab Session Recording pluginat ja sisseehitatud mootorit."
+        "record": "Alustab või peatab selle sessiooni salvestamist. Vajab Session Recording pluginat ja sisseehitatud mootorit.",
+        "monitors": "Lülita kaugmonitorite vahel"
       },
       "option": "Option",
       "logoffConfirm": "Kas soovid sellest Windowsi sessioonist välja logida? Salvestamata töö kaob.",
@@ -96,9 +100,22 @@
       "recordStop": "Peata salvestamine",
       "recordStarted": "Salvestamine alustatud",
       "recordStopped": "Salvestus salvestatud Session Recordingusse",
-      "recordFailed": "Salvestamist ei õnnestunud muuta"
+      "recordFailed": "Salvestamist ei õnnestunud muuta",
+      "recordRequired": "Haldur on sellel hostil salvestamise kohustuslikuks määranud",
+      "recordRequiredLabel": "Salvestamine (kohustuslik)",
+      "monitor": "Monitor {{number}}"
     },
-    "disabled": "Kaugtöölaud on väljas lülitatud. Haldaja saab selle Sätted menüüst sisse lülitada."
+    "disabled": "Kaugtöölaud on väljas lülitatud. Haldaja saab selle Sätted menüüst sisse lülitada.",
+    "rustdesk": {
+      "videoUnsupported": "See brauser ei toeta RustDeski videot. Kasuta uut Chrome'i, Edge'i, Firefoxit või Safari.",
+      "passwordTitle": "RustDeski parool",
+      "passwordDescription": "Kaugseade nõuab parooli. Seda kasutatakse ainult selle sessiooni jaoks ja seda ei salvestata.",
+      "passwordWrong": "Seda parooli ei aktsepteeritud. Proovi uuesti.",
+      "codeTitle": "Kaheastmeline kood",
+      "codeDescription": "Kaugseade vajab autentimise rakmusest saadud koodi.",
+      "codeWrong": "Seda koodi ei aktsepteeritud. Proovi uuesti.",
+      "code": "Kood"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Avatud Windowsi Kaugtöölaual",
@@ -142,6 +159,8 @@
       "serverLayout": "Serveri paigutus",
       "timezone": "Ajalonts",
       "loadBalanceInfo": "Koormuse tasakaalustamise info / küpsis",
+      "kdcUrl": "Kerberos KDC aadress",
+      "kdcUrlDesc": "Kerberosi sisselogimise domeenikontroller Protected Users kontode jaoks. Vajab sisseehitatud mootorit, hosti sisestamist DNS nimega ja domeeni täitmist. Jäta NTLM jaoks tühjaks.",
       "loadBalanceInfoDesc": "RD Connection Brokeri küpsis RDS-farmi koormuse tasakaalustamiseks (nt tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd proksi (valikuline)",
       "guacdHostname": "guacd peremeesmasin",
@@ -278,7 +297,75 @@
     "docsLink": "Vaata dokumentatsiooni",
     "connectionOriginGuacamoleNote": "RDP, VNC ja Telnet töötavad vaikimisi sellel seadmel, nagu ka SSH. Kui soovid, et need töötaksid serveris, vali Kaugserver.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Maci ekraanijagamine"
+    "appleScreenSharing": "Maci ekraanijagamine",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Kauglaud RustDesk ID kaudu",
+    "rustdesk": {
+      "direct": "Otsene IP ligipääs",
+      "directDesc": "Ühenda otse hosti aadressiga, mitte RustDesk-i ID-d otsides. Selle seadme RustDesk-is peab olema lubatud otse IP-ühendus.",
+      "port": "Otse IP-port",
+      "directNote": "Ühendus on krüpteeritud, kuid ilma ID-serverita ei ole võimalik kinnitada, milline seade vastas.",
+      "id": "RustDesk-i ID",
+      "idDesc": "ID, mis kuvatakse kaugseadme RustDesk-is.",
+      "passwordDesc": "RustDesk-is määratud püsiv või ühekordne parool. Jäta tühjaks, kui keegi peab seansi kinnitama kaugseadmes.",
+      "server": "RustDesk-i server",
+      "serverDesc": "Jäta tühjaks, et kasutada Kaugtöölaua haldusseadetes määratud serverit või avalikku RustDesk-i serverit, kui ühtegi ei ole määratud.",
+      "idServer": "ID-server",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Edasiasumise server",
+      "relayServerPlaceholder": "Sama mis ID-server",
+      "key": "Võti",
+      "keyDesc": "Teie RustDesk-serveri avalik võti, failist id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Madala viivitusega voogedastus Sunshine PC-lt",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "Arvuti",
+      "pcDesc": "Voogedastatav Sunshine arvuti. Moonlight Web loetleb kõik teadaolevad arvutid.",
+      "choosePc": "Valige arvuti",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "paaris",
+      "notPaired": "ei ole paaris",
+      "offline": "võrgust väljas",
+      "refresh": "Värskenda",
+      "addPc": "Lisa see host Moonlight Webi",
+      "addPcDesc": "Lisa aadress {{address}} poordil {{port}}, mida jagatakse kõigi Moonlight Webi kasutajatega.",
+      "pair": "Paarita",
+      "pairDesc": "See arvuti tuleb Moonlight Webiga ühendada üks kord.",
+      "pairing": "Oodatakse Sunshine'i",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "Ava arvutis Sunshine'i veebi-liides, mine PIN-i juurde ja sisesta see PIN.",
+      "pairDone": "Arvuti on paaris",
+      "pairFailed": "Paaristamine ebaõnnestus. Kontrolli PIN-i ja proovi uuesti.",
+      "pairExpired": "Paaristamise aeg läbi. Proovi uuesti.",
+      "noSetUpAccess": "Palu administraatoril see arvuti lisada ja paaristada.",
+      "stream": "Voogus",
+      "app": "Rakendus",
+      "appDesc": "Mida arvutis avada.",
+      "firstApp": "Esimene rakendus",
+      "bitrate": "Bitikiirus (kbps)",
+      "bitrateDesc": "Jäta väärtuseks 0, et kasutada Moonlight Webi vaikimisi seadet.",
+      "fps": "Kaadrisagedus",
+      "fpsDesc": "Jäta väärtuseks 0, et kasutada Moonlight Webi vaikimisi seadet.",
+      "transport": "Transpordikiht",
+      "transportDesc": "WebRTC-l on kõige väiksem viivitus. WebSockets töötab võrkudes, mis WebRTC blokeerivad.",
+      "transportAuto": "Automaatne",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "Moonlight Webi server tuleb seadistada administraatori poolt Kaugtöölaua seadetes.",
+      "loading": "Vooguse ettevalmistamine",
+      "signInNote": "Moonlight Web palub esmakordsel korral sisse logida.",
+      "openStream": "Ava voogus",
+      "openInWindow": "Ava uues aknas",
+      "noH264": "See brauser ei toeta H.264 videot. Kui voogus ei käivitu, kasuta Chrome'i, Edge'i või Termixi lauaarvuti rakendust või lülita Sunshines sisse HEVC või AV1.",
+      "retry": "Proovi uuesti",
+      "errorRecordingRequired": "Selle hosti puhul on salvestamine kohustuslik, kuid Moonlighti vooguseid ei saa salvestada.",
+      "errorNotLinked": "Ühtegi arvutit pole seotud. Vali see hosti redaktoris.",
+      "errorNotPaired": "Seda arvutit pole veel paaris seotud. Seota see hosti redaktoris.",
+      "errorOffline": "Arvuti on võrgust väljas või Sunshine ei tööta.",
+      "errorNoApps": "Sunshine'il pole sellel arvutil avatavaid rakendusi."
+    }
   },
   "onboarding": {
     "guacdTitle": "Kaugtöölaua seadistamine",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "Iga hosti jaoks eraldi guacd aadressid on liigutatud"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID-server",
+        "description": "Sinu enda RustDesk ID-server (hbbs) hostina või host:portina. Jäta tühjaks, et kasutada avalikku RustDesk serverit. Hostid saavad määrata oma.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk edastusserver",
+        "description": "Sinu RustDesk edastusserver (hbbr). Jäta tühjaks, et kasutada ID-serveri poolt määratud.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk serveri võti",
+        "description": "Sinu RustDesk serveri avalik võti, failist id_ed25519.pub. Nõutav oma serveri kasutamisel."
+      },
+      "moonlightUrl": {
+        "label": "Moonlight Webi aadress",
+        "description": "Moonlight Webi server, millega Termix Sunshine voogedastuse jaoks suhtleb. Vaata dokumentatsiooni, kuidas see käivitada.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Moonlight Webi avalik aadress",
+        "description": "Aadress, mida brauserid avavad, kui see erineb ülaltoodust. Mängupadi ja klaviatuuri lukustuse jaoks on vajalik HTTPS.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Moonlight Webi kasutajanimi",
+        "description": "Moonlight Webi administraatori sisselogimine. Termix kasutab seda arvutite loetlemiseks, lisamiseks ja paaris sidumiseks."
+      },
+      "moonlightPassword": {
+        "label": "Moonlight Webi parool",
+        "description": "Selle sisselogimise parool."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Eira Moonlight Webi sertifikaati",
+        "description": "Lülita sisse, kui Moonlight Webil on isesertifitseeritud sertifikaat."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "ARD port"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "RustDeski otseühenduse IP-port"
+      },
+      "rustdeskId": {
+        "label": "RustDeski ID"
+      },
+      "rustdeskDirect": {
+        "label": "RustDeski otse IP-ühendus"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDeski ID-server"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDeski edastusserver"
+      },
+      "rustdeskKey": {
+        "label": "RustDeski serveri võti"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine'i port"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlighti rakendus"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlighti bitikiirus"
+      },
+      "moonlightFps": {
+        "label": "Moonlighti kaadrisagedus"
+      },
+      "moonlightTransport": {
+        "label": "Moonlighti transport"
+      },
+      "rdpAutoReconnect": {
+        "label": "RDP automaatne ühenduse taastamine",
+        "description": "Taasta ühendus, kui RDP-sessioon katkeb. Lülita välja, et taastada ühendus käsitsi ja vältida teise klientrakendusega avatud sessioonide katkestamist."
+      },
+      "rdpAutoResize": {
+        "label": "RDP automaatne suuruse muutmine",
+        "description": "Kohanda kauglahutust, kui akna suurus muutub. Lülita välja, et säilitada ühenduse loomisel valitud suurus kuni järgmiseni ühenduse taastamiseni."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Ühendu RDP-ga",
     "connectVnc": "Ühendu VNC-ga",
     "connectTelnet": "Ühendu Telnetiga",
-    "connectArd": "Ühendu Apple Remote Desktopiga"
+    "connectArd": "Ühendu Apple Remote Desktopiga",
+    "connectRustdesk": "Ühendu RustDeski kaudu",
+    "connectMoonlight": "Ühenda Moonlightiga"
   },
   "permissions": {
     "sessions": {
       "title": "Jaga kaugtöölaua sessioone",
       "description": "Luba sessioonide jagamisel ja koostööruumides näidata selle kasutaja RDP, VNC ja Telnet sessioone teistele."
+    },
+    "monitor": {
+      "title": "Jälgi kõigi kasutajate kauglaua sessioone",
+      "description": "Võimaldab muudel funktsioonidel, näiteks sessiooni salvestamisel, kuvada, jälgida ja lõpetada kõigi kasutajate RDP-, VNC- ja Telneti-sessioone."
+    },
+    "moonlight": {
+      "title": "Seadista Moonlighti arvutid",
+      "description": "Lisa Sunshine arvutid Moonlight Webi ja paari need, kasutades salvestatud Moonlight Webi sisselogimisandmeid."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Kaugtöölaud",
     "description": "RDP, VNC ja Telneti sessioonid brauseris, koos lõikelaua, failide ülekande, jagamise ja salvestamise võimalustega."
+  },
+  "operations": {
+    "check": {
+      "title": "Kontrolli kauglaua porte"
+    },
+    "ports": {
+      "title": "Kauglaud"
+    },
+    "sessions": {
+      "title": "Ava kaugsessioonid"
+    },
+    "session": {
+      "title": "Kaugsessioonid",
+      "protocol": "Tüüp",
+      "started": "Käivitatud"
+    }
+  },
+  "card": {
+    "title": "Kaugsessioonid",
+    "loading": "Laadimine...",
+    "empty": "Avatud kaugsessioone pole"
   }
 }

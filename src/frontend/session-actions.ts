@@ -44,24 +44,30 @@ export function signOutOfWindows(
 export function useSessionRecording(sessionId: string | null | undefined) {
   // The client can be a new object each render; only the session id matters.
   const apiRef = useRef(usePluginApi());
-  const [state, setState] = useState({ available: false, recording: false });
+  const [state, setState] = useState({
+    available: false,
+    recording: false,
+    forced: false,
+  });
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
     if (!sessionId) {
-      setState({ available: false, recording: false });
+      setState({ available: false, recording: false, forced: false });
       return;
     }
     let cancelled = false;
     void apiRef.current
-      .get<{ available: boolean; recording: boolean }>(
+      .get<{ available: boolean; recording: boolean; forced?: boolean }>(
         `sessions/${encodeURIComponent(sessionId)}/recording`,
       )
       .then(({ data }) => {
-        if (!cancelled) setState(data);
+        if (!cancelled) setState({ ...data, forced: data.forced === true });
       })
       .catch(() => {
-        if (!cancelled) setState({ available: false, recording: false });
+        if (!cancelled) {
+          setState({ available: false, recording: false, forced: false });
+        }
       });
     return () => {
       cancelled = true;

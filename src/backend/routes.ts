@@ -25,9 +25,11 @@ import {
   isRemoteProtocol,
   readHostSettings,
   readDisplayDefaults,
+  REMOTE_PROTOCOLS,
   type RemoteProtocol,
 } from "./host-settings.js";
 import { errorMessage, type RemoteDesktopLogger } from "./log.js";
+import { registerMoonlightRoutes } from "./moonlight/routes.js";
 import {
   builtinSessionId,
   type BuiltinEngine,
@@ -61,6 +63,52 @@ export function hostUsesGuacd(
   overrides: { guacdHost?: string; guacdPort?: number },
 ): boolean {
   return mode === "guacd" || !!overrides.guacdHost || !!overrides.guacdPort;
+}
+
+/** What the RustDesk client needs: the host's server, else the admin's. */
+export async function rustdeskSettings(
+  ctx: PluginContext,
+  settings: Awaited<ReturnType<typeof readHostSettings>>,
+  input: {
+    hostname: string;
+    port: number;
+    password: string;
+    code?: unknown;
+    codecs?: unknown;
+    guacConfig: Record<string, unknown>;
+  },
+): Promise<Record<string, unknown>> {
+  const admin = async (key: string) =>
+    String((await ctx.settings.get<string>(key)) ?? "").trim();
+  const ownServer = !!settings.rustdeskIdServer;
+  const codecs =
+    typeof input.codecs === "string" && /^[a-z0-9,]{0,40}$/.test(input.codecs)
+      ? input.codecs
+      : "";
+  const code =
+    typeof input.code === "string"
+      ? input.code.replace(/\D/g, "").slice(0, 10)
+      : "";
+  const pick = (key: string) => input.guacConfig[key];
+  return {
+    hostname: input.hostname,
+    port: input.port,
+    password: input.password,
+    "rustdesk-id": settings.rustdeskId,
+    direct: settings.rustdeskDirect,
+    "id-server": ownServer
+      ? settings.rustdeskIdServer
+      : await admin("rustdeskIdServer"),
+    "relay-server": ownServer
+      ? settings.rustdeskRelayServer
+      : await admin("rustdeskRelayServer"),
+    "server-key": ownServer ? settings.rustdeskKey : await admin("rustdeskKey"),
+    ...(code ? { code } : {}),
+    ...(codecs ? { codecs } : {}),
+    "disable-audio": pick("disable-audio") === true,
+    "disable-copy": pick("disable-copy") === true,
+    "disable-paste": pick("disable-paste") === true,
+  };
 }
 
 function actor(ctx: PluginContext, res: Response): string | null {
@@ -104,6 +152,44 @@ function cleanGuacConfig(
   return config;
 }
 
+/**
+ * The 403 body for a connect policy refusal (Termix 26.11.1+), so the client
+ * can offer the access request tab. Null for any other error.
+ */
+export function accessRefusal(error: unknown): Record<string, unknown> | null {
+  const failure = error as {
+    code?: unknown;
+    message?: unknown;
+    toJSON?: () => Record<string, unknown>;
+  } | null;
+  if (
+    failure?.code !== "access-required" &&
+    failure?.code !== "access-denied"
+  ) {
+    return null;
+  }
+  if (typeof failure.toJSON === "function") return failure.toJSON();
+  return { error: String(failure.message ?? ""), code: failure.code };
+}
+
+async function resolveTarget(
+  ctx: PluginContext,
+  res: Response,
+  hostId: number,
+  protocol: RemoteProtocol | "moonlight",
+) {
+  try {
+    const target = await ctx.credentials.resolveHostProtocol(hostId, protocol);
+    if (!target) res.status(404).json({ error: "Host not found" });
+    return target;
+  } catch (error) {
+    const refusal = accessRefusal(error);
+    if (!refusal) throw error;
+    res.status(403).json(refusal);
+    return null;
+  }
+}
+
 /** A host's admin-set guacd address, as token settings. */
 async function guacdOverridesFor(
   ctx: PluginContext,
@@ -120,11 +206,48 @@ async function guacdOverridesFor(
 export function registerRoutes(router: Router, deps: RouteDeps): void {
   const { ctx, log, tokens, sessions } = deps;
 
+  registerMoonlightRoutes(router, {
+    ctx,
+    log,
+    enabled: deps.enabled,
+    recordings: deps.recordings,
+    resolveTarget: (res, hostId) =>
+      resolveTarget(ctx, res, hostId, "moonlight"),
+  });
+
   const refuseWhenOff = async (res: Response): Promise<boolean> => {
     if (await deps.enabled()) return false;
     res.status(403).json({ error: "Remote Desktop is turned off" });
     return true;
   };
+
+  /**
+   * @openapi
+   * /plugin-api/remote-desktop/live-sessions:
+   *   get:
+   *     summary: List my open remote desktop sessions
+   *     description: The caller's RDP, VNC and Telnet sessions that are open on the server now.
+   *     tags:
+   *       - Remote Desktop
+   *     responses:
+   *       200:
+   *         description: The open sessions, newest first.
+   *       401:
+   *         description: Not signed in.
+   */
+  router.get("/live-sessions", (_req: Request, res: Response) => {
+    const userId = actor(ctx, res);
+    if (!userId) return;
+    res.json(
+      deps.sessions.listByOwner(userId).map((session) => ({
+        id: session.guacamoleConnectionId,
+        hostId: session.hostId,
+        hostName: session.hostName,
+        protocol: session.protocol,
+        openedAt: session.openedAt,
+      })),
+    );
+  });
 
   /**
    * @openapi
@@ -167,7 +290,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *           type: string
    *     responses:
    *       200:
-   *         description: available and recording.
+   *         description: available, recording, and forced when an admin made recording required.
    *       401:
    *         description: Not signed in.
    *   post:
@@ -200,22 +323,28 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *         description: Not the session owner.
    *       404:
    *         description: No such session in the built-in engine, or Session Recording is off.
+   *       409:
+   *         description: Recording is required on this host, so it can't be stopped.
    */
   router.get(
     "/sessions/:sessionId/recording",
-    (req: Request, res: Response) => {
+    async (req: Request, res: Response) => {
       const userId = actor(ctx, res);
       if (!userId) return;
       const control = deps.recordingControl;
+      const writer = deps.recordings();
       const state =
-        control && deps.recordings()
+        control && writer
           ? control.recordingState(String(req.params.sessionId), userId)
           : null;
-      res.json(
-        state && "recording" in state
-          ? { available: true, recording: state.recording }
-          : { available: false, recording: false },
-      );
+      if (!state || !("recording" in state)) {
+        return res.json({ available: false, recording: false, forced: false });
+      }
+      const forced =
+        !!state.hostId &&
+        !!writer?.isForced &&
+        (await writer.isForced(state.hostId).catch(() => false));
+      res.json({ available: true, recording: state.recording, forced });
     },
   );
 
@@ -229,8 +358,24 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         return res.status(400).json({ error: "on must be true or false" });
       }
       const control = deps.recordingControl;
-      if (!control || !deps.recordings()) {
+      const writer = deps.recordings();
+      if (!control || !writer) {
         return res.status(404).json({ error: "Session Recording is off" });
+      }
+      if (!on && writer.isForced) {
+        const state = control.recordingState(
+          String(req.params.sessionId),
+          userId,
+        );
+        if (
+          state.ok &&
+          state.hostId &&
+          (await writer.isForced(state.hostId).catch(() => false))
+        ) {
+          return res
+            .status(409)
+            .json({ error: "Recording is required on this host" });
+        }
       }
       const result = await control.setRecording(
         String(req.params.sessionId),
@@ -281,7 +426,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *             properties:
    *               type:
    *                 type: string
-   *                 enum: [rdp, vnc, ard, telnet]
+   *                 enum: [rdp, vnc, ard, telnet, rustdesk]
    *               hostname:
    *                 type: string
    *               port:
@@ -317,8 +462,14 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         }
         if (!isRemoteProtocol(type)) {
           return res.status(400).json({
-            error: "Invalid connection type. Must be rdp, vnc, ard, or telnet",
+            error:
+              "Invalid connection type. Must be rdp, vnc, ard, telnet or rustdesk",
           });
+        }
+        if (type === "rustdesk") {
+          return res
+            .status(400)
+            .json({ error: "Save RustDesk devices as a host to connect" });
         }
         const options: Record<string, unknown> = {};
         for (const [key, value] of Object.entries(raw)) {
@@ -423,13 +574,19 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *             properties:
    *               protocol:
    *                 type: string
-   *                 enum: [rdp, vnc, ard, telnet]
+   *                 enum: [rdp, vnc, ard, telnet, rustdesk]
    *               promptedUsername:
    *                 type: string
    *               promptedPassword:
    *                 type: string
    *               promptedDomain:
    *                 type: string
+   *               promptedCode:
+   *                 type: string
+   *                 description: A RustDesk 2FA code.
+   *               rustdeskCodecs:
+   *                 type: string
+   *                 description: Video codecs the browser can decode, like vp9,av1,vp8.
    *               tabInstanceId:
    *                 type: string
    *     responses:
@@ -461,7 +618,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         const requested = body.protocol;
         const protocol: RemoteProtocol | undefined = isRemoteProtocol(requested)
           ? requested
-          : (["rdp", "vnc", "ard", "telnet"] as const).find(
+          : REMOTE_PROTOCOLS.find(
               (candidate) => settings[ENABLE_KEY[candidate]],
             );
         if (!protocol) {
@@ -470,13 +627,8 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
             .json({ error: "Remote Desktop is not enabled for this host." });
         }
 
-        const target = await ctx.credentials.resolveHostProtocol(
-          hostId,
-          protocol,
-        );
-        if (!target) {
-          return res.status(404).json({ error: "Host not found" });
-        }
+        const target = await resolveTarget(ctx, res, hostId, protocol);
+        if (!target) return;
         if (!settings[ENABLE_KEY[protocol]]) {
           return res.status(400).json({
             error: `${protocol.toUpperCase()} is not enabled for this host.`,
@@ -509,12 +661,15 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
 
         const promptForLogin =
           protocol === "rdp" && target.auth.authType === "none";
+        const isRustdesk = protocol === "rustdesk";
         const username = promptForLogin
           ? String(body.promptedUsername || "")
           : target.auth.username;
-        const password = promptForLogin
-          ? String(body.promptedPassword || "")
-          : target.auth.password;
+        // RustDesk asks for a password or 2FA code once the peer says so.
+        const password =
+          promptForLogin || (isRustdesk && body.promptedPassword)
+            ? String(body.promptedPassword || "")
+            : target.auth.password;
         const domain = resolveRdpDomain(
           target.auth.authType,
           body.promptedDomain,
@@ -526,8 +681,25 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
           (settings[PORT_KEY[protocol]] as number) || DEFAULT_PORT[protocol];
         const termixConnectId = crypto.randomUUID();
         const cleanups: Array<() => void> = [];
-        const jumpHosts = target.host.jumpHosts;
-        const viaGuacd = hostUsesGuacd(deps.engineMode(), guacdOverrides);
+        // Through an ID server the relay is reached directly, not the host.
+        const jumpHosts =
+          isRustdesk && !settings.rustdeskDirect ? [] : target.host.jumpHosts;
+        const recordings = deps.recordings();
+        const recordingForced =
+          !isRustdesk &&
+          !!recordings?.isForced &&
+          (await recordings.isForced(hostId).catch(() => false));
+        // guacd can't record VNC, so a required recording keeps VNC in the
+        // built-in engine unless the host names its own guacd.
+        const keepBuiltin =
+          recordingForced &&
+          (protocol === "vnc" || protocol === "ard") &&
+          !guacdOverrides.guacdHost &&
+          !guacdOverrides.guacdPort;
+        const viaGuacd =
+          !isRustdesk &&
+          !keepBuiltin &&
+          hostUsesGuacd(deps.engineMode(), guacdOverrides);
         // The built-in engine speaks Apple's login itself; only guacd needs
         // the macOS banner proxy.
         const needsVncProxy =
@@ -580,12 +752,14 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         }
         sessions.park(termixConnectId, cleanups);
 
-        const recordings = deps.recordings();
         // guacd never recorded VNC here; the built-in engine does.
+        // RustDesk video stays encoded, which recordings can not play yet.
         const recordingEnabled =
+          !isRustdesk &&
           ((protocol !== "vnc" && protocol !== "ard") || !viaGuacd) &&
           !!recordings &&
-          (await recordings.enabledFor(hostId).catch(() => false));
+          (recordingForced ||
+            (await recordings.enabledFor(hostId).catch(() => false)));
         const recordingName = `${crypto.randomUUID()}.guac`;
         const guacdRecordingPath = viaGuacd
           ? process.env.GUACD_RECORDING_PATH ||
@@ -607,6 +781,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
             guacConfig,
             guacdRecordingPath,
             recordingName,
+            recordingForced,
           );
         }
 
@@ -653,6 +828,19 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
             password,
             { port, ...guacConfig, ...guacdOverrides },
             recording,
+            termixMeta,
+          );
+        } else if (isRustdesk) {
+          token = tokens.createRustdeskToken(
+            await rustdeskSettings(ctx, settings, {
+              hostname,
+              port,
+              password,
+              code: body.promptedCode,
+              codecs: body.rustdeskCodecs,
+              guacConfig,
+            }),
+            undefined,
             termixMeta,
           );
         } else {
@@ -843,7 +1031,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *         name: protocol
    *         schema:
    *           type: string
-   *           enum: [rdp, vnc, ard, telnet]
+   *           enum: [rdp, vnc, ard, telnet, rustdesk]
    *     responses:
    *       200:
    *         description: The status.
@@ -855,6 +1043,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
       const enabled = await deps.enabled();
       let guacd = deps.guacd();
       let overrides: { guacdHost?: string; guacdPort?: number } = {};
+      let alwaysBuiltin = false;
       if (req.query.hostId !== undefined) {
         const userId = actor(ctx, res);
         if (!userId) return;
@@ -867,17 +1056,15 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         ) {
           return res.status(400).json({ error: "Invalid host ID or protocol" });
         }
-        const target = await ctx.credentials.resolveHostProtocol(
-          hostId,
-          protocol,
-        );
-        if (!target) return res.status(404).json({ error: "Host not found" });
+        const target = await resolveTarget(ctx, res, hostId, protocol);
+        if (!target) return;
         const settings = await readHostSettings(ctx, hostId);
         if (!settings[ENABLE_KEY[protocol]]) {
           return res
             .status(400)
             .json({ error: "Protocol is not enabled for this host" });
         }
+        alwaysBuiltin = protocol === "rustdesk";
         overrides = await guacdOverridesFor(
           ctx,
           hostId,
@@ -888,7 +1075,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
           port: overrides.guacdPort || guacd.port,
         };
       }
-      if (!hostUsesGuacd(deps.engineMode(), overrides)) {
+      if (alwaysBuiltin || !hostUsesGuacd(deps.engineMode(), overrides)) {
         // Old clients gate on guacd.status, so the built-in engine reports
         // itself as a connected guacd.
         return res.json({

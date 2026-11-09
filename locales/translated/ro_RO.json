@@ -11,6 +11,8 @@
     "connectionError": "Eroare de conexiune",
     "clipboardWaiting": "Text copiat în sesiune. Faceți clic sau apăsați o tastă aici pentru a-l pune în clipboard. Deschideți Termix prin HTTPS pentru a copia imediat.",
     "failedToConnect": "Nu s-a putut obține tokenul de conexiune",
+    "requestAccess": "Solicită acces",
+    "verifyAccess": "Verifică",
     "hostNotFound": "Gazda nu a fost găsită",
     "noHostSelected": "Nicio gazdă selectată",
     "guacdUnavailable": "Serviciul extern guacd nu răspunde. Verificați dacă este în funcțiune sau dezactivați opțiunea „Folosește un guacd extern” în setările Remote Desktop.",
@@ -81,14 +83,16 @@
         "macLock": "Blocare ecran",
         "spotlight": "Spotlight",
         "logoff": "Deconectare",
-        "record": "Înregistrare"
+        "record": "Înregistrare",
+        "monitors": "Monitoare"
       },
       "hints": {
         "files": "Se afișează doar după activarea unității RDP",
         "touchMode": "Doar pe ecrane tactile",
         "modifiers": "Ctrl, Alt, Shift și tasta de sistem rămân apăsate până la următoarea tastă",
         "logoff": "Se deconectează de la Windows rulând comanda logoff din caseta Run. Sesiunea trebuie să fie deschisă și să afișeze desktopul.",
-        "record": "Începe sau oprește înregistrarea acestei sesiuni. Necesită pluginul Session Recording și motorul integrat."
+        "record": "Începe sau oprește înregistrarea acestei sesiuni. Necesită pluginul Session Recording și motorul integrat.",
+        "monitors": "Comută între monitoarele de la distanță"
       },
       "option": "Opțiune",
       "logoffConfirm": "Doriți să vă deconectați de la această sesiune Windows? Lucrul nesalvat va fi pierdut.",
@@ -96,9 +100,22 @@
       "recordStop": "Oprește înregistrarea",
       "recordStarted": "Înregistrarea a început",
       "recordStopped": "Înregistrarea a fost salvată în Session Recording",
-      "recordFailed": "Nu s-a putut modifica înregistrarea"
+      "recordFailed": "Nu s-a putut modifica înregistrarea",
+      "recordRequired": "Un administrator a impus înregistrarea pe acest gazdă",
+      "recordRequiredLabel": "Înregistrare (obligatorie)",
+      "monitor": "Monitor {{number}}"
     },
-    "disabled": "Remote Desktop este dezactivat. Un administrator îl poate activa în Setări."
+    "disabled": "Remote Desktop este dezactivat. Un administrator îl poate activa în Setări.",
+    "rustdesk": {
+      "videoUnsupported": "Acest browser nu poate reda video RustDesk. Folosește o versiune recentă de Chrome, Edge, Firefox sau Safari.",
+      "passwordTitle": "Parola RustDesk",
+      "passwordDescription": "Dispozitivul de la distanță necesită o parolă. Aceasta este folosită doar pentru această sesiune și nu este salvată.",
+      "passwordWrong": "Această parolă nu a fost acceptată. Încearcă din nou.",
+      "codeTitle": "Cod de autentificare în doi pași",
+      "codeDescription": "Dispozitivul de la distanță necesită codul din aplicația sa de autentificare.",
+      "codeWrong": "Acest cod nu a fost acceptat. Încearcă din nou.",
+      "code": "Cod"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Deschis în Windows Remote Desktop",
@@ -142,6 +159,8 @@
       "serverLayout": "Aranjament server",
       "timezone": "Fus orar",
       "loadBalanceInfo": "Informații echilibrare sarcină / Cookie",
+      "kdcUrl": "Adresa KDC Kerberos",
+      "kdcUrlDesc": "Controller de domeniu pentru autentificarea Kerberos, pentru conturile din Protected Users. Necesită motorul integrat, gazda introdusă prin numele DNS și domeniul completat. Lasă gol pentru NTLM.",
       "loadBalanceInfoDesc": "Cookie pentru brokerul de conexiuni RD pentru echilibrarea sarcinii în ferma RDS (de ex. tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "Proxy guacd (opțional)",
       "guacdHostname": "Gazdă guacd",
@@ -278,7 +297,75 @@
     "docsLink": "Vezi documentația",
     "connectionOriginGuacamoleNote": "RDP, VNC și Telnet rulează implicit pe acest dispozitiv, la fel ca SSH. Alegeți Server remote pentru a le rula pe server.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "Partajarea ecranului Mac"
+    "appleScreenSharing": "Partajarea ecranului Mac",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "Desktop la distanță prin ID RustDesk",
+    "rustdesk": {
+      "direct": "Acces direct IP",
+      "directDesc": "Conectează-te la adresa gazdei în loc să cauți un ID RustDesk. Accesul direct IP trebuie activat în RustDesk pe acel dispozitiv.",
+      "port": "Port acces direct IP",
+      "directNote": "Conexiunea este criptată, dar fără un server ID nu există nicio modalitate de a verifica care dispozitiv a răspuns.",
+      "id": "ID RustDesk",
+      "idDesc": "ID-ul afișat în RustDesk pe dispozitivul de la distanță.",
+      "passwordDesc": "Parola permanentă sau unică setată în RustDesk. Lasă-o goală pentru ca cineva să accepte sesiunea pe dispozitivul de la distanță.",
+      "server": "Server RustDesk",
+      "serverDesc": "Lasă gol pentru a folosi serverul setat în setările de administrare ale Desktop-ului la distanță, sau serverul public RustDesk dacă nu este setat niciunul.",
+      "idServer": "Server ID",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "Server de retransmisie",
+      "relayServerPlaceholder": "Același ca serverul ID",
+      "key": "Cheie",
+      "keyDesc": "Cheia publică a serverului tău RustDesk, din id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "Streaming cu latență redusă de la un PC Sunshine",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "PC",
+      "pcDesc": "PC-ul Sunshine de streamat. Moonlight Web listează fiecare PC pe care îl cunoaște.",
+      "choosePc": "Alege un PC",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "asociat",
+      "notPaired": "neasociat",
+      "offline": "offline",
+      "refresh": "Reîmprospătează",
+      "addPc": "Adaugă această gazdă în Moonlight Web",
+      "addPcDesc": "Adaugă {{address}} pe portul {{port}}, partajat cu toți utilizatorii Moonlight Web.",
+      "pair": "Asociază",
+      "pairDesc": "Acest PC trebuie asociat cu Moonlight Web o singură dată.",
+      "pairing": "Se așteaptă răspunsul de la Sunshine",
+      "pinTitle": "PIN {{pin}}",
+      "pinDesc": "Deschide interfața web Sunshine pe PC, mergi la PIN și introdu acest PIN.",
+      "pairDone": "PC asociat",
+      "pairFailed": "Asocierea a eșuat. Verifică PIN-ul și încearcă din nou.",
+      "pairExpired": "Asocierea a expirat. Încearcă din nou.",
+      "noSetUpAccess": "Cere unui administrator să adauge și să asocieze acest PC.",
+      "stream": "Stream",
+      "app": "Aplicație",
+      "appDesc": "Ce se va deschide pe PC.",
+      "firstApp": "Prima aplicație",
+      "bitrate": "Rata de biți (kbps)",
+      "bitrateDesc": "Lăsați la 0 pentru a folosi valoarea implicită a Moonlight Web.",
+      "fps": "Rata de cadre",
+      "fpsDesc": "Lăsați la 0 pentru a folosi valoarea implicită a Moonlight Web.",
+      "transport": "Transport",
+      "transportDesc": "WebRTC are cea mai mică latență. WebSockets funcționează pe rețelele care blochează WebRTC.",
+      "transportAuto": "Automat",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "Un administrator trebuie să configureze serverul Moonlight Web în setările Remote Desktop.",
+      "loading": "Se pregătește fluxul",
+      "signInNote": "Moonlight Web vă cere să vă autentificați prima dată.",
+      "openStream": "Deschide fluxul",
+      "openInWindow": "Deschide într-o fereastră nouă",
+      "noH264": "Acest browser nu poate reda video H.264. Dacă fluxul nu pornește, folosiți Chrome, Edge sau aplicația desktop Termix, sau activați HEVC sau AV1 în Sunshine.",
+      "retry": "Încercați din nou",
+      "errorRecordingRequired": "Înregistrarea este obligatorie pe acest gazdă, iar fluxurile Moonlight nu pot fi înregistrate.",
+      "errorNotLinked": "Niciun PC nu este legat. Alegeți unul în editorul de gazde.",
+      "errorNotPaired": "Acest PC nu este încă asociat. Asociați-l în editorul de gazde.",
+      "errorOffline": "PC-ul este offline sau Sunshine nu rulează.",
+      "errorNoApps": "Sunshine nu are aplicații de deschis pe acest PC."
+    }
   },
   "onboarding": {
     "guacdTitle": "Configurează desktopul remote",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "Adresele guacd per host au fost mutate"
+      },
+      "rustdeskIdServer": {
+        "label": "Server RustDesk ID",
+        "description": "Serverul dvs. RustDesk ID (hbbs), ca gazdă sau gazdă:port. Lăsați gol pentru a folosi serverul public RustDesk. Gazdele își pot seta propriul.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "Server de retransmisie RustDesk",
+        "description": "Serverul dvs. de retransmisie RustDesk (hbbr). Lăsați gol pentru a folosi ceea ce spune serverul ID.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "Cheia serverului RustDesk",
+        "description": "Cheia publică a serverului dvs. RustDesk, din id_ed25519.pub. Necesară cu propriul server."
+      },
+      "moonlightUrl": {
+        "label": "Adresa Moonlight Web",
+        "description": "Serverul Moonlight Web cu care comunică Termix, pentru streaming Sunshine. Consultați documentația pentru a rula unul.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Adresa publică Moonlight Web",
+        "description": "Adresa deschisă de browsere, dacă diferă de cea de mai sus. HTTPS este necesar pentru gamepad-uri și blocarea tastaturii.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Numele de utilizator Moonlight Web",
+        "description": "O autentificare de administrator pe Moonlight Web. Termix o folosește pentru a lista, adăuga și asocia PC-uri."
+      },
+      "moonlightPassword": {
+        "label": "Parola Moonlight Web",
+        "description": "Parola pentru acea autentificare."
+      },
+      "moonlightIgnoreCert": {
+        "label": "Ignoră certificatul Moonlight Web",
+        "description": "Activați pentru un certificat semnat de sine stătător pe Moonlight Web."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "Port ARD"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "Port IP direct RustDesk"
+      },
+      "rustdeskId": {
+        "label": "ID RustDesk"
+      },
+      "rustdeskDirect": {
+        "label": "Acces IP direct RustDesk"
+      },
+      "rustdeskIdServer": {
+        "label": "Server RustDesk ID"
+      },
+      "rustdeskRelayServer": {
+        "label": "Server de retransmisie RustDesk"
+      },
+      "rustdeskKey": {
+        "label": "Cheia serverului RustDesk"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Port Sunshine"
+      },
+      "moonlightHostId": {
+        "label": "PC Moonlight Web"
+      },
+      "moonlightAppId": {
+        "label": "Aplicație Moonlight"
+      },
+      "moonlightBitrate": {
+        "label": "Rata de biți Moonlight"
+      },
+      "moonlightFps": {
+        "label": "Rata de cadre Moonlight"
+      },
+      "moonlightTransport": {
+        "label": "Transport Moonlight"
+      },
+      "rdpAutoReconnect": {
+        "label": "Reconectare automată RDP",
+        "description": "Reconectează când o sesiune RDP este pierdută. Dezactivați pentru a reconecta manual și a evita întreruperea sesiunilor deschise din alt client."
+      },
+      "rdpAutoResize": {
+        "label": "Redimensionare automată RDP",
+        "description": "Ajustează rezoluția remote când fereastra își schimbă dimensiunea. Dezactivați pentru a păstra dimensiunea aleasă la conectare până la reconectare."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "Conectează-te cu RDP",
     "connectVnc": "Conectează-te cu VNC",
     "connectTelnet": "Conectează-te cu Telnet",
-    "connectArd": "Conectează-te cu Apple Remote Desktop"
+    "connectArd": "Conectează-te cu Apple Remote Desktop",
+    "connectRustdesk": "Conectează-te cu RustDesk",
+    "connectMoonlight": "Conectare cu Moonlight"
   },
   "permissions": {
     "sessions": {
       "title": "Partajează sesiuni de desktop remote",
       "description": "Permite ca partajarea sesiunilor și camerele de colaborare să afișeze sesiunile RDP, VNC și Telnet ale acestui utilizator altora."
+    },
+    "monitor": {
+      "title": "Supravegherea sesiunilor de desktop remote ale tuturor utilizatorilor",
+      "description": "Permite altor funcții, cum ar fi Înregistrarea sesiunilor, să listeze, să supravegheze și să încheie sesiunile RDP, VNC și Telnet ale fiecărui utilizator."
+    },
+    "moonlight": {
+      "title": "Configurarea PC-urilor Moonlight",
+      "description": "Adăugarea PC-urilor Sunshine în Moonlight Web și asocierea acestora, folosind datele de autentificare salvate pentru Moonlight Web."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "Desktop Remote",
     "description": "Sesiuni RDP, VNC și Telnet în browser, cu clipboard, transfer de fișiere, partajare și înregistrare."
+  },
+  "operations": {
+    "check": {
+      "title": "Verificarea porturilor de desktop remote"
+    },
+    "ports": {
+      "title": "Desktop remote"
+    },
+    "sessions": {
+      "title": "Deschiderea sesiunilor remote"
+    },
+    "session": {
+      "title": "Sesiuni remote",
+      "protocol": "Tip",
+      "started": "Început"
+    }
+  },
+  "card": {
+    "title": "Sesiuni remote",
+    "loading": "Se încarcă...",
+    "empty": "Nicio sesiune remote deschisă"
   }
 }

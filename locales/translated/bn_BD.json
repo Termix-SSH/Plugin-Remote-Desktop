@@ -11,6 +11,8 @@
     "connectionError": "সংযোগ ত্রুটি",
     "clipboardWaiting": "সেশনে টেক্সট কপি করা হয়েছে। এটি আপনার ক্লিপবোর্ডে আনতে এখানে ক্লিক করুন বা একটি কী চাপুন। সাথে সাথে কপি করতে HTTPS এর মাধ্যমে Termix ওপেন করুন।",
     "failedToConnect": "সংযোগ টোকেন পাওয়া যায়নি",
+    "requestAccess": "অ্যাক্সেসের অনুরোধ করুন",
+    "verifyAccess": "যাচাই করুন",
     "hostNotFound": "হোস্ট পাওয়া যায়নি",
     "noHostSelected": "কোনো হোস্ট নির্বাচন করা হয়নি",
     "guacdUnavailable": "বাহ্যিক guacd সাড়া দিচ্ছে না। নিশ্চিত করুন যে এটি চলছে, অথবা রিমোট ডেস্কটপ সেটিংস থেকে 'Use an external guacd' বন্ধ করুন।",
@@ -81,14 +83,16 @@
         "macLock": "স্ক্রিন লক করুন",
         "spotlight": "স্পটলাইট",
         "logoff": "সাইন আউট",
-        "record": "রেকর্ড"
+        "record": "রেকর্ড",
+        "monitors": "মনিটর"
       },
       "hints": {
         "files": "RDP ড্রাইভ চালু হলে একবার দেখায়",
         "touchMode": "শুধুমাত্র টাচ স্ক্রিনে",
         "modifiers": "Ctrl, Alt, Shift এবং সিস্টেম কী পরবর্তী কী চাপা পর্যন্ত চেপে থাকবে",
         "logoff": "রান বক্স থেকে logoff চালিয়ে উইন্ডোজ থেকে সাইন আউট করে। সেশনটি ওপেন থাকতে হবে এবং ডেস্কটপ দেখা যাচ্ছে।",
-        "record": "এই সেশনের রেকর্ডিং শুরু বা থামায়। এর জন্য সেশন রেকর্ডিং প্লাগিন এবং বিল্ট-ইন ইঞ্জিন প্রয়োজন।"
+        "record": "এই সেশনের রেকর্ডিং শুরু বা থামায়। এর জন্য সেশন রেকর্ডিং প্লাগিন এবং বিল্ট-ইন ইঞ্জিন প্রয়োজন।",
+        "monitors": "রিমোট মনিটরগুলোর মধ্যে স্যুইচ করুন"
       },
       "option": "অপশন",
       "logoffConfirm": "এই উইন্ডোজ সেশন থেকে সাইন আউট করবেন? এতে অসংরক্ষিত কাজ হারিয়ে যাবে।",
@@ -96,9 +100,22 @@
       "recordStop": "রেকর্ডিং থামান",
       "recordStarted": "রেকর্ডিং শুরু হয়েছে",
       "recordStopped": "রেকর্ডিং সেশন রেকর্ডিং-এ সংরক্ষিত হয়েছে",
-      "recordFailed": "রেকর্ডিং পরিবর্তন করা যায়নি"
+      "recordFailed": "রেকর্ডিং পরিবর্তন করা যায়নি",
+      "recordRequired": "এই হোস্টে রেকর্ডিং বাধ্যতামূলক করা হয়েছে একজন প্রশাসকের দ্বারা",
+      "recordRequiredLabel": "রেকর্ডিং (বাধ্যতামূলক)",
+      "monitor": "মনিটর {{number}}"
     },
-    "disabled": "রিমোট ডেস্কটপ বন্ধ আছে। একজন অ্যাডমিন সেটিংস থেকে এটি চালু করতে পারেন।"
+    "disabled": "রিমোট ডেস্কটপ বন্ধ আছে। একজন অ্যাডমিন সেটিংস থেকে এটি চালু করতে পারেন।",
+    "rustdesk": {
+      "videoUnsupported": "এই ব্রাউজারটি RustDesk ভিডিও প্লে করতে পারে না। একটি সাম্প্রতিক Chrome, Edge, Firefox বা Safari ব্যবহার করুন।",
+      "passwordTitle": "RustDesk পাসওয়ার্ড",
+      "passwordDescription": "রিমোট ডিভাইসটির একটি পাসওয়ার্ড প্রয়োজন। এটি শুধুমাত্র এই সেশনের জন্য ব্যবহৃত হয় এবং সংরক্ষিত হয় না।",
+      "passwordWrong": "পাসওয়ার্ডটি গ্রহণ করা হয়নি। আবার চেষ্টা করুন।",
+      "codeTitle": "দুই-ফ্যাক্টর কোড",
+      "codeDescription": "রিমোট ডিভাইসটির অথেন্টিকেটর অ্যাপ থেকে কোড প্রয়োজন।",
+      "codeWrong": "কোডটি গ্রহণ করা হয়নি। আবার চেষ্টা করুন।",
+      "code": "কোড"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "Windows Remote Desktop-এ খোলা হয়েছে",
@@ -142,6 +159,8 @@
       "serverLayout": "সার্ভার লেআউট",
       "timezone": "টাইমজোন",
       "loadBalanceInfo": "লোড ব্যালেন্স তথ্য / কুকি",
+      "kdcUrl": "কের্বেরোস KDC ঠিকানা",
+      "kdcUrlDesc": "প্রোটেক্টেড ইউজার্স অ্যাকাউন্টের জন্য কের্বেরোস সাইন-ইনের ডোমেইন কন্ট্রোলার। এর জন্য বিল্ট-ইন ইঞ্জিন, DNS নাম ব্যবহার করে হোস্ট এবং ডোমেইন পূরণ করা প্রয়োজন। NTLM-এর জন্য খালি রাখুন।",
       "loadBalanceInfoDesc": "RDS ফার্ম লোড ব্যালেন্সিংয়ের জন্য RD কানেকশন ব্রোকার কুকি (যেমন: tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "guacd প্রক্সি (ঐচ্ছিক)",
       "guacdHostname": "guacd হোস্ট",
@@ -278,7 +297,75 @@
     "docsLink": "ডকুমেন্ট দেখুন",
     "connectionOriginGuacamoleNote": "ডিফল্টভাবে, SSH-এর মতো RDP, VNC এবং Telnet এই ডিভাইসে চলে। পরিবর্তে সেগুলো সার্ভারে চালানোর জন্য রিমোট সার্ভার নির্বাচন করুন।",
     "tabArd": "অ্যাপল রিমোট ডেস্কটপ",
-    "appleScreenSharing": "ম্যাক স্ক্রিন শেয়ারিং"
+    "appleScreenSharing": "ম্যাক স্ক্রিন শেয়ারিং",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "RustDesk ID দ্বারা রিমোট ডেস্কটপ",
+    "rustdesk": {
+      "direct": "সরাসরি IP অ্যাক্সেস",
+      "directDesc": "রাস্টডেস্ক আইডি খোঁজার পরিবর্তে হোস্ট ঠিকানায় সংযোগ করুন। সেই ডিভাইসে রাস্টডেস্কে সরাসরি আইপি অ্যাক্সেস চালু থাকতে হবে।",
+      "port": "সরাসরি আইপি পোর্ট",
+      "directNote": "সংযোগটি এনক্রিপ্ট করা, কিন্তু কোনো আইডি সার্ভার না থাকায় কোন ডিভাইস উত্তর দিয়েছে তা যাচাই করার কোনো উপায় নেই।",
+      "id": "রাস্টডেস্ক আইডি",
+      "idDesc": "রিমোট ডিভাইসে রাস্টডেস্কে যে আইডি দেখানো হয়।",
+      "passwordDesc": "রাস্টডেস্কে সেট করা স্থায়ী বা এককালীন পাসওয়ার্ড। রিমোট ডিভাইসে কেউ সেশনটি গ্রহণ করার জন্য এটি খালি রাখুন।",
+      "server": "রাস্টডেস্ক সার্ভার",
+      "serverDesc": "রিমোট ডেস্কটপ অ্যাডমিন সেটিংসে সেট করা সার্ভার ব্যবহার করতে খালি রাখুন, অথবা কোনোটি সেট না থাকলে পাবলিক রাস্টডেস্ক সার্ভার ব্যবহার করুন।",
+      "idServer": "আইডি সার্ভার",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "রিলে সার্ভার",
+      "relayServerPlaceholder": "আইডি সার্ভারের মতোই",
+      "key": "কী",
+      "keyDesc": "আপনার RustDesk সার্ভারের পাবলিক কী, id_ed25519.pub থেকে।"
+    },
+    "tabMoonlight": "মুনলাইট",
+    "moonlightDescription": "সানশাইন পিসি থেকে কম লেটেন্সি স্ট্রিমিং",
+    "moonlight": {
+      "server": "মুনলাইট ওয়েব",
+      "pc": "পিসি",
+      "pcDesc": "স্ট্রিম করার জন্য সানশাইন পিসি। মুনলাইট ওয়েব তার জানা প্রতিটি পিসি তালিকাভুক্ত করে।",
+      "choosePc": "একটি পিসি নির্বাচন করুন",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "জোড়া লাগানো হয়েছে",
+      "notPaired": "জোড়া লাগানো হয়নি",
+      "offline": "অফলাইন",
+      "refresh": "রিফ্রেশ করুন",
+      "addPc": "এই হোস্টটি Moonlight Web-এ যোগ করুন",
+      "addPcDesc": "{{port}} পোর্টে {{address}} যোগ করবে, যা প্রতিটি Moonlight Web ব্যবহারকারীর সাথে শেয়ার করা হবে।",
+      "pair": "জোড়া লাগান",
+      "pairDesc": "এই পিসিটি একবার Moonlight Web-এর সাথে জোড়া লাগাতে হবে।",
+      "pairing": "Sunshine-এর জন্য অপেক্ষা করছে",
+      "pinTitle": "পিন {{pin}}",
+      "pinDesc": "পিসিতে সানশাইন ওয়েব ইউআই খুলুন, পিন-এ যান এবং এই পিনটি লিখুন।",
+      "pairDone": "পিসি পেয়ার করা হয়েছে",
+      "pairFailed": "পেয়ারিং ব্যর্থ হয়েছে। পিনটি পরীক্ষা করে আবার চেষ্টা করুন।",
+      "pairExpired": "পেয়ারিংয়ের সময় শেষ হয়ে গেছে। আবার চেষ্টা করুন।",
+      "noSetUpAccess": "এই পিসিটি যোগ করতে এবং পেয়ার করতে একজন প্রশাসকের কাছে অনুরোধ করুন।",
+      "stream": "স্ট্রিম",
+      "app": "অ্যাপ",
+      "appDesc": "পিসিতে কী খুলতে চান।",
+      "firstApp": "প্রথম অ্যাপ",
+      "bitrate": "বিটরেট (kbps)",
+      "bitrateDesc": "মুনলাইট ওয়েবের ডিফল্ট ব্যবহার করতে 0 এ রাখুন।",
+      "fps": "ফ্রেম রেট",
+      "fpsDesc": "মুনলাইট ওয়েবের ডিফল্ট ব্যবহার করতে 0 এ রাখুন।",
+      "transport": "ট্রান্সপোর্ট",
+      "transportDesc": "WebRTC-এর বিলম্ব সবচেয়ে কম। WebSockets সেই নেটওয়ার্কে কাজ করে যেখানে এটি ব্লক করা থাকে।",
+      "transportAuto": "অটো",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "রিমোট ডেস্কটপ সেটিংসে মুনলাইট ওয়েব সার্ভার সেটআপ করতে একজন অ্যাডমিনকে হতে হবে।",
+      "loading": "স্ট্রিম প্রস্তুত করা হচ্ছে",
+      "signInNote": "প্রথমবারের মতো Moonlight Web আপনাকে সাইন ইন করতে বলে।",
+      "openStream": "স্ট্রিম খুলুন",
+      "openInWindow": "নতুন উইন্ডোতে খুলুন",
+      "noH264": "এই ব্রাউজারটি H.264 ভিডিও প্লে করতে পারে না। যদি স্ট্রিম শুরু না হয়, তবে Chrome, Edge বা Termix ডেস্কটপ অ্যাপ ব্যবহার করুন, অথবা Sunshine-এ HEVC বা AV1 চালু করুন।",
+      "retry": "আবার চেষ্টা করুন",
+      "errorRecordingRequired": "এই হোস্টে রেকর্ডিং বাধ্যতামূলক, এবং Moonlight স্ট্রিম রেকর্ড করা যায় না।",
+      "errorNotLinked": "কোনো পিসি লিংক করা নেই। হোস্ট এডিটর থেকে একটি নির্বাচন করুন।",
+      "errorNotPaired": "এই পিসিটি এখনও পেয়ার করা হয়নি। হোস্ট এডিটর থেকে এটি পেয়ার করুন।",
+      "errorOffline": "পিসিটি অফলাইন, অথবা Sunshine চলছে না।",
+      "errorNoApps": "এই পিসিতে ওপেন করার জন্য সানশাইনে কোনো অ্যাপ নেই।"
+    }
   },
   "onboarding": {
     "guacdTitle": "রিমোট ডেস্কটপ সেটআপ করুন",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "প্রতি-হোস্ট guacd ঠিকানা সরানো হয়েছে"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk আইডি সার্ভার",
+        "description": "আপনার নিজস্ব RustDesk আইডি সার্ভার (hbbs), হোস্ট বা হোস্ট:পোর্ট হিসেবে। পাবলিক RustDesk সার্ভার ব্যবহার করতে খালি রাখুন। হোস্টরা তাদের নিজস্ব সেট করতে পারে।",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk রিলে সার্ভার",
+        "description": "আপনার RustDesk রিলে সার্ভার (hbbr)। আইডি সার্ভার যা বলে তা ব্যবহার করতে খালি রাখুন।",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk সার্ভার কী",
+        "description": "আপনার RustDesk সার্ভারের পাবলিক কী, id_ed25519.pub থেকে। আপনার নিজস্ব সার্ভারের সাথে এটি প্রয়োজন।"
+      },
+      "moonlightUrl": {
+        "label": "Moonlight ওয়েব ঠিকানা",
+        "description": "Sunshine স্ট্রিমিংয়ের জন্য Termix যার সাথে যোগাযোগ করে, সেই Moonlight Web সার্ভার। একটি চালু করার জন্য ডকুমেন্টেশন দেখুন।",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "Moonlight Web পাবলিক ঠিকানা",
+        "description": "যদি এটি উপরের ঠিকানার সাথে না মিলে, তবে ব্রাউজার যে ঠিকানাটি খুলবে। গেমপ্যাড এবং কীবোর্ড লকের জন্য HTTPS প্রয়োজন।",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "Moonlight Web ব্যবহারকারীর নাম",
+        "description": "Moonlight Web-এর একটি অ্যাডমিন লগইন। Termix এটি ব্যবহার করে পিসি তালিকাভুক্ত, যোগ এবং পেয়ার করে।"
+      },
+      "moonlightPassword": {
+        "label": "Moonlight Web পাসওয়ার্ড",
+        "description": "সেই লগইনের জন্য পাসওয়ার্ড।"
+      },
+      "moonlightIgnoreCert": {
+        "label": "Moonlight Web সার্টিফিকেট উপেক্ষা করুন",
+        "description": "Moonlight Web-এর জন্য স্ব-স্বাক্ষরিত সার্টিফিকেট ব্যবহার করতে এটি চালু করুন।"
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "ARD পোর্ট"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "RustDesk সরাসরি IP পোর্ট"
+      },
+      "rustdeskId": {
+        "label": "RustDesk ID"
+      },
+      "rustdeskDirect": {
+        "label": "RustDesk সরাসরি IP অ্যাক্সেস"
+      },
+      "rustdeskIdServer": {
+        "label": "RustDesk ID সার্ভার"
+      },
+      "rustdeskRelayServer": {
+        "label": "RustDesk রিলে সার্ভার"
+      },
+      "rustdeskKey": {
+        "label": "RustDesk সার্ভার কী"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "Sunshine পোর্ট"
+      },
+      "moonlightHostId": {
+        "label": "Moonlight Web PC"
+      },
+      "moonlightAppId": {
+        "label": "Moonlight অ্যাপ"
+      },
+      "moonlightBitrate": {
+        "label": "Moonlight বিটরেট"
+      },
+      "moonlightFps": {
+        "label": "Moonlight ফ্রেম রেট"
+      },
+      "moonlightTransport": {
+        "label": "Moonlight ট্রান্সপোর্ট"
+      },
+      "rdpAutoReconnect": {
+        "label": "RDP স্বয়ংক্রিয়ভাবে পুনরায় সংযোগ করুন",
+        "description": "RDP সেশন হারিয়ে গেলে পুনরায় সংযোগ করুন। অন্য ক্লায়েন্ট থেকে খোলা সেশনগুলোকে ব্যাহত না করতে এবং ম্যানুয়ালি পুনরায় সংযোগ করতে বন্ধ করুন।"
+      },
+      "rdpAutoResize": {
+        "label": "RDP স্বয়ংক্রিয়ভাবে রিসাইজ করুন",
+        "description": "উইন্ডোর সাইজ পরিবর্তন হলে রিমোট রেজোলিউশন সামঞ্জস্য করুন। পুনরায় সংযোগ না করা পর্যন্ত সংযোগের সময় নির্বাচিত সাইজ বজায় রাখতে বন্ধ করুন।"
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "RDP দিয়ে সংযোগ করুন",
     "connectVnc": "VNC দিয়ে সংযোগ করুন",
     "connectTelnet": "Telnet দিয়ে সংযোগ করুন",
-    "connectArd": "অ্যাপল রিমোট ডেস্কটপ দিয়ে সংযোগ করুন"
+    "connectArd": "অ্যাপল রিমোট ডেস্কটপ দিয়ে সংযোগ করুন",
+    "connectRustdesk": "RustDesk দিয়ে সংযোগ করুন",
+    "connectMoonlight": "Moonlight দিয়ে সংযোগ করুন"
   },
   "permissions": {
     "sessions": {
       "title": "রিমোট ডেস্কটপ সেশন শেয়ার করুন",
       "description": "সেশন শেয়ারিং এবং কলাব রুমগুলিকে অন্যদের কাছে এই ব্যবহারকারীর RDP, VNC এবং Telnet সেশন দেখানোর অনুমতি দিন।"
+    },
+    "monitor": {
+      "title": "সবাইয়ের রিমোট ডেস্কটপ সেশন দেখুন",
+      "description": "সেশন রেকর্ডিংয়ের মতো অন্যান্য ফিচারকে প্রতিটি ব্যবহারকারীর RDP, VNC এবং Telnet সেশন তালিকাভুক্ত, পর্যবেক্ষণ এবং শেষ করার অনুমতি দেয়।"
+    },
+    "moonlight": {
+      "title": "Moonlight PC সেটআপ করুন",
+      "description": "সংরক্ষিত Moonlight Web লগইন ব্যবহার করে Sunshine PC যোগ করুন এবং Moonlight Web-এ তাদের পেয়ার করুন।"
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "রিমোট ডেস্কটপ",
     "description": "ব্রাউজারে RDP, VNC এবং Telnet সেশন, ক্লিপবোর্ড, ফাইল ট্রান্সফার, শেয়ারিং এবং রেকর্ডিং সহ।"
+  },
+  "operations": {
+    "check": {
+      "title": "রিমোট ডেস্কটপ পোর্ট পরীক্ষা করুন"
+    },
+    "ports": {
+      "title": "রিমোট ডেস্কটপ"
+    },
+    "sessions": {
+      "title": "খোলা রিমোট সেশন"
+    },
+    "session": {
+      "title": "রিমোট সেশন",
+      "protocol": "ধরন",
+      "started": "শুরু হয়েছে"
+    }
+  },
+  "card": {
+    "title": "রিমোট সেশন",
+    "loading": "লোড হচ্ছে...",
+    "empty": "কোনো খোলা রিমোট সেশন নেই"
   }
 }

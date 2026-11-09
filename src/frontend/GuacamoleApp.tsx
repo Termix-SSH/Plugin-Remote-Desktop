@@ -24,6 +24,7 @@ import {
   useHost,
   useTranslation,
   useConnectionRetry,
+  useTabs,
   logActivity,
 } from "@termix-ssh/plugin-sdk/frontend";
 import {
@@ -59,11 +60,20 @@ import { describeUploadError } from "./guacamole-filesystem.ts";
 import { canUploadToRdpDrive } from "./guacamole-file-drop.ts";
 import { needsRdpCredentialPrompt } from "./rdp-credential-prompt";
 import { MAX_AUTO_RECONNECTS } from "./tunnel-watch";
+import {
+  RustdeskLoginPrompt,
+  rustdeskPromptFor,
+  type RustdeskPrompt,
+} from "./RustdeskLoginPrompt";
+import {
+  supportedRustdeskCodecs,
+  type RustdeskDisplays,
+} from "./rustdesk-video";
 
 interface GuacamoleAppProps {
   hostId?: string;
   tabId?: string;
-  protocol?: "rdp" | "vnc" | "ard" | "telnet";
+  protocol?: "rdp" | "vnc" | "ard" | "telnet" | "rustdesk";
   isVisible?: boolean;
   /** A quick-connect host: never saved, so the token is minted from its fields. */
   quickConnectHost?: GuacamoleQuickHost;
@@ -80,6 +90,8 @@ export interface GuacamoleHostConfig {
   domain?: string;
   guacamoleConfig?: GuacamoleConfig;
   rdpAuthType?: string;
+  rdpAutoReconnect?: boolean;
+  rdpAutoResize?: boolean;
   authOverrides?: RemoteHostLogin["authOverrides"];
   syncId?: string | null;
   connectionOrigin?: "local" | "remote" | null;
@@ -108,10 +120,14 @@ function savedHostConfig(
           ? "vnc"
           : options.enableArd
             ? "ard"
-            : "telnet"),
+            : options.enableRustdesk
+              ? "rustdesk"
+              : "telnet"),
     domain: rdpDomain(host),
     guacamoleConfig: options.guacamoleConfig,
+    rdpAutoResize: options.rdpAutoResize,
     rdpAuthType: host.protocolAuth?.rdp?.authType,
+    rdpAutoReconnect: options.rdpAutoReconnect,
     authOverrides: host.authOverrides,
     syncId: host.syncId,
     connectionOrigin: host.connectionOrigin,
@@ -190,7 +206,7 @@ interface GuacamoleAppInnerProps {
   hostConfig: GuacamoleHostConfig;
   hostName: string;
   tabId?: string;
-  protocol?: "rdp" | "vnc" | "ard" | "telnet";
+  protocol?: "rdp" | "vnc" | "ard" | "telnet" | "rustdesk";
   isVisible: boolean;
 }
 
@@ -212,6 +228,11 @@ const GuacamoleAppInner = React.forwardRef<
     origin: ConnectionOrigin;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Set when a connect policy refused the session: the request tab, or ""
+  // when access is denied with nowhere to ask.
+  const [accessTab, setAccessTab] = useState<string | null>(null);
+  const [accessVerify, setAccessVerify] = useState(false);
+  const tabsApi = useTabs();
   const [connectionError, setConnectionError] = useState<string | null>(null);
   const [isDisplayReady, setIsDisplayReady] = useState(false);
   const [touchMode, setTouchMode] = useState<GuacamoleTouchMode | null>(() =>
@@ -283,7 +304,7 @@ const GuacamoleAppInner = React.forwardRef<
 
   const resolvedProtocolForConnect = (protocol ??
     hostConfig.connectionType ??
-    "rdp") as "rdp" | "vnc" | "ard" | "telnet";
+    "rdp") as "rdp" | "vnc" | "ard" | "telnet" | "rustdesk";
   const needsCredentialPrompt = needsRdpCredentialPrompt({
     protocol: resolvedProtocolForConnect,
     rdpAuthType: hostConfig.rdpAuthType,
@@ -299,6 +320,13 @@ const GuacamoleAppInner = React.forwardRef<
   const [promptUsername, setPromptUsername] = useState("");
   const [promptPassword, setPromptPassword] = useState("");
   const [promptDomain, setPromptDomain] = useState(hostConfig.domain ?? "");
+  // A RustDesk password or 2FA code typed after the remote asked for it.
+  const rustdeskLoginRef = useRef<{ password?: string; code?: string }>({});
+  const [rustdeskPrompt, setRustdeskPrompt] = useState<RustdeskPrompt | null>(
+    null,
+  );
+  const [rustdeskDisplays, setRustdeskDisplays] =
+    useState<RustdeskDisplays | null>(null);
 
   // Assigned below, once handleReconnect exists; the shell's tab refresh calls it.
   const reconnectRef = useRef<() => void>(() => {});
@@ -371,6 +399,18 @@ const GuacamoleAppInner = React.forwardRef<
         type: resolvedProtocolForConnect.toUpperCase(),
       }),
     });
+    let rustdesk: { code?: string; codecs?: string } | undefined;
+    if (resolvedProtocolForConnect === "rustdesk") {
+      const codecs = await supportedRustdeskCodecs();
+      if (stale()) return false;
+      if (!codecs)
+        throw new Error(t("remoteDesktop.rustdesk.videoUnsupported"));
+      rustdesk = { codecs, code: rustdeskLoginRef.current.code };
+      // A 2FA code is good for one login.
+      rustdeskLoginRef.current.code = undefined;
+    }
+    const rustdeskPassword = rustdeskLoginRef.current.password;
+
     // hostId 0 is a quick-connect host: nothing to look up, mint the token
     // straight from what the user typed. It cannot be shared or logged as
     // host activity because there is no host row.
@@ -393,9 +433,11 @@ const GuacamoleAppInner = React.forwardRef<
             hostId,
             resolvedOrigin,
             protocol,
-            promptedCredentials ?? undefined,
+            promptedCredentials ??
+              (rustdeskPassword ? { password: rustdeskPassword } : undefined),
             hostConfig.syncId,
             tabId,
+            rustdesk,
           );
     if (stale()) return false;
     if (result) {
@@ -434,10 +476,19 @@ const GuacamoleAppInner = React.forwardRef<
         const message = errorMessage(err, t("remoteDesktop.failedToConnect"));
         setError(message || t("remoteDesktop.failedToConnect"));
         addLog({ type: "error", stage: "error", message });
+        const code = (err as { code?: unknown })?.code;
+        if (code === "access-required" || code === "access-denied") {
+          const tab = (err as { requestTab?: unknown }).requestTab;
+          setAccessTab(typeof tab === "string" ? tab : "");
+          setAccessVerify(
+            (err as { requestKind?: unknown }).requestKind === "verify",
+          );
+        }
         tokenRetryRef.current.markFailed();
       }
     },
-    enabled: !needsCredentialPrompt || !!promptedCredentials,
+    enabled:
+      accessTab === null && (!needsCredentialPrompt || !!promptedCredentials),
     autoStart: false,
   });
   const tokenRetryRef = useRef(tokenRetry);
@@ -477,7 +528,11 @@ const GuacamoleAppInner = React.forwardRef<
   // A session lost while the tab was hidden comes back on its own (issue #104).
   const autoReconnects = useRef(0);
   const handleLost = useCallback(() => {
-    if (autoReconnects.current >= MAX_AUTO_RECONNECTS) {
+    if (
+      (resolvedProtocolForConnect === "rdp" &&
+        hostConfig.rdpAutoReconnect === false) ||
+      autoReconnects.current >= MAX_AUTO_RECONNECTS
+    ) {
       setConnectionError(t("remoteDesktop.connectionLost"));
       return;
     }
@@ -488,7 +543,13 @@ const GuacamoleAppInner = React.forwardRef<
       message: t("remoteDesktop.reconnectingAfterLost"),
     });
     handleReconnect();
-  }, [handleReconnect, addLog, t]);
+  }, [
+    resolvedProtocolForConnect,
+    hostConfig.rdpAutoReconnect,
+    handleReconnect,
+    addLog,
+    t,
+  ]);
 
   // A token opens one display, so a new touch mode needs a fresh one.
   const handleTouchModeChange = useCallback(
@@ -504,6 +565,24 @@ const GuacamoleAppInner = React.forwardRef<
   const hostDetail = [hostConfig.username, hostConfig.ip]
     .filter(Boolean)
     .join("@");
+
+  if (rustdeskPrompt) {
+    return (
+      <RustdeskLoginPrompt
+        prompt={rustdeskPrompt}
+        onCancel={() => setRustdeskPrompt(null)}
+        onSubmit={(value) => {
+          if (rustdeskPrompt.kind === "code") {
+            rustdeskLoginRef.current.code = value;
+          } else {
+            rustdeskLoginRef.current.password = value;
+          }
+          setRustdeskPrompt(null);
+          handleReconnect();
+        }}
+      />
+    );
+  }
 
   if (promptOpen) {
     return (
@@ -593,7 +672,27 @@ const GuacamoleAppInner = React.forwardRef<
           attempt={tokenRetry.attempt}
           maxAttempts={tokenRetry.maxAttempts}
           nextRetryInMs={tokenRetry.nextRetryInMs}
-          onManualRetry={handleReconnect}
+          onManualRetry={() => {
+            setAccessTab(null);
+            handleReconnect();
+          }}
+          extraActions={
+            accessTab ? (
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() =>
+                  tabsApi.openSingletonTab(accessTab, { data: { hostId } })
+                }
+              >
+                {t(
+                  accessVerify
+                    ? "remoteDesktop.verifyAccess"
+                    : "remoteDesktop.requestAccess",
+                )}
+              </Button>
+            ) : undefined
+          }
         />
       </div>
     );
@@ -618,6 +717,7 @@ const GuacamoleAppInner = React.forwardRef<
           onToggleFileBrowser={() => setFileBrowserOpen((open) => !open)}
           onTouchModeChange={handleTouchModeChange}
           zoom={displayZoom}
+          displays={rustdeskDisplays}
           settings={toolbarSettings}
           slotContext={
             typeof hostId === "number"
@@ -661,6 +761,7 @@ const GuacamoleAppInner = React.forwardRef<
             type: resolvedProtocol,
             connectionOrigin: hostConfig.connectionOrigin,
             width: configuredWidth,
+            rdpAutoResize: hostConfig.rdpAutoResize,
             height: configuredHeight,
             dpi: configuredDpi,
           }}
@@ -677,9 +778,16 @@ const GuacamoleAppInner = React.forwardRef<
           }}
           onLost={handleLost}
           onError={(err) => {
+            const prompt = rustdeskPromptFor(err);
+            if (prompt) {
+              setConnectionError(null);
+              setRustdeskPrompt(prompt);
+              return;
+            }
             setConnectionError(err);
             addLog({ type: "error", stage: "error", message: err });
           }}
+          onDisplays={setRustdeskDisplays}
           onStageChange={(stage) => {
             const type = resolvedProtocol.toUpperCase();
             switch (stage) {

@@ -171,6 +171,18 @@ export class Display {
     this.out.send("sync", this.now());
   }
 
+  /** Ends a frame drawn outside the display (video), paced like any other. */
+  frame(): void {
+    const ts = this.now();
+    for (const sync of this.users.values()) sync.outstanding.push(ts);
+    this.out.send("sync", ts);
+  }
+
+  /** True while a client still has frames to acknowledge. */
+  behind(): boolean {
+    return this.lagging();
+  }
+
   stop(): void {
     if (this.timer) clearTimeout(this.timer);
     this.timer = null;

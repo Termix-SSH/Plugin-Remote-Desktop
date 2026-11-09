@@ -11,6 +11,8 @@
     "connectionError": "خطأ في الاتصال",
     "clipboardWaiting": "تم نسخ النص في الجلسة. انقر أو اضغط على مفتاح هنا لوضعه في الحافظة. افتح Termix عبر HTTPS للنسخ فوراً.",
     "failedToConnect": "فشل في الحصول على رمز الاتصال",
+    "requestAccess": "طلب الوصول",
+    "verifyAccess": "التحقق",
     "hostNotFound": "لم يتم العثور على المضيف",
     "noHostSelected": "لم يتم تحديد مضيف",
     "guacdUnavailable": "الخادم الخارجي guacd لا يستجيب. تأكد من أنه قيد التشغيل، أو عطّل خيار \"استخدام guacd خارجي\" في إعدادات سطح المكتب عن بُعد.",
@@ -81,14 +83,16 @@
         "macLock": "قفل الشاشة",
         "spotlight": "Spotlight",
         "logoff": "تسجيل الخروج",
-        "record": "تسجيل"
+        "record": "تسجيل",
+        "monitors": "الشاشات"
       },
       "hints": {
         "files": "يظهر بمجرد تفعيل محرك أقراص RDP",
         "touchMode": "على شاشات اللمس فقط",
         "modifiers": "تبقى مفاتيح Ctrl و Alt و Shift ومفتاح النظام مضغوطة حتى الضغط على المفتاح التالي",
         "logoff": "يسجل الخروج من Windows بتشغيل logoff من مربع التشغيل. يجب أن تكون الجلسة مفتوحة وتعرض سطح المكتب.",
-        "record": "يبدأ أو يوقف تسجيل هذه الجلسة. يتطلب إضافة تسجيل الجلسة والمحرك المدمج."
+        "record": "يبدأ أو يوقف تسجيل هذه الجلسة. يتطلب إضافة تسجيل الجلسة والمحرك المدمج.",
+        "monitors": "التبديل بين شاشات الجهاز البعيد"
       },
       "option": "Option",
       "logoffConfirm": "هل تريد تسجيل الخروج من جلسة Windows هذه؟ سيتم فقدان العمل غير المحفوظ فيها.",
@@ -96,9 +100,22 @@
       "recordStop": "إيقاف التسجيل",
       "recordStarted": "بدأ التسجيل",
       "recordStopped": "تم حفظ التسجيل في تسجيل الجلسة",
-      "recordFailed": "تعذر تغيير التسجيل"
+      "recordFailed": "تعذر تغيير التسجيل",
+      "recordRequired": "قام المسؤول بجعل التسجيل إلزاميًا على هذا الجهاز",
+      "recordRequiredLabel": "التسجيل (إلزامي)",
+      "monitor": "الشاشة {{number}}"
     },
-    "disabled": "سطح المكتب البعيد معطل. يمكن للمسؤول تفعيله في الإعدادات."
+    "disabled": "سطح المكتب البعيد معطل. يمكن للمسؤول تفعيله في الإعدادات.",
+    "rustdesk": {
+      "videoUnsupported": "لا يمكن لهذا المتصفح تشغيل فيديو RustDesk. استخدم إصدارًا حديثًا من Chrome أو Edge أو Firefox أو Safari.",
+      "passwordTitle": "كلمة مرور RustDesk",
+      "passwordDescription": "يحتاج الجهاز البعيد إلى كلمة مرور. تُستخدم لهذه الجلسة فقط ولن يتم حفظها.",
+      "passwordWrong": "لم يتم قبول كلمة المرور هذه. حاول مرة أخرى.",
+      "codeTitle": "رمز التحقق الثنائي",
+      "codeDescription": "يحتاج الجهاز البعيد إلى الرمز من تطبيق المصادقة الخاص به.",
+      "codeWrong": "لم يتم قبول الرمز هذا. حاول مرة أخرى.",
+      "code": "الرمز"
+    }
   },
   "hosts": {
     "nativeRdpOpened": "تم الفتح في سطح المكتب البعيد لـ Windows",
@@ -142,6 +159,8 @@
       "serverLayout": "تخطيط الخادم",
       "timezone": "المنطقة الزمنية",
       "loadBalanceInfo": "معلومات موازنة الحمل / الكوكي",
+      "kdcUrl": "عنوان خادم Kerberos KDC",
+      "kdcUrlDesc": "وحدة تحكم المجال لتسجيل الدخول عبر Kerberos، للحسابات الموجودة في \"المستخدمين المحميين\". يتطلب المحرك المدمج، إدخال الجهاز باسم DNS الخاص به، وملء اسم المجال. اتركه فارغًا لاستخدام NTLM.",
       "loadBalanceInfoDesc": "كوكي وسيط اتصال RD لموازنة تحميل مزرعة RDS (مثال: tsv://MS Terminal Services Plugin.1.CollectionName)",
       "guacdProxy": "وكيل guacd (اختياري)",
       "guacdHostname": "مضيف guacd",
@@ -278,7 +297,75 @@
     "docsLink": "عرض الوثائق",
     "connectionOriginGuacamoleNote": "تعمل اتصالات RDP و VNC و Telnet على هذا الجهاز افتراضيًا، مثل SSH. اختر \"خادم عن بُعد\" لتشغيلها على الخادم بدلاً من ذلك.",
     "tabArd": "Apple Remote Desktop",
-    "appleScreenSharing": "مشاركة شاشة Mac"
+    "appleScreenSharing": "مشاركة شاشة Mac",
+    "tabRustdesk": "RustDesk",
+    "rustdeskDescription": "سطح المكتب عن بُعد عبر معرف RustDesk",
+    "rustdesk": {
+      "direct": "الوصول المباشر عبر عنوان IP",
+      "directDesc": "الاتصال بعنوان الجهاز بدلاً من البحث عن معرف RustDesk. يجب تفعيل الوصول المباشر عبر IP في RustDesk على ذلك الجهاز.",
+      "port": "منفذ IP المباشر",
+      "directNote": "الاتصال مشفر، ولكن بدون خادم معرف، لا يوجد ما يثبت هوية الجهاز الذي استجاب.",
+      "id": "معرف RustDesk",
+      "idDesc": "المعرف المعروض في RustDesk على الجهاز البعيد.",
+      "passwordDesc": "كلمة المرور الدائمة أو لمرة واحدة المحددة في RustDesk. اتركها فارغة للسماح لشخص ما بقبول الجلسة على الجهاز البعيد.",
+      "server": "خادم RustDesk",
+      "serverDesc": "اتركه فارغًا لاستخدام الخادم المحدد في إعدادات المسؤول لسطح المكتب عن بُعد، أو خادم RustDesk العام إذا لم يتم تحديد أي خادم.",
+      "idServer": "خادم المعرف",
+      "idServerPlaceholder": "rustdesk.example.com",
+      "relayServer": "خادم الترحيل",
+      "relayServerPlaceholder": "نفس خادم المعرف",
+      "key": "المفتاح",
+      "keyDesc": "المفتاح العام لخادم RustDesk الخاص بك، من ملف id_ed25519.pub."
+    },
+    "tabMoonlight": "Moonlight",
+    "moonlightDescription": "بث منخفض الكمون من جهاز Sunshine",
+    "moonlight": {
+      "server": "Moonlight Web",
+      "pc": "جهاز الكمبيوتر",
+      "pcDesc": "جهاز Sunshine المراد بثه. يعرض Moonlight Web كل جهاز كمبيوتر يعرفه.",
+      "choosePc": "اختر جهاز كمبيوتر",
+      "pcLabel": "{{name}} ({{state}})",
+      "paired": "مقترن",
+      "notPaired": "غير مقترن",
+      "offline": "غير متصل",
+      "refresh": "تحديث",
+      "addPc": "أضف هذا الجهاز إلى Moonlight Web",
+      "addPcDesc": "يضيف {{address}} على المنفذ {{port}}، ومشاركًا مع كل مستخدمي Moonlight Web.",
+      "pair": "الاقتران",
+      "pairDesc": "يجب اقتران هذا الجهاز مع Moonlight Web مرة واحدة.",
+      "pairing": "في انتظار Sunshine",
+      "pinTitle": "الرمز السري {{pin}}",
+      "pinDesc": "افتح واجهة Sunshine الويب على جهاز الكمبيوتر، انتقل إلى الرمز السري، وأدخل هذا الرمز.",
+      "pairDone": "تم اقتران جهاز الكمبيوتر",
+      "pairFailed": "فشل الاقتران. تحقق من الرمز السري وحاول مرة أخرى.",
+      "pairExpired": "انتهت مهلة الاقتران. حاول مرة أخرى.",
+      "noSetUpAccess": "اطلب من المسؤول إضافة هذا الجهاز وإقرانه.",
+      "stream": "بث",
+      "app": "التطبيق",
+      "appDesc": "ما سيتم فتحه على جهاز الكمبيوتر.",
+      "firstApp": "أول تطبيق",
+      "bitrate": "معدل البت (كيلوبت/ثانية)",
+      "bitrateDesc": "اتركه عند 0 لاستخدام الإعداد الافتراضي في Moonlight Web.",
+      "fps": "معدل الإطارات",
+      "fpsDesc": "اتركه عند 0 لاستخدام الإعداد الافتراضي في Moonlight Web.",
+      "transport": "بروتوكول النقل",
+      "transportDesc": "يوفر WebRTC أقل تأخير. يعمل WebSockets على الشبكات التي تحظر WebRTC.",
+      "transportAuto": "تلقائي",
+      "transportWebrtc": "WebRTC",
+      "transportWebsocket": "WebSockets",
+      "notConfigured": "يجب على المسؤول إعداد خادم Moonlight Web في إعدادات سطح المكتب عن بُعد.",
+      "loading": "جارٍ تحضير البث",
+      "signInNote": "يطلب منك Moonlight Web تسجيل الدخول في المرة الأولى.",
+      "openStream": "فتح البث",
+      "openInWindow": "فتح في نافذة جديدة",
+      "noH264": "لا يمكن لهذا المتصفح تشغيل فيديو H.264. إذا لم يبدأ البث، استخدم Chrome أو Edge أو تطبيق Termix المكتبي، أو فعّل HEVC أو AV1 في Sunshine.",
+      "retry": "حاول مرة أخرى",
+      "errorRecordingRequired": "التسجيل مطلوب على هذا المضيف، ولا يمكن تسجيل بث Moonlight.",
+      "errorNotLinked": "لا يوجد جهاز كمبيوتر مرتبط. اختر واحدًا في محرر المضيف.",
+      "errorNotPaired": "لم يتم إقران هذا الكمبيوتر بعد. قم بإقرانه في محرر المضيف.",
+      "errorOffline": "الكمبيوتر غير متصل، أو Sunshine لا يعمل.",
+      "errorNoApps": "لا توجد تطبيقات في Sunshine لفتحها على هذا الكمبيوتر."
+    }
   },
   "onboarding": {
     "guacdTitle": "إعداد سطح المكتب البعيد",
@@ -366,6 +453,42 @@
       },
       "hostGuacdMigrated": {
         "label": "تم نقل عناوين guacd لكل جهاز"
+      },
+      "rustdeskIdServer": {
+        "label": "خادم معرف RustDesk",
+        "description": "خادم معرف RustDesk الخاص بك (hbbs)، كمضيف أو مضيف:منفذ. اتركه فارغًا لاستخدام خادم RustDesk العام. يمكن للمضيفين تعيين خادمهم الخاص.",
+        "placeholder": "rustdesk.example.com"
+      },
+      "rustdeskRelayServer": {
+        "label": "خادم إعادة توجيه RustDesk",
+        "description": "خادم إعادة توجيه RustDesk الخاص بك (hbbr). اتركه فارغًا لاستخدام ما يحدده خادم المعرف.",
+        "placeholder": "rustdesk.example.com:21117"
+      },
+      "rustdeskKey": {
+        "label": "مفتاح خادم RustDesk",
+        "description": "المفتاح العام لخادم RustDesk الخاص بك، من ملف id_ed25519.pub. مطلوب عند استخدام خادمك الخاص."
+      },
+      "moonlightUrl": {
+        "label": "عنوان Moonlight Web",
+        "description": "خادم Moonlight Web الذي يتواصل معه Termix لبث Sunshine. راجع الوثائق لتشغيل واحد.",
+        "placeholder": "http://moonlight.example.com:8080"
+      },
+      "moonlightPublicUrl": {
+        "label": "العنوان العام لـ Moonlight Web",
+        "description": "العنوان الذي تفتحه المتصفحات، إذا اختلف عن العنوان أعلاه. يتطلب HTTPS لأجهزة التحكم وقفل لوحة المفاتيح.",
+        "placeholder": "https://moonlight.example.com"
+      },
+      "moonlightUsername": {
+        "label": "اسم المستخدم في Moonlight Web",
+        "description": "تسجيل دخول مسؤول في Moonlight Web. يستخدمه Termix لسرد وإضافة وإقران أجهزة الكمبيوتر."
+      },
+      "moonlightPassword": {
+        "label": "كلمة المرور في Moonlight Web",
+        "description": "كلمة المرور لتسجيل الدخول هذا."
+      },
+      "moonlightIgnoreCert": {
+        "label": "تجاهل شهادة Moonlight Web",
+        "description": "فعّل هذا الخيار إذا كانت شهادة Moonlight Web موقعة ذاتيًا."
       }
     },
     "host": {
@@ -426,6 +549,56 @@
       },
       "ardPort": {
         "label": "منفذ ARD"
+      },
+      "enableRustdesk": {
+        "label": "RustDesk"
+      },
+      "rustdeskPort": {
+        "label": "منفذ IP المباشر لـ RustDesk"
+      },
+      "rustdeskId": {
+        "label": "معرف RustDesk"
+      },
+      "rustdeskDirect": {
+        "label": "الوصول المباشر عبر IP لـ RustDesk"
+      },
+      "rustdeskIdServer": {
+        "label": "خادم معرف RustDesk"
+      },
+      "rustdeskRelayServer": {
+        "label": "خادم إعادة توجيه RustDesk"
+      },
+      "rustdeskKey": {
+        "label": "مفتاح خادم RustDesk"
+      },
+      "enableMoonlight": {
+        "label": "Moonlight"
+      },
+      "moonlightPort": {
+        "label": "منفذ Sunshine"
+      },
+      "moonlightHostId": {
+        "label": "جهاز كمبيوتر Moonlight Web"
+      },
+      "moonlightAppId": {
+        "label": "تطبيق Moonlight"
+      },
+      "moonlightBitrate": {
+        "label": "معدل البت في Moonlight"
+      },
+      "moonlightFps": {
+        "label": "معدل الإطارات في Moonlight"
+      },
+      "moonlightTransport": {
+        "label": "بروتوكول النقل في Moonlight"
+      },
+      "rdpAutoReconnect": {
+        "label": "إعادة الاتصال بـ RDP تلقائيًا",
+        "description": "إعادة الاتصال عند فقدان جلسة RDP. عطّل هذا الخيار لإعادة الاتصال يدويًا وتجنب مقاطعة الجلسات المفتوحة من عميل آخر."
+      },
+      "rdpAutoResize": {
+        "label": "تغيير حجم RDP تلقائيًا",
+        "description": "تعديل الدقة عن بُعد عند تغيير حجم النافذة. عطّل هذا الخيار للحفاظ على الحجم المختار عند الاتصال حتى إعادة الاتصال."
       }
     }
   },
@@ -433,12 +606,22 @@
     "connectRdp": "الاتصال عبر RDP",
     "connectVnc": "الاتصال عبر VNC",
     "connectTelnet": "الاتصال عبر Telnet",
-    "connectArd": "الاتصال عبر Apple Remote Desktop"
+    "connectArd": "الاتصال عبر Apple Remote Desktop",
+    "connectRustdesk": "الاتصال عبر RustDesk",
+    "connectMoonlight": "الاتصال عبر Moonlight"
   },
   "permissions": {
     "sessions": {
       "title": "مشاركة جلسات سطح المكتب البعيد",
       "description": "السماح لمشاركة الجلسات وغرف التعاون بإظهار جلسات RDP وVNC وTelnet لهذا المستخدم للآخرين."
+    },
+    "monitor": {
+      "title": "مراقبة جلسات سطح المكتب البعيد لجميع المستخدمين",
+      "description": "يسمح للميزات الأخرى، مثل تسجيل الجلسة، بإدراج ومراقبة وإنهاء جلسات RDP وVNC وTelnet لجميع المستخدمين."
+    },
+    "moonlight": {
+      "title": "إعداد أجهزة الكمبيوتر لـ Moonlight",
+      "description": "إضافة أجهزة Sunshine إلى Moonlight Web وإقرانها، باستخدام بيانات تسجيل الدخول المحفوظة لـ Moonlight Web."
     }
   },
   "errors": {
@@ -447,5 +630,26 @@
   "plugin": {
     "name": "سطح المكتب البعيد",
     "description": "جلسات RDP و VNC و Telnet في متصفحك، مع دعم الحافظة، ونقل الملفات، والمشاركة، والتسجيل."
+  },
+  "operations": {
+    "check": {
+      "title": "فحص منافذ سطح المكتب البعيد"
+    },
+    "ports": {
+      "title": "سطح المكتب البعيد"
+    },
+    "sessions": {
+      "title": "فتح جلسات عن بُعد"
+    },
+    "session": {
+      "title": "الجلسات عن بُعد",
+      "protocol": "النوع",
+      "started": "بدأت"
+    }
+  },
+  "card": {
+    "title": "الجلسات عن بُعد",
+    "loading": "جارٍ التحميل...",
+    "empty": "لا توجد جلسات عن بُعد مفتوحة"
   }
 }

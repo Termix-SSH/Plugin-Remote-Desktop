@@ -23,6 +23,23 @@ function sectionProps(form: Record<string, unknown>) {
 }
 
 describe("remote desktop editor form", () => {
+  it("defaults RDP auto reconnect on and persists an explicit opt-out", () => {
+    const { props, state } = sectionProps({
+      pluginSettings: {
+        "remote-desktop": { rdpPort: 3390 },
+        other: { keep: true },
+      },
+    });
+    expect(remoteDesktopForm(props).form.rdpAutoReconnect).toBe(true);
+    remoteDesktopForm(props).setField("rdpAutoReconnect", false);
+    expect(state.form.pluginSettings).toEqual({
+      "remote-desktop": { rdpPort: 3390, rdpAutoReconnect: false },
+      other: { keep: true },
+    });
+    const reopened = sectionProps(state.form);
+    expect(remoteDesktopForm(reopened.props).form.rdpAutoReconnect).toBe(false);
+  });
+
   it("reads each protocol's login from the host form's protocolAuth", () => {
     const { props } = sectionProps({
       protocolAuth: {
@@ -88,4 +105,17 @@ describe("remote desktop editor form", () => {
       rdp: { password: "pw" },
     });
   });
+});
+
+it("defaults RDP resizing on and preserves an explicit opt-out on save and reopen", () => {
+  const { props, state } = sectionProps({});
+  const editor = remoteDesktopForm(props);
+  expect(editor.form.rdpAutoResize).toBe(true);
+  editor.setField("rdpAutoResize", false);
+  expect(state.form.pluginSettings).toEqual({
+    "remote-desktop": { rdpAutoResize: false },
+  });
+  expect(
+    remoteDesktopForm(sectionProps(state.form).props).form.rdpAutoResize,
+  ).toBe(false);
 });

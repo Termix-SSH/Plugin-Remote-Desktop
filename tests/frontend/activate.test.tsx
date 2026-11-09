@@ -1,3 +1,4 @@
+import { screen } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   renderWithApp,
@@ -38,6 +39,32 @@ describe(`${manifest.id} activate`, () => {
     }
   });
 
+  it("shows the open remote sessions on its dashboard card", async () => {
+    rendered = await renderWithApp(plugin, {
+      manifest,
+      locales,
+      permissions: ["remote-desktop.sessions"],
+      hosts: [{ id: "1", name: "desk", ip: "10.0.0.1", port: 3389 }],
+      api: {
+        get: vi.fn(async () => ({
+          data: [
+            {
+              id: "g1",
+              hostId: 1,
+              hostName: "desk",
+              protocol: "rdp",
+              openedAt: 0,
+            },
+          ],
+        })),
+      } as never,
+    });
+    expect(rendered.registered.dashboardCards()).toEqual(["remote-sessions"]);
+    rendered.renderDashboardCard("remote-sessions");
+    expect(await screen.findByText("desk")).toBeTruthy();
+    expect(screen.getByText("RDP")).toBeTruthy();
+  });
+
   it("removes everything it registered on deactivate", async () => {
     const app = await renderWithApp(plugin, { manifest, locales });
     await app.deactivate();
@@ -61,13 +88,15 @@ describe(`${manifest.id} activate`, () => {
     await vi.waitFor(() =>
       expect(rendered!.registered.hostProtocols().sort()).toEqual([
         "ard",
+        "moonlight",
         "rdp",
+        "rustdesk",
         "telnet",
         "vnc",
       ]),
     );
     expect(rendered.registered.hostActions().map((a) => a.id)).toEqual(
-      expect.arrayContaining(["rdp", "vnc", "ard", "telnet"]),
+      expect.arrayContaining(["rdp", "vnc", "ard", "telnet", "rustdesk"]),
     );
   });
 

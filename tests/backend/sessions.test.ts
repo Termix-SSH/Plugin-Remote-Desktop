@@ -81,18 +81,32 @@ describe("RemoteSessions", () => {
 
 describe("sessions.live providers", () => {
   const tokens = new GuacamoleTokenService();
-
-  it("describes a live session of its own protocol only", () => {
-    const sessions = new RemoteSessions();
-    sessions.opened(meta, "g1");
-    const deps = {
+  // A fake ctx: actor and whether they hold remote-desktop.monitor.
+  const fakeCtx = (actor: string | undefined, monitor = false) => ({
+    currentActor: () => actor,
+    rbac: { has: async (name: string) => monitor && name === "monitor" },
+  });
+  const build = (
+    protocol: "rdp" | "vnc",
+    extra: Partial<Parameters<typeof createLiveSessions>[1]> = {},
+  ) => {
+    const sessions = extra.sessions ?? new RemoteSessions();
+    if (!extra.sessions) sessions.opened(meta, "g1");
+    return createLiveSessions(protocol, {
+      ctx: fakeCtx(undefined) as never,
       sessions,
       tokens,
       endSession: vi.fn(() => true),
       disconnectShare: vi.fn(() => 0),
-    };
-    const rdp = createLiveSessions("rdp", deps);
-    const vnc = createLiveSessions("vnc", deps);
+      ...extra,
+    });
+  };
+
+  it("describes a live session of its own protocol only", () => {
+    const sessions = new RemoteSessions();
+    sessions.opened(meta, "g1");
+    const rdp = build("rdp", { sessions, isRecording: () => true });
+    const vnc = build("vnc", { sessions });
 
     expect(rdp.getSession("g1")).toMatchObject({
       id: "g1",
@@ -101,54 +115,95 @@ describe("sessions.live providers", () => {
       hostName: "Win box",
       isConnected: true,
       tabInstanceId: "tab-1",
+      protocol: "rdp",
+      recording: true,
     });
     expect(vnc.getSession("g1")).toBeNull();
   });
 
-  it("mints a join token for a viewer and refuses an unknown session", () => {
-    const sessions = new RemoteSessions();
-    sessions.opened(meta, "g1");
-    const rdp = createLiveSessions("rdp", {
-      sessions,
-      tokens,
-      endSession: vi.fn(() => true),
-      disconnectShare: vi.fn(() => 0),
-    });
-
-    const token = tokens.decryptToken(rdp.createViewerToken("g1", true));
+  it("mints a join token for a viewer and refuses an unknown session", async () => {
+    const rdp = build("rdp");
+    const token = tokens.decryptToken(await rdp.createViewerToken("g1", true));
     expect(token?.connection).toMatchObject({ join: "g1", readOnly: true });
     expect(token?.recording).toBeUndefined();
-    expect(() => rdp.createViewerToken("nope", false)).toThrow();
+    await expect(rdp.createViewerToken("nope", false)).rejects.toThrow();
   });
 
-  it("ends the session for its owner", () => {
-    const sessions = new RemoteSessions();
-    sessions.opened(meta, "g1");
+  it("ends the session for its owner", async () => {
     const endSession = vi.fn(() => true);
-    const rdp = createLiveSessions("rdp", {
-      sessions,
-      tokens,
+    const rdp = build("rdp", {
+      ctx: fakeCtx("user-1") as never,
       endSession,
-      disconnectShare: vi.fn(() => 0),
     });
-    rdp.ownerEndSession("g1", "owner ended");
+    await rdp.ownerEndSession("g1", "owner ended");
     expect(endSession).toHaveBeenCalledWith("g1");
   });
 
-  it("carries the share in a join token and closes that share's viewers", () => {
-    const sessions = new RemoteSessions();
-    sessions.opened(meta, "g1");
-    const disconnectShare = vi.fn(() => 2);
-    const rdp = createLiveSessions("rdp", {
-      sessions,
-      tokens,
-      endSession: vi.fn(() => true),
-      disconnectShare,
+  it("lists a user's own sessions only for that user", () => {
+    const owner = build("rdp", { ctx: fakeCtx("user-1") as never });
+    expect(owner.listForUser("user-1").map((row) => row.id)).toEqual(["g1"]);
+    const other = build("rdp", { ctx: fakeCtx("user-2") as never });
+    expect(other.listForUser("user-1")).toEqual([]);
+  });
+
+  it("refuses someone else without monitor", async () => {
+    const endSession = vi.fn(() => true);
+    const rdp = build("rdp", { ctx: fakeCtx("user-2") as never, endSession });
+    await expect(rdp.ownerEndSession("g1", "x")).rejects.toThrow(/Not allowed/);
+    await expect(rdp.createViewerToken("g1", false)).rejects.toThrow(
+      /Not allowed/,
+    );
+    expect(await rdp.listAll()).toEqual([]);
+    expect(endSession).not.toHaveBeenCalled();
+  });
+
+  it("lets a monitor list, watch read only and end", async () => {
+    const endSession = vi.fn(() => true);
+    const rdp = build("rdp", {
+      ctx: fakeCtx("auditor", true) as never,
+      endSession,
     });
-    const token = tokens.decryptToken(rdp.createViewerToken("g1", true, "s1"));
+    expect((await rdp.listAll()).map((row) => row.id)).toEqual(["g1"]);
+    const token = tokens.decryptToken(
+      await rdp.createViewerToken("g1", false, "s1"),
+    );
+    expect(token?.connection).toMatchObject({ join: "g1", readOnly: true });
+    expect(token?.connection.settings ?? {}).toEqual({});
+    await rdp.ownerEndSession("g1", "auditor");
+    expect(endSession).toHaveBeenCalledWith("g1");
+  });
+
+  it("carries the share in a join token and closes that share's viewers", async () => {
+    const disconnectShare = vi.fn(() => 2);
+    const rdp = build("rdp", { disconnectShare });
+    const token = tokens.decryptToken(
+      await rdp.createViewerToken("g1", true, "s1"),
+    );
     expect(token?.connection.settings).toEqual({ "termix-share-id": "s1" });
     expect(rdp.disconnectParticipants("g1", "s1")).toBe(2);
     expect(disconnectShare).toHaveBeenCalledWith("g1", "s1");
     expect(rdp.disconnectParticipants("nope", "s1")).toBe(0);
+  });
+});
+
+describe("RemoteSessions.listByOwner", () => {
+  it("returns only the owner's open sessions, newest first", () => {
+    const sessions = new RemoteSessions();
+    const meta = (id: string, owner: string) =>
+      ({
+        termixConnectId: id,
+        hostId: 1,
+        hostName: "h",
+        ownerUserId: owner,
+        protocol: "rdp",
+      }) as never;
+    sessions.opened(meta("a", "u1"), "ga");
+    sessions.opened(meta("b", "u2"), "gb");
+    sessions.opened(meta("c", "u1"), "gc");
+    expect(sessions.listByOwner("u1").map((s) => s.termixConnectId)).toEqual(
+      expect.arrayContaining(["a", "c"]),
+    );
+    expect(sessions.listByOwner("u1")).toHaveLength(2);
+    sessions.clear();
   });
 });

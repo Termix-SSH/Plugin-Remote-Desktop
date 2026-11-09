@@ -31,12 +31,14 @@ export const CONNECTION_DEFAULTS: Record<
     width: 1024,
     height: 768,
   },
+  rustdesk: {},
 };
 
 const DEFAULT_PORTS: Record<EngineProtocol, number> = {
   rdp: 3389,
   vnc: 5900,
   telnet: 23,
+  rustdesk: 21118,
 };
 
 /** Settings a client may set in the display URL. Everything else comes from the token. */
@@ -44,6 +46,7 @@ const QUERY_KEYS: Record<EngineProtocol, string[]> = {
   rdp: ["width", "height", "dpi"],
   vnc: ["width", "height"],
   telnet: ["width", "height"],
+  rustdesk: [],
 };
 
 /**

@@ -1,6 +1,6 @@
 import type { PluginContext } from "@termix-ssh/plugin-sdk/backend";
 
-export type RemoteProtocol = "rdp" | "vnc" | "ard" | "telnet";
+export type RemoteProtocol = "rdp" | "vnc" | "ard" | "telnet" | "rustdesk";
 
 const PLUGIN_ID = "remote-desktop";
 
@@ -9,10 +9,24 @@ export interface RemoteDesktopHostSettings {
   enableVnc: boolean;
   enableArd: boolean;
   enableTelnet: boolean;
+  enableRustdesk: boolean;
+  enableMoonlight: boolean;
   rdpPort: number;
   vncPort: number;
   ardPort: number;
   telnetPort: number;
+  rustdeskPort: number;
+  rustdeskId: string;
+  rustdeskIdServer: string;
+  rustdeskRelayServer: string;
+  rustdeskKey: string;
+  rustdeskDirect: boolean;
+  moonlightPort: number;
+  moonlightHostId: number;
+  moonlightAppId: number;
+  moonlightBitrate: number;
+  moonlightFps: number;
+  moonlightTransport: string;
   rdpSecurity: string;
   rdpIgnoreCert: boolean;
   guacamoleConfig: Record<string, unknown>;
@@ -27,6 +41,7 @@ export const ENABLE_KEY: Record<
   vnc: "enableVnc",
   ard: "enableArd",
   telnet: "enableTelnet",
+  rustdesk: "enableRustdesk",
 };
 
 export const PORT_KEY: Record<RemoteProtocol, keyof RemoteDesktopHostSettings> =
@@ -35,6 +50,7 @@ export const PORT_KEY: Record<RemoteProtocol, keyof RemoteDesktopHostSettings> =
     vnc: "vncPort",
     ard: "ardPort",
     telnet: "telnetPort",
+    rustdesk: "rustdeskPort",
   };
 
 export const DEFAULT_PORT: Record<RemoteProtocol, number> = {
@@ -42,11 +58,23 @@ export const DEFAULT_PORT: Record<RemoteProtocol, number> = {
   vnc: 5900,
   ard: 5900,
   telnet: 23,
+  rustdesk: 21118,
 };
+
+export const MOONLIGHT_DEFAULT_PORT = 47989;
+
+export const REMOTE_PROTOCOLS = [
+  "rdp",
+  "vnc",
+  "ard",
+  "telnet",
+  "rustdesk",
+] as const;
 
 export function isRemoteProtocol(value: unknown): value is RemoteProtocol {
   return (
-    value === "rdp" || value === "vnc" || value === "ard" || value === "telnet"
+    typeof value === "string" &&
+    (REMOTE_PROTOCOLS as readonly string[]).includes(value)
   );
 }
 
@@ -74,6 +102,15 @@ function asObject(value: unknown): Record<string, unknown> | undefined {
     : undefined;
 }
 
+function asText(value: unknown): string {
+  return typeof value === "string" ? value.trim() : "";
+}
+
+function asCount(value: unknown): number {
+  const parsed = Number(value);
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : 0;
+}
+
 function asBool(value: unknown): boolean | undefined {
   if (typeof value === "boolean") return value;
   if (value === 1 || value === "1" || value === "true") return true;
@@ -91,10 +128,24 @@ export async function readHostSettings(
     enableVnc: values.enableVnc === true,
     enableArd: values.enableArd === true,
     enableTelnet: values.enableTelnet === true,
+    enableRustdesk: values.enableRustdesk === true,
+    enableMoonlight: values.enableMoonlight === true,
     rdpPort: asPort(values.rdpPort) ?? DEFAULT_PORT.rdp,
     vncPort: asPort(values.vncPort) ?? DEFAULT_PORT.vnc,
     ardPort: asPort(values.ardPort) ?? DEFAULT_PORT.ard,
     telnetPort: asPort(values.telnetPort) ?? DEFAULT_PORT.telnet,
+    rustdeskPort: asPort(values.rustdeskPort) ?? DEFAULT_PORT.rustdesk,
+    rustdeskId: asText(values.rustdeskId),
+    rustdeskIdServer: asText(values.rustdeskIdServer),
+    rustdeskRelayServer: asText(values.rustdeskRelayServer),
+    rustdeskKey: asText(values.rustdeskKey),
+    rustdeskDirect: values.rustdeskDirect === true,
+    moonlightPort: asPort(values.moonlightPort) ?? MOONLIGHT_DEFAULT_PORT,
+    moonlightHostId: asCount(values.moonlightHostId),
+    moonlightAppId: asCount(values.moonlightAppId),
+    moonlightBitrate: asCount(values.moonlightBitrate),
+    moonlightFps: asCount(values.moonlightFps),
+    moonlightTransport: asText(values.moonlightTransport),
     rdpSecurity:
       typeof values.rdpSecurity === "string" ? values.rdpSecurity : "",
     rdpIgnoreCert: values.rdpIgnoreCert === true,
@@ -127,7 +178,7 @@ export function normalizeImportedHost(
           : undefined;
 
   const out: Record<string, unknown> = {};
-  for (const protocol of ["rdp", "vnc", "ard", "telnet"] as const) {
+  for (const protocol of REMOTE_PROTOCOLS) {
     const key = ENABLE_KEY[protocol];
     const flag = asBool(pick(key));
     if (flag !== undefined) out[key] = flag;
@@ -135,8 +186,8 @@ export function normalizeImportedHost(
     if (port !== undefined) out[PORT_KEY[protocol]] = port;
   }
 
-  const anyFlag = ["enableRdp", "enableVnc", "enableArd", "enableTelnet"].some(
-    (key) => out[key] === true,
+  const anyFlag = REMOTE_PROTOCOLS.some(
+    (protocol) => out[ENABLE_KEY[protocol]] === true,
   );
   if (!anyFlag && isRemoteProtocol(raw.connectionType)) {
     out[ENABLE_KEY[raw.connectionType]] = true;
@@ -148,10 +199,40 @@ export function normalizeImportedHost(
 
   const security = pick("rdpSecurity", "security");
   if (typeof security === "string" && security) out.rdpSecurity = security;
+  const reconnect = asBool(pick("rdpAutoReconnect"));
+  if (reconnect !== undefined) out.rdpAutoReconnect = reconnect;
+  const autoResize = asBool(pick("rdpAutoResize"));
+  if (autoResize !== undefined) out.rdpAutoResize = autoResize;
   const ignoreCert = asBool(pick("rdpIgnoreCert", "ignoreCert"));
   if (ignoreCert !== undefined) out.rdpIgnoreCert = ignoreCert;
   const config = asObject(pick("guacamoleConfig"));
   if (config && Object.keys(config).length > 0) out.guacamoleConfig = config;
+  for (const key of [
+    "rustdeskId",
+    "rustdeskIdServer",
+    "rustdeskRelayServer",
+    "rustdeskKey",
+  ]) {
+    const value = asText(pick(key));
+    if (value) out[key] = value;
+  }
+  const direct = asBool(pick("rustdeskDirect"));
+  if (direct !== undefined) out.rustdeskDirect = direct;
+  const moonlight = asBool(pick("enableMoonlight"));
+  if (moonlight !== undefined) out.enableMoonlight = moonlight;
+  const moonlightPort = asPort(pick("moonlightPort"));
+  if (moonlightPort !== undefined) out.moonlightPort = moonlightPort;
+  for (const key of [
+    "moonlightHostId",
+    "moonlightAppId",
+    "moonlightBitrate",
+    "moonlightFps",
+  ]) {
+    const value = asCount(pick(key));
+    if (value) out[key] = value;
+  }
+  const transport = asText(pick("moonlightTransport"));
+  if (transport) out.moonlightTransport = transport;
   const toolbar = asBool(pick("enableToolbar", "enableTerminalToolbar"));
   if (toolbar !== undefined) out.enableToolbar = toolbar;
 
