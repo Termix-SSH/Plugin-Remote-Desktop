@@ -81,6 +81,10 @@ pub struct Config {
     pub initial_program: String,
     pub work_dir: String,
     pub load_balance_info: String,
+    /// From a Server Redirection PDU: present, the next hop logs on with
+    /// RDSTLS instead of NLA.
+    pub redirection_guid: Vec<u8>,
+    pub password_cookie: Vec<u8>,
     pub timezone_bias: i32,
     pub timezone_name: String,
     pub kdc_url: String,
@@ -104,6 +108,8 @@ enum Phase {
     /// Waiting for JS to upgrade the socket to TLS.
     AwaitTls(Box<ClientConnector>),
     Credssp(Box<ClientConnector>, Box<CredsspSequence>),
+    /// RDSTLS after TLS: true once the Authentication Request went out.
+    Rdstls(Box<ClientConnector>, bool),
     /// VMConnect: waiting for TLS right after the preconnection blob.
     VmTls(Box<ClientConnector>),
     /// VMConnect: CredSSP with the Hyper-V host, before X.224.
@@ -246,6 +252,13 @@ impl RdpClient {
             self.phase = phase;
             return;
         };
+        if let ClientConnectorState::EnhancedSecurityUpgrade { selected_protocol } = &connector.state {
+            if selected_protocol.contains(ironrdp::pdu::nego::SecurityProtocol::RDSTLS) {
+                self.phase = Phase::Rdstls(connector, false);
+                self.pump();
+                return;
+            }
+        }
         connector.mark_security_upgrade_as_done();
         if connector.should_perform_credssp() {
             match self.credssp_init(&connector, public_key.to_vec()) {
@@ -691,6 +704,7 @@ impl RdpClient {
             let progressed = match std::mem::replace(&mut self.phase, Phase::Closed) {
                 Phase::Connecting(connector) => self.pump_connecting(connector),
                 Phase::Credssp(connector, sequence) => self.pump_credssp(connector, sequence),
+                Phase::Rdstls(connector, sent) => self.pump_rdstls(connector, sent),
                 Phase::VmCredssp(connector, sequence) => self.pump_vm_credssp(connector, sequence),
                 Phase::Active(session) => self.pump_active(session),
                 other => {
@@ -721,6 +735,11 @@ impl RdpClient {
             }
             self.phase = Phase::Connecting(connector);
             return true;
+        }
+        if !self.config.password_cookie.is_empty()
+            && matches!(connector.state, ClientConnectorState::ConnectionInitiationSendRequest)
+        {
+            return self.request_rdstls(connector);
         }
         if connector.should_perform_security_upgrade() {
             self.phase = Phase::AwaitTls(connector);
@@ -942,6 +961,16 @@ impl RdpClient {
                     self.phase = Phase::Active(session);
                 }
                 keep
+            }
+            // Data on a dynamic channel this client refused or closed, which
+            // GNOME Remote Desktop sends after a refused audio channel. FreeRDP
+            // drops it too; the rest of the session is fine.
+            Err(e) if format!("{e:?}").contains("access to non existing DVC channel") => {
+                let e2 = obj("log");
+                set(&e2, "message", format!("dropped data for a closed dynamic channel: {e}"));
+                self.events.push(e2.into());
+                self.phase = Phase::Active(session);
+                true
             }
             Err(e) => {
                 self.fail("protocol", &format!("{e:?}"));
@@ -1229,8 +1258,73 @@ impl RdpClient {
         set(&e, "username", r.username);
         set(&e, "domain", r.domain);
         set(&e, "password", r.password);
+        set(&e, "redirectionGuid", Uint8Array::from(r.redirection_guid.as_slice()));
+        set(&e, "passwordCookie", Uint8Array::from(r.password_cookie.as_slice()));
         self.events.push(e.into());
         self.phase = Phase::Closed;
+        true
+    }
+
+    /// The X.224 request for a redirected hop that logs on with RDSTLS, which
+    /// the connector cannot ask for itself.
+    fn request_rdstls(&mut self, mut connector: Box<ClientConnector>) -> bool {
+        use ironrdp::pdu::nego;
+        let protocol = nego::SecurityProtocol::RDSTLS;
+        let request = nego::ConnectionRequest {
+            nego_data: None,
+            flags: nego::RequestFlags::empty(),
+            protocol,
+            correlation_info: None,
+        };
+        let token = &self.config.load_balance_info;
+        let encoded = if token.is_empty() {
+            ironrdp_core::encode_vec(&ironrdp::pdu::x224::X224(request))
+        } else {
+            ironrdp_core::encode_vec(&ironrdp::pdu::x224::X224(nego::ConnectionRequestWithOpaqueRoutingToken {
+                request,
+                routing_token: nego::OpaqueRoutingToken(token.clone()),
+            }))
+        };
+        match encoded {
+            Ok(bytes) => self.push_send(bytes),
+            Err(e) => {
+                self.fail("protocol", &format!("{e:?}"));
+                return false;
+            }
+        }
+        connector.state = ClientConnectorState::ConnectionInitiationWaitConfirm {
+            requested_protocol: protocol,
+        };
+        self.phase = Phase::Connecting(connector);
+        true
+    }
+
+    /// Reads the server's capabilities, logs on, then hands back to the
+    /// connector, which skips CredSSP for RDSTLS.
+    fn pump_rdstls(&mut self, mut connector: Box<ClientConnector>, sent: bool) -> bool {
+        let need = if sent { crate::rdstls::RESPONSE_LEN } else { crate::rdstls::CAPABILITIES_LEN };
+        if self.inbuf.len() < need {
+            self.phase = Phase::Rdstls(connector, sent);
+            return false;
+        }
+        let pdu: Vec<u8> = self.inbuf.drain(..need).collect();
+        if !sent {
+            if let Err(e) = crate::rdstls::read_capabilities(&pdu) {
+                self.fail("protocol", &e);
+                return false;
+            }
+            let c = &self.config;
+            let request = crate::rdstls::auth_request(&c.redirection_guid, &c.username, &c.domain, &c.password_cookie);
+            self.push_send(request);
+            self.phase = Phase::Rdstls(connector, true);
+            return true;
+        }
+        if let Err(e) = crate::rdstls::read_response(&pdu) {
+            self.fail("auth", &e);
+            return false;
+        }
+        connector.mark_security_upgrade_as_done();
+        self.phase = Phase::Connecting(connector);
         true
     }
 
