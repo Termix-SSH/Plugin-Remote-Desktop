@@ -60,6 +60,7 @@ import {
   classifyTwoFingerMove,
   nextPinchZoom,
   scrollAfterPan,
+  displayOffsetInContainer,
   scrollAfterZoom,
   touchDistance,
   touchMidpoint,
@@ -1036,6 +1037,7 @@ export const GuacamoleDisplay = forwardRef<
       startScrollLeft: number;
       startScrollTop: number;
       startMid: { x: number; y: number };
+      startOffset: { x: number; y: number };
       lastMid: { x: number; y: number };
       kind: "undecided" | "pinch" | "pan";
     };
@@ -1052,6 +1054,20 @@ export const GuacamoleDisplay = forwardRef<
       x: point.x - rect.left,
       y: point.y - rect.top,
     });
+    // The displayRef wrapper is min-w/h-full, so it sits at the scroll origin.
+    // The Guacamole element inside it is flex-centered while smaller than the
+    // container; pinch math has to use that offset, measured after applyZoom
+    // because a resize can change whether the display is still centered.
+    const measureOffset = () => {
+      const display = displayElementRef.current;
+      if (!display) return { x: 0, y: 0 };
+      return displayOffsetInContainer({
+        containerRect: container.getBoundingClientRect(),
+        displayRect: display.getBoundingClientRect(),
+        scrollLeft: container.scrollLeft,
+        scrollTop: container.scrollTop,
+      });
+    };
 
     const onTouchStart = (event: TouchEvent) => {
       const touches = pair(event.touches);
@@ -1060,13 +1076,15 @@ export const GuacamoleDisplay = forwardRef<
         return;
       }
       const mid = touchMidpoint(touches.a, touches.b);
+      const rect = container.getBoundingClientRect();
       gesture = {
         startDistance: touchDistance(touches.a, touches.b),
         startZoom: zoomRef.current,
         startScale: scaleRef.current,
         startScrollLeft: container.scrollLeft,
         startScrollTop: container.scrollTop,
-        startMid: mid,
+        startMid: relative(mid, rect),
+        startOffset: measureOffset(),
         lastMid: mid,
         kind: "undecided",
       };
@@ -1076,10 +1094,11 @@ export const GuacamoleDisplay = forwardRef<
       const touches = pair(event.touches);
       if (!touches) return;
       const mid = touchMidpoint(touches.a, touches.b);
+      const rect = container.getBoundingClientRect();
+      const to = relative(mid, rect);
       const distance = touchDistance(touches.a, touches.b);
       const moved =
-        Math.hypot(mid.x - gesture.startMid.x, mid.y - gesture.startMid.y) >
-        0.5;
+        Math.hypot(to.x - gesture.startMid.x, to.y - gesture.startMid.y) > 0.5;
       const kind = classifyTwoFingerMove({
         startDistance: gesture.startDistance,
         currentDistance: distance,
@@ -1100,18 +1119,20 @@ export const GuacamoleDisplay = forwardRef<
           distance,
         );
         applyZoom(newZoom);
-        const rect = container.getBoundingClientRect();
-        const from = relative(gesture.startMid, rect);
-        const to = relative(mid, rect);
+        const after = measureOffset();
         const next = scrollAfterZoom({
           scrollLeft: gesture.startScrollLeft,
           scrollTop: gesture.startScrollTop,
-          fromX: from.x,
-          fromY: from.y,
+          fromX: gesture.startMid.x,
+          fromY: gesture.startMid.y,
           pointX: to.x,
           pointY: to.y,
           oldScale: gesture.startScale,
           newScale: scaleRef.current,
+          fromOffsetX: gesture.startOffset.x,
+          fromOffsetY: gesture.startOffset.y,
+          toOffsetX: after.x,
+          toOffsetY: after.y,
         });
         container.scrollLeft = next.scrollLeft;
         container.scrollTop = next.scrollTop;

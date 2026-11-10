@@ -15,6 +15,24 @@ export const PINCH_PX = 8;
 
 export type TwoFingerGesture = "undecided" | "pinch" | "pan";
 
+/** The display's top-left in the scroll container's content coordinates. */
+export function displayOffsetInContainer({
+  containerRect,
+  displayRect,
+  scrollLeft,
+  scrollTop,
+}: {
+  containerRect: { left: number; top: number };
+  displayRect: { left: number; top: number };
+  scrollLeft: number;
+  scrollTop: number;
+}): Point {
+  return {
+    x: displayRect.left - containerRect.left + scrollLeft,
+    y: displayRect.top - containerRect.top + scrollTop,
+  };
+}
+
 export function touchDistance(a: Point, b: Point): number {
   return Math.hypot(a.x - b.x, a.y - b.y);
 }
@@ -59,9 +77,10 @@ export function nextPinchZoom(
 
 /**
  * The scroll offsets that keep the content under the fingers in place when
- * the scale changes. `fromX`/`fromY` is where that content sat at the old
- * scale (relative to the container); `pointX`/`pointY` is where it should
- * sit afterwards. They default to the same point.
+ * the scale changes. `fromX`/`fromY` and `pointX`/`pointY` are relative to
+ * the container viewport. Offsets are the display's top-left in content
+ * coordinates; they are needed when a smaller framebuffer is flex-centered
+ * in the container, and `toOffset` must be measured after applyZoom.
  */
 export function scrollAfterZoom({
   scrollLeft,
@@ -72,6 +91,10 @@ export function scrollAfterZoom({
   newScale,
   fromX = pointX,
   fromY = pointY,
+  fromOffsetX = 0,
+  fromOffsetY = 0,
+  toOffsetX = 0,
+  toOffsetY = 0,
 }: {
   scrollLeft: number;
   scrollTop: number;
@@ -81,11 +104,17 @@ export function scrollAfterZoom({
   newScale: number;
   fromX?: number;
   fromY?: number;
+  /** Display origin in content coordinates at the start of the zoom. */
+  fromOffsetX?: number;
+  fromOffsetY?: number;
+  /** Display origin after applyZoom, which can change flex centering. */
+  toOffsetX?: number;
+  toOffsetY?: number;
 }): { scrollLeft: number; scrollTop: number } {
   const ratio = oldScale === 0 ? 1 : newScale / oldScale;
   return {
-    scrollLeft: (scrollLeft + fromX) * ratio - pointX,
-    scrollTop: (scrollTop + fromY) * ratio - pointY,
+    scrollLeft: (scrollLeft + fromX - fromOffsetX) * ratio + toOffsetX - pointX,
+    scrollTop: (scrollTop + fromY - fromOffsetY) * ratio + toOffsetY - pointY,
   };
 }
 
