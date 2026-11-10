@@ -153,6 +153,7 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
         if (item.id === "touchMode") {
           return touchMode != null && !!onTouchModeChange;
         }
+        if (item.id === "softKeyboard") return touchMode != null;
         return true;
       }),
     [
@@ -419,6 +420,26 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
           onTouchModeChange?.(touch ? "touchpad" : "touchscreen"),
         );
       }
+      case "softKeyboard": {
+        const label = t("remoteDesktop.toolbar.showKeyboard");
+        const Icon = item.icon;
+        return (
+          <button
+            key={item.id}
+            type="button"
+            className={ICON_BUTTON}
+            aria-label={label}
+            title={label}
+            onPointerDown={(event) => {
+              event.preventDefault();
+              displayRef.current?.openSoftKeyboard();
+            }}
+            onClick={() => displayRef.current?.openSoftKeyboard()}
+          >
+            {Icon ? <Icon className="size-3.5" /> : labeled ? label : null}
+          </button>
+        );
+      }
       case "zoom":
         return (
           <span key={item.id} className="flex items-center">
@@ -594,6 +615,15 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
           },
         ];
       }
+      case "softKeyboard":
+        return [
+          {
+            key: item.id,
+            label: t("remoteDesktop.toolbar.showKeyboard"),
+            icon: item.icon,
+            run: () => displayRef.current?.openSoftKeyboard(),
+          },
+        ];
       case "zoom":
         return [
           {

@@ -56,6 +56,18 @@ import {
   type GuacamoleFileStreamClient,
 } from "./guacamole-filesystem.ts";
 import { clampGuacamoleZoom, stepGuacamoleZoom } from "./guacamole-zoom.ts";
+import {
+  classifyTwoFingerMove,
+  nextPinchZoom,
+  scrollAfterPan,
+  scrollAfterZoom,
+  touchDistance,
+  touchMidpoint,
+} from "./guacamole-touch-gestures.ts";
+import {
+  specialKeysymFromKeyboardEvent,
+  textToKeysyms,
+} from "./guacamole-soft-keyboard.ts";
 import { createRdpReadyGate } from "./guacamole-ready.ts";
 import {
   remoteKeysym,
@@ -98,6 +110,10 @@ export interface GuacamoleDisplayHandle {
   zoomIn: () => number;
   zoomOut: () => number;
   resetZoom: () => number;
+  /** Focuses the hidden textarea so a phone can show its software keyboard. */
+  openSoftKeyboard: () => void;
+  closeSoftKeyboard: () => void;
+  isSoftKeyboardOpen: () => boolean;
   /** Shows another RustDesk monitor. */
   selectDisplay: (index: number) => void;
 }
@@ -199,6 +215,7 @@ export const GuacamoleDisplay = forwardRef<
     null,
   );
   const hasKeyboardFocusRef = useRef(false);
+  const softKeyboardRef = useRef<HTMLTextAreaElement>(null);
   const sessionProtocolRef = useRef(
     connectionConfig.protocol ?? connectionConfig.type,
   );
@@ -324,6 +341,17 @@ export const GuacamoleDisplay = forwardRef<
     zoomIn: () => applyZoom(stepGuacamoleZoom(zoomRef.current, 1)),
     zoomOut: () => applyZoom(stepGuacamoleZoom(zoomRef.current, -1)),
     resetZoom: () => applyZoom(1),
+    openSoftKeyboard: () => {
+      const input = softKeyboardRef.current;
+      if (!input) return;
+      input.focus({ preventScroll: true });
+    },
+    closeSoftKeyboard: () => {
+      softKeyboardRef.current?.blur();
+    },
+    isSoftKeyboardOpen: () =>
+      softKeyboardRef.current != null &&
+      document.activeElement === softKeyboardRef.current,
   }));
 
   const getWebSocketConnection = useCallback(
@@ -1001,28 +1029,106 @@ export const GuacamoleDisplay = forwardRef<
     if (!container || !isReady || (protocol !== "vnc" && protocol !== "ard"))
       return;
 
-    let pinchDistance = 0;
-    let pinchZoom = zoomRef.current;
-    const distance = (touches: TouchList) =>
-      Math.hypot(
-        touches[0].clientX - touches[1].clientX,
-        touches[0].clientY - touches[1].clientY,
-      );
+    type Gesture = {
+      startDistance: number;
+      startZoom: number;
+      startScale: number;
+      startScrollLeft: number;
+      startScrollTop: number;
+      startMid: { x: number; y: number };
+      lastMid: { x: number; y: number };
+      kind: "undecided" | "pinch" | "pan";
+    };
+    let gesture: Gesture | null = null;
+
+    const pair = (touches: TouchList) => {
+      if (touches.length !== 2) return null;
+      return {
+        a: { x: touches[0].clientX, y: touches[0].clientY },
+        b: { x: touches[1].clientX, y: touches[1].clientY },
+      };
+    };
+    const relative = (point: { x: number; y: number }, rect: DOMRect) => ({
+      x: point.x - rect.left,
+      y: point.y - rect.top,
+    });
+
     const onTouchStart = (event: TouchEvent) => {
-      if (event.touches.length !== 2) return;
-      event.preventDefault();
-      event.stopPropagation();
-      pinchDistance = distance(event.touches);
-      pinchZoom = zoomRef.current;
+      const touches = pair(event.touches);
+      if (!touches) {
+        gesture = null;
+        return;
+      }
+      const mid = touchMidpoint(touches.a, touches.b);
+      gesture = {
+        startDistance: touchDistance(touches.a, touches.b),
+        startZoom: zoomRef.current,
+        startScale: scaleRef.current,
+        startScrollLeft: container.scrollLeft,
+        startScrollTop: container.scrollTop,
+        startMid: mid,
+        lastMid: mid,
+        kind: "undecided",
+      };
     };
     const onTouchMove = (event: TouchEvent) => {
-      if (event.touches.length !== 2 || pinchDistance === 0) return;
+      if (!gesture) return;
+      const touches = pair(event.touches);
+      if (!touches) return;
+      const mid = touchMidpoint(touches.a, touches.b);
+      const distance = touchDistance(touches.a, touches.b);
+      const moved =
+        Math.hypot(mid.x - gesture.startMid.x, mid.y - gesture.startMid.y) >
+        0.5;
+      const kind = classifyTwoFingerMove({
+        startDistance: gesture.startDistance,
+        currentDistance: distance,
+        current: gesture.kind,
+        moved,
+      });
+      if (kind === "undecided") {
+        gesture.lastMid = mid;
+        return;
+      }
       event.preventDefault();
       event.stopPropagation();
-      applyZoom(pinchZoom * (distance(event.touches) / pinchDistance));
+      gesture.kind = kind;
+      if (kind === "pinch") {
+        const newZoom = nextPinchZoom(
+          gesture.startZoom,
+          gesture.startDistance,
+          distance,
+        );
+        applyZoom(newZoom);
+        const rect = container.getBoundingClientRect();
+        const from = relative(gesture.startMid, rect);
+        const to = relative(mid, rect);
+        const next = scrollAfterZoom({
+          scrollLeft: gesture.startScrollLeft,
+          scrollTop: gesture.startScrollTop,
+          fromX: from.x,
+          fromY: from.y,
+          pointX: to.x,
+          pointY: to.y,
+          oldScale: gesture.startScale,
+          newScale: scaleRef.current,
+        });
+        container.scrollLeft = next.scrollLeft;
+        container.scrollTop = next.scrollTop;
+      } else {
+        const next = scrollAfterPan({
+          scrollLeft: container.scrollLeft,
+          scrollTop: container.scrollTop,
+          dx: mid.x - gesture.lastMid.x,
+          dy: mid.y - gesture.lastMid.y,
+        });
+        container.scrollLeft = next.scrollLeft;
+        container.scrollTop = next.scrollTop;
+      }
+      gesture.lastMid = mid;
     };
-    const onTouchEnd = () => {
-      pinchDistance = 0;
+    const onTouchEnd = (event: TouchEvent) => {
+      if (event.touches.length !== 2) gesture = null;
     };
 
     container.addEventListener("touchstart", onTouchStart, {
@@ -1034,10 +1140,12 @@ export const GuacamoleDisplay = forwardRef<
       capture: true,
     });
     container.addEventListener("touchend", onTouchEnd, { capture: true });
+    container.addEventListener("touchcancel", onTouchEnd, { capture: true });
     return () => {
       container.removeEventListener("touchstart", onTouchStart, true);
       container.removeEventListener("touchmove", onTouchMove, true);
       container.removeEventListener("touchend", onTouchEnd, true);
+      container.removeEventListener("touchcancel", onTouchEnd, true);
     };
   }, [applyZoom, connectionConfig.protocol, connectionConfig.type, isReady]);
 
@@ -1100,6 +1208,77 @@ export const GuacamoleDisplay = forwardRef<
         style={{
           cursor: isReady ? "none" : "default",
           visibility: isReady ? "visible" : "hidden",
+        }}
+      />
+
+      <textarea
+        ref={softKeyboardRef}
+        aria-label={t("remoteDesktop.toolbar.showKeyboard")}
+        autoCapitalize="off"
+        autoComplete="off"
+        autoCorrect="off"
+        spellCheck={false}
+        inputMode="text"
+        tabIndex={-1}
+        rows={1}
+        defaultValue=""
+        onKeyDown={(event) => {
+          const keysym = specialKeysymFromKeyboardEvent(event);
+          if (keysym == null) return;
+          event.preventDefault();
+          const client = clientRef.current;
+          if (!client) return;
+          if (event.repeat) return;
+          client.sendKeyEvent(1, keysym);
+        }}
+        onKeyUp={(event) => {
+          const keysym = specialKeysymFromKeyboardEvent(event);
+          if (keysym == null) return;
+          event.preventDefault();
+          const client = clientRef.current;
+          if (!client) return;
+          client.sendKeyEvent(0, keysym);
+        }}
+        onBeforeInput={(event) => {
+          const native = event.nativeEvent as InputEvent;
+          const type = native.inputType;
+          if (type !== "insertText") return;
+          const text = native.data ?? "";
+          if (!text) return;
+          event.preventDefault();
+          event.currentTarget.value = "";
+          const client = clientRef.current;
+          if (!client) return;
+          for (const keysym of textToKeysyms(text)) {
+            client.sendKeyEvent(1, keysym);
+            client.sendKeyEvent(0, keysym);
+          }
+        }}
+        onCompositionEnd={(event) => {
+          const text = event.data ?? "";
+          const client = clientRef.current;
+          if (!client || !text) return;
+          for (const keysym of textToKeysyms(text)) {
+            client.sendKeyEvent(1, keysym);
+            client.sendKeyEvent(0, keysym);
+          }
+          event.currentTarget.value = "";
+        }}
+        style={{
+          position: "absolute",
+          left: 0,
+          bottom: 0,
+          width: "1px",
+          height: "1px",
+          margin: 0,
+          padding: 0,
+          opacity: 0,
+          fontSize: "16px",
+          border: "none",
+          resize: "none",
+          overflow: "hidden",
+          pointerEvents: "none",
+          zIndex: 0,
         }}
       />
 

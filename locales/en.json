@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Sign out",
         "record": "Record",
-        "monitors": "Monitors"
+        "monitors": "Monitors",
+        "softKeyboard": "Keyboard"
       },
       "hints": {
         "files": "Shows once the RDP drive is on",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift and the system key stay held until the next key",
         "logoff": "Signs out of Windows by running logoff from the Run box. The session must be open and showing the desktop.",
         "record": "Starts or stops a recording of this session. Needs the Session Recording plugin and the built-in engine.",
-        "monitors": "Switch between the remote monitors"
+        "monitors": "Switch between the remote monitors",
+        "softKeyboard": "Shows the on-screen keyboard on a phone or tablet"
       },
       "option": "Option",
       "logoffConfirm": "Sign out of this Windows session? Unsaved work in it is lost.",
@@ -103,7 +105,8 @@
       "recordFailed": "Could not change the recording",
       "recordRequired": "An admin made recording required on this host",
       "recordRequiredLabel": "Recording (required)",
-      "monitor": "Monitor {{number}}"
+      "monitor": "Monitor {{number}}",
+      "showKeyboard": "Show keyboard"
     },
     "disabled": "Remote Desktop is turned off. An admin can turn it on in Settings.",
     "rustdesk": {

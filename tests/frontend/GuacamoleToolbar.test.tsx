@@ -23,6 +23,9 @@ function display(overrides: Partial<GuacamoleDisplayHandle> = {}) {
       zoomIn: vi.fn(() => 1.25),
       zoomOut: vi.fn(() => 0.75),
       resetZoom: vi.fn(() => 1),
+      openSoftKeyboard: vi.fn(),
+      closeSoftKeyboard: vi.fn(),
+      isSoftKeyboardOpen: () => false,
       selectDisplay: vi.fn(),
       ...overrides,
     } satisfies GuacamoleDisplayHandle,
@@ -273,5 +276,37 @@ describe("GuacamoleToolbar on a Mac", () => {
       vnc.queryAllByText("remoteDesktop.toolbar.alt").length,
     ).toBeGreaterThan(0);
     expect(vnc.queryAllByText("remoteDesktop.toolbar.option")).toHaveLength(0);
+  });
+
+  it("shows the soft keyboard button only on a touch session", () => {
+    const ref = display();
+    const { getByRole, rerender, queryByRole } = render(
+      <GuacamoleToolbar displayRef={ref} protocol="vnc" />,
+    );
+    expect(
+      queryByRole("button", { name: "remoteDesktop.toolbar.showKeyboard" }),
+    ).toBeNull();
+
+    rerender(
+      <GuacamoleToolbar
+        displayRef={ref}
+        protocol="vnc"
+        touchMode="touchscreen"
+      />,
+    );
+    const button = getByRole("button", {
+      name: "remoteDesktop.toolbar.showKeyboard",
+    });
+    button.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+    expect(ref.current!.openSoftKeyboard).toHaveBeenCalledOnce();
+  });
+
+  it("opens the soft keyboard for touch RDP as well", () => {
+    const ref = display();
+    const { getByRole } = render(
+      <GuacamoleToolbar displayRef={ref} protocol="rdp" touchMode="touchpad" />,
+    );
+    getByRole("button", { name: "remoteDesktop.toolbar.showKeyboard" }).click();
+    expect(ref.current!.openSoftKeyboard).toHaveBeenCalledOnce();
   });
 });
