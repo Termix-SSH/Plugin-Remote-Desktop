@@ -786,6 +786,17 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
   const fit = layout.fit ?? items.length;
   const shown = items.slice(0, fit);
   const overflow = items.slice(fit);
+  // The software keyboard has to stay on the visible row: opening it from
+  // the overflow menu loses focus to "More" and iOS/Android hide the OSK.
+  const keyboard = overflow.find((item) => item.id === "softKeyboard");
+  if (keyboard) {
+    overflow.splice(
+      overflow.findIndex((item) => item.id === "softKeyboard"),
+      1,
+    );
+    if (shown.length > 0) overflow.unshift(shown.pop()!);
+    shown.push(keyboard);
+  }
 
   const measureRow = (labeled: boolean, ref: React.Ref<HTMLDivElement>) => (
     <div

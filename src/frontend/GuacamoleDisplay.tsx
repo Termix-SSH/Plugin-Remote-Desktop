@@ -1088,6 +1088,7 @@ export const GuacamoleDisplay = forwardRef<
       kind: "undecided" | "pinch" | "pan";
     };
     let gesture: Gesture | null = null;
+    let claimed = false;
 
     const pair = (touches: TouchList) => {
       if (touches.length !== 2) return null;
@@ -1133,8 +1134,8 @@ export const GuacamoleDisplay = forwardRef<
         kind: "undecided",
       };
     };
-    // Synthetic events used to clear the Guacamole emulator after we claimed a
-    // gesture; ignore them so our capture listener does not swallow them.
+    // Synthetic 1-finger moves used to cancel a touchscreen long-press and to
+    // push the touchpad past its tap threshold; ignore them in our listeners.
     let forwardingToEmulator = false;
     const forwardToDisplay = (type: string, init: TouchEventInit) => {
       const display = displayElementRef.current;
@@ -1150,27 +1151,63 @@ export const GuacamoleDisplay = forwardRef<
         forwardingToEmulator = false;
       }
     };
+    const spoilOneFingerTracking = (source: Touch) => {
+      const display = displayElementRef.current;
+      if (!display || typeof Touch === "undefined") return;
+      try {
+        const shifted = new Touch({
+          identifier: source.identifier,
+          target: display,
+          clientX: source.clientX + 32,
+          clientY: source.clientY + 32,
+        });
+        forwardToDisplay("touchmove", {
+          touches: [shifted],
+          targetTouches: [shifted],
+          changedTouches: [shifted],
+        });
+      } catch {
+        // The first-finger long-press may still fire on some WebKit versions.
+      }
+    };
 
     const onTouchStart = (event: TouchEvent) => {
       if (forwardingToEmulator) return;
       const touches = pair(event.touches);
-      if (!touches) {
-        gesture = null;
+      if (touches) {
+        // Take the two-finger sequence so the emulator never sees a 2-finger
+        // start. A 1-finger spoil cancels a touchscreen long-press and makes
+        // a later 1-finger touchend fail the touchpad's tap threshold.
+        event.preventDefault();
+        event.stopPropagation();
+        gesture = beginGesture(touches);
+        claimed = true;
+        spoilOneFingerTracking(event.touches[0]);
         return;
       }
-      // preventDefault stops browser zoom; we do not stopPropagation on start
-      // so a touchscreen long-press from the first finger is cancelled and a
-      // touchpad can update its finger count.
-      event.preventDefault();
-      gesture = beginGesture(touches);
+      if (claimed) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+      gesture = null;
     };
     const onTouchMove = (event: TouchEvent) => {
       if (forwardingToEmulator) return;
       const touches = pair(event.touches);
-      if (!touches) return;
+      if (!touches) {
+        if (claimed) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        return;
+      }
       event.preventDefault();
       event.stopPropagation();
-      if (!gesture) gesture = beginGesture(touches);
+      if (!gesture) {
+        gesture = beginGesture(touches);
+        claimed = true;
+      }
       const mid = touchMidpoint(touches.a, touches.b);
       const to = relative(mid, container.getBoundingClientRect());
       const distance = touchDistance(touches.a, touches.b);
@@ -1236,40 +1273,21 @@ export const GuacamoleDisplay = forwardRef<
     };
     const onTouchEnd = (event: TouchEvent) => {
       if (forwardingToEmulator) return;
-      if (gesture && gesture.kind !== "undecided") {
-        event.preventDefault();
-        event.stopPropagation();
-        // Spoiling the emulator's leftover start (which we let through) so a
-        // short pan is not treated as a two-finger tap / right-click.
-        if (event.touches.length === 0) {
-          const source = event.changedTouches[0];
-          const display = displayElementRef.current;
-          if (display && source && typeof Touch !== "undefined") {
-            try {
-              const shifted = new Touch({
-                identifier: source.identifier,
-                target: display,
-                clientX: source.clientX + 32,
-                clientY: source.clientY + 32,
-              });
-              forwardToDisplay("touchmove", {
-                touches: [shifted],
-                targetTouches: [shifted],
-                changedTouches: [shifted],
-              });
-            } catch {
-              // Fall through to the synthetic end below.
-            }
-          }
-          forwardToDisplay("touchend", {
-            touches: [],
-            targetTouches: [],
-            changedTouches: Array.from(event.changedTouches),
-          });
-        }
-      }
       const remaining = pair(event.touches);
-      // Lifting a third finger leaves two: restart so the view does not jump.
+      if (claimed) {
+        if (event.touches.length > 0) {
+          event.preventDefault();
+          event.stopPropagation();
+          // Lifting a third finger leaves two: restart so the view does not jump.
+          if (remaining) gesture = beginGesture(remaining);
+          return;
+        }
+        // Last finger up: let the emulator see the end so it can leave the
+        // original 1-finger gesture. pixels_moved was already spoilt.
+        gesture = null;
+        claimed = false;
+        return;
+      }
       gesture = remaining ? beginGesture(remaining) : null;
     };
 

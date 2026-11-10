@@ -5,10 +5,22 @@ export function charToKeysym(codePoint: number): number {
 }
 
 export function textToKeysyms(text: string): number[] {
-  return Array.from(text)
-    .map((ch) => ch.codePointAt(0))
-    .filter((cp): cp is number => cp != null && cp !== 0)
-    .map(charToKeysym);
+  const normalized = text.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+  const keysyms: number[] = [];
+  for (const ch of normalized) {
+    if (ch === "\n") {
+      keysyms.push(0xff0d);
+      continue;
+    }
+    if (ch === "\t") {
+      keysyms.push(0xff09);
+      continue;
+    }
+    const cp = ch.codePointAt(0);
+    if (cp == null || cp === 0) continue;
+    keysyms.push(charToKeysym(cp));
+  }
+  return keysyms;
 }
 
 /**

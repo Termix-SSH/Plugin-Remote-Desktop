@@ -19,6 +19,11 @@ describe("guacamole soft keyboard", () => {
 
   it("turns inserted text into a keysym for each character", () => {
     expect(textToKeysyms("Ab")).toEqual([0x41, 0x62]);
+    expect(textToKeysyms("a\nb\tc")).toEqual([
+      0x61, 0xff0d, 0x62, 0xff09, 0x63,
+    ]);
+    expect(textToKeysyms("a\r\nb")).toEqual([0x61, 0xff0d, 0x62]);
+    expect(textToKeysyms("a\rb")).toEqual([0x61, 0xff0d, 0x62]);
   });
 
   it("maps special keys and leaves letters to the input event", () => {
