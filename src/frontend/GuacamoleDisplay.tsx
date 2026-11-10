@@ -66,6 +66,8 @@ import {
   touchMidpoint,
 } from "./guacamole-touch-gestures.ts";
 import {
+  isComposingKeyboardEvent,
+  keysymsForBeforeInput,
   specialKeysymFromKeyboardEvent,
   textToKeysyms,
 } from "./guacamole-soft-keyboard.ts";
@@ -217,6 +219,25 @@ export const GuacamoleDisplay = forwardRef<
   );
   const hasKeyboardFocusRef = useRef(false);
   const softKeyboardRef = useRef<HTMLTextAreaElement>(null);
+  const inputHandledRef = useRef(false);
+  const composingRef = useRef(false);
+
+  const markSoftKeyboardHandled = () => {
+    inputHandledRef.current = true;
+    window.setTimeout(() => {
+      inputHandledRef.current = false;
+    }, 0);
+  };
+
+  const sendSoftKeysyms = (keysyms: number[]) => {
+    const client = clientRef.current;
+    if (!client) return;
+    for (const keysym of keysyms) {
+      client.sendKeyEvent(1, keysym);
+      client.sendKeyEvent(0, keysym);
+    }
+  };
+
   const sessionProtocolRef = useRef(
     connectionConfig.protocol ?? connectionConfig.type,
   );
@@ -1025,6 +1046,31 @@ export const GuacamoleDisplay = forwardRef<
   ]);
 
   useEffect(() => {
+    const input = softKeyboardRef.current;
+    if (!input) return;
+    const onBeforeInput = (event: InputEvent) => {
+      let paste = "";
+      try {
+        paste = event.dataTransfer?.getData("text/plain") ?? "";
+      } catch {
+        paste = "";
+      }
+      const keysyms = keysymsForBeforeInput({
+        inputType: event.inputType,
+        data: event.data ?? paste,
+        isComposing: event.isComposing || composingRef.current,
+      });
+      if (keysyms == null) return;
+      event.preventDefault();
+      input.value = "";
+      markSoftKeyboardHandled();
+      sendSoftKeysyms(keysyms);
+    };
+    input.addEventListener("beforeinput", onBeforeInput);
+    return () => input.removeEventListener("beforeinput", onBeforeInput);
+  }, []);
+
+  useEffect(() => {
     const container = containerRef.current;
     const protocol = connectionConfig.protocol ?? connectionConfig.type;
     if (!container || !isReady || (protocol !== "vnc" && protocol !== "ard"))
@@ -1069,15 +1115,13 @@ export const GuacamoleDisplay = forwardRef<
       });
     };
 
-    const onTouchStart = (event: TouchEvent) => {
-      const touches = pair(event.touches);
-      if (!touches) {
-        gesture = null;
-        return;
-      }
+    const beginGesture = (touches: {
+      a: { x: number; y: number };
+      b: { x: number; y: number };
+    }): Gesture => {
       const mid = touchMidpoint(touches.a, touches.b);
       const rect = container.getBoundingClientRect();
-      gesture = {
+      return {
         startDistance: touchDistance(touches.a, touches.b),
         startZoom: zoomRef.current,
         startScale: scaleRef.current,
@@ -1089,28 +1133,70 @@ export const GuacamoleDisplay = forwardRef<
         kind: "undecided",
       };
     };
+    // Synthetic events used to clear the Guacamole emulator after we claimed a
+    // gesture; ignore them so our capture listener does not swallow them.
+    let forwardingToEmulator = false;
+    const forwardToDisplay = (type: string, init: TouchEventInit) => {
+      const display = displayElementRef.current;
+      if (!display) return;
+      forwardingToEmulator = true;
+      try {
+        display.dispatchEvent(
+          new TouchEvent(type, { bubbles: true, cancelable: true, ...init }),
+        );
+      } catch {
+        // Some WebKit versions reject a synthetic TouchEvent.
+      } finally {
+        forwardingToEmulator = false;
+      }
+    };
+
+    const onTouchStart = (event: TouchEvent) => {
+      if (forwardingToEmulator) return;
+      const touches = pair(event.touches);
+      if (!touches) {
+        gesture = null;
+        return;
+      }
+      // preventDefault stops browser zoom; we do not stopPropagation on start
+      // so a touchscreen long-press from the first finger is cancelled and a
+      // touchpad can update its finger count.
+      event.preventDefault();
+      gesture = beginGesture(touches);
+    };
     const onTouchMove = (event: TouchEvent) => {
-      if (!gesture) return;
+      if (forwardingToEmulator) return;
       const touches = pair(event.touches);
       if (!touches) return;
+      event.preventDefault();
+      event.stopPropagation();
+      if (!gesture) gesture = beginGesture(touches);
       const mid = touchMidpoint(touches.a, touches.b);
-      const rect = container.getBoundingClientRect();
-      const to = relative(mid, rect);
+      const to = relative(mid, container.getBoundingClientRect());
       const distance = touchDistance(touches.a, touches.b);
-      const moved =
-        Math.hypot(to.x - gesture.startMid.x, to.y - gesture.startMid.y) > 0.5;
       const kind = classifyTwoFingerMove({
         startDistance: gesture.startDistance,
         currentDistance: distance,
         current: gesture.kind,
-        moved,
+        midpointDelta: Math.hypot(
+          to.x - gesture.startMid.x,
+          to.y - gesture.startMid.y,
+        ),
       });
       if (kind === "undecided") {
         gesture.lastMid = mid;
         return;
       }
-      event.preventDefault();
-      event.stopPropagation();
+      if (kind === "pinch" && gesture.kind === "pan") {
+        // The pan already scrolled; zoom around what is under the fingers now.
+        gesture.startScrollLeft = container.scrollLeft;
+        gesture.startScrollTop = container.scrollTop;
+        gesture.startMid = to;
+        gesture.startOffset = measureOffset();
+        gesture.startScale = scaleRef.current;
+        gesture.startZoom = zoomRef.current;
+        gesture.startDistance = distance;
+      }
       gesture.kind = kind;
       if (kind === "pinch") {
         const newZoom = nextPinchZoom(
@@ -1149,7 +1235,42 @@ export const GuacamoleDisplay = forwardRef<
       gesture.lastMid = mid;
     };
     const onTouchEnd = (event: TouchEvent) => {
-      if (event.touches.length !== 2) gesture = null;
+      if (forwardingToEmulator) return;
+      if (gesture && gesture.kind !== "undecided") {
+        event.preventDefault();
+        event.stopPropagation();
+        // Spoiling the emulator's leftover start (which we let through) so a
+        // short pan is not treated as a two-finger tap / right-click.
+        if (event.touches.length === 0) {
+          const source = event.changedTouches[0];
+          const display = displayElementRef.current;
+          if (display && source && typeof Touch !== "undefined") {
+            try {
+              const shifted = new Touch({
+                identifier: source.identifier,
+                target: display,
+                clientX: source.clientX + 32,
+                clientY: source.clientY + 32,
+              });
+              forwardToDisplay("touchmove", {
+                touches: [shifted],
+                targetTouches: [shifted],
+                changedTouches: [shifted],
+              });
+            } catch {
+              // Fall through to the synthetic end below.
+            }
+          }
+          forwardToDisplay("touchend", {
+            touches: [],
+            targetTouches: [],
+            changedTouches: Array.from(event.changedTouches),
+          });
+        }
+      }
+      const remaining = pair(event.touches);
+      // Lifting a third finger leaves two: restart so the view does not jump.
+      gesture = remaining ? beginGesture(remaining) : null;
     };
 
     container.addEventListener("touchstart", onTouchStart, {
@@ -1160,8 +1281,14 @@ export const GuacamoleDisplay = forwardRef<
       passive: false,
       capture: true,
     });
-    container.addEventListener("touchend", onTouchEnd, { capture: true });
-    container.addEventListener("touchcancel", onTouchEnd, { capture: true });
+    container.addEventListener("touchend", onTouchEnd, {
+      passive: false,
+      capture: true,
+    });
+    container.addEventListener("touchcancel", onTouchEnd, {
+      passive: false,
+      capture: true,
+    });
     return () => {
       container.removeEventListener("touchstart", onTouchStart, true);
       container.removeEventListener("touchmove", onTouchMove, true);
@@ -1244,6 +1371,15 @@ export const GuacamoleDisplay = forwardRef<
         rows={1}
         defaultValue=""
         onKeyDown={(event) => {
+          if (
+            isComposingKeyboardEvent({
+              key: event.key,
+              keyCode: event.keyCode,
+              isComposing: event.nativeEvent.isComposing,
+            })
+          ) {
+            return;
+          }
           const keysym = specialKeysymFromKeyboardEvent(event);
           if (keysym == null) return;
           event.preventDefault();
@@ -1253,6 +1389,15 @@ export const GuacamoleDisplay = forwardRef<
           client.sendKeyEvent(1, keysym);
         }}
         onKeyUp={(event) => {
+          if (
+            isComposingKeyboardEvent({
+              key: event.key,
+              keyCode: event.keyCode,
+              isComposing: event.nativeEvent.isComposing,
+            })
+          ) {
+            return;
+          }
           const keysym = specialKeysymFromKeyboardEvent(event);
           if (keysym == null) return;
           event.preventDefault();
@@ -1260,30 +1405,28 @@ export const GuacamoleDisplay = forwardRef<
           if (!client) return;
           client.sendKeyEvent(0, keysym);
         }}
-        onBeforeInput={(event) => {
-          const native = event.nativeEvent as InputEvent;
-          const type = native.inputType;
-          if (type !== "insertText") return;
-          const text = native.data ?? "";
-          if (!text) return;
-          event.preventDefault();
-          event.currentTarget.value = "";
-          const client = clientRef.current;
-          if (!client) return;
-          for (const keysym of textToKeysyms(text)) {
-            client.sendKeyEvent(1, keysym);
-            client.sendKeyEvent(0, keysym);
+        onInput={(event) => {
+          if (inputHandledRef.current) {
+            inputHandledRef.current = false;
+            event.currentTarget.value = "";
+            return;
           }
+          if (event.nativeEvent.isComposing || composingRef.current) return;
+          const text = event.currentTarget.value;
+          event.currentTarget.value = "";
+          if (!text) return;
+          sendSoftKeysyms(textToKeysyms(text));
+        }}
+        onCompositionStart={() => {
+          composingRef.current = true;
         }}
         onCompositionEnd={(event) => {
+          composingRef.current = false;
           const text = event.data ?? "";
-          const client = clientRef.current;
-          if (!client || !text) return;
-          for (const keysym of textToKeysyms(text)) {
-            client.sendKeyEvent(1, keysym);
-            client.sendKeyEvent(0, keysym);
-          }
           event.currentTarget.value = "";
+          markSoftKeyboardHandled();
+          if (!text) return;
+          sendSoftKeysyms(textToKeysyms(text));
         }}
         style={{
           position: "absolute",

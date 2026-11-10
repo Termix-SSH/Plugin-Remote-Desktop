@@ -42,27 +42,29 @@ export function touchMidpoint(a: Point, b: Point): Point {
 }
 
 /**
- * Decides what a two-finger move is. A pinch stays a pinch and a pan stays a
- * pan for the rest of the gesture. While the spread is within PINCH_PX and the
- * fingers have not moved together yet, the gesture is left undecided so the
- * browser keeps it.
+ * Decides what a two-finger move is. A pinch stays a pinch for the rest of the
+ * gesture. Once the spread has changed by more than PINCH_PX the gesture is a
+ * pinch, even if it started out as a pan. Otherwise it becomes a pan once the
+ * midpoint has moved by more than PINCH_PX, and stays a pan; until then it is
+ * undecided.
  */
 export function classifyTwoFingerMove({
   startDistance,
   currentDistance,
   current = "undecided",
-  moved = true,
+  midpointDelta = 0,
 }: {
   startDistance: number;
   currentDistance: number;
   /** What the gesture was classified as so far. */
   current?: TwoFingerGesture;
-  /** Whether the midpoint has moved since the gesture started. */
-  moved?: boolean;
+  /** How far (CSS px) the midpoint has moved since the gesture started. */
+  midpointDelta?: number;
 }): TwoFingerGesture {
-  if (current === "pinch" || current === "pan") return current;
+  if (current === "pinch") return "pinch";
   if (Math.abs(currentDistance - startDistance) > PINCH_PX) return "pinch";
-  return moved ? "pan" : "undecided";
+  if (current === "pan") return "pan";
+  return midpointDelta > PINCH_PX ? "pan" : "undecided";
 }
 
 /** The zoom for the current finger spread, scaled from the gesture start. */

@@ -51,3 +51,57 @@ export function specialKeysymFromKeyboardEvent(event: {
       return null;
   }
 }
+
+export function isComposingKeyboardEvent(event: {
+  key?: string;
+  keyCode?: number;
+  isComposing?: boolean;
+}): boolean {
+  return (
+    event.isComposing === true ||
+    event.key === "Process" ||
+    event.keyCode === 229
+  );
+}
+
+const TEXT_INPUT_TYPES = new Set([
+  "insertText",
+  "insertFromPaste",
+  "insertFromYank",
+  "insertFromDrop",
+  "insertCompositionText",
+]);
+
+/**
+ * Keysyms for a beforeinput event, or null to leave it to the browser (or to
+ * compositionend). A missing inputType with non-empty data is treated as
+ * insertText, which covers React-synthesized and some WebView events.
+ */
+export function keysymsForBeforeInput({
+  inputType,
+  data,
+  isComposing = false,
+}: {
+  inputType?: string | null;
+  data?: string | null;
+  isComposing?: boolean;
+}): number[] | null {
+  if (isComposing) return null;
+  const text = data ?? "";
+  const type = inputType || (text ? "insertText" : "");
+  if (TEXT_INPUT_TYPES.has(type)) {
+    const keysyms = textToKeysyms(text);
+    return keysyms.length ? keysyms : null;
+  }
+  switch (type) {
+    case "insertLineBreak":
+    case "insertParagraph":
+      return [0xff0d];
+    case "deleteContentBackward":
+      return [0xff08];
+    case "deleteContentForward":
+      return [0xffff];
+    default:
+      return null;
+  }
+}

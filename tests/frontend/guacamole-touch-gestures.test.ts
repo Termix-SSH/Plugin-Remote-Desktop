@@ -19,47 +19,102 @@ describe("guacamole touch gestures", () => {
     });
   });
 
-  it("stays undecided until the spread changes or the midpoint moves", () => {
+  it("stays undecided at exactly PINCH_PX spread", () => {
     expect(
       classifyTwoFingerMove({
         startDistance: 40,
         currentDistance: 40 + PINCH_PX,
-        moved: false,
       }),
     ).toBe("undecided");
     expect(
       classifyTwoFingerMove({
         startDistance: 40,
         currentDistance: 40 + PINCH_PX + 0.5,
-        moved: false,
       }),
     ).toBe("pinch");
+  });
+
+  it("stays undecided for a 1px midpoint shift with unchanged spread", () => {
+    expect(
+      classifyTwoFingerMove({
+        startDistance: 40,
+        currentDistance: 40,
+        midpointDelta: 1,
+      }),
+    ).toBe("undecided");
+    expect(
+      classifyTwoFingerMove({
+        startDistance: 40,
+        currentDistance: 40,
+        midpointDelta: PINCH_PX,
+      }),
+    ).toBe("undecided");
+  });
+
+  it("becomes a pan once the midpoint moves past PINCH_PX", () => {
     expect(
       classifyTwoFingerMove({
         startDistance: 40,
         currentDistance: 42,
-        moved: true,
+        midpointDelta: PINCH_PX + 0.5,
       }),
     ).toBe("pan");
   });
 
-  it("keeps a decided pinch or pan for the rest of the gesture", () => {
+  it("stays a pan while the spread is within PINCH_PX", () => {
     expect(
       classifyTwoFingerMove({
         startDistance: 40,
-        currentDistance: 80,
+        currentDistance: 40 + PINCH_PX,
         current: "pan",
-        moved: true,
+        midpointDelta: 0,
       }),
     ).toBe("pan");
+  });
+
+  it("promotes a pan to a pinch when the spread later changes", () => {
+    expect(
+      classifyTwoFingerMove({
+        startDistance: 40,
+        currentDistance: 40 + PINCH_PX + 0.5,
+        current: "pan",
+        midpointDelta: 30,
+      }),
+    ).toBe("pinch");
+  });
+
+  it("keeps a pinch when the spread shrinks back", () => {
     expect(
       classifyTwoFingerMove({
         startDistance: 40,
         currentDistance: 40,
         current: "pinch",
-        moved: true,
+        midpointDelta: 30,
       }),
     ).toBe("pinch");
+  });
+
+  it("detects a gradual asymmetric pinch", () => {
+    const b = { x: 200, y: 50 };
+    const startDistance = touchDistance({ x: 100, y: 50 }, b);
+    const startMid = touchMidpoint({ x: 100, y: 50 }, b);
+    const classify = (
+      a: { x: number; y: number },
+      b2: { x: number; y: number },
+      current: "undecided" | "pinch" | "pan",
+    ) => {
+      const mid = touchMidpoint(a, b2);
+      return classifyTwoFingerMove({
+        startDistance,
+        currentDistance: touchDistance(a, b2),
+        current,
+        midpointDelta: Math.hypot(mid.x - startMid.x, mid.y - startMid.y),
+      });
+    };
+
+    const first = classify({ x: 98, y: 50 }, b, "undecided");
+    expect(first).not.toBe("pinch");
+    expect(classify({ x: 90, y: 50 }, { x: 210, y: 50 }, first)).toBe("pinch");
   });
 
   it("scales pinch zoom from the starting spread and clamps it", () => {
