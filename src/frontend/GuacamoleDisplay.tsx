@@ -1151,7 +1151,20 @@ export const GuacamoleDisplay = forwardRef<
     let gesture: Gesture | null = null;
     let claimed = false;
 
-    const pair = (touches: TouchList) => {
+    // event.touches also lists fingers resting outside the display (e.g. on
+    // the toolbar), whose touchend never reaches the container: only count
+    // the touches that started inside it.
+    const ownTouches = (list: TouchList): Touch[] => {
+      const own: Touch[] = [];
+      for (let i = 0; i < list.length; i++) {
+        const target = list[i].target;
+        if (target instanceof Node && container.contains(target)) {
+          own.push(list[i]);
+        }
+      }
+      return own;
+    };
+    const pair = (touches: Touch[]) => {
       if (touches.length !== 2) return null;
       return {
         a: { x: touches[0].clientX, y: touches[0].clientY },
@@ -1200,12 +1213,43 @@ export const GuacamoleDisplay = forwardRef<
     // with synthetic touches (which the touchpad would read as a two-finger
     // tap), the pointer gate drops their output until a fresh touch starts.
     const claim = () => {
+      if (!claimed) {
+        document.addEventListener("touchend", onDocumentTouchEnd, {
+          capture: true,
+          passive: true,
+        });
+        document.addEventListener("touchcancel", onDocumentTouchEnd, {
+          capture: true,
+          passive: true,
+        });
+      }
       claimed = true;
       touchGateRef.current?.beginMultiTouch();
     };
+    const removeDocumentListeners = () => {
+      document.removeEventListener("touchend", onDocumentTouchEnd, true);
+      document.removeEventListener("touchcancel", onDocumentTouchEnd, true);
+    };
+    // Idempotent: the container and document paths may both see one event.
+    const finalize = () => {
+      if (!claimed) return;
+      gesture = null;
+      claimed = false;
+      removeDocumentListeners();
+      touchGateRef.current?.allTouchesEnded();
+    };
+    // Defence in depth: a claimed gesture's last finger may lift outside the
+    // container, where the container never hears about it.
+    const onDocumentTouchEnd = (event: TouchEvent) => {
+      // Inside the container, onTouchEnd handles it (and must run first).
+      if (event.target instanceof Node && container.contains(event.target)) {
+        return;
+      }
+      if (ownTouches(event.touches).length === 0) finalize();
+    };
 
     const onTouchStart = (event: TouchEvent) => {
-      const touches = pair(event.touches);
+      const touches = pair(ownTouches(event.touches));
       if (touches) {
         // Take the two-finger sequence so the emulator never sees a 2-finger
         // start.
@@ -1223,7 +1267,7 @@ export const GuacamoleDisplay = forwardRef<
       gesture = null;
     };
     const onTouchMove = (event: TouchEvent) => {
-      const touches = pair(event.touches);
+      const touches = pair(ownTouches(event.touches));
       if (!touches) {
         if (claimed) {
           event.preventDefault();
@@ -1301,9 +1345,10 @@ export const GuacamoleDisplay = forwardRef<
       gesture.lastMid = mid;
     };
     const onTouchEnd = (event: TouchEvent) => {
-      const remaining = pair(event.touches);
+      const own = ownTouches(event.touches);
+      const remaining = pair(own);
       if (claimed) {
-        if (event.touches.length > 0) {
+        if (own.length > 0) {
           event.preventDefault();
           event.stopPropagation();
           // Lifting a third finger leaves two: restart so the view does not jump.
@@ -1314,9 +1359,7 @@ export const GuacamoleDisplay = forwardRef<
         // original 1-finger gesture (the gate drops whatever it emits), but
         // cancel the browser's compatibility mouse events.
         event.preventDefault();
-        gesture = null;
-        claimed = false;
-        touchGateRef.current?.allTouchesEnded();
+        finalize();
         return;
       }
       gesture = remaining ? beginGesture(remaining) : null;
@@ -1343,6 +1386,7 @@ export const GuacamoleDisplay = forwardRef<
       container.removeEventListener("touchmove", onTouchMove, true);
       container.removeEventListener("touchend", onTouchEnd, true);
       container.removeEventListener("touchcancel", onTouchEnd, true);
+      removeDocumentListeners();
     };
   }, [applyZoom, connectionConfig.protocol, connectionConfig.type, isReady]);
 

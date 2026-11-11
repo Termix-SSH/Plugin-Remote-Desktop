@@ -149,6 +149,90 @@ function dispatchTouch(
   });
 }
 
+type FakeTouch = {
+  identifier: number;
+  clientX: number;
+  clientY: number;
+  target: EventTarget;
+};
+
+function finger(
+  identifier: number,
+  target: EventTarget,
+  x: number,
+  y: number,
+): FakeTouch {
+  return { identifier, clientX: x, clientY: y, target };
+}
+
+function dispatchTouches(
+  target: HTMLElement,
+  type: "touchstart" | "touchmove" | "touchend",
+  touches: FakeTouch[],
+  changed: FakeTouch[],
+) {
+  const event = new Event(type, { bubbles: true, cancelable: true });
+  Object.defineProperty(event, "touches", { value: touches });
+  Object.defineProperty(event, "changedTouches", { value: changed });
+  act(() => {
+    target.dispatchEvent(event);
+  });
+}
+
+function tap(display: HTMLElement) {
+  const point = finger(9, display, 100, 100);
+  dispatchTouches(display, "touchstart", [point], [point]);
+  dispatchTouches(display, "touchend", [], [point]);
+}
+
+describe("GuacamoleDisplay two-finger gesture ownership", () => {
+  it("ignores a finger resting outside the display", async () => {
+    const { client } = await renderConnectedDisplay();
+    const display = client.element;
+    const toolbar = document.createElement("div");
+    document.body.appendChild(toolbar);
+    try {
+      const a = finger(0, toolbar, 10, 10);
+      const b = finger(1, display, 200, 200);
+      const bMoved = finger(1, display, 240, 240);
+      dispatchTouches(display, "touchstart", [a, b], [b]);
+      dispatchTouches(display, "touchmove", [a, bMoved], [bMoved]);
+      dispatchTouches(display, "touchend", [a], [bMoved]);
+      dispatchTouches(toolbar, "touchend", [], [a]);
+
+      client.sendMouseState.mockClear();
+      tap(display);
+
+      expect(client.sendMouseState).toHaveBeenCalledWith(
+        expect.objectContaining({ left: true }),
+      );
+    } finally {
+      toolbar.remove();
+    }
+  });
+
+  it("still clicks after a normal two-finger gesture on the display", async () => {
+    const { client } = await renderConnectedDisplay();
+    const display = client.element;
+    const a = finger(0, display, 100, 100);
+    const b = finger(1, display, 200, 200);
+    const aMoved = finger(0, display, 140, 140);
+    const bMoved = finger(1, display, 240, 240);
+    dispatchTouches(display, "touchstart", [a], [a]);
+    dispatchTouches(display, "touchstart", [a, b], [b]);
+    dispatchTouches(display, "touchmove", [aMoved, bMoved], [aMoved, bMoved]);
+    dispatchTouches(display, "touchend", [aMoved], [bMoved]);
+    dispatchTouches(display, "touchend", [], [aMoved]);
+
+    client.sendMouseState.mockClear();
+    tap(display);
+
+    expect(client.sendMouseState).toHaveBeenCalledWith(
+      expect.objectContaining({ left: true }),
+    );
+  });
+});
+
 describe("GuacamoleDisplay focus", () => {
   it("keeps the soft keyboard focused through a tap's delayed release", async () => {
     const { client, ref } = await renderConnectedDisplay();
