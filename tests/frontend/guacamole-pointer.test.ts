@@ -176,6 +176,25 @@ describe("createTouchGestureGate", () => {
     expect(sent).toEqual([pointer(9, 9, { left: true })]);
   });
 
+  it("releases held buttons once, and only when the remote holds one", () => {
+    const sent: GuacamolePointerState[] = [];
+    const gate = createTouchGestureGate((state) => sent.push(state));
+
+    gate.releaseButtons();
+    gate.forward("touch", pointer(3, 4), 0);
+    gate.releaseButtons();
+    expect(sent).toEqual([pointer(3, 4)]);
+
+    gate.forward("touch", pointer(7, 8, { left: true }), 10);
+    gate.releaseButtons();
+    gate.releaseButtons();
+    expect(sent).toEqual([
+      pointer(3, 4),
+      pointer(7, 8, { left: true }),
+      released(7, 8),
+    ]);
+  });
+
   it("keeps a double-tap drag outside a gesture", () => {
     const sent: GuacamolePointerState[] = [];
     const gate = createTouchGestureGate((state) => sent.push(state));
@@ -330,7 +349,7 @@ describe("bindPointerInput", () => {
 
     const dispatchTouch = (
       target: HTMLElement,
-      type: "touchstart" | "touchmove" | "touchend",
+      type: "touchstart" | "touchmove" | "touchend" | "touchcancel",
       touches: Point[],
       changed: Point[],
     ) => {
@@ -448,6 +467,85 @@ describe("bindPointerInput", () => {
         dispatchTouch(element, "touchend", [], [finger]);
 
         expect(states).toContainEqual(pointer(50, 50, { left: true }));
+      } finally {
+        dispose();
+        remove();
+        vi.useRealTimers();
+      }
+    });
+
+    it("does not jump the touchpad cursor after a quick pinch", () => {
+      vi.useFakeTimers();
+      const { element, remove } = mountInGestureContainer();
+      // jsdom lays nothing out; the touchpad clamps to offsetWidth - 1.
+      Object.defineProperty(element, "offsetWidth", { value: 1000 });
+      Object.defineProperty(element, "offsetHeight", { value: 1000 });
+      const { states, onState } = recorder();
+      const gate = createTouchGestureGate();
+      const dispose = bindPointerInput(element, "touchpad", onState, gate);
+      try {
+        const first = { id: 0, x: 50, y: 50 };
+        const second = { id: 1, x: 150, y: 150 };
+        dispatchTouch(element, "touchstart", [first], [first]);
+        dispatchTouch(element, "touchstart", [first, second], [second]);
+        gate.beginMultiTouch();
+        dispatchTouch(element, "touchend", [first], [second]);
+        vi.advanceTimersByTime(100);
+        // Looks like a tap: the touchpad presses and keeps its gesture open
+        // until the delayed release 250 ms later.
+        dispatchTouch(element, "touchend", [], [first]);
+        gate.allTouchesEnded();
+
+        vi.advanceTimersByTime(50);
+        const fresh = { id: 2, x: 300, y: 300 };
+        dispatchTouch(element, "touchstart", [fresh], [fresh]);
+        vi.advanceTimersByTime(16);
+        const moved = { id: 2, x: 301, y: 300 };
+        dispatchTouch(element, "touchmove", [moved], [moved]);
+        vi.advanceTimersByTime(500);
+
+        // With emulator.reset() the old touchpad kept gesture_in_progress,
+        // so the fresh touchstart did not record (300, 300) and this 1 px
+        // move was measured from (50, 50): a jump to the clamp at 999.
+        expect(states.length).toBeGreaterThan(0);
+        expect(states.filter((s) => s.left || s.middle || s.right)).toEqual([]);
+        let previous = { x: 0, y: 0 };
+        for (const state of states) {
+          expect(Math.abs(state.x - previous.x)).toBeLessThanOrEqual(10);
+          expect(Math.abs(state.y - previous.y)).toBeLessThanOrEqual(10);
+          previous = state;
+        }
+      } finally {
+        dispose();
+        remove();
+        vi.useRealTimers();
+      }
+    });
+
+    it("drops the long press of a cancelled pinch", () => {
+      vi.useFakeTimers();
+      const { element, remove } = mountInGestureContainer();
+      const { states, onState } = recorder();
+      const gate = createTouchGestureGate();
+      const dispose = bindPointerInput(element, "touchscreen", onState, gate);
+      try {
+        const first = { id: 0, x: 50, y: 50 };
+        const second = { id: 1, x: 150, y: 150 };
+        dispatchTouch(element, "touchstart", [first], [first]);
+        dispatchTouch(element, "touchstart", [first, second], [second]);
+        gate.beginMultiTouch();
+        vi.advanceTimersByTime(100);
+        dispatchTouch(element, "touchcancel", [], [first, second]);
+        gate.allTouchesEnded();
+
+        vi.advanceTimersByTime(200);
+        const fresh = { id: 2, x: 60, y: 60 };
+        dispatchTouch(element, "touchstart", [fresh], [fresh]);
+        // t=550: the cancelled finger's long press (t=500) is past; the fresh
+        // touch's own is due at t=800. With emulator.reset() the Touchscreen,
+        // which has no touchcancel listener, right-clicked at (50, 50) here.
+        vi.advanceTimersByTime(250);
+        expect(states.filter((s) => s.right)).toEqual([]);
       } finally {
         dispose();
         remove();

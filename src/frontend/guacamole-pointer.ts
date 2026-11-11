@@ -29,6 +29,8 @@ export interface TouchGestureGate {
   allTouchesEnded(now?: number): void;
   /** A new single-finger touch began after every finger was up. */
   freshTouchStart(): void;
+  /** Send one all-up state if the remote may still hold a button. */
+  releaseButtons(): void;
   isSuppressing(): boolean;
   isMultiTouchActive(): boolean;
   /** Where forwarded states go. bindPointerInput installs its own sink. */
@@ -66,7 +68,7 @@ function snapshot(state: GuacamolePointerState): GuacamolePointerState {
  * the remote. The click a pinch ends in is a press plus a delayed release,
  * and a touchstart inside that delay cancels the release, so the emulator can
  * still hold a button the remote never saw when touches are re-enabled.
- * bindPointerInput resets the emulator before calling freshTouchStart(); as a
+ * bindPointerInput retires the emulator before calling freshTouchStart(); as a
  * second line of defence the gate records every emulator state, including
  * dropped ones, and if the emulator holds a click button the remote never saw
  * pressed when touches are re-enabled, it keeps dropping touch states until
@@ -99,6 +101,20 @@ export function createTouchGestureGate(
     (state.middle && !last?.middle) ||
     (state.right && !last?.right);
 
+  const releaseButtons = () => {
+    if (last && hasAnyButton(last)) {
+      send({
+        x: last.x,
+        y: last.y,
+        left: false,
+        middle: false,
+        right: false,
+        up: false,
+        down: false,
+      });
+    }
+  };
+
   return {
     forward(source, state, now = Date.now()) {
       if (source === "touch") {
@@ -117,17 +133,7 @@ export function createTouchGestureGate(
       active = true;
       suppressTouch = true;
       dropStaleTouch = false;
-      if (last && hasAnyButton(last)) {
-        send({
-          x: last.x,
-          y: last.y,
-          left: false,
-          middle: false,
-          right: false,
-          up: false,
-          down: false,
-        });
-      }
+      releaseButtons();
     },
     allTouchesEnded(now = Date.now()) {
       active = false;
@@ -141,11 +147,158 @@ export function createTouchGestureGate(
       }
       suppressTouch = false;
     },
+    releaseButtons,
     isSuppressing: () => suppressTouch,
     isMultiTouchActive: () => active,
     setSink(next) {
       sink = next;
     },
+  };
+}
+
+type TouchEmulator = Guacamole.Mouse.Touchscreen | Guacamole.Mouse.Touchpad;
+
+/**
+ * A stand-in element for one touch emulator. It records the listeners the
+ * emulator adds instead of attaching them to the page, so a retired emulator
+ * never sees another touch event, and it delegates the layout members the
+ * emulators and Guacamole.Position.fromClientPosition read to the real
+ * element.
+ */
+function createEmulatorHost(element: HTMLElement): {
+  host: HTMLElement;
+  dispatch: (event: Event) => void;
+} {
+  const listeners: {
+    type: string;
+    listener: EventListenerOrEventListenerObject;
+  }[] = [];
+  const host = {
+    addEventListener(
+      type: string,
+      listener: EventListenerOrEventListenerObject | null,
+    ) {
+      if (listener) listeners.push({ type, listener });
+    },
+    removeEventListener(
+      type: string,
+      listener: EventListenerOrEventListenerObject | null,
+    ) {
+      const index = listeners.findIndex(
+        (l) => l.type === type && l.listener === listener,
+      );
+      if (index >= 0) listeners.splice(index, 1);
+    },
+    get offsetLeft() {
+      return element.offsetLeft;
+    },
+    get offsetTop() {
+      return element.offsetTop;
+    },
+    get offsetParent() {
+      return element.offsetParent;
+    },
+    get offsetWidth() {
+      return element.offsetWidth;
+    },
+    get offsetHeight() {
+      return element.offsetHeight;
+    },
+    getBoundingClientRect: () => element.getBoundingClientRect(),
+  };
+  return {
+    host: host as unknown as HTMLElement,
+    dispatch(event) {
+      for (const { type, listener } of [...listeners]) {
+        if (type !== event.type) continue;
+        if (typeof listener === "function") listener.call(element, event);
+        else listener.handleEvent(event);
+      }
+    },
+  };
+}
+
+/**
+ * Layers a Guacamole touch emulator on the element, feeding its states to the
+ * gate.
+ *
+ * The emulators keep private timers and gesture flags that reset() does not
+ * clear: after a quick pinch the Touchpad stays mid-gesture and measures the
+ * next touch's first move from the pinch's finger (a jump of hundreds of
+ * pixels), and the Touchscreen has no touchcancel listener, so a cancelled
+ * touch's long-press timer later right-clicks. So instead of resetting it, the
+ * emulator is retired and replaced by a fresh one when touches are re-enabled
+ * after a claimed gesture and when every touch is cancelled. Touch events
+ * reach only the current emulator, and states from a retired one (its stale
+ * timers) are dropped forever.
+ */
+function bindTouchEmulator(
+  element: HTMLElement,
+  touchMode: GuacamoleTouchMode,
+  gate: TouchGestureGate,
+): () => void {
+  type Instance = {
+    emulator: TouchEmulator;
+    dispatch: (event: Event) => void;
+  };
+  let current: Instance | null = null;
+
+  const create = (previous?: TouchEmulator) => {
+    const { host, dispatch } = createEmulatorHost(element);
+    const emulator =
+      touchMode === "touchscreen"
+        ? new Guacamole.Mouse.Touchscreen(host)
+        : new Guacamole.Mouse.Touchpad(host);
+    if (previous) {
+      // The Touchpad moves relative to its own state: keep the cursor put.
+      emulator.currentState.x = previous.currentState.x;
+      emulator.currentState.y = previous.currentState.y;
+    }
+    const instance: Instance = { emulator, dispatch };
+    emulator.onEach(["mousedown", "mousemove", "mouseup"], (event) => {
+      if (current === instance) gate.forward("touch", event.state);
+    });
+    current = instance;
+  };
+
+  const retire = () => {
+    if (!current) return;
+    const previous = current.emulator;
+    // Report the old emulator's buttons as released while it is still
+    // current, so the gate does not take a held button for a stale press on
+    // the fresh emulator (the gate drops this while it is suppressing).
+    previous.reset();
+    create(previous);
+  };
+
+  create();
+
+  // Capture phase, so these run before the emulator sees the event.
+  const onTouchStart = (event: TouchEvent) => {
+    if (event.touches.length !== 1 || gate.isMultiTouchActive()) return;
+    // The click a claimed gesture ended in may still be pending, with the
+    // emulator mid-gesture: start the fresh touch on a fresh emulator.
+    if (gate.isSuppressing()) retire();
+    gate.freshTouchStart();
+  };
+  const onTouchCancel = (event: TouchEvent) => {
+    if (event.touches.length !== 0) return;
+    retire();
+    gate.releaseButtons();
+  };
+  const forward = (event: Event) => current?.dispatch(event);
+  const touchTypes = ["touchstart", "touchmove", "touchend"] as const;
+
+  const capture = { capture: true, passive: true };
+  element.addEventListener("touchstart", onTouchStart, capture);
+  element.addEventListener("touchcancel", onTouchCancel, capture);
+  for (const type of touchTypes) element.addEventListener(type, forward);
+
+  return () => {
+    element.removeEventListener("touchstart", onTouchStart, true);
+    element.removeEventListener("touchcancel", onTouchCancel, true);
+    for (const type of touchTypes) element.removeEventListener(type, forward);
+    current = null;
   };
 }
 
@@ -200,40 +353,13 @@ export function bindPointerInput(
     mouse.onmousemove =
       (state) => gate.forward("mouse", state);
 
-  let removeTouchStart: (() => void) | null = null;
-  if (touchMode === "touchscreen" || touchMode === "touchpad") {
-    const emulator =
-      touchMode === "touchscreen"
-        ? new Guacamole.Mouse.Touchscreen(element)
-        : new Guacamole.Mouse.Touchpad(element);
-    emulator.onEach(["mousedown", "mousemove", "mouseup"], (event) =>
-      gate.forward("touch", event.state),
-    );
-    // Capture phase, so this runs before the emulator's own touchstart.
-    const onTouchStart = (event: TouchEvent) => {
-      if (event.touches.length !== 1 || gate.isMultiTouchActive()) return;
-      if (gate.isSuppressing()) {
-        // The click a claimed gesture ended in may still be held: a touchstart
-        // within clickTimingThreshold cancels its delayed release ("keep
-        // button pressed if tap after left click"), and the next touchmove
-        // would drag. Release it while the gate still drops the mouseup, so
-        // the remote never sees the press or the release. Afterwards the
-        // Touchscreen only moves with a button when currentState.left is set,
-        // and the Touchpad only presses on a later touchend.
-        emulator.reset();
-      }
-      gate.freshTouchStart();
-    };
-    element.addEventListener("touchstart", onTouchStart, {
-      capture: true,
-      passive: true,
-    });
-    removeTouchStart = () =>
-      element.removeEventListener("touchstart", onTouchStart, true);
-  }
+  const disposeTouch =
+    touchMode === "touchscreen" || touchMode === "touchpad"
+      ? bindTouchEmulator(element, touchMode, gate)
+      : null;
 
   return () => {
-    removeTouchStart?.();
+    disposeTouch?.();
     gate.setSink(null);
     coalescer.dispose();
   };
