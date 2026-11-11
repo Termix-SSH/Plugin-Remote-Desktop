@@ -65,7 +65,11 @@ export function specialKeysymFromKeyboardEvent(event: {
 }
 
 export interface PressedKeyTracker {
-  /** Sends a key down unless the keysym is already held (key repeat). */
+  /**
+   * Sends a key down. If the keysym is already held (autorepeat), sends a
+   * key up then a key down so each repeat is one action on the remote; the
+   * key stays held, so a later release still sends a single key up.
+   */
   press(keysym: number): void;
   /** Sends a key up and forgets the keysym, even if it was not tracked. */
   release(keysym: number): void;
@@ -79,6 +83,11 @@ export interface PressedKeyTracker {
  * Special keys from the soft-keyboard textarea bypass Guacamole.Keyboard and
  * its pressed-key bookkeeping. Track them here so a key held while focus
  * leaves (or the page hides) can still be released on the remote.
+ *
+ * The textarea's keydown handler calls preventDefault(), so the browser emits
+ * no input events for held Backspace/Delete/arrows; the keydown autorepeat is
+ * the only repeat signal. A remote key that is merely held down would not
+ * repeat reliably, so each repeat is replayed as an explicit up+down pair.
  */
 export function createPressedKeyTracker(
   send: (pressed: 0 | 1, keysym: number) => void,
@@ -86,7 +95,11 @@ export function createPressedKeyTracker(
   const held = new Set<number>();
   return {
     press(keysym) {
-      if (held.has(keysym)) return;
+      if (held.has(keysym)) {
+        send(0, keysym);
+        send(1, keysym);
+        return;
+      }
       held.add(keysym);
       send(1, keysym);
     },

@@ -98,7 +98,7 @@ describe("createPressedKeyTracker", () => {
   const ARROW_DOWN = 0xff54;
   const BACKSPACE = 0xff08;
 
-  it("sends a repeated keydown only once", () => {
+  it("replays each repeated keydown as an up+down pair and stays held", () => {
     const send = vi.fn();
     const keys = createPressedKeyTracker(send);
 
@@ -106,9 +106,58 @@ describe("createPressedKeyTracker", () => {
     keys.press(ARROW_DOWN);
     keys.press(ARROW_DOWN);
 
-    expect(send.mock.calls).toEqual([[1, ARROW_DOWN]]);
+    expect(send.mock.calls).toEqual([
+      [1, ARROW_DOWN],
+      [0, ARROW_DOWN],
+      [1, ARROW_DOWN],
+      [0, ARROW_DOWN],
+      [1, ARROW_DOWN],
+    ]);
     expect(keys.has(ARROW_DOWN)).toBe(true);
     expect(keys.size).toBe(1);
+  });
+
+  it("sends one action per autorepeat of a held Backspace", () => {
+    const send = vi.fn();
+    const keys = createPressedKeyTracker(send);
+
+    keys.press(BACKSPACE);
+    keys.press(BACKSPACE);
+    keys.press(BACKSPACE);
+    expect(send.mock.calls).toEqual([
+      [1, BACKSPACE],
+      [0, BACKSPACE],
+      [1, BACKSPACE],
+      [0, BACKSPACE],
+      [1, BACKSPACE],
+    ]);
+
+    send.mockClear();
+    keys.release(BACKSPACE);
+    expect(send.mock.calls).toEqual([[0, BACKSPACE]]);
+    expect(keys.size).toBe(0);
+  });
+
+  it("releases each key once after repeats on releaseAll", () => {
+    const send = vi.fn();
+    const keys = createPressedKeyTracker(send);
+
+    keys.press(ARROW_DOWN);
+    keys.press(ARROW_DOWN);
+    keys.press(BACKSPACE);
+    keys.press(BACKSPACE);
+    keys.press(BACKSPACE);
+    send.mockClear();
+
+    keys.releaseAll();
+    expect(send.mock.calls).toHaveLength(2);
+    expect(send.mock.calls).toEqual(
+      expect.arrayContaining([
+        [0, ARROW_DOWN],
+        [0, BACKSPACE],
+      ]),
+    );
+    expect(keys.size).toBe(0);
   });
 
   it("releases on keyup and can press the key again", () => {

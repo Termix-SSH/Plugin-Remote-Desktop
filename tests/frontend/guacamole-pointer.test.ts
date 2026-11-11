@@ -128,13 +128,70 @@ describe("createTouchGestureGate", () => {
     expect(gate.isSuppressing()).toBe(true);
     gate.allTouchesEnded(100);
     gate.forward("touch", pointer(2, 2, { left: true }), 5000);
+    // The emulator's delayed release of that click.
+    gate.forward("touch", pointer(2, 2), 5250);
     expect(sent).toEqual([]);
 
     gate.freshTouchStart();
     expect(gate.isSuppressing()).toBe(false);
-    gate.forward("touch", pointer(2, 2, { left: true }), 5001);
-    gate.forward("touch", pointer(2, 2), 5002);
+    gate.forward("touch", pointer(2, 2, { left: true }), 5301);
+    gate.forward("touch", pointer(2, 2), 5302);
     expect(sent).toEqual([pointer(2, 2, { left: true }), pointer(2, 2)]);
+  });
+
+  it("never drags with a button the emulator held across a gesture", () => {
+    const sent: GuacamolePointerState[] = [];
+    const gate = createTouchGestureGate((state) => sent.push(state));
+
+    gate.beginMultiTouch(0);
+    gate.allTouchesEnded(100);
+    // The pinch's click; its delayed release is cancelled by the next touch.
+    gate.forward("touch", pointer(50, 50, { left: true }), 101);
+    gate.freshTouchStart();
+    expect(gate.isSuppressing()).toBe(false);
+
+    gate.forward("touch", pointer(120, 90, { left: true }), 150);
+    gate.forward("touch", pointer(200, 200, { left: true }), 160);
+    expect(sent).toEqual([]);
+
+    gate.forward("touch", pointer(200, 200), 170);
+    gate.forward("touch", pointer(210, 210, { left: true }), 400);
+    gate.forward("touch", pointer(210, 210), 410);
+    expect(sent).toEqual([
+      pointer(200, 200),
+      pointer(210, 210, { left: true }),
+      pointer(210, 210),
+    ]);
+  });
+
+  it("forwards a press that starts a fresh touch when nothing was held", () => {
+    const sent: GuacamolePointerState[] = [];
+    const gate = createTouchGestureGate((state) => sent.push(state));
+
+    gate.beginMultiTouch(0);
+    gate.allTouchesEnded(100);
+    gate.freshTouchStart();
+    gate.forward("touch", pointer(9, 9, { left: true }), 200);
+
+    expect(sent).toEqual([pointer(9, 9, { left: true })]);
+  });
+
+  it("keeps a double-tap drag outside a gesture", () => {
+    const sent: GuacamolePointerState[] = [];
+    const gate = createTouchGestureGate((state) => sent.push(state));
+
+    gate.freshTouchStart();
+    gate.forward("touch", pointer(5, 5, { left: true }), 0);
+    // Second tap within clickTimingThreshold keeps the button down.
+    gate.freshTouchStart();
+    gate.forward("touch", pointer(40, 40, { left: true }), 100);
+    gate.forward("touch", pointer(40, 40), 200);
+
+    expect(sent).toEqual([
+      pointer(5, 5, { left: true }),
+      pointer(40, 40, { left: true }),
+      pointer(40, 40),
+    ]);
   });
 });
 
@@ -266,5 +323,136 @@ describe("bindPointerInput", () => {
     gate.allTouchesEnded();
     touchStart(1);
     expect(gate.isSuppressing()).toBe(true);
+  });
+
+  describe("with the real touchscreen emulator", () => {
+    type Point = { id: number; x: number; y: number };
+
+    const dispatchTouch = (
+      target: HTMLElement,
+      type: "touchstart" | "touchmove" | "touchend",
+      touches: Point[],
+      changed: Point[],
+    ) => {
+      const toList = (points: Point[]) =>
+        points.map((p) => ({
+          identifier: p.id,
+          clientX: p.x,
+          clientY: p.y,
+          target,
+        }));
+      const event = new Event(type, { bubbles: true, cancelable: true });
+      Object.defineProperty(event, "touches", { value: toList(touches) });
+      Object.defineProperty(event, "changedTouches", {
+        value: toList(changed),
+      });
+      target.dispatchEvent(event);
+    };
+
+    // The emulator hands out its own mutable currentState: copy on receipt.
+    const pick = (state: GuacamolePointerState) =>
+      pointer(state.x, state.y, {
+        left: state.left,
+        middle: state.middle,
+        right: state.right,
+        up: state.up,
+        down: state.down,
+      });
+    const recorder = () => {
+      const states: GuacamolePointerState[] = [];
+      const onState = (state: GuacamolePointerState) => {
+        states.push(pick(state));
+      };
+      return { states, onState };
+    };
+
+    // Like GuacamoleDisplay's capture-phase gesture handler, the container
+    // keeps every multi-finger touchstart/touchend from the emulator, so it
+    // only ever sees the first finger go down and the last one lift.
+    const mountInGestureContainer = () => {
+      const container = document.createElement("div");
+      const element = document.createElement("div");
+      container.appendChild(element);
+      document.body.appendChild(container);
+      const swallow = (event: Event) => {
+        const { type, touches } = event as TouchEvent;
+        if (
+          (type === "touchstart" && touches.length > 1) ||
+          (type === "touchend" && touches.length > 0)
+        ) {
+          event.stopPropagation();
+        }
+      };
+      container.addEventListener("touchstart", swallow, true);
+      container.addEventListener("touchend", swallow, true);
+      return { element, remove: () => container.remove() };
+    };
+
+    it("does not drag with the click a pinch ended in", () => {
+      vi.useFakeTimers();
+      const { element, remove } = mountInGestureContainer();
+      const { states, onState } = recorder();
+      const gate = createTouchGestureGate();
+      const emitted: GuacamolePointerState[] = [];
+      const forward = gate.forward;
+      gate.forward = (source, state, now) => {
+        if (source === "touch") emitted.push(pick(state));
+        forward(source, state, now);
+      };
+      const dispose = bindPointerInput(element, "touchscreen", onState, gate);
+      try {
+        const first = { id: 0, x: 50, y: 50 };
+        const second = { id: 1, x: 150, y: 150 };
+        dispatchTouch(element, "touchstart", [first], [first]);
+        dispatchTouch(element, "touchstart", [first, second], [second]);
+        gate.beginMultiTouch();
+        dispatchTouch(element, "touchend", [first], [second]);
+        dispatchTouch(element, "touchend", [], [first]);
+        gate.allTouchesEnded();
+
+        // The real emulator ended the gesture in a click whose release is
+        // still pending: the leftover press this test is about.
+        expect(emitted).toContainEqual(pointer(50, 50, { left: true }));
+
+        // Inside clickTimingThreshold (no timers advanced).
+        const fresh = { id: 2, x: 60, y: 60 };
+        dispatchTouch(element, "touchstart", [fresh], [fresh]);
+        const moved = { id: 2, x: 200, y: 200 };
+        dispatchTouch(element, "touchmove", [moved], [moved]);
+        dispatchTouch(element, "touchend", [], [moved]);
+
+        expect(states.filter((s) => s.left)).toEqual([]);
+
+        // The next tap still clicks.
+        const tap = { id: 3, x: 80, y: 80 };
+        dispatchTouch(element, "touchstart", [tap], [tap]);
+        dispatchTouch(element, "touchend", [], [tap]);
+        expect(states[states.length - 1]).toEqual(
+          pointer(80, 80, { left: true }),
+        );
+      } finally {
+        dispose();
+        remove();
+        vi.useRealTimers();
+      }
+    });
+
+    it("still forwards a plain tap as a left press", () => {
+      vi.useFakeTimers();
+      const { element, remove } = mountInGestureContainer();
+      const { states, onState } = recorder();
+      const dispose = bindPointerInput(element, "touchscreen", onState);
+      try {
+        const finger = { id: 0, x: 50, y: 50 };
+        dispatchTouch(element, "touchstart", [finger], [finger]);
+        dispatchTouch(element, "touchend", [], [finger]);
+
+        expect(states).toContainEqual(pointer(50, 50, { left: true }));
+      } finally {
+        dispose();
+        remove();
+        vi.useRealTimers();
+      }
+    });
   });
 });
