@@ -742,7 +742,6 @@ export const GuacamoleDisplay = forwardRef<
     }
 
     const sendMouseState = (state: Guacamole.Mouse.State) => {
-      displayElement.focus({ preventScroll: true });
       const scale = scaleRef.current;
       const adjustedState = new Guacamole.Mouse.State(
         Math.round(state.x / scale),
@@ -753,6 +752,13 @@ export const GuacamoleDisplay = forwardRef<
         state.up,
         state.down,
       ) as Guacamole.Mouse.State;
+      // Hover-to-type: any forwarded mouse state (desktop move/wheel too)
+      // gives the display keyboard focus, except while the soft-keyboard
+      // textarea is focused. The Touchscreen emulator releases a tap from a
+      // 250 ms timer, and refocusing then would dismiss the phone keyboard.
+      if (document.activeElement !== softKeyboardRef.current) {
+        displayElement.focus({ preventScroll: true });
+      }
       client.sendMouseState(adjustedState);
     };
 
@@ -783,10 +789,21 @@ export const GuacamoleDisplay = forwardRef<
       refreshKeyboardHandlers();
     };
 
+    // A real press on the display always takes focus, even from the soft
+    // keyboard (closing it); sendMouseState only refocuses when the soft
+    // keyboard is not focused. The emulators preventDefault touchstart, which
+    // also blocks the native focus, so focus explicitly. Capture phase, so
+    // this runs before the emulators.
+    const focusDisplayFromPress = () => {
+      displayElement.focus({ preventScroll: true });
+      handleDisplayFocus();
+    };
+
     displayElement.addEventListener("focus", handleDisplayFocus);
     displayElement.addEventListener("blur", handleDisplayBlur);
-    displayElement.addEventListener("mousedown", handleDisplayFocus);
-    displayElement.addEventListener("touchstart", handleDisplayFocus, {
+    displayElement.addEventListener("mousedown", focusDisplayFromPress, true);
+    displayElement.addEventListener("touchstart", focusDisplayFromPress, {
+      capture: true,
       passive: true,
     });
     refreshKeyboardHandlers();
