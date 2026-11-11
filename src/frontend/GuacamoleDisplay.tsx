@@ -46,7 +46,11 @@ import {
   getGuacamoleDisplaySize,
   isSmallChange,
 } from "./guacamole-display-size.ts";
-import { bindPointerInput } from "./guacamole-pointer.ts";
+import {
+  bindPointerInput,
+  createTouchGestureGate,
+  type TouchGestureGate,
+} from "./guacamole-pointer.ts";
 import {
   getFileDropDisposition,
   hasDraggedFiles,
@@ -56,6 +60,22 @@ import {
   type GuacamoleFileStreamClient,
 } from "./guacamole-filesystem.ts";
 import { clampGuacamoleZoom, stepGuacamoleZoom } from "./guacamole-zoom.ts";
+import {
+  classifyTwoFingerMove,
+  nextPinchZoom,
+  scrollAfterPan,
+  displayOffsetInContainer,
+  scrollAfterZoom,
+  touchDistance,
+  touchMidpoint,
+} from "./guacamole-touch-gestures.ts";
+import {
+  createPressedKeyTracker,
+  isComposingKeyboardEvent,
+  keysymsForBeforeInput,
+  specialKeysymFromKeyboardEvent,
+  textToKeysyms,
+} from "./guacamole-soft-keyboard.ts";
 import { createRdpReadyGate } from "./guacamole-ready.ts";
 import {
   remoteKeysym,
@@ -98,6 +118,10 @@ export interface GuacamoleDisplayHandle {
   zoomIn: () => number;
   zoomOut: () => number;
   resetZoom: () => number;
+  /** Focuses the hidden textarea so a phone can show its software keyboard. */
+  openSoftKeyboard: () => void;
+  closeSoftKeyboard: () => void;
+  isSoftKeyboardOpen: () => boolean;
   /** Shows another RustDesk monitor. */
   selectDisplay: (index: number) => void;
 }
@@ -199,6 +223,35 @@ export const GuacamoleDisplay = forwardRef<
     null,
   );
   const hasKeyboardFocusRef = useRef(false);
+  const softKeyboardRef = useRef<HTMLTextAreaElement>(null);
+  const inputHandledRef = useRef(false);
+  const composingRef = useRef(false);
+  // Special keys typed into the soft-keyboard textarea bypass
+  // Guacamole.Keyboard, so track them to release on blur/hide/disconnect.
+  const [softKeys] = useState(() =>
+    createPressedKeyTracker((pressed, keysym) => {
+      clientRef.current?.sendKeyEvent(pressed, keysym);
+    }),
+  );
+  // Per connection: drops touch-emulator clicks around two-finger gestures.
+  const touchGateRef = useRef<TouchGestureGate | null>(null);
+
+  const markSoftKeyboardHandled = () => {
+    inputHandledRef.current = true;
+    window.setTimeout(() => {
+      inputHandledRef.current = false;
+    }, 0);
+  };
+
+  const sendSoftKeysyms = (keysyms: number[]) => {
+    const client = clientRef.current;
+    if (!client) return;
+    for (const keysym of keysyms) {
+      client.sendKeyEvent(1, keysym);
+      client.sendKeyEvent(0, keysym);
+    }
+  };
+
   const sessionProtocolRef = useRef(
     connectionConfig.protocol ?? connectionConfig.type,
   );
@@ -227,8 +280,11 @@ export const GuacamoleDisplay = forwardRef<
   );
 
   const disconnectClient = useCallback(() => {
+    // Release while clientRef still points at the client that got the presses.
+    softKeys.releaseAll();
     unbindPointerRef.current?.();
     unbindPointerRef.current = null;
+    touchGateRef.current = null;
     unbindAudioRef.current?.();
     unbindAudioRef.current = null;
     unwatchAltRef.current?.();
@@ -251,7 +307,7 @@ export const GuacamoleDisplay = forwardRef<
     } catch (error) {
       console.warn("Failed to disconnect Guacamole client", error);
     }
-  }, []);
+  }, [softKeys]);
 
   const applyZoom = useCallback(
     (nextZoom: number): number => {
@@ -324,6 +380,17 @@ export const GuacamoleDisplay = forwardRef<
     zoomIn: () => applyZoom(stepGuacamoleZoom(zoomRef.current, 1)),
     zoomOut: () => applyZoom(stepGuacamoleZoom(zoomRef.current, -1)),
     resetZoom: () => applyZoom(1),
+    openSoftKeyboard: () => {
+      const input = softKeyboardRef.current;
+      if (!input) return;
+      input.focus({ preventScroll: true });
+    },
+    closeSoftKeyboard: () => {
+      softKeyboardRef.current?.blur();
+    },
+    isSoftKeyboardOpen: () =>
+      softKeyboardRef.current != null &&
+      document.activeElement === softKeyboardRef.current,
   }));
 
   const getWebSocketConnection = useCallback(
@@ -589,6 +656,8 @@ export const GuacamoleDisplay = forwardRef<
 
     const tunnel = new Guacamole.WebSocketTunnel(wsConnection.url);
     const client = new Guacamole.Client(tunnel);
+    // Keys held on a previous client must be released there, not here.
+    softKeys.releaseAll();
     clientRef.current = client;
     wasConnectedRef.current = false;
     tunnelWatchRef.current?.stop();
@@ -673,7 +742,6 @@ export const GuacamoleDisplay = forwardRef<
     }
 
     const sendMouseState = (state: Guacamole.Mouse.State) => {
-      displayElement.focus({ preventScroll: true });
       const scale = scaleRef.current;
       const adjustedState = new Guacamole.Mouse.State(
         Math.round(state.x / scale),
@@ -684,14 +752,24 @@ export const GuacamoleDisplay = forwardRef<
         state.up,
         state.down,
       ) as Guacamole.Mouse.State;
+      // Hover-to-type: any forwarded mouse state (desktop move/wheel too)
+      // gives the display keyboard focus, except while the soft-keyboard
+      // textarea is focused. The Touchscreen emulator releases a tap from a
+      // 250 ms timer, and refocusing then would dismiss the phone keyboard.
+      if (document.activeElement !== softKeyboardRef.current) {
+        displayElement.focus({ preventScroll: true });
+      }
       client.sendMouseState(adjustedState);
     };
 
     unbindPointerRef.current?.();
+    const touchGate = createTouchGestureGate();
+    touchGateRef.current = touchGate;
     unbindPointerRef.current = bindPointerInput(
       displayElement,
       touchMode,
       sendMouseState,
+      touchGate,
     );
 
     unwatchAltRef.current?.();
@@ -711,10 +789,21 @@ export const GuacamoleDisplay = forwardRef<
       refreshKeyboardHandlers();
     };
 
+    // A real press on the display always takes focus, even from the soft
+    // keyboard (closing it); sendMouseState only refocuses when the soft
+    // keyboard is not focused. The emulators preventDefault touchstart, which
+    // also blocks the native focus, so focus explicitly. Capture phase, so
+    // this runs before the emulators.
+    const focusDisplayFromPress = () => {
+      displayElement.focus({ preventScroll: true });
+      handleDisplayFocus();
+    };
+
     displayElement.addEventListener("focus", handleDisplayFocus);
     displayElement.addEventListener("blur", handleDisplayBlur);
-    displayElement.addEventListener("mousedown", handleDisplayFocus);
-    displayElement.addEventListener("touchstart", handleDisplayFocus, {
+    displayElement.addEventListener("mousedown", focusDisplayFromPress, true);
+    displayElement.addEventListener("touchstart", focusDisplayFromPress, {
+      capture: true,
       passive: true,
     });
     refreshKeyboardHandlers();
@@ -877,6 +966,7 @@ export const GuacamoleDisplay = forwardRef<
     connectionConfig.dpi,
     followsContainer,
     touchMode,
+    softKeys,
     t,
   ]);
 
@@ -996,33 +1086,283 @@ export const GuacamoleDisplay = forwardRef<
   ]);
 
   useEffect(() => {
+    const input = softKeyboardRef.current;
+    if (!input) return;
+    const onBeforeInput = (event: InputEvent) => {
+      let paste = "";
+      try {
+        paste = event.dataTransfer?.getData("text/plain") ?? "";
+      } catch {
+        paste = "";
+      }
+      const keysyms = keysymsForBeforeInput({
+        inputType: event.inputType,
+        data: event.data ?? paste,
+        isComposing: event.isComposing || composingRef.current,
+      });
+      if (keysyms == null) return;
+      event.preventDefault();
+      input.value = "";
+      markSoftKeyboardHandled();
+      sendSoftKeysyms(keysyms);
+    };
+    input.addEventListener("beforeinput", onBeforeInput);
+    return () => input.removeEventListener("beforeinput", onBeforeInput);
+  }, []);
+
+  // A held soft-keyboard key never gets its keyup once focus leaves, so
+  // release everything whenever the textarea or the page loses focus.
+  useEffect(() => {
+    const input = softKeyboardRef.current;
+    const releaseAll = () => softKeys.releaseAll();
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "hidden") releaseAll();
+    };
+    input?.addEventListener("blur", releaseAll);
+    window.addEventListener("blur", releaseAll);
+    window.addEventListener("pagehide", releaseAll);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      input?.removeEventListener("blur", releaseAll);
+      window.removeEventListener("blur", releaseAll);
+      window.removeEventListener("pagehide", releaseAll);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      releaseAll();
+    };
+  }, [softKeys]);
+
+  useEffect(() => {
     const container = containerRef.current;
     const protocol = connectionConfig.protocol ?? connectionConfig.type;
     if (!container || !isReady || (protocol !== "vnc" && protocol !== "ard"))
       return;
 
-    let pinchDistance = 0;
-    let pinchZoom = zoomRef.current;
-    const distance = (touches: TouchList) =>
-      Math.hypot(
-        touches[0].clientX - touches[1].clientX,
-        touches[0].clientY - touches[1].clientY,
-      );
+    type Gesture = {
+      startDistance: number;
+      startZoom: number;
+      startScale: number;
+      startScrollLeft: number;
+      startScrollTop: number;
+      startMid: { x: number; y: number };
+      startOffset: { x: number; y: number };
+      lastMid: { x: number; y: number };
+      kind: "undecided" | "pinch" | "pan";
+    };
+    let gesture: Gesture | null = null;
+    let claimed = false;
+
+    // event.touches also lists fingers resting outside the display (e.g. on
+    // the toolbar), whose touchend never reaches the container: only count
+    // the touches that started inside it.
+    const ownTouches = (list: TouchList): Touch[] => {
+      const own: Touch[] = [];
+      for (let i = 0; i < list.length; i++) {
+        const target = list[i].target;
+        if (target instanceof Node && container.contains(target)) {
+          own.push(list[i]);
+        }
+      }
+      return own;
+    };
+    const pair = (touches: Touch[]) => {
+      if (touches.length !== 2) return null;
+      return {
+        a: { x: touches[0].clientX, y: touches[0].clientY },
+        b: { x: touches[1].clientX, y: touches[1].clientY },
+      };
+    };
+    const relative = (point: { x: number; y: number }, rect: DOMRect) => ({
+      x: point.x - rect.left,
+      y: point.y - rect.top,
+    });
+    // The displayRef wrapper is min-w/h-full, so it sits at the scroll origin.
+    // The Guacamole element inside it is flex-centered while smaller than the
+    // container; pinch math has to use that offset, measured after applyZoom
+    // because a resize can change whether the display is still centered.
+    const measureOffset = () => {
+      const display = displayElementRef.current;
+      if (!display) return { x: 0, y: 0 };
+      return displayOffsetInContainer({
+        containerRect: container.getBoundingClientRect(),
+        displayRect: display.getBoundingClientRect(),
+        scrollLeft: container.scrollLeft,
+        scrollTop: container.scrollTop,
+      });
+    };
+
+    const beginGesture = (touches: {
+      a: { x: number; y: number };
+      b: { x: number; y: number };
+    }): Gesture => {
+      const mid = touchMidpoint(touches.a, touches.b);
+      const rect = container.getBoundingClientRect();
+      return {
+        startDistance: touchDistance(touches.a, touches.b),
+        startZoom: zoomRef.current,
+        startScale: scaleRef.current,
+        startScrollLeft: container.scrollLeft,
+        startScrollTop: container.scrollTop,
+        startMid: relative(mid, rect),
+        startOffset: measureOffset(),
+        lastMid: mid,
+        kind: "undecided",
+      };
+    };
+    // The emulators still track the first finger and would turn it into a
+    // click or long-press right click. Rather than spoil their internal state
+    // with synthetic touches (which the touchpad would read as a two-finger
+    // tap), the pointer gate drops their output until a fresh touch starts.
+    const claim = () => {
+      if (!claimed) {
+        document.addEventListener("touchend", onDocumentTouchEnd, {
+          capture: true,
+          passive: true,
+        });
+        document.addEventListener("touchcancel", onDocumentTouchEnd, {
+          capture: true,
+          passive: true,
+        });
+      }
+      claimed = true;
+      touchGateRef.current?.beginMultiTouch();
+    };
+    const removeDocumentListeners = () => {
+      document.removeEventListener("touchend", onDocumentTouchEnd, true);
+      document.removeEventListener("touchcancel", onDocumentTouchEnd, true);
+    };
+    // Idempotent: the container and document paths may both see one event.
+    const finalize = () => {
+      if (!claimed) return;
+      gesture = null;
+      claimed = false;
+      removeDocumentListeners();
+      touchGateRef.current?.allTouchesEnded();
+    };
+    // Defence in depth: a claimed gesture's last finger may lift outside the
+    // container, where the container never hears about it.
+    const onDocumentTouchEnd = (event: TouchEvent) => {
+      // Inside the container, onTouchEnd handles it (and must run first).
+      if (event.target instanceof Node && container.contains(event.target)) {
+        return;
+      }
+      if (ownTouches(event.touches).length === 0) finalize();
+    };
+
     const onTouchStart = (event: TouchEvent) => {
-      if (event.touches.length !== 2) return;
-      event.preventDefault();
-      event.stopPropagation();
-      pinchDistance = distance(event.touches);
-      pinchZoom = zoomRef.current;
+      const touches = pair(ownTouches(event.touches));
+      if (touches) {
+        // Take the two-finger sequence so the emulator never sees a 2-finger
+        // start.
+        event.preventDefault();
+        event.stopPropagation();
+        gesture = beginGesture(touches);
+        claim();
+        return;
+      }
+      if (claimed) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+      gesture = null;
     };
     const onTouchMove = (event: TouchEvent) => {
-      if (event.touches.length !== 2 || pinchDistance === 0) return;
+      const touches = pair(ownTouches(event.touches));
+      if (!touches) {
+        if (claimed) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        return;
+      }
       event.preventDefault();
       event.stopPropagation();
-      applyZoom(pinchZoom * (distance(event.touches) / pinchDistance));
+      if (!gesture) {
+        gesture = beginGesture(touches);
+        claim();
+      }
+      const mid = touchMidpoint(touches.a, touches.b);
+      const to = relative(mid, container.getBoundingClientRect());
+      const distance = touchDistance(touches.a, touches.b);
+      const kind = classifyTwoFingerMove({
+        startDistance: gesture.startDistance,
+        currentDistance: distance,
+        current: gesture.kind,
+        midpointDelta: Math.hypot(
+          to.x - gesture.startMid.x,
+          to.y - gesture.startMid.y,
+        ),
+      });
+      if (kind === "undecided") {
+        gesture.lastMid = mid;
+        return;
+      }
+      if (kind === "pinch" && gesture.kind === "pan") {
+        // The pan already scrolled; zoom around what is under the fingers now.
+        gesture.startScrollLeft = container.scrollLeft;
+        gesture.startScrollTop = container.scrollTop;
+        gesture.startMid = to;
+        gesture.startOffset = measureOffset();
+        gesture.startScale = scaleRef.current;
+        gesture.startZoom = zoomRef.current;
+        gesture.startDistance = distance;
+      }
+      gesture.kind = kind;
+      if (kind === "pinch") {
+        const newZoom = nextPinchZoom(
+          gesture.startZoom,
+          gesture.startDistance,
+          distance,
+        );
+        applyZoom(newZoom);
+        const after = measureOffset();
+        const next = scrollAfterZoom({
+          scrollLeft: gesture.startScrollLeft,
+          scrollTop: gesture.startScrollTop,
+          fromX: gesture.startMid.x,
+          fromY: gesture.startMid.y,
+          pointX: to.x,
+          pointY: to.y,
+          oldScale: gesture.startScale,
+          newScale: scaleRef.current,
+          fromOffsetX: gesture.startOffset.x,
+          fromOffsetY: gesture.startOffset.y,
+          toOffsetX: after.x,
+          toOffsetY: after.y,
+        });
+        container.scrollLeft = next.scrollLeft;
+        container.scrollTop = next.scrollTop;
+      } else {
+        const next = scrollAfterPan({
+          scrollLeft: container.scrollLeft,
+          scrollTop: container.scrollTop,
+          dx: mid.x - gesture.lastMid.x,
+          dy: mid.y - gesture.lastMid.y,
+        });
+        container.scrollLeft = next.scrollLeft;
+        container.scrollTop = next.scrollTop;
+      }
+      gesture.lastMid = mid;
     };
-    const onTouchEnd = () => {
-      pinchDistance = 0;
+    const onTouchEnd = (event: TouchEvent) => {
+      const own = ownTouches(event.touches);
+      const remaining = pair(own);
+      if (claimed) {
+        if (own.length > 0) {
+          event.preventDefault();
+          event.stopPropagation();
+          // Lifting a third finger leaves two: restart so the view does not jump.
+          if (remaining) gesture = beginGesture(remaining);
+          return;
+        }
+        // Last finger up: let the emulator see the end so it can leave the
+        // original 1-finger gesture (the gate drops whatever it emits), but
+        // cancel the browser's compatibility mouse events.
+        event.preventDefault();
+        finalize();
+        return;
+      }
+      gesture = remaining ? beginGesture(remaining) : null;
     };
 
     container.addEventListener("touchstart", onTouchStart, {
@@ -1033,11 +1373,20 @@ export const GuacamoleDisplay = forwardRef<
       passive: false,
       capture: true,
     });
-    container.addEventListener("touchend", onTouchEnd, { capture: true });
+    container.addEventListener("touchend", onTouchEnd, {
+      passive: false,
+      capture: true,
+    });
+    container.addEventListener("touchcancel", onTouchEnd, {
+      passive: false,
+      capture: true,
+    });
     return () => {
       container.removeEventListener("touchstart", onTouchStart, true);
       container.removeEventListener("touchmove", onTouchMove, true);
       container.removeEventListener("touchend", onTouchEnd, true);
+      container.removeEventListener("touchcancel", onTouchEnd, true);
+      removeDocumentListeners();
     };
   }, [applyZoom, connectionConfig.protocol, connectionConfig.type, isReady]);
 
@@ -1100,6 +1449,90 @@ export const GuacamoleDisplay = forwardRef<
         style={{
           cursor: isReady ? "none" : "default",
           visibility: isReady ? "visible" : "hidden",
+        }}
+      />
+
+      <textarea
+        ref={softKeyboardRef}
+        aria-label={t("remoteDesktop.toolbar.showKeyboard")}
+        autoCapitalize="off"
+        autoComplete="off"
+        autoCorrect="off"
+        spellCheck={false}
+        inputMode="text"
+        tabIndex={-1}
+        rows={1}
+        defaultValue=""
+        onKeyDown={(event) => {
+          if (
+            isComposingKeyboardEvent({
+              key: event.key,
+              keyCode: event.keyCode,
+              isComposing: event.nativeEvent.isComposing,
+            })
+          ) {
+            return;
+          }
+          const keysym = specialKeysymFromKeyboardEvent(event);
+          if (keysym == null) return;
+          event.preventDefault();
+          if (!clientRef.current) return;
+          softKeys.press(keysym);
+        }}
+        onKeyUp={(event) => {
+          if (
+            isComposingKeyboardEvent({
+              key: event.key,
+              keyCode: event.keyCode,
+              isComposing: event.nativeEvent.isComposing,
+            })
+          ) {
+            return;
+          }
+          const keysym = specialKeysymFromKeyboardEvent(event);
+          if (keysym == null) return;
+          event.preventDefault();
+          if (!clientRef.current) return;
+          softKeys.release(keysym);
+        }}
+        onInput={(event) => {
+          if (inputHandledRef.current) {
+            inputHandledRef.current = false;
+            event.currentTarget.value = "";
+            return;
+          }
+          if (event.nativeEvent.isComposing || composingRef.current) return;
+          const text = event.currentTarget.value;
+          event.currentTarget.value = "";
+          if (!text) return;
+          sendSoftKeysyms(textToKeysyms(text));
+        }}
+        onCompositionStart={() => {
+          composingRef.current = true;
+        }}
+        onCompositionEnd={(event) => {
+          composingRef.current = false;
+          const text = event.data ?? "";
+          event.currentTarget.value = "";
+          markSoftKeyboardHandled();
+          if (!text) return;
+          sendSoftKeysyms(textToKeysyms(text));
+        }}
+        style={{
+          position: "absolute",
+          left: 0,
+          bottom: 0,
+          width: "1px",
+          height: "1px",
+          margin: 0,
+          padding: 0,
+          opacity: 0,
+          fontSize: "16px",
+          border: "none",
+          resize: "none",
+          overflow: "hidden",
+          pointerEvents: "none",
+          zIndex: 0,
         }}
       />
 

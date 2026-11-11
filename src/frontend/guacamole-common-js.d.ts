@@ -159,6 +159,8 @@ declare module "guacamole-common-js" {
           listener: (event: Mouse.MouseEvent) => void,
         ): void;
         on(type: string, listener: (event: Mouse.MouseEvent) => void): void;
+        /** Releases every pressed button, firing mouseup for each. */
+        reset(events?: Event | Event[]): void;
       }
 
       class Touchscreen {
@@ -173,6 +175,8 @@ declare module "guacamole-common-js" {
           listener: (event: Mouse.MouseEvent) => void,
         ): void;
         on(type: string, listener: (event: Mouse.MouseEvent) => void): void;
+        /** Releases every pressed button, firing mouseup for each. */
+        reset(events?: Event | Event[]): void;
       }
     }
 
