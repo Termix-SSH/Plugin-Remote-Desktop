@@ -24,7 +24,7 @@ export function setRemoteDesktopApp(next: Pick<TermixApp, "apiFor"> | null) {
  * Outside Electron there is only one backend. Inside it, a host left on
  * Default still resolves to the connected server -- asking the embedded
  * backend would report the guacd *it* can reach rather than the one serving
- * the session. A host explicitly set to "This Device" (Support#1240) is
+ * the session. A host explicitly set to "This Device" is
  * served by the embedded backend against the user's own guacd, so its calls
  * have to go there instead.
  *
