@@ -46,7 +46,11 @@ import {
   getGuacamoleDisplaySize,
   isSmallChange,
 } from "./guacamole-display-size.ts";
-import { bindPointerInput } from "./guacamole-pointer.ts";
+import {
+  bindPointerInput,
+  createTouchGestureGate,
+  type TouchGestureGate,
+} from "./guacamole-pointer.ts";
 import {
   getFileDropDisposition,
   hasDraggedFiles,
@@ -66,6 +70,7 @@ import {
   touchMidpoint,
 } from "./guacamole-touch-gestures.ts";
 import {
+  createPressedKeyTracker,
   isComposingKeyboardEvent,
   keysymsForBeforeInput,
   specialKeysymFromKeyboardEvent,
@@ -221,6 +226,15 @@ export const GuacamoleDisplay = forwardRef<
   const softKeyboardRef = useRef<HTMLTextAreaElement>(null);
   const inputHandledRef = useRef(false);
   const composingRef = useRef(false);
+  // Special keys typed into the soft-keyboard textarea bypass
+  // Guacamole.Keyboard, so track them to release on blur/hide/disconnect.
+  const [softKeys] = useState(() =>
+    createPressedKeyTracker((pressed, keysym) => {
+      clientRef.current?.sendKeyEvent(pressed, keysym);
+    }),
+  );
+  // Per connection: drops touch-emulator clicks around two-finger gestures.
+  const touchGateRef = useRef<TouchGestureGate | null>(null);
 
   const markSoftKeyboardHandled = () => {
     inputHandledRef.current = true;
@@ -266,8 +280,11 @@ export const GuacamoleDisplay = forwardRef<
   );
 
   const disconnectClient = useCallback(() => {
+    // Release while clientRef still points at the client that got the presses.
+    softKeys.releaseAll();
     unbindPointerRef.current?.();
     unbindPointerRef.current = null;
+    touchGateRef.current = null;
     unbindAudioRef.current?.();
     unbindAudioRef.current = null;
     unwatchAltRef.current?.();
@@ -290,7 +307,7 @@ export const GuacamoleDisplay = forwardRef<
     } catch (error) {
       console.warn("Failed to disconnect Guacamole client", error);
     }
-  }, []);
+  }, [softKeys]);
 
   const applyZoom = useCallback(
     (nextZoom: number): number => {
@@ -639,6 +656,8 @@ export const GuacamoleDisplay = forwardRef<
 
     const tunnel = new Guacamole.WebSocketTunnel(wsConnection.url);
     const client = new Guacamole.Client(tunnel);
+    // Keys held on a previous client must be released there, not here.
+    softKeys.releaseAll();
     clientRef.current = client;
     wasConnectedRef.current = false;
     tunnelWatchRef.current?.stop();
@@ -738,10 +757,13 @@ export const GuacamoleDisplay = forwardRef<
     };
 
     unbindPointerRef.current?.();
+    const touchGate = createTouchGestureGate();
+    touchGateRef.current = touchGate;
     unbindPointerRef.current = bindPointerInput(
       displayElement,
       touchMode,
       sendMouseState,
+      touchGate,
     );
 
     unwatchAltRef.current?.();
@@ -927,6 +949,7 @@ export const GuacamoleDisplay = forwardRef<
     connectionConfig.dpi,
     followsContainer,
     touchMode,
+    softKeys,
     t,
   ]);
 
@@ -1070,6 +1093,27 @@ export const GuacamoleDisplay = forwardRef<
     return () => input.removeEventListener("beforeinput", onBeforeInput);
   }, []);
 
+  // A held soft-keyboard key never gets its keyup once focus leaves, so
+  // release everything whenever the textarea or the page loses focus.
+  useEffect(() => {
+    const input = softKeyboardRef.current;
+    const releaseAll = () => softKeys.releaseAll();
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "hidden") releaseAll();
+    };
+    input?.addEventListener("blur", releaseAll);
+    window.addEventListener("blur", releaseAll);
+    window.addEventListener("pagehide", releaseAll);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    return () => {
+      input?.removeEventListener("blur", releaseAll);
+      window.removeEventListener("blur", releaseAll);
+      window.removeEventListener("pagehide", releaseAll);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      releaseAll();
+    };
+  }, [softKeys]);
+
   useEffect(() => {
     const container = containerRef.current;
     const protocol = connectionConfig.protocol ?? connectionConfig.type;
@@ -1134,55 +1178,24 @@ export const GuacamoleDisplay = forwardRef<
         kind: "undecided",
       };
     };
-    // Synthetic 1-finger moves used to cancel a touchscreen long-press and to
-    // push the touchpad past its tap threshold; ignore them in our listeners.
-    let forwardingToEmulator = false;
-    const forwardToDisplay = (type: string, init: TouchEventInit) => {
-      const display = displayElementRef.current;
-      if (!display) return;
-      forwardingToEmulator = true;
-      try {
-        display.dispatchEvent(
-          new TouchEvent(type, { bubbles: true, cancelable: true, ...init }),
-        );
-      } catch {
-        // Some WebKit versions reject a synthetic TouchEvent.
-      } finally {
-        forwardingToEmulator = false;
-      }
-    };
-    const spoilOneFingerTracking = (source: Touch) => {
-      const display = displayElementRef.current;
-      if (!display || typeof Touch === "undefined") return;
-      try {
-        const shifted = new Touch({
-          identifier: source.identifier,
-          target: display,
-          clientX: source.clientX + 32,
-          clientY: source.clientY + 32,
-        });
-        forwardToDisplay("touchmove", {
-          touches: [shifted],
-          targetTouches: [shifted],
-          changedTouches: [shifted],
-        });
-      } catch {
-        // The first-finger long-press may still fire on some WebKit versions.
-      }
+    // The emulators still track the first finger and would turn it into a
+    // click or long-press right click. Rather than spoil their internal state
+    // with synthetic touches (which the touchpad would read as a two-finger
+    // tap), the pointer gate drops their output until a fresh touch starts.
+    const claim = () => {
+      claimed = true;
+      touchGateRef.current?.beginMultiTouch();
     };
 
     const onTouchStart = (event: TouchEvent) => {
-      if (forwardingToEmulator) return;
       const touches = pair(event.touches);
       if (touches) {
         // Take the two-finger sequence so the emulator never sees a 2-finger
-        // start. A 1-finger spoil cancels a touchscreen long-press and makes
-        // a later 1-finger touchend fail the touchpad's tap threshold.
+        // start.
         event.preventDefault();
         event.stopPropagation();
         gesture = beginGesture(touches);
-        claimed = true;
-        spoilOneFingerTracking(event.touches[0]);
+        claim();
         return;
       }
       if (claimed) {
@@ -1193,7 +1206,6 @@ export const GuacamoleDisplay = forwardRef<
       gesture = null;
     };
     const onTouchMove = (event: TouchEvent) => {
-      if (forwardingToEmulator) return;
       const touches = pair(event.touches);
       if (!touches) {
         if (claimed) {
@@ -1206,7 +1218,7 @@ export const GuacamoleDisplay = forwardRef<
       event.stopPropagation();
       if (!gesture) {
         gesture = beginGesture(touches);
-        claimed = true;
+        claim();
       }
       const mid = touchMidpoint(touches.a, touches.b);
       const to = relative(mid, container.getBoundingClientRect());
@@ -1272,7 +1284,6 @@ export const GuacamoleDisplay = forwardRef<
       gesture.lastMid = mid;
     };
     const onTouchEnd = (event: TouchEvent) => {
-      if (forwardingToEmulator) return;
       const remaining = pair(event.touches);
       if (claimed) {
         if (event.touches.length > 0) {
@@ -1283,9 +1294,12 @@ export const GuacamoleDisplay = forwardRef<
           return;
         }
         // Last finger up: let the emulator see the end so it can leave the
-        // original 1-finger gesture. pixels_moved was already spoilt.
+        // original 1-finger gesture (the gate drops whatever it emits), but
+        // cancel the browser's compatibility mouse events.
+        event.preventDefault();
         gesture = null;
         claimed = false;
+        touchGateRef.current?.allTouchesEnded();
         return;
       }
       gesture = remaining ? beginGesture(remaining) : null;
@@ -1401,10 +1415,8 @@ export const GuacamoleDisplay = forwardRef<
           const keysym = specialKeysymFromKeyboardEvent(event);
           if (keysym == null) return;
           event.preventDefault();
-          const client = clientRef.current;
-          if (!client) return;
-          if (event.repeat) return;
-          client.sendKeyEvent(1, keysym);
+          if (!clientRef.current) return;
+          softKeys.press(keysym);
         }}
         onKeyUp={(event) => {
           if (
@@ -1419,9 +1431,8 @@ export const GuacamoleDisplay = forwardRef<
           const keysym = specialKeysymFromKeyboardEvent(event);
           if (keysym == null) return;
           event.preventDefault();
-          const client = clientRef.current;
-          if (!client) return;
-          client.sendKeyEvent(0, keysym);
+          if (!clientRef.current) return;
+          softKeys.release(keysym);
         }}
         onInput={(event) => {
           if (inputHandledRef.current) {

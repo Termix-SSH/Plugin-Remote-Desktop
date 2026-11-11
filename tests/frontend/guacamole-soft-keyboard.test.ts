@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   charToKeysym,
+  createPressedKeyTracker,
   isComposingKeyboardEvent,
   keysymsForBeforeInput,
   specialKeysymFromKeyboardEvent,
@@ -90,5 +91,72 @@ describe("guacamole soft keyboard", () => {
         isComposing: false,
       }),
     ).toEqual([0x01000000 | "あ".codePointAt(0)!]);
+  });
+});
+
+describe("createPressedKeyTracker", () => {
+  const ARROW_DOWN = 0xff54;
+  const BACKSPACE = 0xff08;
+
+  it("sends a repeated keydown only once", () => {
+    const send = vi.fn();
+    const keys = createPressedKeyTracker(send);
+
+    keys.press(ARROW_DOWN);
+    keys.press(ARROW_DOWN);
+    keys.press(ARROW_DOWN);
+
+    expect(send.mock.calls).toEqual([[1, ARROW_DOWN]]);
+    expect(keys.has(ARROW_DOWN)).toBe(true);
+    expect(keys.size).toBe(1);
+  });
+
+  it("releases on keyup and can press the key again", () => {
+    const send = vi.fn();
+    const keys = createPressedKeyTracker(send);
+
+    keys.press(ARROW_DOWN);
+    keys.release(ARROW_DOWN);
+    keys.press(ARROW_DOWN);
+
+    expect(send.mock.calls).toEqual([
+      [1, ARROW_DOWN],
+      [0, ARROW_DOWN],
+      [1, ARROW_DOWN],
+    ]);
+    expect(keys.size).toBe(1);
+  });
+
+  it("releases every held key exactly once, then is a no-op", () => {
+    const send = vi.fn();
+    const keys = createPressedKeyTracker(send);
+
+    keys.press(ARROW_DOWN);
+    keys.press(BACKSPACE);
+    send.mockClear();
+
+    keys.releaseAll();
+    expect(send.mock.calls).toHaveLength(2);
+    expect(send.mock.calls).toEqual(
+      expect.arrayContaining([
+        [0, ARROW_DOWN],
+        [0, BACKSPACE],
+      ]),
+    );
+    expect(keys.size).toBe(0);
+    expect(keys.has(ARROW_DOWN)).toBe(false);
+
+    keys.releaseAll();
+    expect(send.mock.calls).toHaveLength(2);
+  });
+
+  it("tolerates a keyup after releaseAll", () => {
+    const send = vi.fn();
+    const keys = createPressedKeyTracker(send);
+
+    keys.press(ARROW_DOWN);
+    keys.releaseAll();
+    expect(() => keys.release(ARROW_DOWN)).not.toThrow();
+    expect(keys.size).toBe(0);
   });
 });

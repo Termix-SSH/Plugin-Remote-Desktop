@@ -64,6 +64,48 @@ export function specialKeysymFromKeyboardEvent(event: {
   }
 }
 
+export interface PressedKeyTracker {
+  /** Sends a key down unless the keysym is already held (key repeat). */
+  press(keysym: number): void;
+  /** Sends a key up and forgets the keysym, even if it was not tracked. */
+  release(keysym: number): void;
+  /** Sends a key up for every held keysym, then forgets them all. */
+  releaseAll(): void;
+  has(keysym: number): boolean;
+  readonly size: number;
+}
+
+/**
+ * Special keys from the soft-keyboard textarea bypass Guacamole.Keyboard and
+ * its pressed-key bookkeeping. Track them here so a key held while focus
+ * leaves (or the page hides) can still be released on the remote.
+ */
+export function createPressedKeyTracker(
+  send: (pressed: 0 | 1, keysym: number) => void,
+): PressedKeyTracker {
+  const held = new Set<number>();
+  return {
+    press(keysym) {
+      if (held.has(keysym)) return;
+      held.add(keysym);
+      send(1, keysym);
+    },
+    release(keysym) {
+      held.delete(keysym);
+      send(0, keysym);
+    },
+    releaseAll() {
+      const keysyms = [...held];
+      held.clear();
+      for (const keysym of keysyms) send(0, keysym);
+    },
+    has: (keysym) => held.has(keysym),
+    get size() {
+      return held.size;
+    },
+  };
+}
+
 export function isComposingKeyboardEvent(event: {
   key?: string;
   keyCode?: number;
