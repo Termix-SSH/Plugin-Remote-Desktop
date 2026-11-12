@@ -2,6 +2,10 @@
 
 ## 1.4.1
 
+### Changed
+
+- Kerberos KDC requests run in a worker thread instead of a separate process, so they work in desktop builds that can't start Node
+
 ### Fixed
 
 - Updated Rust crates in the built in engine to releases with security fixes
