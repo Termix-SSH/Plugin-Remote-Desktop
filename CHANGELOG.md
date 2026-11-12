@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.4.1
+
+### Fixed
+
+- Updated Rust crates in the built in engine to releases with security fixes
+
 ## 1.4.0
 
 ### Added
