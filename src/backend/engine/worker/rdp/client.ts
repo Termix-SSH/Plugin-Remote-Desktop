@@ -6,7 +6,7 @@ import { Status } from "../../protocol.js";
 import type { RdpClient as WasmRdpClient } from "../../wasm/engine.js";
 import type { PixelSource } from "../display.js";
 import type { RemoteClient, RemoteHost, Settings } from "../remote.js";
-import { Keyboard } from "./keyboard.js";
+import { Keyboard, type Locks } from "./keyboard.js";
 import { DEFAULT_LAYOUT } from "./layouts.js";
 import { DriveCallbacks } from "./drive.js";
 
@@ -588,7 +588,7 @@ export class RdpClient implements RemoteClient, PixelSource {
         this.height = event.h;
         display.setSource(this);
         display.resize(event.w, event.h);
-        this.rdp?.sync_locks(false, false, false);
+        this.syncLocks(this.keyboard.locks);
         this.host.ready();
         break;
       case "resize":
@@ -679,10 +679,15 @@ export class RdpClient implements RemoteClient, PixelSource {
 
   private sendKey(keysym: number, pressed: boolean): void {
     for (const out of this.keyboard.key(keysym, pressed)) {
-      if ("scancode" in out) this.rdp?.key(out.scancode, out.down);
+      if ("locks" in out) this.syncLocks(out.locks);
+      else if ("scancode" in out) this.rdp?.key(out.scancode, out.down);
       else this.rdp?.unicode(out.unicode, out.down);
     }
     this.pump();
+  }
+
+  private syncLocks(locks: Locks): void {
+    this.rdp?.sync_locks(false, locks.num, locks.caps);
   }
 
   resize(width: number, height: number, askedDpi: number): void {
