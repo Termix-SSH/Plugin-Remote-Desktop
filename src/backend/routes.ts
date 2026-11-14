@@ -1174,12 +1174,19 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
     }
     try {
       await ctx.capabilities.require("desktop:local");
-      const result = await launchNativeRdp({
-        host: body.host,
-        port: Number(body.port) || DEFAULT_PORT.rdp,
-        username: typeof body.username === "string" ? body.username : undefined,
-        domain: typeof body.domain === "string" ? body.domain : undefined,
-      });
+      const result = await launchNativeRdp(
+        {
+          host: body.host,
+          port: Number(body.port) || DEFAULT_PORT.rdp,
+          username:
+            typeof body.username === "string" ? body.username : undefined,
+          domain: typeof body.domain === "string" ? body.domain : undefined,
+        },
+        {
+          dataDir: async () => ctx.files.dataDir(),
+          open: (filePath) => ctx.desktop.local.fs.open(filePath),
+        },
+      );
       res.json(result);
     } catch (error) {
       res.json({ success: false, error: errorMessage(error) });
