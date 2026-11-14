@@ -265,6 +265,11 @@ export const GuacamoleDisplay = forwardRef<
         displayRef.current.style.width = `${Math.floor(display.getWidth() * scale)}px`;
         displayRef.current.style.height = `${Math.floor(display.getHeight() * scale)}px`;
       }
+      // Only a zoomed in display needs scrolling. Fitted, a pixel of rounding
+      // shows a scrollbar, which shrinks the fit, which hides it: a loop.
+      if (containerRef.current) {
+        containerRef.current.style.overflow = zoom > 1 ? "auto" : "hidden";
+      }
       onZoomChange?.(zoom);
       return zoom;
     },
@@ -1085,7 +1090,7 @@ export const GuacamoleDisplay = forwardRef<
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 overflow-auto"
+      className="absolute inset-0 overflow-hidden"
       style={{ backgroundColor: "var(--bg-base)" }}
       onDragEnter={handleDragEnter}
       onDragOver={(event) => {
