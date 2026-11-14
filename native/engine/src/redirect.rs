@@ -14,6 +14,8 @@ const LB_TARGET_NETBIOS: u32 = 0x200;
 const LB_TARGET_NET_ADDRESSES: u32 = 0x800;
 const LB_CLIENT_TSV_URL: u32 = 0x1000;
 const LB_PASSWORD_IS_PK_ENCRYPTED: u32 = 0x4000;
+const LB_REDIRECTION_GUID: u32 = 0x8000;
+const LB_TARGET_CERTIFICATE: u32 = 0x10000;
 
 #[derive(Debug, Default, PartialEq, Eq)]
 pub struct Redirect {
@@ -23,6 +25,9 @@ pub struct Redirect {
     pub username: String,
     pub domain: String,
     pub password: String,
+    /// For RDSTLS: the redirection GUID and the password cookie, as sent.
+    pub redirection_guid: Vec<u8>,
+    pub password_cookie: Vec<u8>,
 }
 
 /// Reads the redirect out of a whole TPKT frame, or None when the frame is
@@ -74,9 +79,11 @@ fn parse_packet(data: &[u8]) -> Option<Redirect> {
     }
     if flags & LB_PASSWORD != 0 {
         let raw = r.field()?;
-        // A password cookie is opaque; only a plain one is usable.
+        // A password cookie is opaque: it goes back as is over RDSTLS.
         if flags & LB_PASSWORD_IS_PK_ENCRYPTED == 0 {
             out.password = utf16(raw);
+        } else {
+            out.password_cookie = raw.to_vec();
         }
     }
     if flags & LB_TARGET_FQDN != 0 {
@@ -88,10 +95,16 @@ fn parse_packet(data: &[u8]) -> Option<Redirect> {
     if flags & LB_CLIENT_TSV_URL != 0 {
         r.field()?;
     }
-    if flags & LB_TARGET_NET_ADDRESSES != 0 && out.address.is_empty() {
+    if flags & LB_REDIRECTION_GUID != 0 {
+        out.redirection_guid = r.field()?.to_vec();
+    }
+    if flags & LB_TARGET_CERTIFICATE != 0 {
+        r.field()?;
+    }
+    if flags & LB_TARGET_NET_ADDRESSES != 0 {
         // Count, then a length and an address each; the first one is enough.
         let list = r.field()?;
-        if list.len() >= 8 {
+        if out.address.is_empty() && list.len() >= 8 {
             let len = u32::from_le_bytes([list[4], list[5], list[6], list[7]]) as usize;
             if let Some(first) = list.get(8..8 + len) {
                 out.address = utf16(first);
@@ -126,7 +139,8 @@ impl<'a> Reader<'a> {
 
     fn field(&mut self) -> Option<&'a [u8]> {
         let len = self.u32()? as usize;
-        if len > 4096 {
+        // A target certificate can outgrow 4 KB; the PDU is at most 64 KB.
+        if len > 0xffff {
             return None;
         }
         self.take(len)
@@ -160,7 +174,11 @@ mod tests {
         let mut share = vec![0, 0, 0x1a, 0x00, 0xea, 0x03, 0, 0];
         share.extend(&packet);
         let mut mcs = vec![0x68, 0x00, 0x01, 0x03, 0xeb, 0x70];
-        mcs.push(share.len() as u8);
+        if share.len() < 0x80 {
+            mcs.push(share.len() as u8);
+        } else {
+            mcs.extend([0x80 | (share.len() >> 8) as u8, share.len() as u8]);
+        }
         mcs.extend(&share);
         let mut out = vec![3, 0, 0, 0, 0x02, 0xf0, 0x80];
         out.extend(&mcs);
@@ -183,11 +201,30 @@ mod tests {
     }
 
     #[test]
-    fn skips_an_encrypted_password() {
+    fn keeps_an_encrypted_password_as_a_cookie() {
         let mut body = Vec::new();
         field(&mut body, &[1, 2, 3, 4]);
         let f = frame(LB_PASSWORD | LB_PASSWORD_IS_PK_ENCRYPTED, &body);
-        assert_eq!(parse_frame(&f).expect("redirect").password, "");
+        let r = parse_frame(&f).expect("redirect");
+        assert_eq!(r.password, "");
+        assert_eq!(r.password_cookie, [1, 2, 3, 4]);
+    }
+
+    #[test]
+    fn reads_the_guid_past_the_certificate_and_addresses_last() {
+        let mut body = Vec::new();
+        field(&mut body, &wide("10.0.0.5"));
+        field(&mut body, &wide("guid"));
+        field(&mut body, &[9; 5000]);
+        let mut list = 1u32.to_le_bytes().to_vec();
+        let other = wide("10.0.0.6");
+        list.extend((other.len() as u32).to_le_bytes());
+        list.extend(&other);
+        field(&mut body, &list);
+        let flags = LB_TARGET_NET_ADDRESS | LB_REDIRECTION_GUID | LB_TARGET_CERTIFICATE | LB_TARGET_NET_ADDRESSES;
+        let r = parse_frame(&frame(flags, &body)).expect("redirect");
+        assert_eq!(r.address, "10.0.0.5");
+        assert_eq!(r.redirection_guid, wide("guid"));
     }
 
     #[test]

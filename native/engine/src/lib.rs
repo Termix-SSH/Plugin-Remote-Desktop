@@ -7,6 +7,7 @@ mod drive;
 mod encode;
 mod rail;
 mod rdp;
+mod rdstls;
 mod redirect;
 mod sound;
 mod surface;

@@ -21,6 +21,8 @@ type RdpEvent =
       username: string;
       domain: string;
       password: string;
+      redirectionGuid: Uint8Array;
+      passwordCookie: Uint8Array;
     }
   | { k: "connected"; w: number; h: number }
   | { k: "resize"; w: number; h: number }
@@ -119,6 +121,9 @@ export interface RedirectTarget {
   username: string;
   domain: string;
   password: string;
+  /** With a cookie, the hop logs on with RDSTLS instead of NLA. */
+  redirectionGuid: number[];
+  passwordCookie: number[];
 }
 
 export const MAX_REDIRECTS = 3;
@@ -165,6 +170,8 @@ export function redirectTarget(
     username: string;
     domain: string;
     password: string;
+    redirectionGuid?: Uint8Array;
+    passwordCookie?: Uint8Array;
   },
   host: string,
   port: number,
@@ -176,10 +183,10 @@ export function redirectTarget(
   if (!wanted || /[\s/]/.test(wanted)) return null;
   // A server may not bounce us to this machine or its link local range.
   if (wanted !== host && privateJump(wanted) && !privateJump(host)) return null;
-  // The token is sent as "Cookie: msts=<token>"; the engine adds the prefix.
-  const token = event.loadBalanceInfo
-    .replace(/^Cookie:\s*msts=/i, "")
-    .replace(/[\r\n]+$/, "");
+  // The X.224 request carries the token as the server sent it, prefix and
+  // all ("Cookie: msts=..." from GNOME and Windows, "tsv://..." from a
+  // broker). The engine adds the closing CRLF.
+  const token = event.loadBalanceInfo.replace(/[\r\n]+$/, "");
   return {
     host: wanted,
     port,
@@ -187,6 +194,8 @@ export function redirectTarget(
     username: event.username,
     domain: event.domain,
     password: event.password,
+    redirectionGuid: [...(event.redirectionGuid ?? [])],
+    passwordCookie: [...(event.passwordCookie ?? [])],
   };
 }
 
@@ -421,6 +430,10 @@ export class RdpClient implements RemoteClient, PixelSource {
       if (target.username) config.username = target.username;
       if (target.domain) config.domain = target.domain;
       if (target.password) config.password = target.password;
+      Object.assign(config, {
+        redirectionGuid: target.redirectionGuid,
+        passwordCookie: target.passwordCookie,
+      });
     }
     config.width = this.size.width;
     config.height = this.size.height;
