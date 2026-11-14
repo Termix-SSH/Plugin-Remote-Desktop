@@ -21,7 +21,10 @@ function setup(
       checkAccess: async () => ({ hasAccess: options.access ?? true }),
       get: async () => ({ name: "kvm", ip: "10.0.0.1" }),
     },
-    services: { get: () => ({ forward }) },
+    services: {
+      providers: async () => ["tunnels"],
+      get: async () => ({ forward }),
+    },
     audit: { record },
   } as unknown as PluginContext;
   const park = vi.fn();

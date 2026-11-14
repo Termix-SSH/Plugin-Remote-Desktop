@@ -61,7 +61,10 @@ async function forwardThroughTunnels(
   log: RemoteDesktopLogger,
   request: JumpTunnelRequest,
 ): Promise<JumpTunnel | null> {
-  const tunnels = ctx.services.get<Partial<TunnelsAccess>>("tunnels.access");
+  // Asked first, since a handle always has every method from another process.
+  if (!(await ctx.services.providers("tunnels.access")).length) return null;
+  const tunnels =
+    await ctx.services.get<Partial<TunnelsAccess>>("tunnels.access");
   if (typeof tunnels.forward !== "function") return null;
   const hopId = request.jumpHosts[0].hostId;
   try {

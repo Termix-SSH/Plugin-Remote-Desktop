@@ -70,7 +70,9 @@ export async function readGuacdHost(
 ): Promise<GuacdHostAddress | null> {
   const stored = normalizeGuacdAddress((await readMap(ctx))[String(hostId)]);
   if (stored) return stored;
-  return ctx.desktop.available() ? guacdFromConfig(guacamoleConfig) : null;
+  return (await ctx.desktop.available())
+    ? guacdFromConfig(guacamoleConfig)
+    : null;
 }
 
 /**

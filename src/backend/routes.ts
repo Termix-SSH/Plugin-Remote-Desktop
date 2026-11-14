@@ -51,7 +51,7 @@ export interface RouteDeps {
   /** Whether an admin pointed Termix at a guacd (setting or GUACD_* env). */
   guacdConfigured?: () => boolean;
   enabled: () => Promise<boolean>;
-  recordings: () => RecordingsWriter | null;
+  recordings: () => Promise<RecordingsWriter | null>;
   engineMode: () => EngineMode;
   /** Starts and stops recording a running built-in engine session. */
   recordingControl?: Pick<BuiltinEngine, "recordingState" | "setRecording">;
@@ -332,7 +332,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
       const userId = actor(ctx, res);
       if (!userId) return;
       const control = deps.recordingControl;
-      const writer = deps.recordings();
+      const writer = await deps.recordings();
       const state =
         control && writer
           ? control.recordingState(String(req.params.sessionId), userId)
@@ -358,7 +358,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         return res.status(400).json({ error: "on must be true or false" });
       }
       const control = deps.recordingControl;
-      const writer = deps.recordings();
+      const writer = await deps.recordings();
       if (!control || !writer) {
         return res.status(404).json({ error: "Session Recording is off" });
       }
@@ -684,7 +684,7 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
         // Through an ID server the relay is reached directly, not the host.
         const jumpHosts =
           isRustdesk && !settings.rustdeskDirect ? [] : target.host.jumpHosts;
-        const recordings = deps.recordings();
+        const recordings = await deps.recordings();
         const recordingForced =
           !isRustdesk &&
           !!recordings?.isForced &&
@@ -1157,14 +1157,15 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
    *       404:
    *         description: Not running in the desktop app.
    */
-  router.get("/native-rdp", (_req: Request, res: Response) => {
+  router.get("/native-rdp", async (_req: Request, res: Response) => {
     res.json({
-      available: ctx.desktop.local.available() && process.platform === "win32",
+      available:
+        (await ctx.desktop.local.available()) && process.platform === "win32",
     });
   });
 
   router.post("/native-rdp", async (req: Request, res: Response) => {
-    if (!ctx.desktop.local.available()) {
+    if (!(await ctx.desktop.local.available())) {
       return res.status(404).json({ error: "Only in the desktop app" });
     }
     const body = (req.body ?? {}) as Record<string, unknown>;

@@ -1,3 +1,5 @@
+// Desktop app only (Windows mstsc), where plugin processes have no file or
+// process limits.
 import { spawn } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";

@@ -1,5 +1,6 @@
 import GuacamoleLite from "guacamole-lite";
 import fs from "fs";
+import fsp from "fs/promises";
 import path from "path";
 import type { IncomingMessage } from "http";
 import type { Duplex } from "stream";
@@ -25,18 +26,45 @@ export interface RecordingsWriter {
     endedAt: string;
     duration: number | null;
     recordingPath: string;
+    /**
+     * Session Recording 1.2.1+: reads the file from an offset, since its
+     * process can't open this plugin's files. Empty or null at the end.
+     */
+    read?: (offset: number) => Promise<Uint8Array | null>;
     protocol: string;
     format: string;
   }) => Promise<{ id: number }>;
 }
 
-const DATA_DIR = process.env.DATA_DIR || "./db/data";
+/** Most a recording read hands over at once. */
+export const RECORDING_CHUNK_BYTES = 1024 * 1024;
+
+/** Bytes of a recording from an offset; null once the file is read. */
+export async function readRecordingChunk(
+  file: string,
+  offset: number,
+): Promise<Uint8Array | null> {
+  if (!Number.isInteger(offset) || offset < 0) return null;
+  const handle = await fsp.open(file, "r");
+  try {
+    const buffer = Buffer.alloc(RECORDING_CHUNK_BYTES);
+    const { bytesRead } = await handle.read(
+      buffer,
+      0,
+      RECORDING_CHUNK_BYTES,
+      offset,
+    );
+    return bytesRead > 0 ? new Uint8Array(buffer.subarray(0, bytesRead)) : null;
+  } finally {
+    await handle.close();
+  }
+}
 
 /** Where the backend reads guacd's recordings from. */
 export function recordingsDir(env: NodeJS.ProcessEnv = process.env): string {
   return (
     env.GUACD_RECORDING_BACKEND_PATH ||
-    path.join(DATA_DIR, "session_recordings", "guacamole")
+    path.join(env.DATA_DIR || "./db/data", "session_recordings", "guacamole")
   );
 }
 
@@ -105,7 +133,7 @@ export interface GuacamoleServerDeps {
   tokens: GuacamoleTokenService;
   sessions: RemoteSessions;
   guacd: () => GuacdOptions;
-  recordings: () => RecordingsWriter | null;
+  recordings: () => Promise<RecordingsWriter | null>;
   /** A socket event has no request behind it, so the row is written as the session's user. */
   asUser: <T>(userId: string, fn: () => Promise<T>) => Promise<T>;
   /** Called when a primary session opens; returns what to release on close. */
@@ -130,7 +158,7 @@ export interface GuacamoleServer {
 
 export interface PersistDeps {
   log: RemoteDesktopLogger;
-  recordings: () => RecordingsWriter | null;
+  recordings: () => Promise<RecordingsWriter | null>;
   asUser: <T>(userId: string, fn: () => Promise<T>) => Promise<T>;
 }
 
@@ -194,10 +222,13 @@ export async function persistRecording(
         Math.floor((endedAt.getTime() - startedAt.getTime()) / 1000),
       ),
       recordingPath: resolvedPath,
+      read: (offset: number) => readRecordingChunk(resolvedPath, offset),
       protocol: recording.protocol,
       format: "guacamole",
     }),
   );
+  // Session Recording has its own copy now.
+  await fsp.rm(resolvedPath, { force: true }).catch(() => {});
 }
 
 /**

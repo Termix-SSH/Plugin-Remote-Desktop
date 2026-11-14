@@ -4,6 +4,9 @@
 
 ### Changed
 
+- Runs in its own process with only the access it needs (plugin API 2.3, needs Termix 26.11.2)
+- The RDP drive folder and recordings live in the plugin's own data folder (`/app/data/plugin-data/remote-desktop`). Files in the old `/app/data/rdp-drive` stay there; copy them over if you still need them
+- Session Recording takes its own copy of a finished recording
 - Kerberos KDC requests run in a worker thread instead of a separate process, so they work in desktop builds that can't start Node
 
 ### Fixed
