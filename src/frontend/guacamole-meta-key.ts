@@ -222,3 +222,25 @@ export function remoteKeysym(
   optionKeysSent.delete(keysym);
   return sent;
 }
+
+type KeyboardLock = {
+  lock?: (codes: string[]) => Promise<void>;
+  unlock?: () => void;
+};
+
+/**
+ * Claims the Windows keys for a focused session, so Win+R and the like reach
+ * the remote desktop instead of the local one. Browsers only honour the lock
+ * in fullscreen, so windowed sessions keep the toolbar keys.
+ */
+export function systemKeyLock(
+  keyboard = (navigator as Navigator & { keyboard?: KeyboardLock }).keyboard,
+): (on: boolean) => void {
+  let locked = false;
+  return (on) => {
+    if (on === locked) return;
+    locked = on;
+    if (on) void keyboard?.lock?.(["MetaLeft", "MetaRight"])?.catch(() => {});
+    else keyboard?.unlock?.();
+  };
+}

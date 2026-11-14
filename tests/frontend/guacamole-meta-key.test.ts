@@ -1,8 +1,9 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   detectMetaKeyFamily,
   metaKeyLabels,
   remoteKeysym,
+  systemKeyLock,
   watchRightAlt,
 } from "../../src/frontend/guacamole-meta-key.js";
 
@@ -177,5 +178,36 @@ describe("Option on an ARD host", () => {
     key("Digit2", "@");
     expect(remoteKeysym("vnc", AT, true)).toBe(AT);
     stop();
+  });
+});
+
+describe("systemKeyLock", () => {
+  it("claims the Windows keys once and gives them back once", () => {
+    const keyboard = {
+      lock: vi.fn(() => Promise.resolve()),
+      unlock: vi.fn(),
+    };
+    const set = systemKeyLock(keyboard);
+    set(true);
+    set(true);
+    expect(keyboard.lock).toHaveBeenCalledTimes(1);
+    expect(keyboard.lock).toHaveBeenCalledWith(["MetaLeft", "MetaRight"]);
+    set(false);
+    set(false);
+    expect(keyboard.unlock).toHaveBeenCalledTimes(1);
+  });
+
+  it("is harmless where the browser has no keyboard lock", () => {
+    const set = systemKeyLock(undefined);
+    expect(() => {
+      set(true);
+      set(false);
+    }).not.toThrow();
+  });
+
+  it("ignores a refused lock", async () => {
+    const set = systemKeyLock({ lock: () => Promise.reject(new Error("no")) });
+    set(true);
+    await Promise.resolve();
   });
 });
