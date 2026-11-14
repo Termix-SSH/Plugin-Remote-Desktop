@@ -72,8 +72,7 @@ async function start(
 ): Promise<Server> {
   let router: Router | null = null;
   const mock = createMockCtx({
-    // The SDK 2.2.1 mock refuses desktop.local; turn sandbox on once the
-    // lock moves to 2.3.0.
+    sandbox: true,
     pluginId: manifest.id,
     manifest,
     capabilities: options.capabilities ?? manifest.capabilities,
