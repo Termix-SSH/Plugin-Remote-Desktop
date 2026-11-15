@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.4.1
+
+### Fixed
+
+- RDP sessions to Windows no longer drop with "rfx progressive decode failed" when the screen shows a wallpaper, the Start menu or images
+- Updated Rust crates in the built in engine to releases with security fixes
+
 ## 1.4.0
 
 ### Added
