@@ -28,7 +28,9 @@ pub fn png(data: &[u8], stride: usize, x: usize, y: usize, w: usize, h: usize, a
         let mut encoder = png::Encoder::new(&mut out, w as u32, h as u32);
         encoder.set_color(if alpha { png::ColorType::Rgba } else { png::ColorType::Rgb });
         encoder.set_depth(png::BitDepth::Eight);
-        encoder.set_compression(png::Compression::Fast);
+        // fdeflate's fast modes skip LZ matching, so text and UI barely shrink.
+        // zlib level 1 costs a few ms more per frame and sends about a quarter.
+        encoder.set_deflate_compression(png::DeflateCompression::Level(1));
         encoder.set_filter(png::Filter::Adaptive);
         let Ok(mut writer) = encoder.write_header() else {
             return Vec::new();

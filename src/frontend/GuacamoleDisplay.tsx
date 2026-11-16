@@ -60,6 +60,7 @@ import { createRdpReadyGate } from "./guacamole-ready.ts";
 import {
   remoteKeysym,
   isToggleKey,
+  systemKeyLock,
   watchRightAlt,
 } from "./guacamole-meta-key.ts";
 
@@ -191,6 +192,7 @@ export const GuacamoleDisplay = forwardRef<
   const unbindAudioRef = useRef<(() => void) | null>(null);
   const unbindPointerRef = useRef<(() => void) | null>(null);
   const unwatchAltRef = useRef<(() => void) | null>(null);
+  const systemKeysRef = useRef(systemKeyLock());
   const scaleRef = useRef<number>(1);
   const fitScaleRef = useRef<number>(1);
   const zoomRef = useRef<number>(1);
@@ -233,6 +235,7 @@ export const GuacamoleDisplay = forwardRef<
     unbindAudioRef.current = null;
     unwatchAltRef.current?.();
     unwatchAltRef.current = null;
+    systemKeysRef.current(false);
     const client = clientRef.current;
     clientRef.current = null;
     tunnelWatchRef.current?.stop();
@@ -264,6 +267,11 @@ export const GuacamoleDisplay = forwardRef<
         display.scale(scale);
         displayRef.current.style.width = `${Math.floor(display.getWidth() * scale)}px`;
         displayRef.current.style.height = `${Math.floor(display.getHeight() * scale)}px`;
+      }
+      // Only a zoomed in display needs scrolling. Fitted, a pixel of rounding
+      // shows a scrollbar, which shrinks the fit, which hides it: a loop.
+      if (containerRef.current) {
+        containerRef.current.style.overflow = zoom > 1 ? "auto" : "hidden";
       }
       onZoomChange?.(zoom);
       return zoom;
@@ -447,6 +455,7 @@ export const GuacamoleDisplay = forwardRef<
       windowFocusedRef.current &&
       (hasKeyboardFocusRef.current || displayIsFocused);
 
+    systemKeysRef.current(shouldCaptureInput);
     if (!shouldCaptureInput) {
       keyboard.reset();
       keyboard.onkeydown = null;
@@ -1085,7 +1094,7 @@ export const GuacamoleDisplay = forwardRef<
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 overflow-auto"
+      className="absolute inset-0 overflow-hidden"
       style={{ backgroundColor: "var(--bg-base)" }}
       onDragEnter={handleDragEnter}
       onDragOver={(event) => {
