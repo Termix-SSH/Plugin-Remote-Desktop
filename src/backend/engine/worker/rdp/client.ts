@@ -1,7 +1,6 @@
 import net from "node:net";
 import tls from "node:tls";
 import crypto from "node:crypto";
-import { spawnSync } from "node:child_process";
 import { Status } from "../../protocol.js";
 import type { RdpClient as WasmRdpClient } from "../../wasm/engine.js";
 import type { PixelSource } from "../display.js";
@@ -9,6 +8,7 @@ import type { RemoteClient, RemoteHost, Settings } from "../remote.js";
 import { Keyboard } from "./keyboard.js";
 import { DEFAULT_LAYOUT } from "./layouts.js";
 import { DriveCallbacks } from "./drive.js";
+import { kerberosRequest } from "./kdc.js";
 
 type RdpEvent =
   | { k: "send"; data: Uint8Array }
@@ -281,54 +281,6 @@ export function printFile(bytes: Uint8Array): {
     return { name: `print-${stamp}.ps`, mimetype: "application/postscript" };
   }
   return { name: `print-${stamp}.xps`, mimetype: "application/oxps" };
-}
-
-const KERBEROS_SCRIPT = `
-const [proto, url, data] = [process.argv[1], process.argv[2], Buffer.from(process.argv[3], "base64")];
-const done = (b) => { process.stdout.write(b.toString("base64")); process.exit(0); };
-const fail = (e) => { process.stderr.write(String(e && e.message || e)); process.exit(1); };
-const u = new URL(url);
-if (proto === "0") {
-  const s = require("net").connect(Number(u.port) || 88, u.hostname);
-  let buf = Buffer.alloc(0);
-  s.setTimeout(10000, () => fail("timeout"));
-  s.on("connect", () => s.write(data));
-  s.on("data", (c) => { buf = Buffer.concat([buf, c]); if (buf.length >= 4 && buf.length >= 4 + buf.readUInt32BE(0)) { s.destroy(); done(buf); } });
-  s.on("error", fail);
-} else if (proto === "1") {
-  const s = require("dgram").createSocket(u.hostname.includes(":") ? "udp6" : "udp4");
-  const t = setTimeout(() => fail("timeout"), 10000);
-  s.on("message", (m) => { clearTimeout(t); s.close(); done(m); });
-  s.send(data, Number(u.port) || 88, u.hostname, (e) => e && fail(e));
-} else {
-  fetch(url, { method: "POST", body: data, headers: { "content-type": "application/kerberos" } })
-    .then((r) => r.arrayBuffer()).then((b) => done(Buffer.from(b))).catch(fail);
-}`;
-
-/**
- * Kerberos asks for KDC round trips in the middle of a synchronous WASM call,
- * so each one runs in a short-lived child process the worker waits on.
- */
-function kerberosRequest(
-  protocol: number,
-  url: string,
-  data: Uint8Array,
-): Uint8Array {
-  const result = spawnSync(
-    process.execPath,
-    [
-      "-e",
-      KERBEROS_SCRIPT,
-      String(protocol),
-      url,
-      Buffer.from(data).toString("base64"),
-    ],
-    { timeout: 15000, encoding: "utf8", maxBuffer: 16 * 1024 * 1024 },
-  );
-  if (result.status !== 0) {
-    throw new Error(result.stderr || "KDC request failed");
-  }
-  return Buffer.from(result.stdout, "base64");
 }
 
 const KIND_STATUS: Record<string, [string, number]> = {

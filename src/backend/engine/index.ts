@@ -34,8 +34,6 @@ export function resolveEngineMode(
   return useGuacd === true ? "guacd" : "builtin";
 }
 
-const DATA_DIR = process.env.DATA_DIR || "./db/data";
-
 /** The RDP drive folder for a user in built-in mode. */
 export function rdpDrivePath(
   userId: string,
@@ -43,7 +41,7 @@ export function rdpDrivePath(
 ): string {
   const root =
     env.RDP_DRIVE_PATH?.trim() ||
-    path.join(env.DATA_DIR || DATA_DIR, "rdp-drive");
+    path.join(env.DATA_DIR || "./db/data", "rdp-drive");
   return path.resolve(root, userId.replace(/[^A-Za-z0-9_-]/g, "_"));
 }
 
