@@ -1,6 +1,8 @@
-import { spawn } from "node:child_process";
+// Desktop app only (Windows mstsc). The plugin process is fenced like on a
+// server, so the .rdp file goes in the plugin's own data folder and the
+// desktop app opens it (Windows hands .rdp files to mstsc).
+import { randomUUID } from "node:crypto";
 import fs from "node:fs";
-import os from "node:os";
 import path from "node:path";
 
 export interface NativeRdpOptions {
@@ -53,8 +55,16 @@ export function buildRdpFile(options: NativeRdpOptions): string {
 }
 
 /** Opens Windows Remote Desktop (mstsc) on this computer. Windows only. */
+export interface NativeRdpLauncher {
+  /** The plugin's own data folder (ctx.files.dataDir()). */
+  dataDir: () => Promise<string>;
+  /** Opens a local file with its default app (ctx.desktop.local.fs.open). */
+  open: (filePath: string) => Promise<void>;
+}
+
 export async function launchNativeRdp(
   options: NativeRdpOptions,
+  launcher: NativeRdpLauncher,
   platform: NodeJS.Platform = process.platform,
 ): Promise<{ success: boolean; error?: string }> {
   if (platform !== "win32") {
@@ -65,32 +75,26 @@ export async function launchNativeRdp(
   }
 
   const rdpContent = buildRdpFile(options);
-  const tempDir = await fs.promises.mkdtemp(
-    path.join(os.tmpdir(), "termix-rdp-"),
-  );
-  const rdpPath = path.join(tempDir, "connection.rdp");
+  const dir = path.join(await launcher.dataDir(), "native-rdp", randomUUID());
+  await fs.promises.mkdir(dir, { recursive: true });
+  const rdpPath = path.join(dir, "connection.rdp");
   await fs.promises.writeFile(rdpPath, rdpContent, {
     encoding: "utf8",
     mode: 0o600,
   });
+  const cleanup = () =>
+    fs.promises.rm(dir, { recursive: true, force: true }).catch(() => {});
 
-  return new Promise((resolve) => {
-    const child = spawn("mstsc.exe", [rdpPath], {
-      detached: true,
-      // Hiding the console also hides mstsc's own window, so it opened unseen.
-      windowsHide: false,
-      stdio: "ignore",
-    });
-    const cleanup = () =>
-      fs.promises.rm(tempDir, { recursive: true, force: true }).catch(() => {});
-    child.once("error", (error) => {
-      void cleanup();
-      resolve({ success: false, error: error.message });
-    });
-    child.once("spawn", () => {
-      child.unref();
-      setTimeout(cleanup, 30_000).unref();
-      resolve({ success: true });
-    });
-  });
+  try {
+    await launcher.open(rdpPath);
+  } catch (error) {
+    void cleanup();
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : String(error),
+    };
+  }
+  // mstsc reads the file once it starts.
+  setTimeout(cleanup, 30_000).unref();
+  return { success: true };
 }

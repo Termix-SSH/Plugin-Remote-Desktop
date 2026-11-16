@@ -90,8 +90,7 @@ const newTimezone = "if (protocolVersion !== '1_0_0') {";
 // The Guacamole protocol added `name` in 1.3.0, but guacd 1.6.0 began requiring it
 // during the VNC handshake even when negotiating VERSION_1_1_0, causing connections to
 // silently drop right after "User joined". Sending it for all non-1.0.0 sessions is
-// harmless (guacd ignores unknown handshake instructions for older versions). See
-// Termix-SSH/Support#567 and #734.
+// harmless (guacd ignores unknown handshake instructions for older versions).
 const oldConnect =
   "        this.sendInstruction(['connect'].concat(connectArgs));";
 const oldNameConnect =

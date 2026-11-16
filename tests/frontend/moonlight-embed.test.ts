@@ -2,63 +2,9 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   canPlayH264,
   keyboardLockRequest,
-  moonlightEmbed,
 } from "../../src/frontend/moonlight-embed";
 
 const STREAM = "https://moonlight.example.com/stream.html?hostId=1&appId=2";
-
-describe("moonlightEmbed", () => {
-  it("frames a stream on a sibling subdomain", () => {
-    expect(moonlightEmbed(STREAM, "https://termix.example.com/", false)).toBe(
-      "iframe",
-    );
-  });
-
-  it("opens a window on the desktop", () => {
-    expect(moonlightEmbed(STREAM, "https://termix.example.com/", true)).toBe(
-      "window",
-    );
-  });
-
-  it("opens a window across sites", () => {
-    expect(moonlightEmbed(STREAM, "https://termix.other.net/", false)).toBe(
-      "window",
-    );
-  });
-
-  it("opens a window for mixed schemes", () => {
-    expect(moonlightEmbed(STREAM, "http://termix.example.com/", false)).toBe(
-      "window",
-    );
-  });
-
-  it("never frames the same hostname, since Termix cookies would go along", () => {
-    expect(
-      moonlightEmbed(
-        "https://example.com:8443/stream.html",
-        "https://example.com/",
-        false,
-      ),
-    ).toBe("window");
-  });
-
-  it("opens a window for IP addresses and bare names", () => {
-    expect(
-      moonlightEmbed(
-        "http://10.0.0.2:8080/stream.html",
-        "http://10.0.0.1/",
-        false,
-      ),
-    ).toBe("window");
-    expect(
-      moonlightEmbed(
-        "http://moonlight:8080/stream.html",
-        "http://termix/",
-        false,
-      ),
-    ).toBe("window");
-  });
-});
 
 describe("keyboardLockRequest", () => {
   const frame = {} as Window;

@@ -1,0 +1,123 @@
+{
+  "$schema": "https://raw.githubusercontent.com/Termix-SSH/Termix/main/scripts/authz/authz.schema.json",
+  "seed": [],
+  "routes": {
+    "POST /plugin-api/remote-desktop/connect-host/:hostId": {
+      "access": "user",
+      "permission": "remote-desktop.sessions",
+      "resource": {
+        "kind": "host",
+        "min": "connect"
+      }
+    },
+    "GET /plugin-api/remote-desktop/connection/:connectId": {
+      "access": "user",
+      "note": "Keyed by a live connectId looked up with the caller; none exists in the test data"
+    },
+    "GET /plugin-api/remote-desktop/guacd-host/:hostId": {
+      "access": "user",
+      "permission": "remote-desktop.sessions",
+      "resource": {
+        "kind": "host",
+        "min": "view"
+      }
+    },
+    "PUT /plugin-api/remote-desktop/guacd-host/:hostId": {
+      "access": "user",
+      "permission": "remote-desktop.sessions",
+      "resource": {
+        "kind": "host",
+        "min": "connect"
+      }
+    },
+    "GET /plugin-api/remote-desktop/live-sessions": {
+      "access": "user",
+      "filtered": true,
+      "note": "Lists only what the caller may see"
+    },
+    "GET /plugin-api/remote-desktop/moonlight/hosts": {
+      "access": "user",
+      "permission": "remote-desktop.sessions",
+      "allowed": "any",
+      "note": "Moonlight Web is not set up in the test data"
+    },
+    "POST /plugin-api/remote-desktop/moonlight/hosts": {
+      "access": "user",
+      "permission": "remote-desktop.sessions"
+    },
+    "GET /plugin-api/remote-desktop/moonlight/hosts/:id/apps": {
+      "access": "user",
+      "permission": "remote-desktop.sessions"
+    },
+    "POST /plugin-api/remote-desktop/moonlight/hosts/:id/pair": {
+      "access": "user",
+      "permission": "remote-desktop.sessions",
+      "resource": {
+        "kind": "own",
+        "fixture": "remote-desktop.hosts"
+      },
+      "params": {
+        "id": "=authz-none"
+      },
+      "allowed": "any",
+      "note": "No hosts in the test data (needs a Moonlight Web server); only session, permission and unknown id refusals are checked"
+    },
+    "POST /plugin-api/remote-desktop/moonlight/launch/:hostId": {
+      "access": "user",
+      "permission": "remote-desktop.sessions",
+      "resource": {
+        "kind": "host",
+        "min": "connect"
+      }
+    },
+    "GET /plugin-api/remote-desktop/moonlight/pair/:job": {
+      "access": "user",
+      "permission": ["remote-desktop.sessions", "remote-desktop.moonlight"],
+      "note": "No pairing job in the test data",
+      "allowed": "any"
+    },
+    "GET /plugin-api/remote-desktop/moonlight/status": {
+      "access": "user",
+      "permission": "remote-desktop.sessions"
+    },
+    "GET /plugin-api/remote-desktop/native-rdp": {
+      "access": "user"
+    },
+    "POST /plugin-api/remote-desktop/native-rdp": {
+      "access": "user",
+      "permission": "remote-desktop.sessions"
+    },
+    "GET /plugin-api/remote-desktop/sessions/:sessionId/recording": {
+      "access": "user",
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data"
+    },
+    "POST /plugin-api/remote-desktop/sessions/:sessionId/recording": {
+      "access": "user",
+      "permission": "remote-desktop.sessions",
+      "note": "Keyed by a live sessionId looked up with the caller; none exists in the test data",
+      "body": {
+        "on": true
+      }
+    },
+    "GET /plugin-api/remote-desktop/status": {
+      "access": "user"
+    },
+    "POST /plugin-api/remote-desktop/token": {
+      "access": "user",
+      "permission": "remote-desktop.sessions"
+    },
+    "WS /plugin-ws/remote-desktop/display": {
+      "access": "public",
+      "note": "Public socket that checks its own one time token",
+      "expect": {
+        "anon": "any"
+      }
+    },
+    "WS /plugin-ws/remote-desktop/moonlight/web/api/host/stream/web_socket": {
+      "access": "user",
+      "permission": "remote-desktop.sessions",
+      "allowed": "any",
+      "note": "Moonlight Web is not set up in the test data"
+    }
+  }
+}

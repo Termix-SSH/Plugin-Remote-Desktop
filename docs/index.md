@@ -45,7 +45,7 @@ RDP has settings for color depth, how the screen follows the window size, lossle
 ## Clipboard and files
 
 - Copy and paste works both ways through the toolbar.
-- Turn on Enable Drive Redirection to get a drive in the RDP session for moving files. Each user gets their own folder under `RDP_DRIVE_PATH` (default `/app/data/rdp-drive`).
+- Turn on Enable Drive Redirection to get a drive in the RDP session for moving files. Each user gets their own folder under `RDP_DRIVE_PATH` (default `/app/data/plugin-data/remote-desktop/rdp-drive`).
 - Files saved to the drive's Download folder are sent to your browser, then removed from the drive.
 - With printing on, the session gets a printer. Print to it and you get the document as a PDF.
 
@@ -146,7 +146,7 @@ A remote desktop host can sit behind SSH jump hosts. Termix opens a tunnel throu
 
 ## Recording
 
-With [Session Recording](/plugins/session-recording) on, turn on recording for a host and every RDP, VNC and Telnet session is saved as a video you can play back in Termix. Recordings are kept in `/app/data/session_recordings/guacamole` unless `GUACD_RECORDING_BACKEND_PATH` says otherwise.
+With [Session Recording](/plugins/session-recording) on, turn on recording for a host and every RDP, VNC and Telnet session is saved as a video you can play back in Termix. Recordings are kept in `/app/data/plugin-data/remote-desktop/session_recordings/guacamole` unless `GUACD_RECORDING_BACKEND_PATH` says otherwise, and Session Recording takes its own copy when a session ends. The plugin runs in its own process, which can only use its own data folder, so a different `GUACD_RECORDING_BACKEND_PATH` or `RDP_DRIVE_PATH` must be inside it.
 
 To record only part of a session, use Record in the toolbar. It starts a recording right away, beginning with what is
 on the screen, and Stop recording saves it. Only the person who opened the session can use it, and it needs Session
@@ -186,7 +186,7 @@ termix:
     REMOTE_DESKTOP_ENGINE: "guacd"
     GUACD_HOST: "guacd"
     GUACD_TUNNEL_HOST: "termix"
-    GUACD_RECORDING_PATH: "/termix-data/session_recordings/guacamole"
+    GUACD_RECORDING_PATH: "/termix-data/plugin-data/remote-desktop/session_recordings/guacamole"
 
 guacd:
   image: guacamole/guacd:1.6.0

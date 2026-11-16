@@ -118,7 +118,7 @@ describe("guacamole API origin", () => {
     });
   });
 
-  // Support#1240: a host set to "This Device" is served by the embedded
+  // A host set to "This Device" is served by the embedded
   // backend, so its token has to come from there too -- and its id must not
   // be remapped onto a remote server that may not even be configured.
   it("asks the embedded backend when the host originates locally", async () => {

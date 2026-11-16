@@ -23,7 +23,7 @@ export const CONNECTION_DEFAULTS: Record<
     cursor: "remote",
     width: 1280,
     height: 720,
-    // macOS Screen Sharing can fail its first negotiation (Support#1063).
+    // macOS Screen Sharing can fail its first negotiation.
     autoretry: 2,
   },
   telnet: {
