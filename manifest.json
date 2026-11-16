@@ -443,6 +443,14 @@
             "defaultable": false
           },
           {
+            "key": "rustdeskAllowPlain",
+            "type": "boolean",
+            "labelKey": "settings.host.rustdeskAllowPlain.label",
+            "default": false,
+            "hidden": true,
+            "defaultable": false
+          },
+          {
             "key": "moonlightPort",
             "type": "number",
             "labelKey": "settings.host.moonlightPort.label",

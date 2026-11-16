@@ -132,6 +132,7 @@ Termix connects to a [RustDesk](https://rustdesk.com) device the way the RustDes
 - By default Termix finds the device through the public RustDesk server. To use your own, set the ID server, relay server and key in the admin settings, under Remote Desktop. The key is the contents of `id_ed25519.pub` on your server. A host can also set its own server.
 - The Termix server talks to the ID server on TCP 21116 and the relay on TCP 21117. It always goes through the relay, since a server can't hole punch.
 - Direct IP access connects to the host address on port 21118 instead, with no ID server. Turn on Direct IP access in RustDesk on the device first. The connection is encrypted, but with no ID server nothing proves which device answered. Jump hosts work in this mode.
+- Older RustDesk versions answer direct IP access without encryption, and Termix refuses that by default. Turn on Allow unencrypted sessions on the host to connect anyway, and only over a network you trust, such as a VPN.
 - Video stays in RustDesk's own format and your browser decodes it, so it needs a recent Chrome, Edge, Firefox or Safari. VP9, AV1 and VP8 are used, never H.264 or H.265.
 - Clipboard text works both ways, and you hear the remote's audio. With more than one monitor, the toolbar has a button for each.
 - Not supported yet: file transfer and recording.

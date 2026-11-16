@@ -31,6 +31,7 @@ export interface RemoteDesktopForm {
   rustdeskPort: number;
   rustdeskId: string;
   rustdeskDirect: boolean;
+  rustdeskAllowPlain: boolean;
   rustdeskIdServer: string;
   rustdeskRelayServer: string;
   rustdeskKey: string;
@@ -81,6 +82,7 @@ const SETTING_FOR_FIELD: Partial<Record<keyof RemoteDesktopForm, string>> = {
   rustdeskPort: "rustdeskPort",
   rustdeskId: "rustdeskId",
   rustdeskDirect: "rustdeskDirect",
+  rustdeskAllowPlain: "rustdeskAllowPlain",
   rustdeskIdServer: "rustdeskIdServer",
   rustdeskRelayServer: "rustdeskRelayServer",
   rustdeskKey: "rustdeskKey",
@@ -195,6 +197,7 @@ export function remoteDesktopForm(props: HostEditorSectionProps): {
     rustdeskPort: options.rustdeskPort,
     rustdeskId: options.rustdeskId,
     rustdeskDirect: options.rustdeskDirect,
+    rustdeskAllowPlain: options.rustdeskAllowPlain,
     rustdeskIdServer: options.rustdeskIdServer,
     rustdeskRelayServer: options.rustdeskRelayServer,
     rustdeskKey: options.rustdeskKey,

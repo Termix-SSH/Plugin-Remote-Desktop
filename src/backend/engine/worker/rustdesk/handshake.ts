@@ -285,9 +285,15 @@ export async function secure(
   conn: Connection,
   peerId: string,
   route: Route,
-  options: { key: string; direct: boolean; idServer: string },
+  options: {
+    key: string;
+    direct: boolean;
+    idServer: string;
+    /** Carry on when a direct peer skips the key exchange. */
+    allowPlain?: boolean;
+  },
   timeoutMs = 10_000,
-): Promise<{ verified: boolean }> {
+): Promise<{ verified: boolean; plain?: Uint8Array }> {
   let peerSignPk: Uint8Array | null = null;
   if (!options.direct) {
     const rsKey = serverKey(
@@ -311,9 +317,19 @@ export async function secure(
     peerSignPk = idPk.pk;
   }
 
-  const first = PbMessage.decode(await conn.next(timeoutMs));
+  const frame = await conn.next(timeoutMs);
+  const first = PbMessage.decode(frame);
   const signedId = first.message(MSG.signedId);
   if (!signedId) {
+    // Older RustDesk answers direct IP access with the password challenge
+    // straight away and never encrypts the session.
+    if (options.direct && first.has(MSG.hash)) {
+      if (options.allowPlain) return { verified: false, plain: frame };
+      throw new RustDeskError(
+        "The remote device answered without encryption. Allow unencrypted sessions on this host to connect anyway",
+        UPSTREAM_ERROR,
+      );
+    }
     throw new RustDeskError(
       "The remote device did not start a secure session",
       UPSTREAM_ERROR,

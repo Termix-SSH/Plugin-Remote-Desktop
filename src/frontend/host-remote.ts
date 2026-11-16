@@ -27,6 +27,7 @@ export interface RemoteHostOptions {
   rustdeskPort: number;
   rustdeskId: string;
   rustdeskDirect: boolean;
+  rustdeskAllowPlain: boolean;
   rustdeskIdServer: string;
   rustdeskRelayServer: string;
   rustdeskKey: string;
@@ -146,6 +147,7 @@ export function remoteOptions(
     rustdeskPort: port(values.rustdeskPort, DEFAULT_PORT.rustdesk),
     rustdeskId: text(values.rustdeskId),
     rustdeskDirect: values.rustdeskDirect === true,
+    rustdeskAllowPlain: values.rustdeskAllowPlain === true,
     rustdeskIdServer: text(values.rustdeskIdServer),
     rustdeskRelayServer: text(values.rustdeskRelayServer),
     rustdeskKey: text(values.rustdeskKey),

@@ -303,6 +303,8 @@
     "rustdesk": {
       "direct": "Direct IP access",
       "directDesc": "Connect to the host address instead of looking up a RustDesk ID. Direct IP access must be on in RustDesk on that device.",
+      "allowPlain": "Allow unencrypted sessions",
+      "allowPlainDesc": "Older RustDesk versions answer direct IP access without encryption. Only turn this on over a network you trust, such as a VPN.",
       "port": "Direct IP port",
       "directNote": "The connection is encrypted, but with no ID server there is nothing to prove which device answered.",
       "id": "RustDesk ID",
@@ -561,6 +563,9 @@
       },
       "rustdeskDirect": {
         "label": "RustDesk direct IP access"
+      },
+      "rustdeskAllowPlain": {
+        "label": "RustDesk unencrypted direct IP sessions"
       },
       "rustdeskIdServer": {
         "label": "RustDesk ID server"

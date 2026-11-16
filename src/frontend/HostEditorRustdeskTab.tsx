@@ -66,6 +66,17 @@ export function HostEditorRustdeskTab({
               onChange={(v) => setField("rustdeskDirect", v)}
             />
           </SettingRow>
+          {form.rustdeskDirect && (
+            <SettingRow
+              label={t("hosts.rustdesk.allowPlain")}
+              description={t("hosts.rustdesk.allowPlainDesc")}
+            >
+              <FakeSwitch
+                checked={form.rustdeskAllowPlain}
+                onChange={(v) => setField("rustdeskAllowPlain", v)}
+              />
+            </SettingRow>
+          )}
           {form.rustdeskDirect ? (
             <div className="flex flex-col gap-1.5">
               <label className={LABEL}>{t("hosts.rustdesk.port")}</label>

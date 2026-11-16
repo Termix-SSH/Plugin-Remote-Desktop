@@ -96,6 +96,7 @@ export async function rustdeskSettings(
     password: input.password,
     "rustdesk-id": settings.rustdeskId,
     direct: settings.rustdeskDirect,
+    "allow-plain": settings.rustdeskDirect && settings.rustdeskAllowPlain,
     "id-server": ownServer
       ? settings.rustdeskIdServer
       : await admin("rustdeskIdServer"),
