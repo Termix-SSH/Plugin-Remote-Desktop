@@ -34,11 +34,14 @@ function DocsLink({ label }: { label: string }) {
 }
 
 export function HostEditorRustdeskTab({
+  advanced = true,
   form,
   setField,
   setGuacField,
   credentials,
 }: {
+  /** False in the simple host editor: connection and login only. */
+  advanced?: boolean;
   form: RemoteDesktopForm;
   setField: RemoteFormSetField;
   setGuacField: (key: string, value: unknown) => void;
@@ -66,6 +69,17 @@ export function HostEditorRustdeskTab({
               onChange={(v) => setField("rustdeskDirect", v)}
             />
           </SettingRow>
+          {form.rustdeskDirect && (
+            <SettingRow
+              label={t("hosts.rustdesk.allowPlain")}
+              description={t("hosts.rustdesk.allowPlainDesc")}
+            >
+              <FakeSwitch
+                checked={form.rustdeskAllowPlain}
+                onChange={(v) => setField("rustdeskAllowPlain", v)}
+              />
+            </SettingRow>
+          )}
           {form.rustdeskDirect ? (
             <div className="flex flex-col gap-1.5">
               <label className={LABEL}>{t("hosts.rustdesk.port")}</label>
@@ -138,7 +152,7 @@ export function HostEditorRustdeskTab({
                 onChange={(e) =>
                   setField("rustdeskCredentialId", e.target.value)
                 }
-                className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
               >
                 <option value="">{t("hosts.guac.selectCredential")}</option>
                 {credentials!.map((c) => (
@@ -217,31 +231,35 @@ export function HostEditorRustdeskTab({
         </SectionCard>
       )}
 
-      <SectionCard
-        title={t("hosts.guac.displaySettings")}
-        icon={<Settings className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-4 py-3">
-          {(
-            [
-              ["disable-audio", "disableAudio"],
-              ["disable-copy", "disableCopy"],
-              ["disable-paste", "disablePaste"],
-            ] as const
-          ).map(([key, label]) => (
-            <SettingRow
-              key={key}
-              label={t(`hosts.guac.${label}`)}
-              description={t(`hosts.guac.${label}Desc`)}
-            >
-              <FakeSwitch
-                checked={!!form.guacamoleConfig[key]}
-                onChange={(v) => setGuacField(key, v)}
-              />
-            </SettingRow>
-          ))}
-        </div>
-      </SectionCard>
+      {advanced && (
+        <>
+          <SectionCard
+            title={t("hosts.guac.displaySettings")}
+            icon={<Settings className="size-3.5" />}
+          >
+            <div className="flex flex-col gap-4 py-3">
+              {(
+                [
+                  ["disable-audio", "disableAudio"],
+                  ["disable-copy", "disableCopy"],
+                  ["disable-paste", "disablePaste"],
+                ] as const
+              ).map(([key, label]) => (
+                <SettingRow
+                  key={key}
+                  label={t(`hosts.guac.${label}`)}
+                  description={t(`hosts.guac.${label}Desc`)}
+                >
+                  <FakeSwitch
+                    checked={!!form.guacamoleConfig[key]}
+                    onChange={(v) => setGuacField(key, v)}
+                  />
+                </SettingRow>
+              ))}
+            </div>
+          </SectionCard>
+        </>
+      )}
     </>
   );
 }

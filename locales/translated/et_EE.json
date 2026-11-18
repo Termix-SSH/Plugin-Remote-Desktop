@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Logi välja",
         "record": "Salvesta",
-        "monitors": "Monitorid"
+        "monitors": "Monitorid",
+        "softKeyboard": "Klaviatuur"
       },
       "hints": {
         "files": "Näidatakse, kui RDP draiv on sisse lülitatud",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift ja süsteemiklahv hoitakse all kuni järgmise klahvinõusuni",
         "logoff": "Logib Windowsist välja, käivitades käsu logoff käivitusaknast. Sessioon peab olema avatud ja töölaud nähtav.",
         "record": "Alustab või peatab selle sessiooni salvestamist. Vajab Session Recording pluginat ja sisseehitatud mootorit.",
-        "monitors": "Lülita kaugmonitorite vahel"
+        "monitors": "Lülita kaugmonitorite vahel",
+        "softKeyboard": "Kuvab ekraaniklaviatuuri telefonis või tahvelarvutis"
       },
       "option": "Option",
       "logoffConfirm": "Kas soovid sellest Windowsi sessioonist välja logida? Salvestamata töö kaob.",
@@ -103,7 +105,8 @@
       "recordFailed": "Salvestamist ei õnnestunud muuta",
       "recordRequired": "Haldur on sellel hostil salvestamise kohustuslikuks määranud",
       "recordRequiredLabel": "Salvestamine (kohustuslik)",
-      "monitor": "Monitor {{number}}"
+      "monitor": "Monitor {{number}}",
+      "showKeyboard": "Kuva klaviatuur"
     },
     "disabled": "Kaugtöölaud on väljas lülitatud. Haldaja saab selle Sätted menüüst sisse lülitada.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Otsene IP ligipääs",
       "directDesc": "Ühenda otse hosti aadressiga, mitte RustDesk-i ID-d otsides. Selle seadme RustDesk-is peab olema lubatud otse IP-ühendus.",
+      "allowPlain": "Luba krüpteerimata seansid",
+      "allowPlainDesc": "Vananenud RustDesk'i versioonid vastavad otse IP-ühendusele ilma krüpteerimiseta. Luba see ainult usaldusväärse võrgu, näiteks VPN-i, kaudu.",
       "port": "Otse IP-port",
       "directNote": "Ühendus on krüpteeritud, kuid ilma ID-serverita ei ole võimalik kinnitada, milline seade vastas.",
       "id": "RustDesk-i ID",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "RustDeski otse IP-ühendus"
+      },
+      "rustdeskAllowPlain": {
+        "label": "RustDesk'i krüpteerimata otse IP-seansid"
       },
       "rustdeskIdServer": {
         "label": "RustDeski ID-server"

@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "साइन आउट",
         "record": "रिकॉर्ड करें",
-        "monitors": "मॉनिटर"
+        "monitors": "मॉनिटर",
+        "softKeyboard": "कीबोर्ड"
       },
       "hints": {
         "files": "Shows once the RDP drive is on",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift and the system key stay held until the next key",
         "logoff": "रन बॉक्स से logoff चलाकर Windows से साइन आउट करता है। सत्र खुला होना चाहिए और डेस्कटॉप दिखा रहा होना चाहिए।",
         "record": "इस सत्र की रिकॉर्डिंग शुरू या बंद करता है। इसके लिए Session Recording प्लगइन और बिल्ट-इन इंजन की आवश्यकता होती है।",
-        "monitors": "रिमोट मॉनिटर के बीच स्विच करें"
+        "monitors": "रिमोट मॉनिटर के बीच स्विच करें",
+        "softKeyboard": "फ़ोन या टैबलेट पर स्क्रीन-कीबोर्ड दिखाता है"
       },
       "option": "Option",
       "logoffConfirm": "क्या आप इस Windows सत्र से साइन आउट करना चाहते हैं? इसमें असहेज काम खो जाएगा।",
@@ -103,7 +105,8 @@
       "recordFailed": "रिकॉर्डिंग बदलने में असमर्थ",
       "recordRequired": "एक एडमिन ने इस होस्ट पर रिकॉर्डिंग अनिवार्य कर दी है",
       "recordRequiredLabel": "रिकॉर्डिंग (अनिवार्य)",
-      "monitor": "मॉनिटर {{number}}"
+      "monitor": "मॉनिटर {{number}}",
+      "showKeyboard": "कीबोर्ड दिखाएं"
     },
     "disabled": "रिमोट डेस्कटॉप बंद है। एक एडमिन सेटिंग्स में इसे चालू कर सकता है।",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "प्रत्यक्ष IP एक्सेस",
       "directDesc": "RustDesk ID खोजने के बजाय होस्ट पते से कनेक्ट करें। उस डिवाइस पर RustDesk में सीधा IP एक्सेस चालू होना चाहिए।",
+      "allowPlain": "अगूढ़ सत्रों की अनुमति दें",
+      "allowPlainDesc": "पुरानी RustDesk संस्करण एन्क्रिप्शन के बिना सीधे IP एक्सेस का जवाब देते हैं। इसे केवल उस नेटवर्क पर चालू करें जिस पर आप भरोसा करते हैं, जैसे VPN।",
       "port": "सीधा IP पोर्ट",
       "directNote": "कनेक्शन एन्क्रिप्टेड है, लेकिन ID सर्वर के बिना यह सत्यापित नहीं किया जा सकता कि किस डिवाइस ने जवाब दिया।",
       "id": "RustDesk ID",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "RustDesk प्रत्यक्ष IP एक्सेस"
+      },
+      "rustdeskAllowPlain": {
+        "label": "RustDesk अगूढ़ सीधे IP सत्र"
       },
       "rustdeskIdServer": {
         "label": "RustDesk ID सर्वर"

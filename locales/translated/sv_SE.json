@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Logga ut",
         "record": "Spela in",
-        "monitors": "Skärmar"
+        "monitors": "Skärmar",
+        "softKeyboard": "Tangentbord"
       },
       "hints": {
         "files": "Visas när RDP-enheten är aktiverad",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift och systemtangenten hålls intryckta tills nästa tangent trycks",
         "logoff": "Loggar ut från Windows genom att köra logoff från Kör-rutan. Sessionen måste vara öppen och visa skrivbordet.",
         "record": "Startar eller stoppar inspelning av denna session. Kräver tillägget Session Recording och den inbyggda motorn.",
-        "monitors": "Byt mellan de fjärrskärmarna"
+        "monitors": "Byt mellan de fjärrskärmarna",
+        "softKeyboard": "Visar skärmtangentbordet på en telefon eller surfplatta"
       },
       "option": "Alternativ",
       "logoffConfirm": "Vill du logga ut från denna Windows-session? Osparat arbete i den går förlorat.",
@@ -103,7 +105,8 @@
       "recordFailed": "Kunde inte ändra inspelningen",
       "recordRequired": "En administratör har gjort inspelning obligatorisk på denna värd",
       "recordRequiredLabel": "Inspelning (obligatoriskt)",
-      "monitor": "Skärm {{number}}"
+      "monitor": "Skärm {{number}}",
+      "showKeyboard": "Visa tangentbord"
     },
     "disabled": "Fjärrskrivbord är inaktiverat. En administratör kan aktivera det i Inställningar.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Direkt IP-åtkomst",
       "directDesc": "Anslut till värdadressen istället för att slå upp ett RustDesk-ID. Direkt IP-åtkomst måste vara aktiverat i RustDesk på den enheten.",
+      "allowPlain": "Tillåt okrypterade sessioner",
+      "allowPlainDesc": "Äldre versioner av RustDesk svarar på direkt IP-åtkomst utan kryptering. Aktivera detta endast över ett nätverk du litar på, till exempel en VPN.",
       "port": "Port för direkt IP",
       "directNote": "Anslutningen är krypterad, men utan ID-server finns det inget som bevisar vilken enhet som svarade.",
       "id": "RustDesk-ID",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "RustDesk direkt IP-åtkomst"
+      },
+      "rustdeskAllowPlain": {
+        "label": "Okrypterade direkta IP-sessioner för RustDesk"
       },
       "rustdeskIdServer": {
         "label": "RustDesk ID-server"

@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Teken uit",
         "record": "Neem op",
-        "monitors": "Monitors"
+        "monitors": "Monitors",
+        "softKeyboard": "Sleutelbord"
       },
       "hints": {
         "files": "Verskyn eers wanneer die RDP-stoor is aangeskakel",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift en die stelselsleutel bly ingedruk tot die volgende sleutel",
         "logoff": "Teken uit van Windows deur logoff uit die Run-boks te hardloop. Die sessie moet oop wees en die bureblad wys.",
         "record": "Begin of stop 'n opname van hierdie sessie. Vereis die Session Recording-plug-in en die ingeboude enjin.",
-        "monitors": "Skakel tussen die afgeleë monitors"
+        "monitors": "Skakel tussen die afgeleë monitors",
+        "softKeyboard": "Wys die skerm-sleutelbord op 'n foon of tablet"
       },
       "option": "Opsie",
       "logoffConfirm": "Teken uit van hierdie Windows-sessie? Ongespaarde werk daarin gaan verlore.",
@@ -103,7 +105,8 @@
       "recordFailed": "Kon nie die opname verander nie",
       "recordRequired": "'n Admin het opname verpligtend gemaak op hierdie gasheer",
       "recordRequiredLabel": "Opname (verpligtend)",
-      "monitor": "Monitor {{number}}"
+      "monitor": "Monitor {{number}}",
+      "showKeyboard": "Wys sleutelbord"
     },
     "disabled": "Afgeleë Bureaublad is afgeskakel. 'n Admin kan dit in Instellings aanskakel.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Direkte IP-toegang",
       "directDesc": "Maak verbinding met die gasheeradres in plaas daarvan om 'n RustDesk-ID op te soek. Direkte IP-toegang moet ingeskakel wees in RustDesk op daardie toestel.",
+      "allowPlain": "Laat onversleutelde sessies toe",
+      "allowPlainDesc": "Ou RustDesk-weergawes antwoord direkte IP-toegang sonder versleuteling. Skakel dit slegs aan oor 'n netwerk wat jy vertrou, soos 'n VPN.",
       "port": "Direkte IP-poort",
       "directNote": "Die verbinding is versleutel, maar sonder 'n ID-bedienaar is daar niks om te bewys watter toestel geantwoord het nie.",
       "id": "RustDesk-ID",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "RustDesk direkte IP-toegang"
+      },
+      "rustdeskAllowPlain": {
+        "label": "RustDesk onversleutelde direkte IP-sessies"
       },
       "rustdeskIdServer": {
         "label": "RustDesk-ID-bedienaar"

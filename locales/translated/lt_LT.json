@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Atsijungti",
         "record": "Įrašyti",
-        "monitors": "Monitoriai"
+        "monitors": "Monitoriai",
+        "softKeyboard": "Klaviatūra"
       },
       "hints": {
         "files": "Rodoma tik įjungus RDP diską",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift ir sistemos klavišas laikomi nuspausti iki kito klavišo paspaudimo",
         "logoff": "Atsijungia nuo Windows, paleidžiant logoff iš Run langelio. Sesija turi būti atidaryta ir rodyti darbalaukį.",
         "record": "Pradeda arba sustabdo šios sesijos įrašymą. Reikalingas Session Recording priedas ir integruota variklio sistema.",
-        "monitors": "Perjungti tarp nuotolinių monitorių"
+        "monitors": "Perjungti tarp nuotolinių monitorių",
+        "softKeyboard": "Rodo ekraninę klaviatūrą telefone ar planšetiniame kompiuteryje"
       },
       "option": "Option",
       "logoffConfirm": "Atsijungti nuo šios Windows sesijos? Neišsaugotas darbas bus prarastas.",
@@ -103,7 +105,8 @@
       "recordFailed": "Nepavyko pakeisti įrašymo",
       "recordRequired": "Administratorius šiam hostui nustatė privalomą įrašymą",
       "recordRequiredLabel": "Įrašymas (privaloma)",
-      "monitor": "Monitorius {{number}}"
+      "monitor": "Monitorius {{number}}",
+      "showKeyboard": "Rodyti klaviatūrą"
     },
     "disabled": "Nuotolinis darbalaukis išjungtas. Administratorius gali jį įjungti „Nustatymuose“.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Tiesioginis IP prieiga",
       "directDesc": "Jungtis prie hosto adreso, o ne ieškant RustDesk ID. Tiesioginė IP prieiga turi būti įjungta RustDesk tame įrenginyje.",
+      "allowPlain": "Leisti nesifrizuotas sesijas",
+      "allowPlainDesc": "Senesnės RustDesk versijos atsako į tiesioginį IP prisijungimą be šifravimo. Įjunkite tai tik pasitikimo tinkle, pvz., VPN.",
       "port": "Tiesioginio IP prievadas",
       "directNote": "Ryšys yra šifruotas, tačiau be ID serverio niekas negali patvirtinti, kuris įrenginys atsakė.",
       "id": "RustDesk ID",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "Tiesioginis RustDesk IP prisijungimas"
+      },
+      "rustdeskAllowPlain": {
+        "label": "RustDesk nesifrizuotos tiesioginės IP sesijos"
       },
       "rustdeskIdServer": {
         "label": "RustDesk ID serveris"

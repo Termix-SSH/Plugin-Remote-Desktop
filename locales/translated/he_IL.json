@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "התנתק",
         "record": "הקלט",
-        "monitors": "מסכים"
+        "monitors": "מסכים",
+        "softKeyboard": "מקלדת"
       },
       "hints": {
         "files": "מוצג לאחר הפעלת כונן RDP",
@@ -92,7 +93,8 @@
         "modifiers": "מקשי Ctrl, Alt, Shift ומקש המערכת נשארים לחוצים עד להקשת המקש הבא",
         "logoff": "מתנתק מ-Windows על ידי הפעלת הפקודה logoff מתוך תיבת הרצה. הפעלה חייבת להיות פתוחה ולהציג את שולחן העבודה.",
         "record": "מתחיל או עוצר הקלטה של הפעלה זו. דורש את התוסף Session Recording ואת המנוע המובנה.",
-        "monitors": "החלף בין מסכים מרוחקים"
+        "monitors": "החלף בין מסכים מרוחקים",
+        "softKeyboard": "מציג את המקלדת על המסך בטלפון או בטאבלט"
       },
       "option": "Option",
       "logoffConfirm": "להתנתק מהפעלה זו של Windows? עבודה שלא נשמרה בה תאבד.",
@@ -103,7 +105,8 @@
       "recordFailed": "לא ניתן היה לשנות את ההקלטה",
       "recordRequired": "מנהל הגדיר הקלטת חובה במארח זה",
       "recordRequiredLabel": "הקלטה (חובה)",
-      "monitor": "מסך {{number}}"
+      "monitor": "מסך {{number}}",
+      "showKeyboard": "הצג מקלדת"
     },
     "disabled": "שולחן עבודה מרוחק כבוי. מנהל מערכת יכול להפעיל אותו בהגדרות.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "גישה ישירה דרך IP",
       "directDesc": "התחבר לכתובת המארח במקום לחפש מזהה RustDesk. יש להפעיל גישה ישירה דרך IP ב-RustDesk במכשיר זה.",
+      "allowPlain": "אפשר הפעלות ללא הצפנה",
+      "allowPlainDesc": "גרסאות ישנות יותר של RustDesk מגיבות לגישה ישירה דרך כתובת IP ללא הצפנה. הפעל אפשרות זו רק ברשת שאתה סומך עליה, כמו VPN.",
       "port": "פורט IP ישיר",
       "directNote": "החיבור מוצפן, אך ללא שרת מזהה אין דרך לאמת איזה מכשיר הגיב.",
       "id": "מזהה RustDesk",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "גישה ישירה ל-IP של RustDesk"
+      },
+      "rustdeskAllowPlain": {
+        "label": "הפעלות ישירות דרך IP ללא הצפנה ב-RustDesk"
       },
       "rustdeskIdServer": {
         "label": "שרת מזהה של RustDesk"

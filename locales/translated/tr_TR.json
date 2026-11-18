@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Oturumu kapat",
         "record": "Kaydet",
-        "monitors": "Monitörler"
+        "monitors": "Monitörler",
+        "softKeyboard": "Klavye"
       },
       "hints": {
         "files": "RDP sürücüsü açıldığında görünür",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift ve sistem tuşu bir sonraki tuşa basılana kadar basılı tutulur",
         "logoff": "Çalıştır kutusundan logoff komutunu çalıştırarak Windows oturumunu kapatır. Oturumun açık ve masaüstünün görünür olması gerekir.",
         "record": "Bu oturumun kaydını başlatır veya durdurur. Oturum Kaydı eklentisi ve yerleşik motor gerektirir.",
-        "monitors": "Uzaktaki monitörler arasında geçiş yap"
+        "monitors": "Uzaktaki monitörler arasında geçiş yap",
+        "softKeyboard": "Telefon veya tablette ekranda klavye gösterir"
       },
       "option": "Seçenek",
       "logoffConfirm": "Bu Windows oturumundan çıkış yapılsın mı? Kaydedilmemiş işler kaybolacak.",
@@ -103,7 +105,8 @@
       "recordFailed": "Kayıt değiştirilemedi",
       "recordRequired": "Bir yönetici bu ana makinede kaydı zorunlu kıldı",
       "recordRequiredLabel": "Kayıt (zorunlu)",
-      "monitor": "Monitör {{number}}"
+      "monitor": "Monitör {{number}}",
+      "showKeyboard": "Klavyeyi göster"
     },
     "disabled": "Uzak Masaüstü kapalı. Bir yönetici bunu Ayarlar'dan açabilir.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Doğrudan IP erişimi",
       "directDesc": "Bir RustDesk Kimliği aramak yerine ana makine adresine bağlanın. O cihazda RustDesk'te Doğrudan IP erişimi açık olmalıdır.",
+      "allowPlain": "Şifrelenmemiş oturumlara izin ver",
+      "allowPlainDesc": "Eski RustDesk sürümleri, doğrudan IP erişimine şifreleme olmadan yanıt verir. Bunu yalnızca VPN gibi güvendiğiniz bir ağ üzerinden açın.",
       "port": "Doğrudan IP bağlantı noktası",
       "directNote": "Bağlantı şifrelenmiştir, ancak kimlik sunucusu olmadığı için hangi cihazın yanıt verdiğini kanıtlayacak bir şey yoktur.",
       "id": "RustDesk Kimliği",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "RustDesk doğrudan IP erişimi"
+      },
+      "rustdeskAllowPlain": {
+        "label": "RustDesk şifrelenmemiş doğrudan IP oturumları"
       },
       "rustdeskIdServer": {
         "label": "RustDesk ID sunucusu"

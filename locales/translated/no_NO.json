@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Logg av",
         "record": "Ta opp",
-        "monitors": "Skjermer"
+        "monitors": "Skjermer",
+        "softKeyboard": "Tastatur"
       },
       "hints": {
         "files": "Vises når RDP-enheten er aktivert",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift og systemtasten holdes inne til neste tastetrykk",
         "logoff": "Logger av Windows ved å kjøre logoff fra Utfør-boksen. Økten må være åpen og vise skrivebordet.",
         "record": "Starter eller stopper opptak av denne økten. Krever Session Recording-pluginen og den innebygde motoren.",
-        "monitors": "Bytt mellom fjerntskjermene"
+        "monitors": "Bytt mellom fjerntskjermene",
+        "softKeyboard": "Viser skjerm-tastaturet på en telefon eller nettbrett"
       },
       "option": "Alternativ",
       "logoffConfirm": "Vil du logge av denne Windows-økten? Ulagret arbeid i den går tapt.",
@@ -103,7 +105,8 @@
       "recordFailed": "Kunne ikke endre opptaket",
       "recordRequired": "En administrator har gjort opptak påkrevd på denne verten",
       "recordRequiredLabel": "Opptak (påkrevd)",
-      "monitor": "Skjerm {{number}}"
+      "monitor": "Skjerm {{number}}",
+      "showKeyboard": "Vis tastatur"
     },
     "disabled": "Fjernskrivebord er slått av. En administrator kan slå det på i Innstillinger.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Direkte IP-tilgang",
       "directDesc": "Koble til vertsadressen i stedet for å slå opp en RustDesk-ID. Direkte IP-tilgang må være aktivert i RustDesk på den enheten.",
+      "allowPlain": "Tillat ukrypterte økter",
+      "allowPlainDesc": "Eldre versjoner av RustDesk svarer på direkte IP-tilgang uten kryptering. Skru dette kun på i et nettverk du stoler på, for eksempel en VPN.",
       "port": "Port for direkte IP",
       "directNote": "Tilkoblingen er kryptert, men uten ID-server er det ingen måte å verifisere hvilken enhet som svarte.",
       "id": "RustDesk-ID",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "RustDesk direkte IP-tilgang"
+      },
+      "rustdeskAllowPlain": {
+        "label": "Ukrypterte direkte IP-økter for RustDesk"
       },
       "rustdeskIdServer": {
         "label": "RustDesk ID-server"

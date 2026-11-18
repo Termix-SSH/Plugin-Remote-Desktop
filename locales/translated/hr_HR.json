@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Odjava",
         "record": "Snimanje",
-        "monitors": "Monitori"
+        "monitors": "Monitori",
+        "softKeyboard": "Tipkovnica"
       },
       "hints": {
         "files": "Prikazuje se nakon uključivanja RDP pogona",
@@ -92,7 +93,8 @@
         "modifiers": "Tipke Ctrl, Alt, Shift i sustavna tipka ostaju pritisnute do sljedeće tipke",
         "logoff": "Odjava iz Windowsa pokretanjem naredbe logoff iz dijaloškog okvira Run. Sesija mora biti otvorena i prikazivati radnu površinu.",
         "record": "Pokreće ili zaustavlja snimanje ove sesije. Zahtijeva dodatak Session Recording i ugrađeni mehanizam.",
-        "monitors": "Prebacivanje između udaljenih monitora"
+        "monitors": "Prebacivanje između udaljenih monitora",
+        "softKeyboard": "Prikazuje tipkovnicu na zaslonu na telefonu ili tabletu"
       },
       "option": "Opcija",
       "logoffConfirm": "Odjaviti se iz ove Windows sesije? Nesavedeni rad u njoj bit će izgubljen.",
@@ -103,7 +105,8 @@
       "recordFailed": "Nije moguće promijeniti snimanje",
       "recordRequired": "Administrator je postavio snimanje kao obavezno za ovaj host",
       "recordRequiredLabel": "Snimanje (obavezno)",
-      "monitor": "Monitor {{number}}"
+      "monitor": "Monitor {{number}}",
+      "showKeyboard": "Prikaži tipkovnicu"
     },
     "disabled": "Udaljeni radni stol je isključen. Administrator ga može uključiti u postavkama.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Izravan pristup putem IP adrese",
       "directDesc": "Poveži se na adresu hosta umjesto traženja RustDesk ID-a. Izravan pristup putem IP adrese mora biti uključen u RustDesku na tom uređaju.",
+      "allowPlain": "Dopusti nesifrirane sesije",
+      "allowPlainDesc": "Starije verzije RustDeska odgovaraju na izravan pristup putem IP adrese bez šifriranja. Uključite ovo samo na mreži kojoj vjerujete, poput VPN-a.",
       "port": "Port za izravan IP pristup",
       "directNote": "Veza je šifrirana, ali bez ID poslužitelja nema načina da se potvrdi koji je uređaj odgovorio.",
       "id": "RustDesk ID",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "RustDesk izravan IP pristup"
+      },
+      "rustdeskAllowPlain": {
+        "label": "Nesifrirane izravne IP sesije RustDeska"
       },
       "rustdeskIdServer": {
         "label": "RustDesk ID poslužitelj"

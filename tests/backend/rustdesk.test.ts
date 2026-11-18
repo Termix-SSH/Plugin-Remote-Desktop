@@ -39,6 +39,25 @@ describe("RustDesk hosts", () => {
     expect(settings.rustdeskId).toBe("123 456 789");
     expect(settings.rustdeskPort).toBe(21118);
     expect(settings.rustdeskIdServer).toBe("");
+    expect(settings.rustdeskAllowPlain).toBe(false);
+  });
+
+  it("reads the switch for unencrypted direct sessions", async () => {
+    const settings = await readHostSettings(
+      ctxWith({}, { rustdeskDirect: true, rustdeskAllowPlain: true }),
+      1,
+    );
+    expect(settings.rustdeskAllowPlain).toBe(true);
+  });
+
+  it("imports the switch for unencrypted direct sessions", () => {
+    expect(
+      normalizeImportedHost({
+        pluginSettings: {
+          "remote-desktop": { rustdeskDirect: true, rustdeskAllowPlain: true },
+        },
+      }),
+    ).toEqual({ rustdeskDirect: true, rustdeskAllowPlain: true });
   });
 
   it("imports its settings", () => {
@@ -123,6 +142,21 @@ describe("rustdeskSettings", () => {
     expect(out["id-server"]).toBe("own");
     expect(out["server-key"]).toBe("OWN=");
     expect(out["relay-server"]).toBe("");
+  });
+
+  it("allows an unencrypted session only for direct IP", async () => {
+    const direct = await rustdeskSettings(
+      ctxWith({}),
+      { ...base, rustdeskDirect: true, rustdeskAllowPlain: true } as never,
+      input,
+    );
+    expect(direct["allow-plain"]).toBe(true);
+    const byId = await rustdeskSettings(
+      ctxWith({}),
+      { ...base, rustdeskAllowPlain: true } as never,
+      input,
+    );
+    expect(byId["allow-plain"]).toBe(false);
   });
 
   it("drops codec lists it does not trust", async () => {

@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Keluar",
         "record": "Rekam",
-        "monitors": "Monitor"
+        "monitors": "Monitor",
+        "softKeyboard": "Papan Ketik"
       },
       "hints": {
         "files": "Muncul setelah drive RDP diaktifkan",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift, dan tombol sistem tetap tertahan hingga tombol berikutnya ditekan",
         "logoff": "Keluar dari Windows dengan menjalankan logoff dari kotak Run. Sesi harus terbuka dan menampilkan desktop.",
         "record": "Memulai atau menghentikan rekaman sesi ini. Membutuhkan plugin Session Recording dan mesin bawaan.",
-        "monitors": "Beralih antar monitor jarak jauh"
+        "monitors": "Beralih antar monitor jarak jauh",
+        "softKeyboard": "Menampilkan papan ketik layar pada ponsel atau tablet"
       },
       "option": "Opsi",
       "logoffConfirm": "Keluar dari sesi Windows ini? Pekerjaan yang belum disimpan akan hilang.",
@@ -103,7 +105,8 @@
       "recordFailed": "Tidak dapat mengubah rekaman",
       "recordRequired": "Admin telah mewajibkan perekaman pada host ini",
       "recordRequiredLabel": "Perekaman (wajib)",
-      "monitor": "Monitor {{number}}"
+      "monitor": "Monitor {{number}}",
+      "showKeyboard": "Tampilkan papan ketik"
     },
     "disabled": "Remote Desktop dimatikan. Admin dapat mengaktifkannya di Pengaturan.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Akses IP langsung",
       "directDesc": "Hubungkan ke alamat host alih-alih mencari ID RustDesk. Akses IP langsung harus diaktifkan di RustDesk pada perangkat tersebut.",
+      "allowPlain": "Izinkan sesi tanpa enkripsi",
+      "allowPlainDesc": "Versi RustDesk yang lebih lama merespons akses IP langsung tanpa enkripsi. Hanya aktifkan ini di jaringan yang Anda percayai, seperti VPN.",
       "port": "Port IP langsung",
       "directNote": "Koneksi ini terenkripsi, namun tanpa server ID tidak ada cara untuk memverifikasi perangkat mana yang merespons.",
       "id": "ID RustDesk",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "Akses IP langsung RustDesk"
+      },
+      "rustdeskAllowPlain": {
+        "label": "Sesi IP langsung RustDesk tanpa enkripsi"
       },
       "rustdeskIdServer": {
         "label": "Server ID RustDesk"

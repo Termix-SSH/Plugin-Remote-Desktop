@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Kijelentkezés",
         "record": "Felvétel",
-        "monitors": "Monitorok"
+        "monitors": "Monitorok",
+        "softKeyboard": "Billentyűzet"
       },
       "hints": {
         "files": "Csak akkor jelenik meg, ha az RDP-meghajtó be van kapcsolva",
@@ -92,7 +93,8 @@
         "modifiers": "A Ctrl, Alt, Shift és a rendszerbillentyű lenyomva marad a következő billentyűig",
         "logoff": "Kijelentkezik a Windowsból a logoff parancs futtatásával a Futtató ablakból. A munkamenetnek nyitottnak kell lennie, és meg kell jelenítenie az asztalt.",
         "record": "Egy munkamenet-felvétel indítását vagy leállítását kezdeményezi. Szükséges a Session Recording bővítmény és a beépített motor.",
-        "monitors": "Váltás a távoli monitorok között"
+        "monitors": "Váltás a távoli monitorok között",
+        "softKeyboard": "Megjeleníti a képernyőbillentyűzetet telefonon vagy táblagépen"
       },
       "option": "Option",
       "logoffConfirm": "Kijelentkezik ebből a Windows munkamenetből? A mentetlen munka elveszik.",
@@ -103,7 +105,8 @@
       "recordFailed": "Nem sikerült módosítani a felvételt",
       "recordRequired": "Egy rendszergazda kötelezővé tette a felvételt ezen a hoszton",
       "recordRequiredLabel": "Felvétel (kötelező)",
-      "monitor": "{{number}}. monitor"
+      "monitor": "{{number}}. monitor",
+      "showKeyboard": "Billentyűzet megjelenítése"
     },
     "disabled": "A Távoli asztal kikapcsolva van. Egy rendszergazda bekapcsolhatja a Beállításokban.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Közvetlen IP-hozzáférés",
       "directDesc": "Csatlakozás a gazdagép címéhez, nem pedig egy RustDesk-azonosító kereséséhez. A közvetlen IP-hozzáférésnek be kell lennie kapcsolva a RustDeskben az adott eszközön.",
+      "allowPlain": "Nem titkosított munkamenetek engedélyezése",
+      "allowPlainDesc": "A régebbi RustDesk-verziók titkosítás nélkül válaszolnak a közvetlen IP-címes hozzáférésre. Csak olyan hálózaton kapcsold be, amelynek megbízol, például egy VPN-en.",
       "port": "Közvetlen IP-port",
       "directNote": "A kapcsolat titkosított, de azonosítószerver nélkül nincs, ami igazolná, hogy melyik eszköz válaszolt.",
       "id": "RustDesk-azonosító",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "RustDesk közvetlen IP-hozzáférés"
+      },
+      "rustdeskAllowPlain": {
+        "label": "RustDesk nem titkosított közvetlen IP-címes munkamenetek"
       },
       "rustdeskIdServer": {
         "label": "RustDesk azonosító-szerver"

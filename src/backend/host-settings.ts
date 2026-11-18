@@ -21,6 +21,7 @@ export interface RemoteDesktopHostSettings {
   rustdeskRelayServer: string;
   rustdeskKey: string;
   rustdeskDirect: boolean;
+  rustdeskAllowPlain: boolean;
   moonlightPort: number;
   moonlightHostId: number;
   moonlightAppId: number;
@@ -140,6 +141,7 @@ export async function readHostSettings(
     rustdeskRelayServer: asText(values.rustdeskRelayServer),
     rustdeskKey: asText(values.rustdeskKey),
     rustdeskDirect: values.rustdeskDirect === true,
+    rustdeskAllowPlain: values.rustdeskAllowPlain === true,
     moonlightPort: asPort(values.moonlightPort) ?? MOONLIGHT_DEFAULT_PORT,
     moonlightHostId: asCount(values.moonlightHostId),
     moonlightAppId: asCount(values.moonlightAppId),
@@ -218,6 +220,8 @@ export function normalizeImportedHost(
   }
   const direct = asBool(pick("rustdeskDirect"));
   if (direct !== undefined) out.rustdeskDirect = direct;
+  const allowPlain = asBool(pick("rustdeskAllowPlain"));
+  if (allowPlain !== undefined) out.rustdeskAllowPlain = allowPlain;
   const moonlight = asBool(pick("enableMoonlight"));
   if (moonlight !== undefined) out.enableMoonlight = moonlight;
   const moonlightPort = asPort(pick("moonlightPort"));

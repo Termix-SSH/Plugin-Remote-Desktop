@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Log keluar",
         "record": "Rakam",
-        "monitors": "Monitor"
+        "monitors": "Monitor",
+        "softKeyboard": "Papan Kekunci"
       },
       "hints": {
         "files": "Muncul sekali pemacu RDP dihidupkan",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift dan kunci sistem kekal ditekan sehingga kekunci seterusnya",
         "logoff": "Log keluar dari Windows dengan menjalankan logoff dari kotak Run. Sesi mesti dibuka dan menunjukkan desktop.",
         "record": "Memulakan atau menghentikan rakaman sesi ini. Memerlukan plugin Rakaman Sesi dan enjin terbina dalam.",
-        "monitors": "Tukar antara monitor jauh"
+        "monitors": "Tukar antara monitor jauh",
+        "softKeyboard": "Memaparkan papan kekunci pada skrin di telefon atau tablet"
       },
       "option": "Pilihan",
       "logoffConfirm": "Log keluar dari sesi Windows ini? Kerja yang belum disimpan akan hilang.",
@@ -103,7 +105,8 @@
       "recordFailed": "Tidak dapat mengubah rakaman",
       "recordRequired": "Pentadbir telah menetapkan rakaman sebagai wajib pada hos ini",
       "recordRequiredLabel": "Rakaman (wajib)",
-      "monitor": "Monitor {{number}}"
+      "monitor": "Monitor {{number}}",
+      "showKeyboard": "Paparkan papan kekunci"
     },
     "disabled": "Remote Desktop dimatikan. Admin boleh menghidupkannya dalam Tetapan.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Akses IP langsung",
       "directDesc": "Sambung ke alamat hos daripada mencari ID RustDesk. Akses IP terus mesti dihidupkan dalam RustDesk pada peranti tersebut.",
+      "allowPlain": "Benarkan sesi tanpa penyulitan",
+      "allowPlainDesc": "Versi RustDesk yang lebih lama membolehkan akses IP terus tanpa penyulitan. Hanya hidupkan ini di rangkaian yang dipercayai, seperti VPN.",
       "port": "Port IP terus",
       "directNote": "Sambungan ini disulitkan, tetapi tanpa pelayan ID, tiada cara untuk membuktikan peranti mana yang menjawab.",
       "id": "ID RustDesk",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "Akses IP terus RustDesk"
+      },
+      "rustdeskAllowPlain": {
+        "label": "Sesi IP terus RustDesk tanpa penyulitan"
       },
       "rustdeskIdServer": {
         "label": "Pelayan ID RustDesk"

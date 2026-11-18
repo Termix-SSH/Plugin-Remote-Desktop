@@ -5,6 +5,14 @@ interface TokenLogger {
   error: (message: string, meta?: Record<string, unknown>) => void;
 }
 
+/** guacd sends the username as typed, so a DOMAIN\user login is split here. */
+function splitDomainUser(username: string, domain: unknown) {
+  const slash = username.indexOf("\\");
+  return domain || slash < 1
+    ? {}
+    : { domain: username.slice(0, slash), username: username.slice(slash + 1) };
+}
+
 export interface GuacamoleConnectionSettings {
   type?: "rdp" | "vnc" | "telnet" | "rustdesk";
   join?: string;
@@ -264,6 +272,7 @@ export class GuacamoleTokenService {
           "ignore-cert": true,
           ...(!username && !password ? { "disable-auth": true } : {}),
           ...settingsOptions,
+          ...splitDomainUser(username, settingsOptions.domain),
         },
       },
       recording,

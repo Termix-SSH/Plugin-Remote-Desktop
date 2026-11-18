@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Izrakstīties",
         "record": "Ierakstīt",
-        "monitors": "Monitori"
+        "monitors": "Monitori",
+        "softKeyboard": "Tastatūra"
       },
       "hints": {
         "files": "Parādās, kad RDP diskzīme ir ieslēgta",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift un sistēmas taustiņi tiek turēti nospiežami līdz nākamajam taustiņam",
         "logoff": "Izrakstās no Windows, izpildot logoff no Run lodziņa. Sesijai ir jābūt atvērtai un jāparāda darbvirsma.",
         "record": "Sāk vai aptur šīs sesijas ierakstīšanu. Nepieciešama Session Recording spraudprogramma un iebūvētais dzinējs.",
-        "monitors": "Pārslēgties starp attālo monitoriem"
+        "monitors": "Pārslēgties starp attālo monitoriem",
+        "softKeyboard": "Rāda ekrāntastatūru telefonā vai planšetdatorā"
       },
       "option": "Opcija",
       "logoffConfirm": "Vai vēlaties izrakstīties no šīs Windows sesijas? Nesaglabātais darbs tajā tiks zaudēts.",
@@ -103,7 +105,8 @@
       "recordFailed": "Neizdevās mainīt ierakstīšanu",
       "recordRequired": "Šī hosta administrators ir noteicis, ka ierakstīšana ir obligāta",
       "recordRequiredLabel": "Ierakstīšana (obligāti)",
-      "monitor": "Monitors {{number}}"
+      "monitor": "Monitors {{number}}",
+      "showKeyboard": "Rādīt tastatūru"
     },
     "disabled": "Tālvadības darbvirsma ir izslēgta. Administrators to var ieslēgt Iestatījumos.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Tieša IP piekļuve",
       "directDesc": "Savienojieties ar hosta adresi, nevis meklējot RustDesk ID. Lai tas darbotos, ierīcē ir jābūt ieslēgtam tiešajam IP piekļuves režīmam RustDesk.",
+      "allowPlain": "Atļaut nesakodētas sesijas",
+      "allowPlainDesc": "Vecākās RustDesk versijas atbild uz tiešo IP piekļuvi bez šifrēšanas. Ieslēdziet to tikai tīklā, kuram uzticat, piemēram, VPN.",
       "port": "Tiešās IP piekļuves ports",
       "directNote": "Savienojums ir šifrēts, taču, ja nav ID servera, nav iespējams pierādīt, kura ierīce atbildēja.",
       "id": "RustDesk ID",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "RustDesk tiešā IP piekļuve"
+      },
+      "rustdeskAllowPlain": {
+        "label": "RustDesk nesakodētas tiešās IP sesijas"
       },
       "rustdeskIdServer": {
         "label": "RustDesk ID serveris"

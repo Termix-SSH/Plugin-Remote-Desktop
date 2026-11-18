@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Wyloguj się",
         "record": "Nagrywaj",
-        "monitors": "Monitory"
+        "monitors": "Monitory",
+        "softKeyboard": "Klawiatura"
       },
       "hints": {
         "files": "Wyświetlane po włączeniu dysku RDP",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift i klawisz systemowy pozostają wciśnięte do momentu naciśnięcia następnego klawisza",
         "logoff": "Wylogowuje z systemu Windows, uruchamiając polecenie logoff z okna Uruchom. Sesja musi być otwarta i wyświetlać pulpit.",
         "record": "Rozpoczyna lub zatrzymuje nagrywanie tej sesji. Wymaga wtyczki Nagrywanie sesji i wbudowanego silnika.",
-        "monitors": "Przełączaj się między monitorami zdalnymi"
+        "monitors": "Przełączaj się między monitorami zdalnymi",
+        "softKeyboard": "Wyświetla klawiaturę ekranową na telefonie lub tablecie"
       },
       "option": "Opcja",
       "logoffConfirm": "Wylogować się z tej sesji Windows? Niezapisana praca zostanie utracona.",
@@ -103,7 +105,8 @@
       "recordFailed": "Nie udało się zmienić nagrywania",
       "recordRequired": "Administrator wymusił nagrywanie na tym hoście",
       "recordRequiredLabel": "Nagrywanie (wymagane)",
-      "monitor": "Monitor {{number}}"
+      "monitor": "Monitor {{number}}",
+      "showKeyboard": "Pokaż klawiaturę"
     },
     "disabled": "Zdalny pulpit jest wyłączony. Administrator może go włączyć w ustawieniach.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Bezpośredni dostęp przez IP",
       "directDesc": "Łącz się z adresem hosta zamiast wyszukiwać identyfikator RustDesk. Bezpośredni dostęp przez IP musi być włączony w RustDesk na tym urządzeniu.",
+      "allowPlain": "Zezwól na sesje nieszyfrowane",
+      "allowPlainDesc": "Starsze wersje RustDesk odpowiadają na bezpośredni dostęp przez IP bez szyfrowania. Włącz tę opcję tylko w zaufanej sieci, takiej jak VPN.",
       "port": "Port bezpośredniego dostępu przez IP",
       "directNote": "Połączenie jest szyfrowane, ale bez serwera ID nie ma możliwości potwierdzenia, które urządzenie odpowiedziało.",
       "id": "Identyfikator RustDesk",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "Bezpośredni dostęp IP RustDesk"
+      },
+      "rustdeskAllowPlain": {
+        "label": "Nieszyfrowane sesje RustDesk przez bezpośredni adres IP"
       },
       "rustdeskIdServer": {
         "label": "Serwer ID RustDesk"

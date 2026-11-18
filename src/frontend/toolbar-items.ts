@@ -11,6 +11,7 @@ import {
   OctagonX,
   ScanSearch,
   Search,
+  TextCursorInput,
   ToggleLeft,
   MonitorSmartphone,
 } from "lucide-react";
@@ -132,6 +133,14 @@ export const BUILTIN_ITEMS: ToolbarItemInfo[] = [
     titleKey: "remoteDesktop.toolbar.items.touchMode",
     icon: MousePointer,
     hintKey: "remoteDesktop.toolbar.hints.touchMode",
+    source: { kind: "builtin" },
+  },
+  {
+    id: "softKeyboard",
+    titleKey: "remoteDesktop.toolbar.items.softKeyboard",
+    icon: TextCursorInput,
+    hintKey: "remoteDesktop.toolbar.hints.softKeyboard",
+    protocols: DESKTOP,
     source: { kind: "builtin" },
   },
   {

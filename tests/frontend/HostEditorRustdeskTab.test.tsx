@@ -66,4 +66,14 @@ describe("RustDesk host editor", () => {
     expect(screen.queryByText("RustDesk ID")).toBeNull();
     expect(screen.queryByText("ID server")).toBeNull();
   });
+
+  it("offers unencrypted sessions only for direct IP", async () => {
+    await renderSection({ enableRustdesk: true, rustdeskDirect: true });
+    expect(await screen.findByText("Allow unencrypted sessions")).toBeTruthy();
+    cleanup();
+    await rendered?.deactivate();
+    await renderSection({ enableRustdesk: true, rustdeskId: "123456789" });
+    expect(await screen.findByText("RustDesk ID")).toBeTruthy();
+    expect(screen.queryByText("Allow unencrypted sessions")).toBeNull();
+  });
 });

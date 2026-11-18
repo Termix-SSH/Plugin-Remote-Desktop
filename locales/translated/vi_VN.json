@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Đăng xuất",
         "record": "Ghi lại",
-        "monitors": "Màn hình"
+        "monitors": "Màn hình",
+        "softKeyboard": "Bàn phím"
       },
       "hints": {
         "files": "Hiển thị khi ổ RDP đã bật",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift và phím hệ thống sẽ được giữ nguyên cho đến khi nhấn phím tiếp theo",
         "logoff": "Đăng xuất khỏi Windows bằng cách chạy lệnh logoff từ hộp Run. Phiên làm việc phải đang mở và hiển thị màn hình desktop.",
         "record": "Bắt đầu hoặc dừng ghi lại phiên làm việc này. Cần có plugin Session Recording và công cụ ghi tích hợp.",
-        "monitors": "Chuyển đổi giữa các màn hình từ xa"
+        "monitors": "Chuyển đổi giữa các màn hình từ xa",
+        "softKeyboard": "Hiển thị bàn phím trên màn hình trên điện thoại hoặc máy tính bảng"
       },
       "option": "Tùy chọn",
       "logoffConfirm": "Đăng xuất khỏi phiên Windows này? Các công việc chưa lưu sẽ bị mất.",
@@ -103,7 +105,8 @@
       "recordFailed": "Không thể thay đổi bản ghi",
       "recordRequired": "Quản trị viên đã yêu cầu ghi lại phiên trên máy chủ này",
       "recordRequiredLabel": "Đang ghi (bắt buộc)",
-      "monitor": "Màn hình {{number}}"
+      "monitor": "Màn hình {{number}}",
+      "showKeyboard": "Hiển thị bàn phím"
     },
     "disabled": "Màn hình từ xa đang bị tắt. Quản trị viên có thể bật tính năng này trong Cài đặt.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Truy cập IP trực tiếp",
       "directDesc": "Kết nối đến địa chỉ máy chủ thay vì tra cứu ID RustDesk. Tính năng truy cập IP trực tiếp phải được bật trong RustDesk trên thiết bị đó.",
+      "allowPlain": "Cho phép phiên không mã hóa",
+      "allowPlainDesc": "Các phiên bản RustDesk cũ hơn hỗ trợ truy cập trực tiếp qua IP mà không mã hóa. Chỉ bật tính năng này trên mạng bạn tin cậy, chẳng hạn như VPN.",
       "port": "Cổng IP trực tiếp",
       "directNote": "Kết nối được mã hóa, nhưng khi không có máy chủ ID thì không có cách nào xác minh thiết bị nào đang phản hồi.",
       "id": "ID RustDesk",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "Truy cập IP trực tiếp RustDesk"
+      },
+      "rustdeskAllowPlain": {
+        "label": "Phiên RustDesk trực tiếp qua IP không mã hóa"
       },
       "rustdeskIdServer": {
         "label": "Máy chủ ID RustDesk"

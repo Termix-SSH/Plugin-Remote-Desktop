@@ -34,7 +34,7 @@ if (!callback) throw new Error("Missing refreshKeyboardHandlers callback");
 const runRefresh = new Function(
   "state",
   ts.transpileModule(
-    `const { keyboardRef, clientRef, displayElementRef, isVisible, windowFocusedRef, hasKeyboardFocusRef, sessionProtocolRef, remoteKeysym, isToggleKey } = state;
+    `const { keyboardRef, clientRef, displayElementRef, isVisible, windowFocusedRef, hasKeyboardFocusRef, sessionProtocolRef, remoteKeysym, isToggleKey, systemKeysRef } = state;
     (${callback})();`,
     { compilerOptions: { target: ts.ScriptTarget.ES2022 } },
   ).outputText,
@@ -68,6 +68,7 @@ describe("remote keyboard focus loss", () => {
         windowFocusedRef: { current: true },
         hasKeyboardFocusRef: { current: true },
         sessionProtocolRef: { current: "vnc" },
+        systemKeysRef: { current: vi.fn() },
         remoteKeysym,
         isToggleKey,
       };
@@ -91,6 +92,8 @@ describe("remote keyboard focus loss", () => {
         [...keys].sort((a, b) => a - b).map((key) => [0, key]),
       );
       expect(Object.keys(keyboard.pressed)).toEqual([]);
+      // The Windows keys go back to the local system with the focus.
+      expect(state.systemKeysRef.current.mock.calls).toEqual([[true], [false]]);
       expect(keyboard.onkeydown).toBeNull();
       expect(keyboard.onkeyup).toBeNull();
       keyboard.press(0x6c);
@@ -137,6 +140,7 @@ describe("remote keyboard on a Mac", () => {
         windowFocusedRef: { current: true },
         hasKeyboardFocusRef: { current: true },
         sessionProtocolRef: { current: protocol },
+        systemKeysRef: { current: vi.fn() },
         remoteKeysym,
         isToggleKey,
       });
@@ -161,7 +165,7 @@ describe("Korean toggle keys with the real keyboard", () => {
     ["HangulMode", 0xff31],
     ["HanjaMode", 0xff34],
   ] as const)(
-    "%s sends pulses without requiring keyup and ignores repeats",
+    "%s sends pulses without requiring keyup and ignores fast repeats",
     (key, keysym) => {
       vi.useFakeTimers();
       const display = document.createElement("div");
@@ -182,6 +186,7 @@ describe("Korean toggle keys with the real keyboard", () => {
         windowFocusedRef: { current: true },
         hasKeyboardFocusRef: { current: true },
         sessionProtocolRef: { current: "rdp" },
+        systemKeysRef: { current: vi.fn() },
         remoteKeysym,
         isToggleKey,
       };
@@ -197,8 +202,11 @@ describe("Korean toggle keys with the real keyboard", () => {
         );
       try {
         dispatch("keydown");
-        vi.advanceTimersByTime(2000);
-        dispatch("keydown", true);
+        // A held key repeats every 33 ms or so
+        for (let i = 0; i < 5; i++) {
+          vi.advanceTimersByTime(33);
+          dispatch("keydown", true);
+        }
         expect(sendKeyEvent.mock.calls).toEqual([
           [1, keysym],
           [0, keysym],
@@ -213,10 +221,16 @@ describe("Korean toggle keys with the real keyboard", () => {
           [1, keysym],
           [0, keysym],
         ]);
+        // On Windows ko-KR every later press is marked as a repeat.
+        vi.advanceTimersByTime(200);
+        dispatch("keydown", true);
+        vi.advanceTimersByTime(80);
+        dispatch("keydown", true);
+        expect(sendKeyEvent).toHaveBeenCalledTimes(8);
         state.isVisible = false;
         runRefresh(state);
         dispatch("keydown");
-        expect(sendKeyEvent).toHaveBeenCalledTimes(4);
+        expect(sendKeyEvent).toHaveBeenCalledTimes(8);
       } finally {
         stop();
         keyboard.reset();

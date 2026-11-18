@@ -24,7 +24,7 @@ const NO_SPIN =
   "[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none";
 
 const SELECT =
-  "flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring";
+  "flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring";
 
 const PAIR_POLL_MS = 2000;
 
@@ -52,12 +52,15 @@ function Field({
 }
 
 export function HostEditorMoonlightTab({
+  advanced = true,
   form,
   setField,
   address,
   port,
   connectionOrigin,
 }: {
+  /** False in the simple host editor: connection and login only. */
+  advanced?: boolean;
   form: RemoteDesktopForm;
   setField: RemoteFormSetField;
   address: string;
@@ -299,76 +302,86 @@ export function HostEditorMoonlightTab({
         </div>
       </SectionCard>
 
-      <SectionCard
-        title={t("hosts.moonlight.stream")}
-        icon={<Gamepad2 className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <Field
-            label={t("hosts.moonlight.app")}
-            hint={t("hosts.moonlight.appDesc")}
+      {advanced && (
+        <>
+          <SectionCard
+            title={t("hosts.moonlight.stream")}
+            icon={<Gamepad2 className="size-3.5" />}
           >
-            <Select2
-              value={String(form.moonlightAppId || "")}
-              onChange={(e) =>
-                setField("moonlightAppId", Number(e.target.value))
-              }
-              className={SELECT}
-            >
-              <option value="">{t("hosts.moonlight.firstApp")}</option>
-              {apps.map((app) => (
-                <option key={app.id} value={app.id}>
-                  {app.title}
-                </option>
-              ))}
-            </Select2>
-          </Field>
-          <Field
-            label={t("hosts.moonlight.bitrate")}
-            hint={t("hosts.moonlight.bitrateDesc")}
-          >
-            <Input
-              type="number"
-              min={0}
-              value={form.moonlightBitrate}
-              onChange={(e) =>
-                setField("moonlightBitrate", Number(e.target.value))
-              }
-              className={NO_SPIN}
-            />
-          </Field>
-          <Field
-            label={t("hosts.moonlight.fps")}
-            hint={t("hosts.moonlight.fpsDesc")}
-          >
-            <Input
-              type="number"
-              min={0}
-              value={form.moonlightFps}
-              onChange={(e) => setField("moonlightFps", Number(e.target.value))}
-              className={NO_SPIN}
-            />
-          </Field>
-          <Field
-            label={t("hosts.moonlight.transport")}
-            hint={t("hosts.moonlight.transportDesc")}
-          >
-            <Select2
-              value={form.moonlightTransport}
-              onChange={(e) => setField("moonlightTransport", e.target.value)}
-              className={SELECT}
-            >
-              <option value="auto">{t("hosts.moonlight.transportAuto")}</option>
-              <option value="webrtc">
-                {t("hosts.moonlight.transportWebrtc")}
-              </option>
-              <option value="websocket">
-                {t("hosts.moonlight.transportWebsocket")}
-              </option>
-            </Select2>
-          </Field>
-        </div>
-      </SectionCard>
+            <div className="flex flex-col gap-4 py-3">
+              <Field
+                label={t("hosts.moonlight.app")}
+                hint={t("hosts.moonlight.appDesc")}
+              >
+                <Select2
+                  value={String(form.moonlightAppId || "")}
+                  onChange={(e) =>
+                    setField("moonlightAppId", Number(e.target.value))
+                  }
+                  className={SELECT}
+                >
+                  <option value="">{t("hosts.moonlight.firstApp")}</option>
+                  {apps.map((app) => (
+                    <option key={app.id} value={app.id}>
+                      {app.title}
+                    </option>
+                  ))}
+                </Select2>
+              </Field>
+              <Field
+                label={t("hosts.moonlight.bitrate")}
+                hint={t("hosts.moonlight.bitrateDesc")}
+              >
+                <Input
+                  type="number"
+                  min={0}
+                  value={form.moonlightBitrate}
+                  onChange={(e) =>
+                    setField("moonlightBitrate", Number(e.target.value))
+                  }
+                  className={NO_SPIN}
+                />
+              </Field>
+              <Field
+                label={t("hosts.moonlight.fps")}
+                hint={t("hosts.moonlight.fpsDesc")}
+              >
+                <Input
+                  type="number"
+                  min={0}
+                  value={form.moonlightFps}
+                  onChange={(e) =>
+                    setField("moonlightFps", Number(e.target.value))
+                  }
+                  className={NO_SPIN}
+                />
+              </Field>
+              <Field
+                label={t("hosts.moonlight.transport")}
+                hint={t("hosts.moonlight.transportDesc")}
+              >
+                <Select2
+                  value={form.moonlightTransport}
+                  onChange={(e) =>
+                    setField("moonlightTransport", e.target.value)
+                  }
+                  className={SELECT}
+                >
+                  <option value="auto">
+                    {t("hosts.moonlight.transportAuto")}
+                  </option>
+                  <option value="webrtc">
+                    {t("hosts.moonlight.transportWebrtc")}
+                  </option>
+                  <option value="websocket">
+                    {t("hosts.moonlight.transportWebsocket")}
+                  </option>
+                </Select2>
+              </Field>
+            </div>
+          </SectionCard>
+        </>
+      )}
     </>
   );
 }

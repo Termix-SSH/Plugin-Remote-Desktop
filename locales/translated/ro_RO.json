@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Deconectare",
         "record": "Înregistrare",
-        "monitors": "Monitoare"
+        "monitors": "Monitoare",
+        "softKeyboard": "Tastatură"
       },
       "hints": {
         "files": "Se afișează doar după activarea unității RDP",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift și tasta de sistem rămân apăsate până la următoarea tastă",
         "logoff": "Se deconectează de la Windows rulând comanda logoff din caseta Run. Sesiunea trebuie să fie deschisă și să afișeze desktopul.",
         "record": "Începe sau oprește înregistrarea acestei sesiuni. Necesită pluginul Session Recording și motorul integrat.",
-        "monitors": "Comută între monitoarele de la distanță"
+        "monitors": "Comută între monitoarele de la distanță",
+        "softKeyboard": "Afișează tastatura pe ecran pe un telefon sau tabletă"
       },
       "option": "Opțiune",
       "logoffConfirm": "Doriți să vă deconectați de la această sesiune Windows? Lucrul nesalvat va fi pierdut.",
@@ -103,7 +105,8 @@
       "recordFailed": "Nu s-a putut modifica înregistrarea",
       "recordRequired": "Un administrator a impus înregistrarea pe acest gazdă",
       "recordRequiredLabel": "Înregistrare (obligatorie)",
-      "monitor": "Monitor {{number}}"
+      "monitor": "Monitor {{number}}",
+      "showKeyboard": "Afișează tastatura"
     },
     "disabled": "Remote Desktop este dezactivat. Un administrator îl poate activa în Setări.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Acces direct IP",
       "directDesc": "Conectează-te la adresa gazdei în loc să cauți un ID RustDesk. Accesul direct IP trebuie activat în RustDesk pe acel dispozitiv.",
+      "allowPlain": "Permite sesiuni necriptate",
+      "allowPlainDesc": "Versiunile mai vechi de RustDesk răspund la accesul direct prin IP fără criptare. Activează această opțiune doar pe o rețea de încredere, cum ar fi o VPN.",
       "port": "Port acces direct IP",
       "directNote": "Conexiunea este criptată, dar fără un server ID nu există nicio modalitate de a verifica care dispozitiv a răspuns.",
       "id": "ID RustDesk",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "Acces IP direct RustDesk"
+      },
+      "rustdeskAllowPlain": {
+        "label": "Sesiuni directe IP necriptate RustDesk"
       },
       "rustdeskIdServer": {
         "label": "Server RustDesk ID"

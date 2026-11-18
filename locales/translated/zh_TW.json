@@ -84,7 +84,8 @@
         "spotlight": "聚焦搜尋",
         "logoff": "登出",
         "record": "錄製",
-        "monitors": "顯示器"
+        "monitors": "顯示器",
+        "softKeyboard": "鍵盤"
       },
       "hints": {
         "files": "啟用 RDP 磁碟機後顯示",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl、Alt、Shift 與系統鍵會持續按住，直到按下下一個鍵",
         "logoff": "透過執行「執行」視窗中的 logoff 命令來登出 Windows。會話必須處於開啟狀態並顯示桌面。",
         "record": "開始或停止錄製此會話。需要會話錄製外掛程式與內建引擎。",
-        "monitors": "切換遠端顯示器"
+        "monitors": "切換遠端顯示器",
+        "softKeyboard": "在手機或平板上顯示螢幕鍵盤"
       },
       "option": "選項",
       "logoffConfirm": "要登出此 Windows 會話嗎？未儲存的作業將會遺失。",
@@ -103,7 +105,8 @@
       "recordFailed": "無法變更錄製狀態",
       "recordRequired": "管理員已在此主機上強制要求錄製",
       "recordRequiredLabel": "錄製（強制）",
-      "monitor": "顯示器 {{number}}"
+      "monitor": "顯示器 {{number}}",
+      "showKeyboard": "顯示鍵盤"
     },
     "disabled": "遠端桌面已關閉。管理員可在設定中開啟。",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "直接 IP 存取",
       "directDesc": "直接連線至主機位址，而非查詢 RustDesk ID。該裝置上的 RustDesk 必須啟用直接 IP 存取功能。",
+      "allowPlain": "允許未加密的連線",
+      "allowPlainDesc": "舊版 RustDesk 在直接透過 IP 存取時不會加密。請僅在您信任的網路（例如 VPN）上啟用此選項。",
       "port": "直接 IP 連接埠",
       "directNote": "連線已加密，但由於沒有 ID 伺服器，無法驗證回應的裝置身分。",
       "id": "RustDesk ID",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "RustDesk 直接 IP 連線"
+      },
+      "rustdeskAllowPlain": {
+        "label": "RustDesk 未加密的直接 IP 連線"
       },
       "rustdeskIdServer": {
         "label": "RustDesk ID 伺服器"

@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Esci",
         "record": "Registra",
-        "monitors": "Monitor"
+        "monitors": "Monitor",
+        "softKeyboard": "Tastiera"
       },
       "hints": {
         "files": "Viene visualizzato quando l'unità RDP è attiva",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift e il tasto di sistema rimangono premuti fino al tasto successivo",
         "logoff": "Effettua il logout da Windows eseguendo logoff dalla finestra Esegui. La sessione deve essere aperta e mostrare il desktop.",
         "record": "Avvia o interrompe la registrazione di questa sessione. Richiede il plugin Session Recording e il motore integrato.",
-        "monitors": "Passa da un monitor remoto all'altro"
+        "monitors": "Passa da un monitor remoto all'altro",
+        "softKeyboard": "Mostra la tastiera sullo schermo su un telefono o un tablet"
       },
       "option": "Opzione",
       "logoffConfirm": "Effettuare il logout da questa sessione Windows? Il lavoro non salvato verrà perso.",
@@ -103,7 +105,8 @@
       "recordFailed": "Impossibile modificare la registrazione",
       "recordRequired": "Un amministratore ha reso obbligatoria la registrazione su questo host",
       "recordRequiredLabel": "Registrazione (obbligatoria)",
-      "monitor": "Monitor {{number}}"
+      "monitor": "Monitor {{number}}",
+      "showKeyboard": "Mostra tastiera"
     },
     "disabled": "Remote Desktop is turned off. An admin can turn it on in Settings.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Accesso IP diretto",
       "directDesc": "Connettiti all'indirizzo dell'host invece di cercare un ID RustDesk. L'accesso IP diretto deve essere attivato in RustDesk su quel dispositivo.",
+      "allowPlain": "Consenti sessioni non crittografate",
+      "allowPlainDesc": "Le versioni più vecchie di RustDesk rispondono all'accesso diretto tramite IP senza crittografia. Attiva questa opzione solo su una rete di fiducia, come una VPN.",
       "port": "Porta IP diretto",
       "directNote": "La connessione è crittografata, ma senza un server ID non c'è nulla che provi quale dispositivo ha risposto.",
       "id": "ID RustDesk",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "Accesso IP diretto RustDesk"
+      },
+      "rustdeskAllowPlain": {
+        "label": "Sessioni dirette IP non crittografate di RustDesk"
       },
       "rustdeskIdServer": {
         "label": "Server ID RustDesk"

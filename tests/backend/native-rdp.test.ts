@@ -38,8 +38,9 @@ describe("native Windows RDP", () => {
   });
 
   it("only opens on Windows", async () => {
-    expect(await launchNativeRdp({ host: "server" }, "linux")).toMatchObject({
-      success: false,
-    });
+    const launcher = { dataDir: async () => "/x", open: async () => {} };
+    expect(
+      await launchNativeRdp({ host: "server" }, launcher, "linux"),
+    ).toMatchObject({ success: false });
   });
 });

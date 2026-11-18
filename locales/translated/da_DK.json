@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Log ud",
         "record": "Optag",
-        "monitors": "Skærme"
+        "monitors": "Skærme",
+        "softKeyboard": "Tastatur"
       },
       "hints": {
         "files": "Vises, når RDP-drevet er aktiveret",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift og systemtasten holdes nede, indtil næste tast trykkes",
         "logoff": "Logger ud af Windows ved at køre logoff fra Kør-boksen. Sessionen skal være åben og vise skrivebordet.",
         "record": "Starter eller stopper optagelse af denne session. Kræver Session Recording-pluginet og den indbyggede motor.",
-        "monitors": "Skift mellem de fjerne skærme"
+        "monitors": "Skift mellem de fjerne skærme",
+        "softKeyboard": "Viser skærmtastaturet på en telefon eller tablet"
       },
       "option": "Option",
       "logoffConfirm": "Vil du logge ud af denne Windows-session? Ugemte ændringer i den går tabt.",
@@ -103,7 +105,8 @@
       "recordFailed": "Kunne ikke ændre optagelsen",
       "recordRequired": "En administrator har gjort optagelse påkrævet på denne vært",
       "recordRequiredLabel": "Optagelse (påkrævet)",
-      "monitor": "Skærm {{number}}"
+      "monitor": "Skærm {{number}}",
+      "showKeyboard": "Vis tastatur"
     },
     "disabled": "Remote Desktop er slået fra. En administrator kan slå det til i Indstillinger.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Direkte IP-adgang",
       "directDesc": "Forbind til værtsadressen i stedet for at slå et RustDesk-ID op. Direkte IP-adgang skal være aktiveret i RustDesk på den pågældende enhed.",
+      "allowPlain": "Tillad ukrypterede sessioner",
+      "allowPlainDesc": "Ældre versioner af RustDesk svarer på direkte IP-adgang uden kryptering. Aktiver kun dette på et netværk, du stoler på, f.eks. en VPN.",
       "port": "Port for direkte IP",
       "directNote": "Forbindelsen er krypteret, men uden en ID-server er der ingen måde at verificere, hvilken enhed der har svaret.",
       "id": "RustDesk-ID",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "RustDesk direkte IP-adgang"
+      },
+      "rustdeskAllowPlain": {
+        "label": "Ukrypterede direkte IP-sessioner til RustDesk"
       },
       "rustdeskIdServer": {
         "label": "RustDesk ID-server"

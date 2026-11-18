@@ -84,7 +84,8 @@
         "spotlight": "聚焦搜索",
         "logoff": "注销",
         "record": "录制",
-        "monitors": "显示器"
+        "monitors": "显示器",
+        "softKeyboard": "键盘"
       },
       "hints": {
         "files": "启用 RDP 驱动器后显示",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl、Alt、Shift 和系统键将保持按下状态，直到按下下一个键",
         "logoff": "通过运行“运行”对话框中的 logoff 命令来注销 Windows。会话必须处于打开状态并显示桌面。",
         "record": "开始或停止录制此会话。需要会话录制插件和内置引擎。",
-        "monitors": "在远程显示器之间切换"
+        "monitors": "在远程显示器之间切换",
+        "softKeyboard": "在手机或平板上显示屏幕键盘"
       },
       "option": "Option",
       "logoffConfirm": "要注销此 Windows 会话吗？其中未保存的工作将会丢失。",
@@ -103,7 +105,8 @@
       "recordFailed": "无法更改录制状态",
       "recordRequired": "管理员已在此主机上强制要求录制",
       "recordRequiredLabel": "录制（强制）",
-      "monitor": "显示器 {{number}}"
+      "monitor": "显示器 {{number}}",
+      "showKeyboard": "显示键盘"
     },
     "disabled": "远程桌面已关闭。管理员可以在设置中将其开启。",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "直接 IP 访问",
       "directDesc": "直接连接到主机地址，而不是查找 RustDesk ID。该设备上的 RustDesk 必须启用直接 IP 访问。",
+      "allowPlain": "允许未加密会话",
+      "allowPlainDesc": "旧版 RustDesk 在不加密的情况下响应直接 IP 访问。仅在您信任的网络（如 VPN）上启用此选项。",
       "port": "直接 IP 端口",
       "directNote": "连接已加密，但由于没有 ID 服务器，无法验证响应的是哪台设备。",
       "id": "RustDesk ID",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "RustDesk 直连 IP 访问"
+      },
+      "rustdeskAllowPlain": {
+        "label": "RustDesk 未加密的直接 IP 会话"
       },
       "rustdeskIdServer": {
         "label": "RustDesk ID 服务器"

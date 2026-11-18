@@ -36,6 +36,36 @@ describe("GuacamoleTokenService", () => {
     expect(decrypted?.connection.settings["disable-auth"]).toBeUndefined();
   });
 
+  it("splits a DOMAIN\\user login into the domain and the username", () => {
+    const split = tokenService.decryptToken(
+      tokenService.createRdpToken("windows.example.test", "CORP\\alice", "s"),
+    );
+    expect(split?.connection.settings).toMatchObject({
+      username: "alice",
+      domain: "CORP",
+    });
+
+    const kept = tokenService.decryptToken(
+      tokenService.createRdpToken("windows.example.test", "CORP\\alice", "s", {
+        domain: "OTHER",
+      }),
+    );
+    expect(kept?.connection.settings).toMatchObject({
+      username: "CORP\\alice",
+      domain: "OTHER",
+    });
+
+    const upn = tokenService.decryptToken(
+      tokenService.createRdpToken(
+        "windows.example.test",
+        "alice@corp.test",
+        "s",
+      ),
+    );
+    expect(upn?.connection.settings.username).toBe("alice@corp.test");
+    expect(upn?.connection.settings.domain).toBeUndefined();
+  });
+
   it("preserves recording metadata outside guacd connection settings", () => {
     const recording = {
       hostId: 42,

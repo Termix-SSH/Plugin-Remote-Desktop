@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Afmelden",
         "record": "Opnemen",
-        "monitors": "Monitors"
+        "monitors": "Monitors",
+        "softKeyboard": "Toetsenbord"
       },
       "hints": {
         "files": "Wordt weergegeven zodra het RDP-station is ingeschakeld",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift en de systeemtoets blijven ingedrukt tot de volgende toetsaanslag",
         "logoff": "Meldt af bij Windows door logoff uit te voeren via het Uitvoeren-dialoogvenster. De sessie moet open zijn en het bureaublad tonen.",
         "record": "Start of stopt de opname van deze sessie. Vereist de plugin Sessieopname en de ingebouwde engine.",
-        "monitors": "Schakel tussen de externe monitors"
+        "monitors": "Schakel tussen de externe monitors",
+        "softKeyboard": "Toont het schermtoetsenbord op een telefoon of tablet"
       },
       "option": "Optie",
       "logoffConfirm": "Afmelden van deze Windows-sessie? Niet-opgeslagen werk hierin gaat verloren.",
@@ -103,7 +105,8 @@
       "recordFailed": "Kon de opname niet wijzigen",
       "recordRequired": "Een beheerder heeft opnemen verplicht gesteld op deze host",
       "recordRequiredLabel": "Opname (verplicht)",
-      "monitor": "Monitor {{number}}"
+      "monitor": "Monitor {{number}}",
+      "showKeyboard": "Toetsenbord tonen"
     },
     "disabled": "Remote Desktop is uitgeschakeld. Een beheerder kan het inschakelen in Instellingen.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Direct IP-toegang",
       "directDesc": "Verbind met het hostadres in plaats van een RustDesk-ID op te zoeken. Direct IP-toegang moet ingeschakeld zijn in RustDesk op dat apparaat.",
+      "allowPlain": "Onversleutelde sessies toestaan",
+      "allowPlainDesc": "Oudere RustDesk-versies reageren op directe IP-toegang zonder versleuteling. Schakel dit alleen in op een netwerk dat je vertrouwt, zoals een VPN.",
       "port": "Direct IP-poort",
       "directNote": "De verbinding is versleuteld, maar zonder ID-server is er niets dat bewijst welk apparaat heeft gereageerd.",
       "id": "RustDesk-ID",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "RustDesk directe IP-toegang"
+      },
+      "rustdeskAllowPlain": {
+        "label": "Onversleutelde directe IP-sessies voor RustDesk"
       },
       "rustdeskIdServer": {
         "label": "RustDesk ID-server"

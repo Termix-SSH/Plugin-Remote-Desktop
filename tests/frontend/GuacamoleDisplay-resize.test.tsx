@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, cleanup, render } from "@testing-library/react";
+import { createRef } from "react";
 
 // guacd's VNC client segfaults if it gets a display `size` while it is still
 // dialing the VNC server, so the resize observer must stay quiet until the
@@ -87,7 +88,10 @@ vi.mock("@termix-ssh/plugin-sdk/ui", async (importOriginal) => ({
   resolveConnectionOrigin: async () => "remote",
 }));
 
-import { GuacamoleDisplay } from "../../src/frontend/GuacamoleDisplay";
+import {
+  GuacamoleDisplay,
+  type GuacamoleDisplayHandle,
+} from "../../src/frontend/GuacamoleDisplay";
 
 const RESIZE_DEBOUNCE_MS = 150;
 
@@ -261,6 +265,27 @@ describe("RDP automatic resizing", () => {
     resizeTo(1400, 900);
     await fireResize();
     expect(client.sendSize).not.toHaveBeenCalled();
+  });
+});
+
+describe("GuacamoleDisplay scrolling", () => {
+  it("scrolls only a zoomed in display, so a fitted one cannot loop", async () => {
+    const ref = createRef<GuacamoleDisplayHandle>();
+    const { container } = render(
+      <GuacamoleDisplay
+        ref={ref}
+        connectionConfig={{ protocol: "rdp", token: "test-token" }}
+        isVisible
+      />,
+    );
+    await vi.waitFor(() => expect(mocks.client).not.toBeNull());
+    const box = container.firstElementChild as HTMLElement;
+    const overflow = () => getComputedStyle(box).overflow;
+
+    act(() => void ref.current!.zoomIn());
+    expect(overflow()).toBe("auto");
+    act(() => void ref.current!.zoomOut());
+    expect(overflow()).toBe("hidden");
   });
 });
 

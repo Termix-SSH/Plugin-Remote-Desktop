@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Odjava",
         "record": "Snemanje",
-        "monitors": "Zasloni"
+        "monitors": "Zasloni",
+        "softKeyboard": "Tipkovnica"
       },
       "hints": {
         "files": "Prikaže se, ko je RDP pogon vklopljen",
@@ -92,7 +93,8 @@
         "modifiers": "Tipke Ctrl, Alt, Shift in sistemsko tipko držite pritisnjene do naslednje tipke",
         "logoff": "Odjava iz Windows z izvajanjem ukaza logoff iz polja Zaženi. Seja mora biti odprta in prikazovati namizje.",
         "record": "Začne ali ustavi snemanje te seje. Zahteva vtičnik za snemanje sej in vgrajeni motor.",
-        "monitors": "Preklopi med oddaljenimi zasloni"
+        "monitors": "Preklopi med oddaljenimi zasloni",
+        "softKeyboard": "Prikaže tipkovnico na zaslonu na telefonu ali tabličnem računalniku"
       },
       "option": "Option",
       "logoffConfirm": "Se želite odjaviti iz te seje Windows? Neshranjeno delo bo izgubljeno.",
@@ -103,7 +105,8 @@
       "recordFailed": "Ni bilo mogoče spremeniti snemanja",
       "recordRequired": "Upravitelj je na tem gostitelju zahteval snemanje",
       "recordRequiredLabel": "Snemanje (obvezno)",
-      "monitor": "Zaslon {{number}}"
+      "monitor": "Zaslon {{number}}",
+      "showKeyboard": "Prikaži tipkovnico"
     },
     "disabled": "Oddaljena namizna površina je izklopljena. Skrbnik jo lahko vklopi v Nastavitev.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Neposreden dostop prek IP naslova",
       "directDesc": "Povežite se na naslov gostitelja namesto iskanja identifikatorja RustDesk. Neposreden dostop prek IP naslova mora biti omogočen v aplikaciji RustDesk na tej napravi.",
+      "allowPlain": "Dovoli nešifrirane seje",
+      "allowPlainDesc": "Starejše različice RustDesk odgovarjajo na neposreden dostop prek IP naslova brez šifriranja. To možnost vklopite le v omrežju, ki mu zaupate, na primer v VPN.",
       "port": "Vrata za neposreden IP dostop",
       "directNote": "Povezava je šifrirana, vendar brez strežnika identifikatorjev ni mogoče preveriti, katera naprava je odgovorila.",
       "id": "Identifikator RustDesk",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "Neposreden IP dostop RustDesk"
+      },
+      "rustdeskAllowPlain": {
+        "label": "Nešifrirane seje RustDesk neposredno prek IP naslova"
       },
       "rustdeskIdServer": {
         "label": "Strežnik ID za RustDesk"

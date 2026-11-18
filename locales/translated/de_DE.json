@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Abmelden",
         "record": "Aufnahme",
-        "monitors": "Monitore"
+        "monitors": "Monitore",
+        "softKeyboard": "Tastatur"
       },
       "hints": {
         "files": "Wird angezeigt, sobald das RDP-Laufwerk aktiv ist",
@@ -92,7 +93,8 @@
         "modifiers": "Strg, Alt, Shift und die Systemtaste bleiben gedrückt, bis die nächste Taste betätigt wird",
         "logoff": "Meldet sich von Windows ab, indem logoff über das Ausführen-Dialogfeld ausgeführt wird. Die Sitzung muss geöffnet sein und den Desktop anzeigen.",
         "record": "Startet oder stoppt die Aufnahme dieser Sitzung. Erfordert das Plugin „Session Recording“ und die integrierte Engine.",
-        "monitors": "Zwischen den entfernten Monitoren wechseln"
+        "monitors": "Zwischen den entfernten Monitoren wechseln",
+        "softKeyboard": "Zeigt die Bildschirmtastatur auf einem Telefon oder Tablet an"
       },
       "option": "Option",
       "logoffConfirm": "Von dieser Windows-Sitzung abmelden? Nicht gespeicherte Arbeit geht dabei verloren.",
@@ -103,7 +105,8 @@
       "recordFailed": "Aufnahme konnte nicht geändert werden",
       "recordRequired": "Ein Administrator hat die Aufzeichnung für diesen Host als obligatorisch festgelegt",
       "recordRequiredLabel": "Aufzeichnung (obligatorisch)",
-      "monitor": "Monitor {{number}}"
+      "monitor": "Monitor {{number}}",
+      "showKeyboard": "Tastatur anzeigen"
     },
     "disabled": "Remote Desktop ist deaktiviert. Ein Administrator kann es in den Einstellungen aktivieren.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Direkter IP-Zugriff",
       "directDesc": "Verbinden Sie sich direkt mit der Host-Adresse, anstatt eine RustDesk-ID aufzulösen. Der direkte IP-Zugriff muss in RustDesk auf diesem Gerät aktiviert sein.",
+      "allowPlain": "Unverschlüsselte Sitzungen zulassen",
+      "allowPlainDesc": "Ältere RustDesk-Versionen antworten auf direkten IP-Zugriff ohne Verschlüsselung. Aktivieren Sie dies nur in einem vertrauenswürdigen Netzwerk, z. B. einem VPN.",
       "port": "Direkter IP-Port",
       "directNote": "Die Verbindung ist verschlüsselt, aber ohne ID-Server kann nicht verifiziert werden, welches Gerät geantwortet hat.",
       "id": "RustDesk-ID",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "RustDesk-Direkt-IP-Zugriff"
+      },
+      "rustdeskAllowPlain": {
+        "label": "Unverschlüsselte RustDesk-Sitzungen über direkte IP-Adresse"
       },
       "rustdeskIdServer": {
         "label": "RustDesk-ID-Server"

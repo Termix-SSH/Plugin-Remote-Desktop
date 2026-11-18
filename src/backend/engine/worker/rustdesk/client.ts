@@ -172,8 +172,16 @@ export class RustDeskClient implements RemoteClient {
       route.conn.close();
       return;
     }
-    await secure(route.conn, peerId, route, { key, direct, idServer });
-    this.host.log("debug", "RustDesk session secured", { direct });
+    const { plain } = await secure(route.conn, peerId, route, {
+      key,
+      direct,
+      idServer,
+      allowPlain: s.bool("allow-plain"),
+    });
+    this.host.log("debug", "RustDesk session secured", {
+      direct,
+      encrypted: !plain,
+    });
     this.loginTimer = setTimeout(() => {
       if (this.loggedIn || this.stopped) return;
       this.abort(
@@ -200,6 +208,8 @@ export class RustDeskClient implements RemoteClient {
         });
       }
     });
+    // An unencrypted peer already sent its password challenge.
+    if (plain) this.receive(plain, peerId);
   }
 
   /** Ends the session with an error, once. */

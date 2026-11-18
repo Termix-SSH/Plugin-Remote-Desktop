@@ -228,12 +228,18 @@ function useWakeOnLanMac(hostId: string | undefined): string | null {
   return mac;
 }
 
+// Only on SDK 2.10.0 types; older cores leave it unset, which means all.
+function isAdvanced(props: HostEditorSectionProps): boolean {
+  return (props as { advanced?: boolean }).advanced !== false;
+}
+
 function RdpSection(props: HostEditorSectionProps) {
   const { form, setField, setGuacField } = remoteDesktopForm(props);
   const macAddress = useWakeOnLanMac(props.host?.id);
   return (
     <>
       <HostEditorRdpTab
+        advanced={isAdvanced(props)}
         form={form}
         setField={setField}
         setGuacField={setGuacField}
@@ -241,7 +247,7 @@ function RdpSection(props: HostEditorSectionProps) {
         host={{ macAddress }}
         credentials={props.credentials as never}
       />
-      <HostToolbarCard form={form} setField={setField} />
+      {isAdvanced(props) && <HostToolbarCard form={form} setField={setField} />}
       <SectionNotes />
     </>
   );
@@ -253,6 +259,7 @@ function VncSection(props: HostEditorSectionProps) {
   return (
     <>
       <HostEditorVncTab
+        advanced={isAdvanced(props)}
         form={form}
         setField={setField}
         setGuacField={setGuacField}
@@ -260,7 +267,7 @@ function VncSection(props: HostEditorSectionProps) {
         host={{ macAddress }}
         credentials={props.credentials as never}
       />
-      <HostToolbarCard form={form} setField={setField} />
+      {isAdvanced(props) && <HostToolbarCard form={form} setField={setField} />}
       <SectionNotes />
     </>
   );
@@ -272,6 +279,7 @@ function ArdSection(props: HostEditorSectionProps) {
   return (
     <>
       <HostEditorVncTab
+        advanced={isAdvanced(props)}
         variant="ard"
         form={form}
         setField={setField}
@@ -280,7 +288,7 @@ function ArdSection(props: HostEditorSectionProps) {
         host={{ macAddress }}
         credentials={props.credentials as never}
       />
-      <HostToolbarCard form={form} setField={setField} />
+      {isAdvanced(props) && <HostToolbarCard form={form} setField={setField} />}
       <SectionNotes />
     </>
   );
@@ -291,12 +299,13 @@ function RustdeskSection(props: HostEditorSectionProps) {
   return (
     <>
       <HostEditorRustdeskTab
+        advanced={isAdvanced(props)}
         form={form}
         setField={setField}
         setGuacField={setGuacField}
         credentials={props.credentials as never}
       />
-      <HostToolbarCard form={form} setField={setField} />
+      {isAdvanced(props) && <HostToolbarCard form={form} setField={setField} />}
       <SectionNotes />
     </>
   );
@@ -308,6 +317,7 @@ function MoonlightSection(props: HostEditorSectionProps) {
     Record<string, Record<string, unknown>> | undefined;
   return (
     <HostEditorMoonlightTab
+      advanced={isAdvanced(props)}
       form={form}
       setField={setField}
       address={String(props.form?.ip ?? "")}
@@ -322,13 +332,14 @@ function TelnetSection(props: HostEditorSectionProps) {
   return (
     <>
       <HostEditorTelnetTab
+        advanced={isAdvanced(props)}
         form={form}
         setField={setField}
         setGuacField={setGuacField}
         hostId={props.host?.id}
         credentials={props.credentials as never}
       />
-      <HostToolbarCard form={form} setField={setField} />
+      {isAdvanced(props) && <HostToolbarCard form={form} setField={setField} />}
       <SectionNotes />
     </>
   );
@@ -444,6 +455,8 @@ function registerHostSurfaces(app: TermixApp): void {
       icon: protocol.icon,
       order: protocol.order / 5,
       visible: (protocols) => !!protocols[ENABLE_KEY[protocol.id]],
+      // Shown in the simple host editor (SDK 2.10.0).
+      ...{ simple: true },
       component: SECTIONS[protocol.id],
     });
   }

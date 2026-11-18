@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Tanca la sessió",
         "record": "Enregistra",
-        "monitors": "Monitors"
+        "monitors": "Monitors",
+        "softKeyboard": "Teclat"
       },
       "hints": {
         "files": "Es mostra un cop s'activa la unitat RDP",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift i la tecla del sistema es mantenen premudes fins a la següent tecla",
         "logoff": "Tanca la sessió de Windows executant logoff des de la caixa Executa. La sessió ha d'estar oberta i mostrar l'escriptori.",
         "record": "Inicia o atura l'enregistrament d'aquesta sessió. Requereix el complement d'Enregistrament de sessions i el motor integrat.",
-        "monitors": "Canviar entre els monitors remots"
+        "monitors": "Canviar entre els monitors remots",
+        "softKeyboard": "Mostra el teclat a la pantalla en un telèfon o tauleta"
       },
       "option": "Opció",
       "logoffConfirm": "Voleu tancar la sessió d'aquesta sessió de Windows? Es perdrà la feina no desada.",
@@ -103,7 +105,8 @@
       "recordFailed": "No s'ha pogut modificar l'enregistrament",
       "recordRequired": "Un administrador ha fet que la gravació sigui obligatòria en aquest host",
       "recordRequiredLabel": "Gravació (obligatòria)",
-      "monitor": "Monitor {{number}}"
+      "monitor": "Monitor {{number}}",
+      "showKeyboard": "Mostra el teclat"
     },
     "disabled": "L'escriptori remot està desactivat. Un administrador el pot activar a Configuració.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Accés directe per IP",
       "directDesc": "Connecta a l'adreça de l'host en lloc de cercar un ID de RustDesk. L'accés directe per IP ha d'estar activat a RustDesk en aquest dispositiu.",
+      "allowPlain": "Permet sessions sense xifrar",
+      "allowPlainDesc": "Les versions antigues de RustDesk responen a l'accés directe per IP sense xifratge. Activa-ho només en una xarxa de confiança, com ara una VPN.",
       "port": "Port d'IP directa",
       "directNote": "La connexió està xifrada, però sense un servidor d'ID no hi ha res que demostri quin dispositiu ha respost.",
       "id": "ID de RustDesk",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "Accés IP directe de RustDesk"
+      },
+      "rustdeskAllowPlain": {
+        "label": "Sessions directes per IP sense xifrar de RustDesk"
       },
       "rustdeskIdServer": {
         "label": "Servidor d'ID de RustDesk"

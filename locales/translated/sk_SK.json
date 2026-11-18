@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Odhlásiť sa",
         "record": "Nahrávať",
-        "monitors": "Monitory"
+        "monitors": "Monitory",
+        "softKeyboard": "Klávesnica"
       },
       "hints": {
         "files": "Zobrazí sa po zapnutí RDP jednotky",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift a systémové tlačidlo zostávajú stlačené až do stlačenia ďalšieho tlačidla",
         "logoff": "Odhlási sa z Windows spustením príkazu logoff z dialógu Spustiť. Relácia musí byť otvorená a zobrazovať plochu.",
         "record": "Spustí alebo zastaví nahrávanie tejto relácie. Vyžaduje plugin Session Recording a vstavaný engine.",
-        "monitors": "Prepínať medzi vzdialenými monitorami"
+        "monitors": "Prepínať medzi vzdialenými monitorami",
+        "softKeyboard": "Zobrazí obrazovkovú klávesnicu na telefóne alebo tablete"
       },
       "option": "Možnosť",
       "logoffConfirm": "Odhlásiť sa z tejto relácie Windows? Neuložená práca v nej bude stratená.",
@@ -103,7 +105,8 @@
       "recordFailed": "Nepodarilo sa zmeniť nahrávanie",
       "recordRequired": "Správca na tomto hostiteľovi nastavil povinné nahrávanie",
       "recordRequiredLabel": "Nahrávanie (povinné)",
-      "monitor": "Monitor {{number}}"
+      "monitor": "Monitor {{number}}",
+      "showKeyboard": "Zobraziť klávesnicu"
     },
     "disabled": "Vzdialená plocha je vypnutá. Správca ju môže zapnúť v Nastaveniach.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Priamy prístup cez IP",
       "directDesc": "Pripojiť sa priamo na adresu hostiteľa namiesto vyhľadávania ID RustDesk. Priamy prístup cez IP musí byť na danom zariadení v RustDesk povolený.",
+      "allowPlain": "Povoliť nešifrované relácie",
+      "allowPlainDesc": "Staršie verzie RustDesk odpovedajú na priamy prístup cez IP bez šifrovania. Túto možnosť povoľte len v dôveryhodnej sieti, napríklad vo VPN.",
       "port": "Port pre priamy prístup cez IP",
       "directNote": "Spojenie je šifrované, ale bez ID servera nie je možné overiť, ktoré zariadenie odpovedalo.",
       "id": "ID RustDesk",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "Priamy IP prístup RustDesk"
+      },
+      "rustdeskAllowPlain": {
+        "label": "Nešifrované priame IP relácie RustDesk"
       },
       "rustdeskIdServer": {
         "label": "ID server RustDesk"

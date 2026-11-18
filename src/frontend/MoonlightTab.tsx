@@ -9,11 +9,7 @@ import {
 } from "@termix-ssh/plugin-sdk/ui";
 import { errorMessage, type RemoteHostLogin } from "./host-remote";
 import { apiBase, launchMoonlight, moonlightOrigin } from "./moonlight-api";
-import {
-  canPlayH264,
-  keyboardLockRequest,
-  moonlightEmbed,
-} from "./moonlight-embed";
+import { canPlayH264, keyboardLockRequest } from "./moonlight-embed";
 
 const ERROR_KEYS: Record<string, string> = {
   "not-configured": "hosts.moonlight.notConfigured",
@@ -70,8 +66,9 @@ export function MoonlightTab({ host }: { host?: RemoteHostLogin }) {
         throw new Error(t("remoteDesktop.noHostSelected"));
       }
       const launched = await launchMoonlight(origin, id);
-      // Through this server the page is on Termix's own address, so it can be
-      // framed. A linked server's proxy is another address, so it opens apart.
+      // Through this server the page comes from the plugin's own routes, so
+      // it can be framed. Termix 26.11.2 lets a plugin view frame nothing
+      // else, so a stream on any other address opens in its own window.
       const proxied = !!launched.proxyUrl && !remote;
       const url = proxied
         ? new URL(
@@ -79,9 +76,7 @@ export function MoonlightTab({ host }: { host?: RemoteHostLogin }) {
             location.href,
           ).toString()
         : launched.url;
-      const framed =
-        proxied ||
-        moonlightEmbed(url, location.href, isElectron()) === "iframe";
+      const framed = proxied;
       if (current === run.current) {
         setState({ status: "ready", url, framed });
       }

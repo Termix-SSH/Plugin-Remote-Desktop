@@ -27,7 +27,7 @@ export interface MoonlightDeps {
   ctx: PluginContext;
   log: RemoteDesktopLogger;
   enabled: () => Promise<boolean>;
-  recordings: () => RecordingsWriter | null;
+  recordings: () => Promise<RecordingsWriter | null>;
   /** Checks access and connect policy, answering the request when refused. */
   resolveTarget: (res: Response, hostId: number) => Promise<unknown>;
   client?: MoonlightClient;
@@ -443,7 +443,7 @@ export function registerMoonlightRoutes(
             .json({ error: "Moonlight is off for this host" });
         }
         // A stream goes straight to Moonlight Web, so Termix can't record it.
-        const recordings = deps.recordings();
+        const recordings = await deps.recordings();
         const forced =
           !!recordings?.isForced &&
           (await recordings.isForced(hostId).catch(() => false));

@@ -26,6 +26,11 @@ import { createConsoleService } from "./console-service.js";
 
 export async function activate(ctx: PluginContext) {
   const log = createLogger(ctx.log);
+  // A plugin process has none of core's DATA_DIR; the drive folder and
+  // recordings live in the plugin's own data folder there.
+  if (process.env.TERMIX_SANDBOX_PLUGIN) {
+    process.env.DATA_DIR = await ctx.files.dataDir();
+  }
   const tokens = new GuacamoleTokenService(log);
   const sessions = new RemoteSessions();
   ctx.disposables.add(() => sessions.clear());
@@ -44,11 +49,13 @@ export async function activate(ctx: PluginContext) {
   });
 
   // Optional: without session-recording nothing is recorded.
-  const recordings = (): RecordingsWriter | null => {
+  const recordings = async (): Promise<RecordingsWriter | null> => {
     // A handle to a disabled provider still has its methods, but they throw.
-    if (!ctx.services.providers("recordings.writer").includes("")) return null;
+    if (!(await ctx.services.providers("recordings.writer")).includes("")) {
+      return null;
+    }
     const service =
-      ctx.services.get<Partial<RecordingsWriter>>("recordings.writer");
+      await ctx.services.get<Partial<RecordingsWriter>>("recordings.writer");
     return typeof service.createFinished === "function" &&
       typeof service.enabledFor === "function"
       ? (service as RecordingsWriter)

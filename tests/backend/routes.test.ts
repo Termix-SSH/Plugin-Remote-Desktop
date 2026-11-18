@@ -72,6 +72,7 @@ async function start(
 ): Promise<Server> {
   let router: Router | null = null;
   const mock = createMockCtx({
+    sandbox: true,
     pluginId: manifest.id,
     manifest,
     capabilities: options.capabilities ?? manifest.capabilities,

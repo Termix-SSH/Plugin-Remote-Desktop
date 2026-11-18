@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Se déconnecter",
         "record": "Enregistrer",
-        "monitors": "Écrans"
+        "monitors": "Écrans",
+        "softKeyboard": "Clavier"
       },
       "hints": {
         "files": "Apparaît une fois le lecteur RDP activé",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift et la touche système restent enfoncées jusqu'à la prochaine touche",
         "logoff": "Se déconnecte de Windows en exécutant logoff depuis la boîte Exécuter. La session doit être ouverte et afficher le bureau.",
         "record": "Démarrer ou arrêter l'enregistrement de cette session. Nécessite le plugin Enregistrement de session et le moteur intégré.",
-        "monitors": "Basculer entre les écrans distants"
+        "monitors": "Basculer entre les écrans distants",
+        "softKeyboard": "Affiche le clavier à l'écran sur un téléphone ou une tablette"
       },
       "option": "Option",
       "logoffConfirm": "Se déconnecter de cette session Windows ? Le travail non enregistré sera perdu.",
@@ -103,7 +105,8 @@
       "recordFailed": "Impossible de modifier l'enregistrement",
       "recordRequired": "Un administrateur a rendu l'enregistrement obligatoire sur cet hôte",
       "recordRequiredLabel": "Enregistrement (obligatoire)",
-      "monitor": "Écran {{number}}"
+      "monitor": "Écran {{number}}",
+      "showKeyboard": "Afficher le clavier"
     },
     "disabled": "Le Bureau à distance est désactivé. Un administrateur peut l'activer dans les Paramètres.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Accès IP direct",
       "directDesc": "Se connecter à l'adresse de l'hôte au lieu de rechercher un ID RustDesk. L'accès IP direct doit être activé dans RustDesk sur cet appareil.",
+      "allowPlain": "Autoriser les sessions non chiffrées",
+      "allowPlainDesc": "Les anciennes versions de RustDesk acceptent l'accès direct par IP sans chiffrement. Activez cette option uniquement sur un réseau de confiance, comme un VPN.",
       "port": "Port IP direct",
       "directNote": "La connexion est chiffrée, mais sans serveur d'identification, rien ne permet de prouver quel appareil a répondu.",
       "id": "ID RustDesk",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "Accès IP direct RustDesk"
+      },
+      "rustdeskAllowPlain": {
+        "label": "Sessions directes IP non chiffrées RustDesk"
       },
       "rustdeskIdServer": {
         "label": "Serveur d'ID RustDesk"

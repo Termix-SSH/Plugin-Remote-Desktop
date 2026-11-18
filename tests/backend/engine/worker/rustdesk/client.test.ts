@@ -215,6 +215,34 @@ async function rustdeskWorld(options: PeerOptions) {
   };
 }
 
+/**
+ * A device on loopback that answers direct IP access the way older RustDesk
+ * does: no key exchange, the password challenge comes first.
+ */
+async function plainPeer(login: PeerOptions["login"]) {
+  const peerMessages: PbMessage[] = [];
+  const port = await listen((conn) => {
+    conn.send(
+      msg(MSG.hash, new PbWriter().string(1, "salt").string(2, "chal")),
+    );
+    conn.onFrame((frame) => {
+      const m = PbMessage.decode(frame);
+      peerMessages.push(m);
+      const lr = m.message(MSG.loginRequest);
+      if (lr) login(lr, conn);
+    });
+  });
+  return {
+    peerMessages,
+    settings: {
+      direct: "true",
+      hostname: "127.0.0.1",
+      port: String(port),
+      password: PASSWORD,
+    } as Record<string, string>,
+  };
+}
+
 const peerInfo = () =>
   new PbWriter().message(
     2,
@@ -238,7 +266,7 @@ function acceptLogin(lr: PbMessage, peer: Connection) {
   );
 }
 
-function start(world: Awaited<ReturnType<typeof rustdeskWorld>>, extra = {}) {
+function start(world: { settings: Record<string, string> }, extra = {}) {
   const fake = fakeHost({ ...world.settings, ...extra });
   const client = new RustDeskClient(fake.host);
   clients.push(client);
@@ -408,6 +436,33 @@ describe("RustDeskClient", () => {
     });
     await until(() => !!events.failed);
     expect(events.failed!.message).toBe("The remote device is offline");
+  });
+
+  it("logs in to a direct peer without encryption when the host allows it", async () => {
+    const world = await plainPeer((lr, peer) => {
+      const ok = Buffer.from(lr.bytes(2)).equals(
+        Buffer.from(passwordHash(PASSWORD, "salt", "chal")),
+      );
+      peer.send(
+        msg(
+          MSG.loginResponse,
+          ok ? peerInfo() : new PbWriter().string(1, "Wrong Password"),
+        ),
+      );
+    });
+    const { events } = start(world, { "allow-plain": "true" });
+    await until(() => events.ready || !!events.failed);
+    expect(events.failed).toBeNull();
+    expect(events.ready).toBe(true);
+  });
+
+  it("refuses a direct peer without encryption unless the host allows it", async () => {
+    const world = await plainPeer(() => {});
+    const { events } = start(world);
+    await until(() => !!events.failed);
+    expect(events.failed!.message).toMatch(/without encryption/);
+    expect(events.ready).toBe(false);
+    expect(world.peerMessages).toEqual([]);
   });
 
   it("needs an ID unless direct", async () => {

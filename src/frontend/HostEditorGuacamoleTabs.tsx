@@ -45,6 +45,7 @@ function DocsLinkAction({ href, label }: { href: string; label: string }) {
 }
 
 export function HostEditorRdpTab({
+  advanced = true,
   form,
   setField,
   setGuacField,
@@ -52,6 +53,8 @@ export function HostEditorRdpTab({
   hostId,
   credentials,
 }: {
+  /** False in the simple host editor: connection and login only. */
+  advanced?: boolean;
   form: HostEditorForm;
   setField: HostEditorSetField;
   setGuacField: GuacFieldSetter;
@@ -148,7 +151,7 @@ export function HostEditorRdpTab({
                     onChange={(e) =>
                       setField("rdpCredentialId", e.target.value)
                     }
-                    className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                    className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
                   >
                     <option value="">{t("hosts.guac.selectCredential")}</option>
                     {credentials.map((c) => (
@@ -210,704 +213,736 @@ export function HostEditorRdpTab({
         </div>
       </SectionCard>
 
-      <SectionCard
-        title={t("hosts.guac.connectionSettings")}
-        icon={<Shield className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.securityMode")}
-            </label>
-            <Select2
-              className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-              value={form.security ?? "any"}
-              onChange={(e) => setField("security", e.target.value)}
-            >
-              <option value="any">{t("hosts.guac.options.any")}</option>
-              <option value="nla">NLA</option>
-              <option value="nla-ext">
-                {t("hosts.guac.options.nlaExtended")}
-              </option>
-              <option value="tls">TLS</option>
-              <option value="vmconnect">VMConnect</option>
-              <option value="rdp">RDP</option>
-            </Select2>
-          </div>
-          <SettingRow
-            label={t("hosts.guac.ignoreCertificate")}
-            description={t("hosts.guac.ignoreCertificateDesc")}
+      {advanced && (
+        <>
+          <SectionCard
+            title={t("hosts.guac.connectionSettings")}
+            icon={<Shield className="size-3.5" />}
           >
-            <FakeSwitch
-              checked={form.ignoreCert}
-              onChange={(v) => setField("ignoreCert", v)}
-            />
-          </SettingRow>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.loadBalanceInfo")}
-            </label>
-            <Input
-              placeholder="tsv://MS Terminal Services Plugin.1.CollectionName"
-              value={
-                (form.guacamoleConfig["load-balance-info"] as string) ?? ""
-              }
-              onChange={(e) =>
-                setGuacField("load-balance-info", e.target.value)
-              }
-            />
-            <p className="text-[10px] text-muted-foreground">
-              {t("hosts.guac.loadBalanceInfoDesc")}
-            </p>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.kdcUrl")}
-            </label>
-            <Input
-              placeholder="dc1.example.com"
-              value={(form.guacamoleConfig["kdc-url"] as string) ?? ""}
-              onChange={(e) => setGuacField("kdc-url", e.target.value)}
-            />
-            <p className="text-[10px] text-muted-foreground">
-              {t("hosts.guac.kdcUrlDesc")}
-            </p>
-          </div>
-        </div>
-      </SectionCard>
+            <div className="flex flex-col gap-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.securityMode")}
+                </label>
+                <Select2
+                  className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                  value={form.security ?? "any"}
+                  onChange={(e) => setField("security", e.target.value)}
+                >
+                  <option value="any">{t("hosts.guac.options.any")}</option>
+                  <option value="nla">NLA</option>
+                  <option value="nla-ext">
+                    {t("hosts.guac.options.nlaExtended")}
+                  </option>
+                  <option value="tls">TLS</option>
+                  <option value="vmconnect">VMConnect</option>
+                  <option value="rdp">RDP</option>
+                </Select2>
+              </div>
+              <SettingRow
+                label={t("hosts.guac.ignoreCertificate")}
+                description={t("hosts.guac.ignoreCertificateDesc")}
+              >
+                <FakeSwitch
+                  checked={form.ignoreCert}
+                  onChange={(v) => setField("ignoreCert", v)}
+                />
+              </SettingRow>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.loadBalanceInfo")}
+                </label>
+                <Input
+                  placeholder="tsv://MS Terminal Services Plugin.1.CollectionName"
+                  value={
+                    (form.guacamoleConfig["load-balance-info"] as string) ?? ""
+                  }
+                  onChange={(e) =>
+                    setGuacField("load-balance-info", e.target.value)
+                  }
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  {t("hosts.guac.loadBalanceInfoDesc")}
+                </p>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.kdcUrl")}
+                </label>
+                <Input
+                  placeholder="dc1.example.com"
+                  value={(form.guacamoleConfig["kdc-url"] as string) ?? ""}
+                  onChange={(e) => setGuacField("kdc-url", e.target.value)}
+                />
+                <p className="text-[10px] text-muted-foreground">
+                  {t("hosts.guac.kdcUrlDesc")}
+                </p>
+              </div>
+            </div>
+          </SectionCard>
 
-      <SectionCard
-        title={t("hosts.guac.displaySettings")}
-        icon={<Monitor className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.colorDepth")}
-            </label>
-            <Select2
-              className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-              value={form.guacamoleConfig["color-depth"] ?? "auto"}
-              onChange={(e) => setGuacField("color-depth", e.target.value)}
-            >
-              <option value="auto">{t("hosts.guac.options.auto")}</option>
-              <option value="8">{t("hosts.guac.options.color8")}</option>
-              <option value="16">{t("hosts.guac.options.color16")}</option>
-              <option value="24">{t("hosts.guac.options.color24")}</option>
-              <option value="32">{t("hosts.guac.options.color32")}</option>
-            </Select2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.width")}
-              </label>
-              <Input
-                type="number"
-                placeholder="Auto"
-                value={form.guacamoleConfig["width"] ?? ""}
-                onChange={(e) => setGuacField("width", e.target.value)}
-                className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.height")}
-              </label>
-              <Input
-                type="number"
-                placeholder="Auto"
-                value={form.guacamoleConfig["height"] ?? ""}
-                onChange={(e) => setGuacField("height", e.target.value)}
-                className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              />
-            </div>
-          </div>
-          <SettingRow
-            label={t("settings.host.rdpAutoResize.label")}
-            description={t("settings.host.rdpAutoResize.description")}
+          <SectionCard
+            title={t("hosts.guac.displaySettings")}
+            icon={<Monitor className="size-3.5" />}
           >
-            <FakeSwitch
-              checked={form.rdpAutoResize}
-              onChange={(value) => setField("rdpAutoResize", value)}
-            />
-          </SettingRow>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.dpi")}
-            </label>
-            <Input
-              type="number"
-              placeholder="96"
-              value={form.guacamoleConfig["dpi"] ?? ""}
-              onChange={(e) => setGuacField("dpi", e.target.value)}
-              className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.resizeMethod")}
-            </label>
-            <Select2
-              className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-              value={form.guacamoleConfig["resize-method"] ?? "auto"}
-              onChange={(e) => setGuacField("resize-method", e.target.value)}
-            >
-              <option value="auto">{t("hosts.guac.options.auto")}</option>
-              <option value="display-update">
-                {t("hosts.guac.options.displayUpdate")}
-              </option>
-              <option value="reconnect">
-                {t("hosts.guac.options.reconnect")}
-              </option>
-            </Select2>
-          </div>
-          <SettingRow
-            label={t("hosts.guac.forceLossless")}
-            description={t("hosts.guac.forceLosslessDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["force-lossless"]}
-              onChange={(v) => setGuacField("force-lossless", v)}
-            />
-          </SettingRow>
-        </div>
-      </SectionCard>
+            <div className="flex flex-col gap-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.colorDepth")}
+                </label>
+                <Select2
+                  className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                  value={form.guacamoleConfig["color-depth"] ?? "auto"}
+                  onChange={(e) => setGuacField("color-depth", e.target.value)}
+                >
+                  <option value="auto">{t("hosts.guac.options.auto")}</option>
+                  <option value="8">{t("hosts.guac.options.color8")}</option>
+                  <option value="16">{t("hosts.guac.options.color16")}</option>
+                  <option value="24">{t("hosts.guac.options.color24")}</option>
+                  <option value="32">{t("hosts.guac.options.color32")}</option>
+                </Select2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.width")}
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="Auto"
+                    value={form.guacamoleConfig["width"] ?? ""}
+                    onChange={(e) => setGuacField("width", e.target.value)}
+                    className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.height")}
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="Auto"
+                    value={form.guacamoleConfig["height"] ?? ""}
+                    onChange={(e) => setGuacField("height", e.target.value)}
+                    className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                  />
+                </div>
+              </div>
+              <SettingRow
+                label={t("settings.host.rdpAutoResize.label")}
+                description={t("settings.host.rdpAutoResize.description")}
+              >
+                <FakeSwitch
+                  checked={form.rdpAutoResize}
+                  onChange={(value) => setField("rdpAutoResize", value)}
+                />
+              </SettingRow>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.dpi")}
+                </label>
+                <Input
+                  type="number"
+                  placeholder="96"
+                  value={form.guacamoleConfig["dpi"] ?? ""}
+                  onChange={(e) => setGuacField("dpi", e.target.value)}
+                  className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.resizeMethod")}
+                </label>
+                <Select2
+                  className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                  value={form.guacamoleConfig["resize-method"] ?? "auto"}
+                  onChange={(e) =>
+                    setGuacField("resize-method", e.target.value)
+                  }
+                >
+                  <option value="auto">{t("hosts.guac.options.auto")}</option>
+                  <option value="display-update">
+                    {t("hosts.guac.options.displayUpdate")}
+                  </option>
+                  <option value="reconnect">
+                    {t("hosts.guac.options.reconnect")}
+                  </option>
+                </Select2>
+              </div>
+              <SettingRow
+                label={t("hosts.guac.forceLossless")}
+                description={t("hosts.guac.forceLosslessDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["force-lossless"]}
+                  onChange={(v) => setGuacField("force-lossless", v)}
+                />
+              </SettingRow>
+            </div>
+          </SectionCard>
 
-      <SectionCard
-        title={t("hosts.guac.audioSettings")}
-        icon={<Activity className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-0 py-1">
-          <SettingRow
-            label={t("hosts.guac.disableAudio")}
-            description={t("hosts.guac.disableAudioDesc")}
+          <SectionCard
+            title={t("hosts.guac.audioSettings")}
+            icon={<Activity className="size-3.5" />}
           >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["disable-audio"]}
-              onChange={(v) => setGuacField("disable-audio", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.enableAudioInput")}
-            description={t("hosts.guac.enableAudioInputDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["enable-audio-input"]}
-              onChange={(v) => setGuacField("enable-audio-input", v)}
-            />
-          </SettingRow>
-        </div>
-      </SectionCard>
+            <div className="flex flex-col gap-0 py-1">
+              <SettingRow
+                label={t("hosts.guac.disableAudio")}
+                description={t("hosts.guac.disableAudioDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["disable-audio"]}
+                  onChange={(v) => setGuacField("disable-audio", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.enableAudioInput")}
+                description={t("hosts.guac.enableAudioInputDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["enable-audio-input"]}
+                  onChange={(v) => setGuacField("enable-audio-input", v)}
+                />
+              </SettingRow>
+            </div>
+          </SectionCard>
 
-      <SectionCard
-        title={t("hosts.guac.rdpPerformance")}
-        icon={<Zap className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-0 py-1">
-          <SettingRow
-            label={t("hosts.guac.wallpaper")}
-            description={t("hosts.guac.wallpaperDesc")}
+          <SectionCard
+            title={t("hosts.guac.rdpPerformance")}
+            icon={<Zap className="size-3.5" />}
           >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["enable-wallpaper"]}
-              onChange={(v) => setGuacField("enable-wallpaper", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.theming")}
-            description={t("hosts.guac.themingDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["enable-theming"]}
-              onChange={(v) => setGuacField("enable-theming", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.fontSmoothing")}
-            description={t("hosts.guac.fontSmoothingDesc")}
-          >
-            <FakeSwitch
-              checked={form.guacamoleConfig["enable-font-smoothing"] !== false}
-              onChange={(v) => setGuacField("enable-font-smoothing", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.fullWindowDrag")}
-            description={t("hosts.guac.fullWindowDragDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["enable-full-window-drag"]}
-              onChange={(v) => setGuacField("enable-full-window-drag", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.desktopComposition")}
-            description={t("hosts.guac.desktopCompositionDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["enable-desktop-composition"]}
-              onChange={(v) => setGuacField("enable-desktop-composition", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.menuAnimations")}
-            description={t("hosts.guac.menuAnimationsDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["enable-menu-animations"]}
-              onChange={(v) => setGuacField("enable-menu-animations", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.disableBitmapCaching")}
-            description={t("hosts.guac.disableBitmapCachingDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["disable-bitmap-caching"]}
-              onChange={(v) => setGuacField("disable-bitmap-caching", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.disableOffscreenCaching")}
-            description={t("hosts.guac.disableOffscreenCachingDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["disable-offscreen-caching"]}
-              onChange={(v) => setGuacField("disable-offscreen-caching", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.disableGlyphCaching")}
-            description={t("hosts.guac.disableGlyphCachingDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["disable-glyph-caching"]}
-              onChange={(v) => setGuacField("disable-glyph-caching", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.enableGfx")}
-            description={t("hosts.guac.enableGfxDesc")}
-          >
-            <FakeSwitch
-              checked={form.guacamoleConfig["enable-gfx"] !== false}
-              onChange={(v) => setGuacField("enable-gfx", v)}
-            />
-          </SettingRow>
-        </div>
-      </SectionCard>
+            <div className="flex flex-col gap-0 py-1">
+              <SettingRow
+                label={t("hosts.guac.wallpaper")}
+                description={t("hosts.guac.wallpaperDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["enable-wallpaper"]}
+                  onChange={(v) => setGuacField("enable-wallpaper", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.theming")}
+                description={t("hosts.guac.themingDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["enable-theming"]}
+                  onChange={(v) => setGuacField("enable-theming", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.fontSmoothing")}
+                description={t("hosts.guac.fontSmoothingDesc")}
+              >
+                <FakeSwitch
+                  checked={
+                    form.guacamoleConfig["enable-font-smoothing"] !== false
+                  }
+                  onChange={(v) => setGuacField("enable-font-smoothing", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.fullWindowDrag")}
+                description={t("hosts.guac.fullWindowDragDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["enable-full-window-drag"]}
+                  onChange={(v) => setGuacField("enable-full-window-drag", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.desktopComposition")}
+                description={t("hosts.guac.desktopCompositionDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["enable-desktop-composition"]}
+                  onChange={(v) =>
+                    setGuacField("enable-desktop-composition", v)
+                  }
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.menuAnimations")}
+                description={t("hosts.guac.menuAnimationsDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["enable-menu-animations"]}
+                  onChange={(v) => setGuacField("enable-menu-animations", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.disableBitmapCaching")}
+                description={t("hosts.guac.disableBitmapCachingDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["disable-bitmap-caching"]}
+                  onChange={(v) => setGuacField("disable-bitmap-caching", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.disableOffscreenCaching")}
+                description={t("hosts.guac.disableOffscreenCachingDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["disable-offscreen-caching"]}
+                  onChange={(v) => setGuacField("disable-offscreen-caching", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.disableGlyphCaching")}
+                description={t("hosts.guac.disableGlyphCachingDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["disable-glyph-caching"]}
+                  onChange={(v) => setGuacField("disable-glyph-caching", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.enableGfx")}
+                description={t("hosts.guac.enableGfxDesc")}
+              >
+                <FakeSwitch
+                  checked={form.guacamoleConfig["enable-gfx"] !== false}
+                  onChange={(v) => setGuacField("enable-gfx", v)}
+                />
+              </SettingRow>
+            </div>
+          </SectionCard>
 
-      <SectionCard
-        title={t("hosts.guac.deviceRedirection")}
-        icon={<Settings className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <SettingRow
-            label={t("hosts.guac.enablePrinting")}
-            description={t("hosts.guac.enablePrintingDesc")}
+          <SectionCard
+            title={t("hosts.guac.deviceRedirection")}
+            icon={<Settings className="size-3.5" />}
           >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["enable-printing"]}
-              onChange={(v) => setGuacField("enable-printing", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.enableDriveRedirection")}
-            description={t("hosts.guac.enableDriveRedirectionDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["enable-drive"]}
-              onChange={(v) => setGuacField("enable-drive", v)}
-            />
-          </SettingRow>
-          <div className="flex flex-col gap-1.5 border-t border-border pt-3">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.driveName")}
-            </label>
-            <Input
-              placeholder={t("hosts.guac.driveNamePlaceholder")}
-              value={form.guacamoleConfig["drive-name"] ?? ""}
-              onChange={(e) => setGuacField("drive-name", e.target.value)}
-            />
-          </div>
-          <SettingRow
-            label={t("hosts.guac.disableDownload")}
-            description={t("hosts.guac.disableDownloadDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["disable-download"]}
-              onChange={(v) => setGuacField("disable-download", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.disableUpload")}
-            description={t("hosts.guac.disableUploadDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["disable-upload"]}
-              onChange={(v) => setGuacField("disable-upload", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.enableTouch")}
-            description={t("hosts.guac.enableTouchDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["enable-touch"]}
-              onChange={(v) => setGuacField("enable-touch", v)}
-            />
-          </SettingRow>
-        </div>
-      </SectionCard>
+            <div className="flex flex-col gap-4 py-3">
+              <SettingRow
+                label={t("hosts.guac.enablePrinting")}
+                description={t("hosts.guac.enablePrintingDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["enable-printing"]}
+                  onChange={(v) => setGuacField("enable-printing", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.enableDriveRedirection")}
+                description={t("hosts.guac.enableDriveRedirectionDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["enable-drive"]}
+                  onChange={(v) => setGuacField("enable-drive", v)}
+                />
+              </SettingRow>
+              <div className="flex flex-col gap-1.5 border-t border-border pt-3">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.driveName")}
+                </label>
+                <Input
+                  placeholder={t("hosts.guac.driveNamePlaceholder")}
+                  value={form.guacamoleConfig["drive-name"] ?? ""}
+                  onChange={(e) => setGuacField("drive-name", e.target.value)}
+                />
+              </div>
+              <SettingRow
+                label={t("hosts.guac.disableDownload")}
+                description={t("hosts.guac.disableDownloadDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["disable-download"]}
+                  onChange={(v) => setGuacField("disable-download", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.disableUpload")}
+                description={t("hosts.guac.disableUploadDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["disable-upload"]}
+                  onChange={(v) => setGuacField("disable-upload", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.enableTouch")}
+                description={t("hosts.guac.enableTouchDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["enable-touch"]}
+                  onChange={(v) => setGuacField("enable-touch", v)}
+                />
+              </SettingRow>
+            </div>
+          </SectionCard>
 
-      <SectionCard
-        title={t("hosts.guac.session")}
-        icon={<Server className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.clientName")}
-            </label>
-            <Input
-              placeholder="Termix"
-              value={form.guacamoleConfig["client-name"] ?? ""}
-              onChange={(e) => setGuacField("client-name", e.target.value)}
-            />
-          </div>
-          <SettingRow
-            label={t("hosts.guac.consoleSession")}
-            description={t("hosts.guac.consoleSessionDesc")}
+          <SectionCard
+            title={t("hosts.guac.session")}
+            icon={<Server className="size-3.5" />}
           >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["console"]}
-              onChange={(v) => setGuacField("console", v)}
-            />
-          </SettingRow>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.initialProgram")}
-            </label>
-            <Input
-              placeholder="e.g. cmd.exe"
-              value={form.guacamoleConfig["initial-program"] ?? ""}
-              onChange={(e) => setGuacField("initial-program", e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.serverLayout")}
-            </label>
-            <Select2
-              className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-              value={form.guacamoleConfig["server-layout"] ?? "auto"}
-              onChange={(e) => setGuacField("server-layout", e.target.value)}
-            >
-              <option value="auto">{t("hosts.guac.options.auto")}</option>
-              <option>en-us-qwerty</option>
-              <option>en-gb-qwerty</option>
-              <option>de-de-qwertz</option>
-              <option>de-ch-qwertz</option>
-              <option>fr-fr-azerty</option>
-              <option>fr-be-azerty</option>
-              <option>it-it-qwerty</option>
-              <option>sv-se-qwerty</option>
-              <option>ja-jp-qwerty</option>
-              <option>pt-br-qwerty</option>
-              <option>es-es-qwerty</option>
-              <option>es-latam-qwerty</option>
-              <option>pt-pt-qwerty</option>
-              <option>fr-ch-qwertz</option>
-              <option>da-dk-qwerty</option>
-              <option>no-no-qwerty</option>
-              <option>pl-pl-qwerty</option>
-              <option>hu-hu-qwertz</option>
-              <option>ro-ro-qwerty</option>
-              <option>tr-tr-qwerty</option>
-              <option value="failsafe">
-                {t("hosts.guac.options.failsafe")}
-              </option>
-            </Select2>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.timezone")}
-            </label>
-            <Input
-              placeholder="e.g. America/New_York"
-              value={form.guacamoleConfig["timezone"] ?? ""}
-              onChange={(e) => setGuacField("timezone", e.target.value)}
-            />
-          </div>
-        </div>
-      </SectionCard>
+            <div className="flex flex-col gap-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.clientName")}
+                </label>
+                <Input
+                  placeholder="Termix"
+                  value={form.guacamoleConfig["client-name"] ?? ""}
+                  onChange={(e) => setGuacField("client-name", e.target.value)}
+                />
+              </div>
+              <SettingRow
+                label={t("hosts.guac.consoleSession")}
+                description={t("hosts.guac.consoleSessionDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["console"]}
+                  onChange={(v) => setGuacField("console", v)}
+                />
+              </SettingRow>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.initialProgram")}
+                </label>
+                <Input
+                  placeholder="e.g. cmd.exe"
+                  value={form.guacamoleConfig["initial-program"] ?? ""}
+                  onChange={(e) =>
+                    setGuacField("initial-program", e.target.value)
+                  }
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.serverLayout")}
+                </label>
+                <Select2
+                  className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                  value={form.guacamoleConfig["server-layout"] ?? "auto"}
+                  onChange={(e) =>
+                    setGuacField("server-layout", e.target.value)
+                  }
+                >
+                  <option value="auto">{t("hosts.guac.options.auto")}</option>
+                  <option>en-us-qwerty</option>
+                  <option>en-gb-qwerty</option>
+                  <option>de-de-qwertz</option>
+                  <option>de-ch-qwertz</option>
+                  <option>fr-fr-azerty</option>
+                  <option>fr-be-azerty</option>
+                  <option>it-it-qwerty</option>
+                  <option>sv-se-qwerty</option>
+                  <option>ja-jp-qwerty</option>
+                  <option>pt-br-qwerty</option>
+                  <option>es-es-qwerty</option>
+                  <option>es-latam-qwerty</option>
+                  <option>pt-pt-qwerty</option>
+                  <option>fr-ch-qwertz</option>
+                  <option>da-dk-qwerty</option>
+                  <option>no-no-qwerty</option>
+                  <option>pl-pl-qwerty</option>
+                  <option>hu-hu-qwertz</option>
+                  <option>ro-ro-qwerty</option>
+                  <option>tr-tr-qwerty</option>
+                  <option value="failsafe">
+                    {t("hosts.guac.options.failsafe")}
+                  </option>
+                </Select2>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.timezone")}
+                </label>
+                <Input
+                  placeholder="e.g. America/New_York"
+                  value={form.guacamoleConfig["timezone"] ?? ""}
+                  onChange={(e) => setGuacField("timezone", e.target.value)}
+                />
+              </div>
+            </div>
+          </SectionCard>
 
-      <SectionCard
-        title={t("hosts.guac.gateway")}
-        icon={<Network className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <p className="text-xs text-muted-foreground">
-            {t("hosts.guac.gatewayNote")}
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.gatewayHostname")}
-              </label>
-              <Input
-                placeholder="gateway.example.com"
-                value={form.guacamoleConfig["gateway-hostname"] ?? ""}
-                onChange={(e) =>
-                  setGuacField("gateway-hostname", e.target.value)
-                }
-              />
+          <SectionCard
+            title={t("hosts.guac.gateway")}
+            icon={<Network className="size-3.5" />}
+          >
+            <div className="flex flex-col gap-4 py-3">
+              <p className="text-xs text-muted-foreground">
+                {t("hosts.guac.gatewayNote")}
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.gatewayHostname")}
+                  </label>
+                  <Input
+                    placeholder="gateway.example.com"
+                    value={form.guacamoleConfig["gateway-hostname"] ?? ""}
+                    onChange={(e) =>
+                      setGuacField("gateway-hostname", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.gatewayPort")}
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="443"
+                    value={form.guacamoleConfig["gateway-port"] ?? ""}
+                    onChange={(e) =>
+                      setGuacField("gateway-port", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.gatewayUsername")}
+                  </label>
+                  <Input
+                    placeholder="user"
+                    value={form.guacamoleConfig["gateway-username"] ?? ""}
+                    onChange={(e) =>
+                      setGuacField("gateway-username", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.gatewayPassword")}
+                  </label>
+                  <PasswordInput
+                    className="h-8 text-xs pr-8"
+                    placeholder="••••••••"
+                    value={form.guacamoleConfig["gateway-password"] ?? ""}
+                    onChange={(e) =>
+                      setGuacField("gateway-password", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5 col-span-2">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.gatewayDomain")}
+                  </label>
+                  <Input
+                    placeholder="DOMAIN"
+                    value={form.guacamoleConfig["gateway-domain"] ?? ""}
+                    onChange={(e) =>
+                      setGuacField("gateway-domain", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
             </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.gatewayPort")}
-              </label>
-              <Input
-                type="number"
-                placeholder="443"
-                value={form.guacamoleConfig["gateway-port"] ?? ""}
-                onChange={(e) => setGuacField("gateway-port", e.target.value)}
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.gatewayUsername")}
-              </label>
-              <Input
-                placeholder="user"
-                value={form.guacamoleConfig["gateway-username"] ?? ""}
-                onChange={(e) =>
-                  setGuacField("gateway-username", e.target.value)
-                }
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.gatewayPassword")}
-              </label>
-              <PasswordInput
-                className="h-8 text-xs pr-8"
-                placeholder="••••••••"
-                value={form.guacamoleConfig["gateway-password"] ?? ""}
-                onChange={(e) =>
-                  setGuacField("gateway-password", e.target.value)
-                }
-              />
-            </div>
-            <div className="flex flex-col gap-1.5 col-span-2">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.gatewayDomain")}
-              </label>
-              <Input
-                placeholder="DOMAIN"
-                value={form.guacamoleConfig["gateway-domain"] ?? ""}
-                onChange={(e) => setGuacField("gateway-domain", e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-      </SectionCard>
+          </SectionCard>
 
-      <SectionCard
-        title={t("hosts.guac.remoteApp")}
-        icon={<Monitor className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.remoteAppProgram")}
-            </label>
-            <Input
-              placeholder="||MyApp"
-              value={form.guacamoleConfig["remote-app"] ?? ""}
-              onChange={(e) => setGuacField("remote-app", e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.workingDirectory")}
-            </label>
-            <Input
-              placeholder="C:\Apps\MyApp"
-              value={form.guacamoleConfig["remote-app-dir"] ?? ""}
-              onChange={(e) => setGuacField("remote-app-dir", e.target.value)}
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.arguments")}
-            </label>
-            <Input
-              placeholder="--flag value"
-              value={form.guacamoleConfig["remote-app-args"] ?? ""}
-              onChange={(e) => setGuacField("remote-app-args", e.target.value)}
-            />
-          </div>
-        </div>
-      </SectionCard>
+          <SectionCard
+            title={t("hosts.guac.remoteApp")}
+            icon={<Monitor className="size-3.5" />}
+          >
+            <div className="flex flex-col gap-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.remoteAppProgram")}
+                </label>
+                <Input
+                  placeholder="||MyApp"
+                  value={form.guacamoleConfig["remote-app"] ?? ""}
+                  onChange={(e) => setGuacField("remote-app", e.target.value)}
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.workingDirectory")}
+                </label>
+                <Input
+                  placeholder="C:\Apps\MyApp"
+                  value={form.guacamoleConfig["remote-app-dir"] ?? ""}
+                  onChange={(e) =>
+                    setGuacField("remote-app-dir", e.target.value)
+                  }
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.arguments")}
+                </label>
+                <Input
+                  placeholder="--flag value"
+                  value={form.guacamoleConfig["remote-app-args"] ?? ""}
+                  onChange={(e) =>
+                    setGuacField("remote-app-args", e.target.value)
+                  }
+                />
+              </div>
+            </div>
+          </SectionCard>
 
-      <SectionCard
-        title={t("hosts.guac.clipboard")}
-        icon={<Copy className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.normalizeLineEndings")}
-            </label>
-            <Select2
-              className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-              value={form.guacamoleConfig["normalize-clipboard"] ?? "auto"}
-              onChange={(e) =>
-                setGuacField("normalize-clipboard", e.target.value)
-              }
-            >
-              <option value="auto">{t("hosts.guac.options.auto")}</option>
-              <option value="preserve">
-                {t("hosts.guac.options.preserve")}
-              </option>
-              <option value="unix">{t("hosts.guac.options.unix")}</option>
-              <option value="windows">{t("hosts.guac.options.windows")}</option>
-            </Select2>
-          </div>
-          <SettingRow
-            label={t("hosts.guac.disableCopy")}
-            description={t("hosts.guac.disableCopyDesc")}
+          <SectionCard
+            title={t("hosts.guac.clipboard")}
+            icon={<Copy className="size-3.5" />}
           >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["disable-copy"]}
-              onChange={(v) => setGuacField("disable-copy", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.disablePaste")}
-            description={t("hosts.guac.disablePasteDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["disable-paste"]}
-              onChange={(v) => setGuacField("disable-paste", v)}
-            />
-          </SettingRow>
-        </div>
-      </SectionCard>
+            <div className="flex flex-col gap-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.normalizeLineEndings")}
+                </label>
+                <Select2
+                  className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                  value={form.guacamoleConfig["normalize-clipboard"] ?? "auto"}
+                  onChange={(e) =>
+                    setGuacField("normalize-clipboard", e.target.value)
+                  }
+                >
+                  <option value="auto">{t("hosts.guac.options.auto")}</option>
+                  <option value="preserve">
+                    {t("hosts.guac.options.preserve")}
+                  </option>
+                  <option value="unix">{t("hosts.guac.options.unix")}</option>
+                  <option value="windows">
+                    {t("hosts.guac.options.windows")}
+                  </option>
+                </Select2>
+              </div>
+              <SettingRow
+                label={t("hosts.guac.disableCopy")}
+                description={t("hosts.guac.disableCopyDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["disable-copy"]}
+                  onChange={(v) => setGuacField("disable-copy", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.disablePaste")}
+                description={t("hosts.guac.disablePasteDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["disable-paste"]}
+                  onChange={(v) => setGuacField("disable-paste", v)}
+                />
+              </SettingRow>
+            </div>
+          </SectionCard>
 
-      <SectionCard
-        title={t("hosts.guac.sessionRecording")}
-        icon={<Activity className="size-3.5" />}
-        action={
-          <DocsLinkAction
-            href={docsUrl("", "recording")}
-            label={t("hosts.docsLink")}
-          />
-        }
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <SettingRow
-            label={t("hosts.guac.excludeOutput")}
-            description={t("hosts.guac.excludeOutputDesc")}
+          <SectionCard
+            title={t("hosts.guac.sessionRecording")}
+            icon={<Activity className="size-3.5" />}
+            action={
+              <DocsLinkAction
+                href={docsUrl("", "recording")}
+                label={t("hosts.docsLink")}
+              />
+            }
           >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["recording-exclude-output"]}
-              onChange={(v) => setGuacField("recording-exclude-output", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.excludeMouse")}
-            description={t("hosts.guac.excludeMouseDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["recording-exclude-mouse"]}
-              onChange={(v) => setGuacField("recording-exclude-mouse", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.includeKeystrokes")}
-            description={t("hosts.guac.includeKeystrokesDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["recording-include-keys"]}
-              onChange={(v) => setGuacField("recording-include-keys", v)}
-            />
-          </SettingRow>
-        </div>
-      </SectionCard>
+            <div className="flex flex-col gap-4 py-3">
+              <SettingRow
+                label={t("hosts.guac.excludeOutput")}
+                description={t("hosts.guac.excludeOutputDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["recording-exclude-output"]}
+                  onChange={(v) => setGuacField("recording-exclude-output", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.excludeMouse")}
+                description={t("hosts.guac.excludeMouseDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["recording-exclude-mouse"]}
+                  onChange={(v) => setGuacField("recording-exclude-mouse", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.includeKeystrokes")}
+                description={t("hosts.guac.includeKeystrokesDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["recording-include-keys"]}
+                  onChange={(v) => setGuacField("recording-include-keys", v)}
+                />
+              </SettingRow>
+            </div>
+          </SectionCard>
 
-      <SectionCard
-        title={t("hosts.guac.wakeOnLan")}
-        icon={<Zap className="size-3.5" />}
-        action={
-          <DocsLinkAction
-            href={docsUrl("", "wake-on-lan")}
-            label={t("hosts.docsLink")}
-          />
-        }
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <SettingRow
-            label={t("hosts.guac.sendWolPacket")}
-            description={t("hosts.guac.sendWolPacketDesc")}
+          <SectionCard
+            title={t("hosts.guac.wakeOnLan")}
+            icon={<Zap className="size-3.5" />}
+            action={
+              <DocsLinkAction
+                href={docsUrl("", "wake-on-lan")}
+                label={t("hosts.docsLink")}
+              />
+            }
           >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["wol-send-packet"]}
-              onChange={(v) => setGuacField("wol-send-packet", v)}
-            />
-          </SettingRow>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.macAddress")}
-              </label>
-              <Input
-                placeholder="AA:BB:CC:DD:EE:FF"
-                value={
-                  form.guacamoleConfig["wol-mac-addr"] ?? host?.macAddress ?? ""
-                }
-                onChange={(e) => setGuacField("wol-mac-addr", e.target.value)}
-              />
+            <div className="flex flex-col gap-4 py-3">
+              <SettingRow
+                label={t("hosts.guac.sendWolPacket")}
+                description={t("hosts.guac.sendWolPacketDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["wol-send-packet"]}
+                  onChange={(v) => setGuacField("wol-send-packet", v)}
+                />
+              </SettingRow>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.macAddress")}
+                  </label>
+                  <Input
+                    placeholder="AA:BB:CC:DD:EE:FF"
+                    value={
+                      form.guacamoleConfig["wol-mac-addr"] ??
+                      host?.macAddress ??
+                      ""
+                    }
+                    onChange={(e) =>
+                      setGuacField("wol-mac-addr", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.broadcastAddress")}
+                  </label>
+                  <Input
+                    placeholder="255.255.255.255"
+                    value={form.guacamoleConfig["wol-broadcast-addr"] ?? ""}
+                    onChange={(e) =>
+                      setGuacField("wol-broadcast-addr", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.udpPort")}
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="9"
+                    value={form.guacamoleConfig["wol-udp-port"] ?? ""}
+                    onChange={(e) =>
+                      setGuacField("wol-udp-port", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.waitTimeS")}
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="0"
+                    value={form.guacamoleConfig["wol-wait-time"] ?? ""}
+                    onChange={(e) =>
+                      setGuacField("wol-wait-time", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
             </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.broadcastAddress")}
-              </label>
-              <Input
-                placeholder="255.255.255.255"
-                value={form.guacamoleConfig["wol-broadcast-addr"] ?? ""}
-                onChange={(e) =>
-                  setGuacField("wol-broadcast-addr", e.target.value)
-                }
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.udpPort")}
-              </label>
-              <Input
-                type="number"
-                placeholder="9"
-                value={form.guacamoleConfig["wol-udp-port"] ?? ""}
-                onChange={(e) => setGuacField("wol-udp-port", e.target.value)}
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.waitTimeS")}
-              </label>
-              <Input
-                type="number"
-                placeholder="0"
-                value={form.guacamoleConfig["wol-wait-time"] ?? ""}
-                onChange={(e) => setGuacField("wol-wait-time", e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-      </SectionCard>
+          </SectionCard>
+        </>
+      )}
     </>
   );
 }
@@ -918,6 +953,7 @@ export function HostEditorRdpTab({
  * macOS account instead of an optional username.
  */
 export function HostEditorVncTab({
+  advanced = true,
   variant = "vnc",
   form,
   setField,
@@ -926,6 +962,8 @@ export function HostEditorVncTab({
   hostId,
   credentials,
 }: {
+  /** False in the simple host editor: connection and login only. */
+  advanced?: boolean;
   variant?: "vnc" | "ard";
   form: HostEditorForm;
   setField: HostEditorSetField;
@@ -1006,7 +1044,7 @@ export function HostEditorVncTab({
               <Select2
                 value={form[credentialKey]}
                 onChange={(e) => setField(credentialKey, e.target.value)}
-                className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
               >
                 <option value="">{t("hosts.guac.selectCredential")}</option>
                 {credentials.map((c) => (
@@ -1064,340 +1102,363 @@ export function HostEditorVncTab({
         </div>
       </SectionCard>
 
-      <SectionCard
-        title={t("hosts.guac.displaySettings")}
-        icon={<Monitor className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.colorDepth")}
-            </label>
-            <Select2
-              className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-              value={form.guacamoleConfig["color-depth"] ?? "auto"}
-              onChange={(e) => setGuacField("color-depth", e.target.value)}
-            >
-              <option value="auto">{t("hosts.guac.options.auto")}</option>
-              <option value="8">{t("hosts.guac.options.color8")}</option>
-              <option value="16">{t("hosts.guac.options.color16")}</option>
-              <option value="24">{t("hosts.guac.options.color24")}</option>
-              <option value="32">{t("hosts.guac.options.color32")}</option>
-            </Select2>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.width")}
-              </label>
-              <Input
-                type="number"
-                placeholder="Auto"
-                value={form.guacamoleConfig["width"] ?? ""}
-                onChange={(e) => setGuacField("width", e.target.value)}
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.height")}
-              </label>
-              <Input
-                type="number"
-                placeholder="Auto"
-                value={form.guacamoleConfig["height"] ?? ""}
-                onChange={(e) => setGuacField("height", e.target.value)}
-              />
-            </div>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.resizeMethod")}
-            </label>
-            <Select2
-              className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-              value={form.guacamoleConfig["resize-method"] ?? "auto"}
-              onChange={(e) => setGuacField("resize-method", e.target.value)}
-            >
-              <option value="auto">{t("hosts.guac.options.auto")}</option>
-              <option value="display-update">
-                {t("hosts.guac.options.displayUpdate")}
-              </option>
-              <option value="reconnect">
-                {t("hosts.guac.options.reconnect")}
-              </option>
-            </Select2>
-          </div>
-          <SettingRow
-            label={t("hosts.guac.forceLossless")}
-            description={t("hosts.guac.forceLosslessDesc")}
+      {advanced && (
+        <>
+          <SectionCard
+            title={t("hosts.guac.displaySettings")}
+            icon={<Monitor className="size-3.5" />}
           >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["force-lossless"]}
-              onChange={(v) => setGuacField("force-lossless", v)}
-            />
-          </SettingRow>
-        </div>
-      </SectionCard>
+            <div className="flex flex-col gap-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.colorDepth")}
+                </label>
+                <Select2
+                  className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                  value={form.guacamoleConfig["color-depth"] ?? "auto"}
+                  onChange={(e) => setGuacField("color-depth", e.target.value)}
+                >
+                  <option value="auto">{t("hosts.guac.options.auto")}</option>
+                  <option value="8">{t("hosts.guac.options.color8")}</option>
+                  <option value="16">{t("hosts.guac.options.color16")}</option>
+                  <option value="24">{t("hosts.guac.options.color24")}</option>
+                  <option value="32">{t("hosts.guac.options.color32")}</option>
+                </Select2>
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.width")}
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="Auto"
+                    value={form.guacamoleConfig["width"] ?? ""}
+                    onChange={(e) => setGuacField("width", e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.height")}
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="Auto"
+                    value={form.guacamoleConfig["height"] ?? ""}
+                    onChange={(e) => setGuacField("height", e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.resizeMethod")}
+                </label>
+                <Select2
+                  className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                  value={form.guacamoleConfig["resize-method"] ?? "auto"}
+                  onChange={(e) =>
+                    setGuacField("resize-method", e.target.value)
+                  }
+                >
+                  <option value="auto">{t("hosts.guac.options.auto")}</option>
+                  <option value="display-update">
+                    {t("hosts.guac.options.displayUpdate")}
+                  </option>
+                  <option value="reconnect">
+                    {t("hosts.guac.options.reconnect")}
+                  </option>
+                </Select2>
+              </div>
+              <SettingRow
+                label={t("hosts.guac.forceLossless")}
+                description={t("hosts.guac.forceLosslessDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["force-lossless"]}
+                  onChange={(v) => setGuacField("force-lossless", v)}
+                />
+              </SettingRow>
+            </div>
+          </SectionCard>
 
-      <SectionCard
-        title={t("hosts.guac.audioSettings")}
-        icon={<Activity className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-0 py-1">
-          <SettingRow
-            label={t("hosts.guac.disableAudio")}
-            description={t("hosts.guac.disableAudioDesc")}
+          <SectionCard
+            title={t("hosts.guac.audioSettings")}
+            icon={<Activity className="size-3.5" />}
           >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["disable-audio"]}
-              onChange={(v) => setGuacField("disable-audio", v)}
-            />
-          </SettingRow>
-        </div>
-      </SectionCard>
-
-      <SectionCard
-        title={t(ard ? "hosts.guac.ardSettings" : "hosts.guac.vncSettings")}
-        icon={<Settings className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.cursorMode")}
-            </label>
-            <Select2
-              className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-              value={form.guacamoleConfig["cursor"] ?? "auto"}
-              onChange={(e) => setGuacField("cursor", e.target.value)}
-            >
-              <option value="auto">{t("hosts.guac.options.auto")}</option>
-              <option value="local">{t("hosts.guac.options.local")}</option>
-              <option value="remote">{t("hosts.guac.options.remote")}</option>
-            </Select2>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.serverLayout")}
-            </label>
-            <Select2
-              className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-              value={form.guacamoleConfig["server-layout"] ?? "auto"}
-              onChange={(e) => setGuacField("server-layout", e.target.value)}
-            >
-              <option value="auto">{t("hosts.guac.options.auto")}</option>
-              <option>en-us-qwerty</option>
-              <option>en-gb-qwerty</option>
-              <option>de-de-qwertz</option>
-              <option>de-ch-qwertz</option>
-              <option>fr-fr-azerty</option>
-              <option>fr-be-azerty</option>
-              <option>it-it-qwerty</option>
-              <option>sv-se-qwerty</option>
-              <option>ja-jp-qwerty</option>
-              <option>pt-br-qwerty</option>
-              <option>es-es-qwerty</option>
-              <option>es-latam-qwerty</option>
-              <option>pt-pt-qwerty</option>
-              <option>fr-ch-qwertz</option>
-              <option>da-dk-qwerty</option>
-              <option>no-no-qwerty</option>
-              <option>pl-pl-qwerty</option>
-              <option>hu-hu-qwertz</option>
-              <option>ro-ro-qwerty</option>
-              <option>tr-tr-qwerty</option>
-              <option value="failsafe">
-                {t("hosts.guac.options.failsafe")}
-              </option>
-            </Select2>
-          </div>
-          <SettingRow
-            label={t("hosts.guac.swapRedBlue")}
-            description={t("hosts.guac.swapRedBlueDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["swap-red-blue"]}
-              onChange={(v) => setGuacField("swap-red-blue", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.readOnly")}
-            description={t("hosts.guac.readOnlyDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["read-only"]}
-              onChange={(v) => setGuacField("read-only", v)}
-            />
-          </SettingRow>
-        </div>
-      </SectionCard>
-
-      <SectionCard
-        title={t("hosts.guac.clipboard")}
-        icon={<Copy className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.normalizeLineEndings")}
-            </label>
-            <Select2
-              className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-              value={form.guacamoleConfig["normalize-clipboard"] ?? "auto"}
-              onChange={(e) =>
-                setGuacField("normalize-clipboard", e.target.value)
-              }
-            >
-              <option value="auto">{t("hosts.guac.options.auto")}</option>
-              <option value="preserve">
-                {t("hosts.guac.options.preserve")}
-              </option>
-              <option value="unix">{t("hosts.guac.options.unix")}</option>
-              <option value="windows">{t("hosts.guac.options.windows")}</option>
-            </Select2>
-          </div>
-          <SettingRow
-            label={t("hosts.guac.disableCopy")}
-            description={t("hosts.guac.disableCopyDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["disable-copy"]}
-              onChange={(v) => setGuacField("disable-copy", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.disablePaste")}
-            description={t("hosts.guac.disablePasteDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["disable-paste"]}
-              onChange={(v) => setGuacField("disable-paste", v)}
-            />
-          </SettingRow>
-        </div>
-      </SectionCard>
-
-      <SectionCard
-        title={t("hosts.guac.sessionRecording")}
-        icon={<Activity className="size-3.5" />}
-        action={
-          <DocsLinkAction
-            href={docsUrl("", "recording")}
-            label={t("hosts.docsLink")}
-          />
-        }
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <SettingRow
-            label={t("hosts.guac.excludeOutput")}
-            description={t("hosts.guac.excludeOutputDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["recording-exclude-output"]}
-              onChange={(v) => setGuacField("recording-exclude-output", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.excludeMouse")}
-            description={t("hosts.guac.excludeMouseDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["recording-exclude-mouse"]}
-              onChange={(v) => setGuacField("recording-exclude-mouse", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.includeKeystrokes")}
-            description={t("hosts.guac.includeKeystrokesDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["recording-include-keys"]}
-              onChange={(v) => setGuacField("recording-include-keys", v)}
-            />
-          </SettingRow>
-        </div>
-      </SectionCard>
-
-      <SectionCard
-        title={t("hosts.guac.wakeOnLan")}
-        icon={<Zap className="size-3.5" />}
-        action={
-          <DocsLinkAction
-            href={docsUrl("", "wake-on-lan")}
-            label={t("hosts.docsLink")}
-          />
-        }
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <SettingRow
-            label={t("hosts.guac.sendWolPacket")}
-            description={t("hosts.guac.sendWolPacketDesc")}
-          >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["wol-send-packet"]}
-              onChange={(v) => setGuacField("wol-send-packet", v)}
-            />
-          </SettingRow>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.macAddress")}
-              </label>
-              <Input
-                placeholder="AA:BB:CC:DD:EE:FF"
-                value={
-                  form.guacamoleConfig["wol-mac-addr"] ?? host?.macAddress ?? ""
-                }
-                onChange={(e) => setGuacField("wol-mac-addr", e.target.value)}
-              />
+            <div className="flex flex-col gap-0 py-1">
+              <SettingRow
+                label={t("hosts.guac.disableAudio")}
+                description={t("hosts.guac.disableAudioDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["disable-audio"]}
+                  onChange={(v) => setGuacField("disable-audio", v)}
+                />
+              </SettingRow>
             </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.broadcastAddress")}
-              </label>
-              <Input
-                placeholder="255.255.255.255"
-                value={form.guacamoleConfig["wol-broadcast-addr"] ?? ""}
-                onChange={(e) =>
-                  setGuacField("wol-broadcast-addr", e.target.value)
-                }
-              />
+          </SectionCard>
+
+          <SectionCard
+            title={t(ard ? "hosts.guac.ardSettings" : "hosts.guac.vncSettings")}
+            icon={<Settings className="size-3.5" />}
+          >
+            <div className="flex flex-col gap-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.cursorMode")}
+                </label>
+                <Select2
+                  className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                  value={form.guacamoleConfig["cursor"] ?? "auto"}
+                  onChange={(e) => setGuacField("cursor", e.target.value)}
+                >
+                  <option value="auto">{t("hosts.guac.options.auto")}</option>
+                  <option value="local">{t("hosts.guac.options.local")}</option>
+                  <option value="remote">
+                    {t("hosts.guac.options.remote")}
+                  </option>
+                </Select2>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.serverLayout")}
+                </label>
+                <Select2
+                  className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                  value={form.guacamoleConfig["server-layout"] ?? "auto"}
+                  onChange={(e) =>
+                    setGuacField("server-layout", e.target.value)
+                  }
+                >
+                  <option value="auto">{t("hosts.guac.options.auto")}</option>
+                  <option>en-us-qwerty</option>
+                  <option>en-gb-qwerty</option>
+                  <option>de-de-qwertz</option>
+                  <option>de-ch-qwertz</option>
+                  <option>fr-fr-azerty</option>
+                  <option>fr-be-azerty</option>
+                  <option>it-it-qwerty</option>
+                  <option>sv-se-qwerty</option>
+                  <option>ja-jp-qwerty</option>
+                  <option>pt-br-qwerty</option>
+                  <option>es-es-qwerty</option>
+                  <option>es-latam-qwerty</option>
+                  <option>pt-pt-qwerty</option>
+                  <option>fr-ch-qwertz</option>
+                  <option>da-dk-qwerty</option>
+                  <option>no-no-qwerty</option>
+                  <option>pl-pl-qwerty</option>
+                  <option>hu-hu-qwertz</option>
+                  <option>ro-ro-qwerty</option>
+                  <option>tr-tr-qwerty</option>
+                  <option value="failsafe">
+                    {t("hosts.guac.options.failsafe")}
+                  </option>
+                </Select2>
+              </div>
+              <SettingRow
+                label={t("hosts.guac.swapRedBlue")}
+                description={t("hosts.guac.swapRedBlueDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["swap-red-blue"]}
+                  onChange={(v) => setGuacField("swap-red-blue", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.readOnly")}
+                description={t("hosts.guac.readOnlyDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["read-only"]}
+                  onChange={(v) => setGuacField("read-only", v)}
+                />
+              </SettingRow>
             </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.udpPort")}
-              </label>
-              <Input
-                type="number"
-                placeholder="9"
-                value={form.guacamoleConfig["wol-udp-port"] ?? ""}
-                onChange={(e) => setGuacField("wol-udp-port", e.target.value)}
-              />
+          </SectionCard>
+
+          <SectionCard
+            title={t("hosts.guac.clipboard")}
+            icon={<Copy className="size-3.5" />}
+          >
+            <div className="flex flex-col gap-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.normalizeLineEndings")}
+                </label>
+                <Select2
+                  className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                  value={form.guacamoleConfig["normalize-clipboard"] ?? "auto"}
+                  onChange={(e) =>
+                    setGuacField("normalize-clipboard", e.target.value)
+                  }
+                >
+                  <option value="auto">{t("hosts.guac.options.auto")}</option>
+                  <option value="preserve">
+                    {t("hosts.guac.options.preserve")}
+                  </option>
+                  <option value="unix">{t("hosts.guac.options.unix")}</option>
+                  <option value="windows">
+                    {t("hosts.guac.options.windows")}
+                  </option>
+                </Select2>
+              </div>
+              <SettingRow
+                label={t("hosts.guac.disableCopy")}
+                description={t("hosts.guac.disableCopyDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["disable-copy"]}
+                  onChange={(v) => setGuacField("disable-copy", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.disablePaste")}
+                description={t("hosts.guac.disablePasteDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["disable-paste"]}
+                  onChange={(v) => setGuacField("disable-paste", v)}
+                />
+              </SettingRow>
             </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.waitTimeS")}
-              </label>
-              <Input
-                type="number"
-                placeholder="0"
-                value={form.guacamoleConfig["wol-wait-time"] ?? ""}
-                onChange={(e) => setGuacField("wol-wait-time", e.target.value)}
+          </SectionCard>
+
+          <SectionCard
+            title={t("hosts.guac.sessionRecording")}
+            icon={<Activity className="size-3.5" />}
+            action={
+              <DocsLinkAction
+                href={docsUrl("", "recording")}
+                label={t("hosts.docsLink")}
               />
+            }
+          >
+            <div className="flex flex-col gap-4 py-3">
+              <SettingRow
+                label={t("hosts.guac.excludeOutput")}
+                description={t("hosts.guac.excludeOutputDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["recording-exclude-output"]}
+                  onChange={(v) => setGuacField("recording-exclude-output", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.excludeMouse")}
+                description={t("hosts.guac.excludeMouseDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["recording-exclude-mouse"]}
+                  onChange={(v) => setGuacField("recording-exclude-mouse", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.includeKeystrokes")}
+                description={t("hosts.guac.includeKeystrokesDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["recording-include-keys"]}
+                  onChange={(v) => setGuacField("recording-include-keys", v)}
+                />
+              </SettingRow>
             </div>
-          </div>
-        </div>
-      </SectionCard>
+          </SectionCard>
+
+          <SectionCard
+            title={t("hosts.guac.wakeOnLan")}
+            icon={<Zap className="size-3.5" />}
+            action={
+              <DocsLinkAction
+                href={docsUrl("", "wake-on-lan")}
+                label={t("hosts.docsLink")}
+              />
+            }
+          >
+            <div className="flex flex-col gap-4 py-3">
+              <SettingRow
+                label={t("hosts.guac.sendWolPacket")}
+                description={t("hosts.guac.sendWolPacketDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["wol-send-packet"]}
+                  onChange={(v) => setGuacField("wol-send-packet", v)}
+                />
+              </SettingRow>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.macAddress")}
+                  </label>
+                  <Input
+                    placeholder="AA:BB:CC:DD:EE:FF"
+                    value={
+                      form.guacamoleConfig["wol-mac-addr"] ??
+                      host?.macAddress ??
+                      ""
+                    }
+                    onChange={(e) =>
+                      setGuacField("wol-mac-addr", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.broadcastAddress")}
+                  </label>
+                  <Input
+                    placeholder="255.255.255.255"
+                    value={form.guacamoleConfig["wol-broadcast-addr"] ?? ""}
+                    onChange={(e) =>
+                      setGuacField("wol-broadcast-addr", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.udpPort")}
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="9"
+                    value={form.guacamoleConfig["wol-udp-port"] ?? ""}
+                    onChange={(e) =>
+                      setGuacField("wol-udp-port", e.target.value)
+                    }
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.waitTimeS")}
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="0"
+                    value={form.guacamoleConfig["wol-wait-time"] ?? ""}
+                    onChange={(e) =>
+                      setGuacField("wol-wait-time", e.target.value)
+                    }
+                  />
+                </div>
+              </div>
+            </div>
+          </SectionCard>
+        </>
+      )}
     </>
   );
 }
 
 export function HostEditorTelnetTab({
+  advanced = true,
   form,
   setField,
   setGuacField,
   hostId,
   credentials,
 }: {
+  /** False in the simple host editor: connection and login only. */
+  advanced?: boolean;
   form: HostEditorForm;
   setField: HostEditorSetField;
   setGuacField: GuacFieldSetter;
@@ -1469,7 +1530,7 @@ export function HostEditorTelnetTab({
               <Select2
                 value={form.telnetCredentialId}
                 onChange={(e) => setField("telnetCredentialId", e.target.value)}
-                className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
               >
                 <option value="">{t("hosts.guac.selectCredential")}</option>
                 {credentials.map((c) => (
@@ -1519,156 +1580,162 @@ export function HostEditorTelnetTab({
         </div>
       </SectionCard>
 
-      <SectionCard
-        title={t("hosts.guac.displaySettings")}
-        icon={<Monitor className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.width")}
-              </label>
-              <Input
-                type="number"
-                placeholder="Auto"
-                value={form.guacamoleConfig["width"] ?? ""}
-                onChange={(e) => setGuacField("width", e.target.value)}
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                {t("hosts.guac.height")}
-              </label>
-              <Input
-                type="number"
-                placeholder="Auto"
-                value={form.guacamoleConfig["height"] ?? ""}
-                onChange={(e) => setGuacField("height", e.target.value)}
-              />
-            </div>
-          </div>
-        </div>
-      </SectionCard>
-
-      <SectionCard
-        title={t("hosts.guac.terminalSettings")}
-        icon={<Terminal className="size-3.5" />}
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.terminalType")}
-            </label>
-            <Select2
-              className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-              value={form.guacamoleConfig["terminal-type"] ?? "auto"}
-              onChange={(e) => setGuacField("terminal-type", e.target.value)}
-            >
-              <option value="auto">{t("hosts.guac.options.auto")}</option>
-              <option value="xterm">xterm</option>
-              <option value="xterm-256color">xterm-256color</option>
-              <option value="vt100">VT100</option>
-              <option value="vt220">VT220</option>
-            </Select2>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.fontName")}
-            </label>
-            <Input
-              placeholder="monospace"
-              value={form.guacamoleConfig["font-name"] ?? ""}
-              onChange={(e) => setGuacField("font-name", e.target.value)}
-            />
-            <p className="text-xs text-muted-foreground">
-              {t("hosts.guac.fontNameDesc")}
-            </p>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.fontSize")}
-            </label>
-            <Input
-              type="number"
-              value={form.guacamoleConfig["font-size"] ?? 12}
-              onChange={(e) =>
-                setGuacField("font-size", Number(e.target.value))
-              }
-            />
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.colorScheme")}
-            </label>
-            <Select2
-              className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-              value={form.guacamoleConfig["color-scheme"] ?? "auto"}
-              onChange={(e) => setGuacField("color-scheme", e.target.value)}
-            >
-              <option value="auto">{t("hosts.guac.options.auto")}</option>
-              <option value="black-white">
-                {t("hosts.guac.options.blackOnWhite")}
-              </option>
-              <option value="white-black">
-                {t("hosts.guac.options.whiteOnBlack")}
-              </option>
-              <option value="gray-black">
-                {t("hosts.guac.options.grayOnBlack")}
-              </option>
-              <option value="green-black">
-                {t("hosts.guac.options.greenOnBlack")}
-              </option>
-            </Select2>
-          </div>
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-              {t("hosts.guac.backspaceKey")}
-            </label>
-            <Select2
-              className="flex h-9 w-full border border-border bg-background px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
-              value={form.guacamoleConfig["backspace"] ?? "auto"}
-              onChange={(e) => setGuacField("backspace", e.target.value)}
-            >
-              <option value="auto">{t("hosts.guac.options.auto")}</option>
-              <option value="127">DEL (127)</option>
-              <option value="8">BS (8)</option>
-            </Select2>
-          </div>
-        </div>
-      </SectionCard>
-
-      <SectionCard
-        title={t("hosts.guac.sessionRecording")}
-        icon={<Activity className="size-3.5" />}
-        action={
-          <DocsLinkAction
-            href={docsUrl("", "recording")}
-            label={t("hosts.docsLink")}
-          />
-        }
-      >
-        <div className="flex flex-col gap-4 py-3">
-          <SettingRow
-            label={t("hosts.guac.excludeOutput")}
-            description={t("hosts.guac.excludeOutputDesc")}
+      {advanced && (
+        <>
+          <SectionCard
+            title={t("hosts.guac.displaySettings")}
+            icon={<Monitor className="size-3.5" />}
           >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["recording-exclude-output"]}
-              onChange={(v) => setGuacField("recording-exclude-output", v)}
-            />
-          </SettingRow>
-          <SettingRow
-            label={t("hosts.guac.includeKeystrokes")}
-            description={t("hosts.guac.includeKeystrokesDesc")}
+            <div className="flex flex-col gap-4 py-3">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.width")}
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="Auto"
+                    value={form.guacamoleConfig["width"] ?? ""}
+                    onChange={(e) => setGuacField("width", e.target.value)}
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                    {t("hosts.guac.height")}
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="Auto"
+                    value={form.guacamoleConfig["height"] ?? ""}
+                    onChange={(e) => setGuacField("height", e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+          </SectionCard>
+
+          <SectionCard
+            title={t("hosts.guac.terminalSettings")}
+            icon={<Terminal className="size-3.5" />}
           >
-            <FakeSwitch
-              checked={!!form.guacamoleConfig["recording-include-keys"]}
-              onChange={(v) => setGuacField("recording-include-keys", v)}
-            />
-          </SettingRow>
-        </div>
-      </SectionCard>
+            <div className="flex flex-col gap-4 py-3">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.terminalType")}
+                </label>
+                <Select2
+                  className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                  value={form.guacamoleConfig["terminal-type"] ?? "auto"}
+                  onChange={(e) =>
+                    setGuacField("terminal-type", e.target.value)
+                  }
+                >
+                  <option value="auto">{t("hosts.guac.options.auto")}</option>
+                  <option value="xterm">xterm</option>
+                  <option value="xterm-256color">xterm-256color</option>
+                  <option value="vt100">VT100</option>
+                  <option value="vt220">VT220</option>
+                </Select2>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.fontName")}
+                </label>
+                <Input
+                  placeholder="monospace"
+                  value={form.guacamoleConfig["font-name"] ?? ""}
+                  onChange={(e) => setGuacField("font-name", e.target.value)}
+                />
+                <p className="text-xs text-muted-foreground">
+                  {t("hosts.guac.fontNameDesc")}
+                </p>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.fontSize")}
+                </label>
+                <Input
+                  type="number"
+                  value={form.guacamoleConfig["font-size"] ?? 12}
+                  onChange={(e) =>
+                    setGuacField("font-size", Number(e.target.value))
+                  }
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.colorScheme")}
+                </label>
+                <Select2
+                  className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                  value={form.guacamoleConfig["color-scheme"] ?? "auto"}
+                  onChange={(e) => setGuacField("color-scheme", e.target.value)}
+                >
+                  <option value="auto">{t("hosts.guac.options.auto")}</option>
+                  <option value="black-white">
+                    {t("hosts.guac.options.blackOnWhite")}
+                  </option>
+                  <option value="white-black">
+                    {t("hosts.guac.options.whiteOnBlack")}
+                  </option>
+                  <option value="gray-black">
+                    {t("hosts.guac.options.grayOnBlack")}
+                  </option>
+                  <option value="green-black">
+                    {t("hosts.guac.options.greenOnBlack")}
+                  </option>
+                </Select2>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                  {t("hosts.guac.backspaceKey")}
+                </label>
+                <Select2
+                  className="flex h-8 w-full border border-border bg-(--field) px-3 py-1 text-xs outline-none focus:ring-1 focus:ring-ring"
+                  value={form.guacamoleConfig["backspace"] ?? "auto"}
+                  onChange={(e) => setGuacField("backspace", e.target.value)}
+                >
+                  <option value="auto">{t("hosts.guac.options.auto")}</option>
+                  <option value="127">DEL (127)</option>
+                  <option value="8">BS (8)</option>
+                </Select2>
+              </div>
+            </div>
+          </SectionCard>
+
+          <SectionCard
+            title={t("hosts.guac.sessionRecording")}
+            icon={<Activity className="size-3.5" />}
+            action={
+              <DocsLinkAction
+                href={docsUrl("", "recording")}
+                label={t("hosts.docsLink")}
+              />
+            }
+          >
+            <div className="flex flex-col gap-4 py-3">
+              <SettingRow
+                label={t("hosts.guac.excludeOutput")}
+                description={t("hosts.guac.excludeOutputDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["recording-exclude-output"]}
+                  onChange={(v) => setGuacField("recording-exclude-output", v)}
+                />
+              </SettingRow>
+              <SettingRow
+                label={t("hosts.guac.includeKeystrokes")}
+                description={t("hosts.guac.includeKeystrokesDesc")}
+              >
+                <FakeSwitch
+                  checked={!!form.guacamoleConfig["recording-include-keys"]}
+                  onChange={(v) => setGuacField("recording-include-keys", v)}
+                />
+              </SettingRow>
+            </div>
+          </SectionCard>
+        </>
+      )}
     </>
   );
 }

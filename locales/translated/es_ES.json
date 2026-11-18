@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Cerrar sesión",
         "record": "Grabar",
-        "monitors": "Monitores"
+        "monitors": "Monitores",
+        "softKeyboard": "Teclado"
       },
       "hints": {
         "files": "Se muestra una vez que la unidad RDP está activa",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift y la tecla del sistema se mantienen pulsadas hasta la siguiente tecla",
         "logoff": "Cierra la sesión de Windows ejecutando logoff desde el cuadro Ejecutar. La sesión debe estar abierta y mostrando el escritorio.",
         "record": "Inicia o detiene la grabación de esta sesión. Requiere el complemento Session Recording y el motor integrado.",
-        "monitors": "Cambiar entre los monitores remotos"
+        "monitors": "Cambiar entre los monitores remotos",
+        "softKeyboard": "Muestra el teclado en pantalla en un teléfono o tableta"
       },
       "option": "Opción",
       "logoffConfirm": "¿Quieres cerrar la sesión de Windows? Se perderá el trabajo no guardado.",
@@ -103,7 +105,8 @@
       "recordFailed": "No se ha podido modificar la grabación",
       "recordRequired": "Un administrador ha establecido la grabación como obligatoria en este host",
       "recordRequiredLabel": "Grabación (obligatoria)",
-      "monitor": "Monitor {{number}}"
+      "monitor": "Monitor {{number}}",
+      "showKeyboard": "Mostrar teclado"
     },
     "disabled": "El escritorio remoto está desactivado. Un administrador puede activarlo en Configuración.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Acceso IP directo",
       "directDesc": "Conéctate a la dirección del host en lugar de buscar un ID de RustDesk. El acceso IP directo debe estar activado en RustDesk en ese dispositivo.",
+      "allowPlain": "Permitir sesiones sin cifrar",
+      "allowPlainDesc": "Las versiones antiguas de RustDesk responden al acceso directo por IP sin cifrado. Activa esta opción solo en redes de confianza, como una VPN.",
       "port": "Puerto IP directo",
       "directNote": "La conexión está cifrada, pero sin un servidor de ID no hay nada que demuestre qué dispositivo respondió.",
       "id": "ID de RustDesk",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "Acceso a IP directa de RustDesk"
+      },
+      "rustdeskAllowPlain": {
+        "label": "Sesiones directas por IP sin cifrar en RustDesk"
       },
       "rustdeskIdServer": {
         "label": "Servidor ID de RustDesk"

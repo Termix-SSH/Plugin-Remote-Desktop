@@ -150,3 +150,39 @@ describe("Korean input keys", () => {
     expect(tap(kb, 0xff34)).toEqual([down(0x71), up(0x71)]);
   });
 });
+
+describe("Keyboard keypad Num Lock", () => {
+  const KP_1 = 0xffb1;
+  const KP_END = 0xff9c;
+  const NUM_LOCK = 0xff7f;
+
+  it("turns the server's Num Lock on before a keypad digit", () => {
+    const kb = new Keyboard("en-us-qwerty");
+    expect(tap(kb, KP_1)).toEqual([
+      { locks: { num: true, caps: false } },
+      down(0x4f),
+      up(0x4f),
+    ]);
+    // Already on: the next digit goes straight through.
+    expect(tap(kb, KP_1)).toEqual([down(0x4f), up(0x4f)]);
+    expect(kb.locks).toEqual({ num: true, caps: false });
+  });
+
+  it("turns it off for keypad navigation, keeping Caps Lock", () => {
+    const kb = new Keyboard("en-us-qwerty");
+    tap(kb, 0xffe5);
+    tap(kb, KP_1);
+    expect(tap(kb, KP_END)).toEqual([
+      { locks: { num: false, caps: true } },
+      down(0x4f),
+      up(0x4f),
+    ]);
+  });
+
+  it("follows Num Lock pressed in the session", () => {
+    const kb = new Keyboard("en-us-qwerty");
+    expect(tap(kb, NUM_LOCK)).toEqual([down(0x45), up(0x45)]);
+    expect(kb.locks.num).toBe(true);
+    expect(tap(kb, KP_1)).toEqual([down(0x4f), up(0x4f)]);
+  });
+});

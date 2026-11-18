@@ -138,12 +138,17 @@ const TOGGLE_KEYS: Record<string, number> = {
   HanjaMode: 0xff34,
 };
 const toggleKeysyms = new Set(Object.values(TOGGLE_KEYS));
+// A latching driver (ko-KR on Windows) never sends keyup, so every later press
+// comes marked as a repeat. Real auto-repeat is about 33 ms apart, a person
+// pressing again is slower.
+const TOGGLE_REPEAT_GAP_MS = 40;
 
 /** Tracks whether the browser sees right Alt as Alt or as AltGraph. */
 export function watchRightAlt(
   target: HTMLElement,
   onToggle?: (keysym: number) => void,
 ): () => void {
+  let lastToggleDown = -Infinity;
   const onKey = (event: KeyboardEvent) => {
     if (event.code === "AltRight") rightAltIsPlain = event.key === "Alt";
     if (event.type !== "keyup") lastKeyCode = event.code;
@@ -154,7 +159,10 @@ export function watchRightAlt(
     if (!onToggle) return;
     event.preventDefault();
     event.stopImmediatePropagation();
-    if (event.type === "keydown" && !event.repeat) onToggle(toggle);
+    if (event.type !== "keydown") return;
+    const gap = event.timeStamp - lastToggleDown;
+    lastToggleDown = event.timeStamp;
+    if (!event.repeat || gap >= TOGGLE_REPEAT_GAP_MS) onToggle(toggle);
   };
   target.addEventListener("keydown", onKey, true);
   target.addEventListener("keyup", onKey, true);
@@ -221,4 +229,26 @@ export function remoteKeysym(
   if (sent === undefined) return keysym;
   optionKeysSent.delete(keysym);
   return sent;
+}
+
+type KeyboardLock = {
+  lock?: (codes: string[]) => Promise<void>;
+  unlock?: () => void;
+};
+
+/**
+ * Claims the Windows keys for a focused session, so Win+R and the like reach
+ * the remote desktop instead of the local one. Browsers only honour the lock
+ * in fullscreen, so windowed sessions keep the toolbar keys.
+ */
+export function systemKeyLock(
+  keyboard = (navigator as Navigator & { keyboard?: KeyboardLock }).keyboard,
+): (on: boolean) => void {
+  let locked = false;
+  return (on) => {
+    if (on === locked) return;
+    locked = on;
+    if (on) void keyboard?.lock?.(["MetaLeft", "MetaRight"])?.catch(() => {});
+    else keyboard?.unlock?.();
+  };
 }

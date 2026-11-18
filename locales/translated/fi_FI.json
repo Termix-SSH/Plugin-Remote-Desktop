@@ -84,7 +84,8 @@
         "spotlight": "Spotlight",
         "logoff": "Kirjaudu ulos",
         "record": "Nauhoita",
-        "monitors": "Näytöt"
+        "monitors": "Näytöt",
+        "softKeyboard": "Näppäimistö"
       },
       "hints": {
         "files": "Näytetään, kun RDP-levy on käytössä",
@@ -92,7 +93,8 @@
         "modifiers": "Ctrl, Alt, Shift ja järjestelmänäppäin pysyvät painettuina seuraavaan näppäimeen asti",
         "logoff": "Kirjautuu Windowsista ulos suorittamalla logoff-käskyn Suorita-ruudusta. Istunnon on oltava auki ja työpöydän näkyvissä.",
         "record": "Aloittaa tai lopettaa tämän istunnon nauhoituksen. Vaatii Session Recording -liitännäisen ja sisäänrakennetun moottorin.",
-        "monitors": "Vaihda etänäytön näyttöjen välillä"
+        "monitors": "Vaihda etänäytön näyttöjen välillä",
+        "softKeyboard": "Näyttää ruutunäppäimistön puhelimessa tai tabletissa"
       },
       "option": "Option",
       "logoffConfirm": "Kirjaudu ulos tästä Windows-istunnosta? Tallentamaton työ istunnossa menetetään.",
@@ -103,7 +105,8 @@
       "recordFailed": "Nauhoituksen muuttaminen epäonnistui",
       "recordRequired": "Ylläpitäjä on vaatinut tallennuksen tälle palvelimelle",
       "recordRequiredLabel": "Tallennus (pakollinen)",
-      "monitor": "Näyttö {{number}}"
+      "monitor": "Näyttö {{number}}",
+      "showKeyboard": "Näytä näppäimistö"
     },
     "disabled": "Etätyöpöytä on poissa käytöstä. Ylläpitäjä voi ottaa sen käyttöön Asetuksista.",
     "rustdesk": {
@@ -303,6 +306,8 @@
     "rustdesk": {
       "direct": "Suora IP-yhteys",
       "directDesc": "Yhdistä suoraan isäntäosoitteeseen RustDesk-tunnuksen sijasta. Suora IP-yhteys on oltava käytössä RustDeskissä kyseisellä laitteella.",
+      "allowPlain": "Salli salaamattomat istunnot",
+      "allowPlainDesc": "Vanhemmat RustDesk-versiot vastaavat suoraa IP-osoitetta käyttäviin yhteyksiin ilman salausta. Ota tämä käyttöön vain luotettavassa verkossa, kuten VPN-yhteydessä.",
       "port": "Suora IP-portti",
       "directNote": "Yhteys on salattu, mutta ilman tunnuspalvelinta ei voida varmistaa, mikä laite vastasi.",
       "id": "RustDesk-tunnus",
@@ -561,6 +566,9 @@
       },
       "rustdeskDirect": {
         "label": "RustDeskin suora IP-yhteys"
+      },
+      "rustdeskAllowPlain": {
+        "label": "RustDeskin salaamattomat suorat IP-istunnot"
       },
       "rustdeskIdServer": {
         "label": "RustDesk-tunnuspalvelin"
