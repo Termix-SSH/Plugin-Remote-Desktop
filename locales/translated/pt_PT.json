@@ -85,7 +85,8 @@
         "logoff": "Terminar sessão",
         "record": "Gravar",
         "monitors": "Monitores",
-        "softKeyboard": "Teclado"
+        "softKeyboard": "Teclado",
+        "viewOnly": "Apenas visualização"
       },
       "hints": {
         "files": "Aparece quando a unidade RDP está ativa",
@@ -94,7 +95,8 @@
         "logoff": "Termina a sessão no Windows executando o comando logoff a partir da caixa Executar. A sessão deve estar aberta e a mostrar o ambiente de trabalho.",
         "record": "Inicia ou para a gravação desta sessão. Requer o plugin Gravação de Sessão e o motor integrado.",
         "monitors": "Alterar entre os monitores remotos",
-        "softKeyboard": "Mostra o teclado na ecrã num telemóvel ou tablet"
+        "softKeyboard": "Mostra o teclado na ecrã num telemóvel ou tablet",
+        "viewOnly": "Deixa de enviar o rato e o teclado, para que possa observar sem alterar nada."
       },
       "option": "Opção",
       "logoffConfirm": "Terminar a sessão do Windows? O trabalho não guardado será perdido.",
@@ -106,7 +108,9 @@
       "recordRequired": "Um administrador definiu a gravação como obrigatória neste host",
       "recordRequiredLabel": "Gravação (obrigatória)",
       "monitor": "Monitor {{number}}",
-      "showKeyboard": "Mostrar teclado"
+      "showKeyboard": "Mostrar teclado",
+      "viewOnlyOn": "Apenas visualização está ativo. Clique para voltar a enviar entrada",
+      "viewOnlyOff": "Ativar apenas visualização"
     },
     "disabled": "O Remote Desktop está desativado. Um administrador pode ativá-lo nas Definições.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "O dispositivo remoto necessita do código da sua aplicação de autenticação.",
       "codeWrong": "Esse código não foi aceite. Tente novamente.",
       "code": "Código"
-    }
+    },
+    "viewOnlyStarted": "Apenas visualização: o rato e o teclado não estão a ser enviados"
   },
   "hosts": {
     "nativeRdpOpened": "Aberto no Windows Remote Desktop",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16 bits",
       "colorDepth24": "24 bits",
-      "colorDepth32": "32 bits"
+      "colorDepth32": "32 bits",
+      "quickConnectViewOnly": {
+        "label": "Iniciar sessões de Ligação Rápida em apenas visualização",
+        "description": "As sessões RDP, VNC e ARD de Ligação Rápida abrem sem enviar o rato e o teclado. Ative a entrada na barra de ferramentas quando quiser interagir."
+      }
     },
     "admin": {
       "enabled": {

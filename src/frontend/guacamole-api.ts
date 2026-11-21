@@ -69,6 +69,10 @@ export interface GuacamoleTokenRequest {
   port?: number;
   username?: string;
   password?: string;
+  /** A saved credential the server resolves; wins over username and password. */
+  credentialId?: number;
+  /** Start without the user's input. Only ever turns it on. */
+  viewOnly?: boolean;
   domain?: string;
   security?: string;
   ignoreCert?: boolean;
@@ -202,6 +206,8 @@ export async function getGuacamoleToken(
         port: request.port,
         username: request.username,
         password: request.password,
+        credentialId: request.credentialId,
+        ...(request.viewOnly ? { viewOnly: true } : {}),
         domain: request.domain,
         security: request.security,
         "ignore-cert": request.ignoreCert,

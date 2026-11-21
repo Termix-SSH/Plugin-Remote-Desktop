@@ -85,7 +85,8 @@
         "logoff": "Esci",
         "record": "Registra",
         "monitors": "Monitor",
-        "softKeyboard": "Tastiera"
+        "softKeyboard": "Tastiera",
+        "viewOnly": "Sola visualizzazione"
       },
       "hints": {
         "files": "Viene visualizzato quando l'unità RDP è attiva",
@@ -94,7 +95,8 @@
         "logoff": "Effettua il logout da Windows eseguendo logoff dalla finestra Esegui. La sessione deve essere aperta e mostrare il desktop.",
         "record": "Avvia o interrompe la registrazione di questa sessione. Richiede il plugin Session Recording e il motore integrato.",
         "monitors": "Passa da un monitor remoto all'altro",
-        "softKeyboard": "Mostra la tastiera sullo schermo su un telefono o un tablet"
+        "softKeyboard": "Mostra la tastiera sullo schermo su un telefono o un tablet",
+        "viewOnly": "Interrompe l'invio di mouse e tastiera, così puoi osservare senza modificare nulla."
       },
       "option": "Opzione",
       "logoffConfirm": "Effettuare il logout da questa sessione Windows? Il lavoro non salvato verrà perso.",
@@ -106,7 +108,9 @@
       "recordRequired": "Un amministratore ha reso obbligatoria la registrazione su questo host",
       "recordRequiredLabel": "Registrazione (obbligatoria)",
       "monitor": "Monitor {{number}}",
-      "showKeyboard": "Mostra tastiera"
+      "showKeyboard": "Mostra tastiera",
+      "viewOnlyOn": "Sola visualizzazione attiva. Clicca per inviare nuovamente l'input",
+      "viewOnlyOff": "Attiva sola visualizzazione"
     },
     "disabled": "Remote Desktop is turned off. An admin can turn it on in Settings.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Il dispositivo remoto richiede il codice dall'app di autenticazione.",
       "codeWrong": "Questo codice non è stato accettato. Riprova.",
       "code": "Codice"
-    }
+    },
+    "viewOnlyStarted": "Sola visualizzazione: mouse e tastiera non vengono inviati"
   },
   "hosts": {
     "nativeRdpOpened": "Opened in Windows Remote Desktop",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
-      "colorDepth32": "32-bit"
+      "colorDepth32": "32-bit",
+      "quickConnectViewOnly": {
+        "label": "Avvia le sessioni di Connessione Rapida in sola visualizzazione",
+        "description": "Le sessioni RDP, VNC e ARD di Connessione Rapida si aprono senza inviare mouse e tastiera. Attiva l'input dalla barra degli strumenti quando vuoi interagire."
+      }
     },
     "admin": {
       "enabled": {

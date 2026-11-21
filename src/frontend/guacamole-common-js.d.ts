@@ -80,6 +80,8 @@ declare module "guacamole-common-js" {
     class Tunnel {
       onerror: ((status: Status) => void) | null;
       onstatechange: ((state: number) => void) | null;
+      oninstruction: ((opcode: string, args: string[]) => void) | null;
+      sendMessage(...elements: unknown[]): void;
     }
 
     class WebSocketTunnel extends Tunnel {

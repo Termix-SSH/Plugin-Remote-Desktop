@@ -85,7 +85,8 @@
         "logoff": "Log keluar",
         "record": "Rakam",
         "monitors": "Monitor",
-        "softKeyboard": "Papan Kekunci"
+        "softKeyboard": "Papan Kekunci",
+        "viewOnly": "Lihat sahaja"
       },
       "hints": {
         "files": "Muncul sekali pemacu RDP dihidupkan",
@@ -94,7 +95,8 @@
         "logoff": "Log keluar dari Windows dengan menjalankan logoff dari kotak Run. Sesi mesti dibuka dan menunjukkan desktop.",
         "record": "Memulakan atau menghentikan rakaman sesi ini. Memerlukan plugin Rakaman Sesi dan enjin terbina dalam.",
         "monitors": "Tukar antara monitor jauh",
-        "softKeyboard": "Memaparkan papan kekunci pada skrin di telefon atau tablet"
+        "softKeyboard": "Memaparkan papan kekunci pada skrin di telefon atau tablet",
+        "viewOnly": "Berhantar tetikus dan papan kekunci anda, supaya anda boleh menonton tanpa mengubah apa-apa."
       },
       "option": "Pilihan",
       "logoffConfirm": "Log keluar dari sesi Windows ini? Kerja yang belum disimpan akan hilang.",
@@ -106,7 +108,9 @@
       "recordRequired": "Pentadbir telah menetapkan rakaman sebagai wajib pada hos ini",
       "recordRequiredLabel": "Rakaman (wajib)",
       "monitor": "Monitor {{number}}",
-      "showKeyboard": "Paparkan papan kekunci"
+      "showKeyboard": "Paparkan papan kekunci",
+      "viewOnlyOn": "Lihat sahaja dihidupkan. Klik untuk menghantar input semula",
+      "viewOnlyOff": "Hidupkan lihat sahaja"
     },
     "disabled": "Remote Desktop dimatikan. Admin boleh menghidupkannya dalam Tetapan.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Peranti jauh memerlukan kod daripada aplikasi pengesah peranti.",
       "codeWrong": "Kod tersebut tidak diterima. Cuba lagi.",
       "code": "Kod"
-    }
+    },
+    "viewOnlyStarted": "Lihat sahaja: tetikus dan papan kekunci anda tidak dihantar"
   },
   "hosts": {
     "nativeRdpOpened": "Dibuka dalam Windows Remote Desktop",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
-      "colorDepth32": "32-bit"
+      "colorDepth32": "32-bit",
+      "quickConnectViewOnly": {
+        "label": "Mulakan sesi Sambungan Pantas dalam mod lihat sahaja",
+        "description": "Sesi RDP, VNC dan ARD Sambungan Pantas dibuka tanpa menghantar tetikus dan papan kekunci anda. Hidupkan input dari bar alat apabila anda ingin bertindak."
+      }
     },
     "admin": {
       "enabled": {

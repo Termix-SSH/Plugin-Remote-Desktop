@@ -27,6 +27,7 @@ function display(overrides: Partial<GuacamoleDisplayHandle> = {}) {
       closeSoftKeyboard: vi.fn(),
       isSoftKeyboardOpen: () => false,
       selectDisplay: vi.fn(),
+      setViewOnly: vi.fn(),
       ...overrides,
     } satisfies GuacamoleDisplayHandle,
   } as React.RefObject<GuacamoleDisplayHandle>;

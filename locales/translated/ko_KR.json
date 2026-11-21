@@ -85,7 +85,8 @@
         "logoff": "로그아웃",
         "record": "녹화",
         "monitors": "모니터",
-        "softKeyboard": "키보드"
+        "softKeyboard": "키보드",
+        "viewOnly": "읽기 전용"
       },
       "hints": {
         "files": "RDP 드라이브가 켜지면 표시됩니다",
@@ -94,7 +95,8 @@
         "logoff": "실행 상자에서 logoff를 실행하여 Windows에서 로그아웃합니다. 세션이 열려 있고 데스크톱이 표시되어야 합니다.",
         "record": "이 세션의 녹화를 시작하거나 중지합니다. 세션 녹화 플러그인과 기본 엔진이 필요합니다.",
         "monitors": "원격 모니터 간 전환",
-        "softKeyboard": "전화기나 태블릿에서 화면 키보드를 표시합니다"
+        "softKeyboard": "전화기나 태블릿에서 화면 키보드를 표시합니다",
+        "viewOnly": "마우스와 키보드 입력을 전송하지 않아서 변경 없이 화면만 시청할 수 있습니다."
       },
       "option": "Option",
       "logoffConfirm": "이 Windows 세션에서 로그아웃하시겠습니까? 저장되지 않은 작업은 손실됩니다.",
@@ -106,7 +108,9 @@
       "recordRequired": "관리자가 이 호스트에서 녹화를 필수로 설정했습니다",
       "recordRequiredLabel": "녹화 (필수)",
       "monitor": "모니터 {{number}}",
-      "showKeyboard": "키보드 표시"
+      "showKeyboard": "키보드 표시",
+      "viewOnlyOn": "읽기 전용이 활성화되었습니다. 다시 입력하려면 클릭하세요.",
+      "viewOnlyOff": "읽기 전용 활성화"
     },
     "disabled": "원격 데스크톱이 꺼져 있습니다. 관리자가 설정에서 켤 수 있습니다.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "원격 장치는 인증 앱에서 생성한 코드가 필요합니다.",
       "codeWrong": "코드가 거부되었습니다. 다시 시도하세요.",
       "code": "코드"
-    }
+    },
+    "viewOnlyStarted": "읽기 전용: 마우스와 키보드 입력이 전송되지 않습니다"
   },
   "hosts": {
     "nativeRdpOpened": "Windows 원격 데스크톱에서 열렸습니다",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16비트",
       "colorDepth24": "24비트",
-      "colorDepth32": "32비트"
+      "colorDepth32": "32비트",
+      "quickConnectViewOnly": {
+        "label": "빠른 연결 세션 읽기 전용으로 시작",
+        "description": "빠른 연결 RDP, VNC 및 ARD 세션은 마우스와 키보드 입력 없이 열립니다. 작업을 하려면 도구 모음에서 입력을 활성화하세요."
+      }
     },
     "admin": {
       "enabled": {

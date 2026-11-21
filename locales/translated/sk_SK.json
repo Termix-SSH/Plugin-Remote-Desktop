@@ -85,7 +85,8 @@
         "logoff": "Odhlásiť sa",
         "record": "Nahrávať",
         "monitors": "Monitory",
-        "softKeyboard": "Klávesnica"
+        "softKeyboard": "Klávesnica",
+        "viewOnly": "Iba na zobrazenie"
       },
       "hints": {
         "files": "Zobrazí sa po zapnutí RDP jednotky",
@@ -94,7 +95,8 @@
         "logoff": "Odhlási sa z Windows spustením príkazu logoff z dialógu Spustiť. Relácia musí byť otvorená a zobrazovať plochu.",
         "record": "Spustí alebo zastaví nahrávanie tejto relácie. Vyžaduje plugin Session Recording a vstavaný engine.",
         "monitors": "Prepínať medzi vzdialenými monitorami",
-        "softKeyboard": "Zobrazí obrazovkovú klávesnicu na telefóne alebo tablete"
+        "softKeyboard": "Zobrazí obrazovkovú klávesnicu na telefóne alebo tablete",
+        "viewOnly": "Zastaví odosielanie vstupov z myši a klávesnice, takže môžete sledovať bez toho, aby ste niečo menili."
       },
       "option": "Možnosť",
       "logoffConfirm": "Odhlásiť sa z tejto relácie Windows? Neuložená práca v nej bude stratená.",
@@ -106,7 +108,9 @@
       "recordRequired": "Správca na tomto hostiteľovi nastavil povinné nahrávanie",
       "recordRequiredLabel": "Nahrávanie (povinné)",
       "monitor": "Monitor {{number}}",
-      "showKeyboard": "Zobraziť klávesnicu"
+      "showKeyboard": "Zobraziť klávesnicu",
+      "viewOnlyOn": "Režim iba na zobrazenie je zapnutý. Kliknutím znovupovolíte ovládanie.",
+      "viewOnlyOff": "Zapnúť režim iba na zobrazenie"
     },
     "disabled": "Vzdialená plocha je vypnutá. Správca ju môže zapnúť v Nastaveniach.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Vzdialené zariadenie vyžaduje kód z aplikácie na overovanie.",
       "codeWrong": "Tento kód nebolo prijaté. Skúste to znova.",
       "code": "Kód"
-    }
+    },
+    "viewOnlyStarted": "Režim iba na zobrazenie: vstupy z myši a klávesnice sa neodosielajú"
   },
   "hosts": {
     "nativeRdpOpened": "Otvorené vo Windows Remote Desktop",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
-      "colorDepth32": "32-bit"
+      "colorDepth32": "32-bit",
+      "quickConnectViewOnly": {
+        "label": "Spúšťať relácie Rýchleho pripojenia v režime iba na zobrazenie",
+        "description": "Relácie Rýchleho pripojenia pre RDP, VNC a ARD sa otvoria bez odosielania vstupov z myši a klávesnice. Ovládanie môžete zapnúť z panela nástrojov, keď budete chcieť konať."
+      }
     },
     "admin": {
       "enabled": {

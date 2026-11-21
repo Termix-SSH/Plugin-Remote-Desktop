@@ -85,7 +85,8 @@
         "logoff": "サインアウト",
         "record": "録画",
         "monitors": "モニター",
-        "softKeyboard": "キーボード"
+        "softKeyboard": "キーボード",
+        "viewOnly": "閲覧のみ"
       },
       "hints": {
         "files": "RDP ドライブが有効になると表示されます",
@@ -94,7 +95,8 @@
         "logoff": "実行ダイアログから logoff を実行して Windows からサインアウトします。セッションが開いていてデスクトップが表示されている必要があります。",
         "record": "このセッションの録画を開始または停止します。Session Recording プラグインと組み込みエンジンが必要です。",
         "monitors": "リモートモニターを切り替えます",
-        "softKeyboard": "スマートフォンやタブレットで画面キーボードを表示します"
+        "softKeyboard": "スマートフォンやタブレットで画面キーボードを表示します",
+        "viewOnly": "マウスとキーボードの入力を送信しなくなるため、変更を加えずに監視できます。"
       },
       "option": "Option",
       "logoffConfirm": "この Windows セッションからサインアウトしますか？保存されていない作業は失われます。",
@@ -106,7 +108,9 @@
       "recordRequired": "管理者がこのホストで録画を必須に設定しています",
       "recordRequiredLabel": "録画（必須）",
       "monitor": "モニター {{number}}",
-      "showKeyboard": "キーボードを表示"
+      "showKeyboard": "キーボードを表示",
+      "viewOnlyOn": "閲覧のみが有効です。クリックして入力を再開します",
+      "viewOnlyOff": "閲覧のみを有効にする"
     },
     "disabled": "リモートデスクトップは無効化されています。管理者が設定で有効化できます。",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "リモートデバイスには、認証アプリから取得したコードが必要です。",
       "codeWrong": "そのコードは受け入れられませんでした。もう一度お試しください。",
       "code": "コード"
-    }
+    },
+    "viewOnlyStarted": "閲覧のみ：マウスとキーボードの入力は送信されません"
   },
   "hosts": {
     "nativeRdpOpened": "Windows リモートデスクトップで開きました",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16ビット",
       "colorDepth24": "24ビット",
-      "colorDepth32": "32ビット"
+      "colorDepth32": "32ビット",
+      "quickConnectViewOnly": {
+        "label": "クイック接続セッションを閲覧のみで開始",
+        "description": "クイック接続の RDP、VNC、および ARD セッションは、マウスとキーボードの入力を送信せずに開きます。操作したい場合は、ツールバーから入力を有効にしてください。"
+      }
     },
     "admin": {
       "enabled": {

@@ -107,7 +107,9 @@ describe("EngineSession", () => {
     worker.reply({ t: "out", data: "all;" });
     worker.reply({ t: "out", data: "only-a;", to: ida });
     worker.reply({ t: "out", data: "not-a;", except: ida });
-    expect(a.sent.slice(1)).toEqual(["all;", "only-a;"]);
+    // The owner also hears the view only state first.
+    expect(a.sent[1]).toBe("16.termix-view-only,1.0;");
+    expect(a.sent.slice(2)).toEqual(["all;", "only-a;"]);
     expect(b.sent.slice(1)).toEqual(["all;", "not-a;"]);
   });
 
@@ -122,6 +124,35 @@ describe("EngineSession", () => {
     );
     expect(worker.inputs().map((m) => m.t === "input" && m.opcode)).toEqual([
       "sync",
+    ]);
+  });
+
+  it("drops the owner's input while view only, and only the owner can switch it", () => {
+    const worker = new FakeWorker();
+    const session = new EngineSession({
+      config: { protocol: "rdp", settings: {} },
+      worker,
+      log: () => {},
+      viewOnly: true,
+    });
+    sessions.push(session);
+    const owner = new FakeSocket();
+    session.attach(owner, { owner: true, readOnly: false });
+    expect(owner.sent[1]).toBe("16.termix-view-only,1.1;");
+    owner.client("3.key,2.97,1.1;4.size,3.800,3.600;");
+    expect(worker.inputs().map((m) => m.t === "input" && m.opcode)).toEqual([
+      "size",
+    ]);
+    const viewer = new FakeSocket();
+    session.attach(viewer, { owner: false, readOnly: false });
+    viewer.client("16.termix-view-only,1.0;");
+    expect(session.viewOnly).toBe(true);
+    owner.client("16.termix-view-only,1.0;3.key,2.97,1.1;");
+    expect(session.viewOnly).toBe(false);
+    expect(owner.sent.at(-1)).toBe("16.termix-view-only,1.0;");
+    expect(worker.inputs().map((m) => m.t === "input" && m.opcode)).toEqual([
+      "size",
+      "key",
     ]);
   });
 

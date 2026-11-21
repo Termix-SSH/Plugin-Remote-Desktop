@@ -85,7 +85,8 @@
         "logoff": "注销",
         "record": "录制",
         "monitors": "显示器",
-        "softKeyboard": "键盘"
+        "softKeyboard": "键盘",
+        "viewOnly": "仅查看"
       },
       "hints": {
         "files": "启用 RDP 驱动器后显示",
@@ -94,7 +95,8 @@
         "logoff": "通过运行“运行”对话框中的 logoff 命令来注销 Windows。会话必须处于打开状态并显示桌面。",
         "record": "开始或停止录制此会话。需要会话录制插件和内置引擎。",
         "monitors": "在远程显示器之间切换",
-        "softKeyboard": "在手机或平板上显示屏幕键盘"
+        "softKeyboard": "在手机或平板上显示屏幕键盘",
+        "viewOnly": "停止发送鼠标和键盘输入，以便在不进行任何更改的情况下进行观看。"
       },
       "option": "Option",
       "logoffConfirm": "要注销此 Windows 会话吗？其中未保存的工作将会丢失。",
@@ -106,7 +108,9 @@
       "recordRequired": "管理员已在此主机上强制要求录制",
       "recordRequiredLabel": "录制（强制）",
       "monitor": "显示器 {{number}}",
-      "showKeyboard": "显示键盘"
+      "showKeyboard": "显示键盘",
+      "viewOnlyOn": "已启用仅查看模式。点击以恢复发送输入。",
+      "viewOnlyOff": "启用仅查看模式"
     },
     "disabled": "远程桌面已关闭。管理员可以在设置中将其开启。",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "远程设备需要其身份验证器应用中的验证码。",
       "codeWrong": "验证码未被接受。请重试。",
       "code": "验证码"
-    }
+    },
+    "viewOnlyStarted": "仅查看模式：您的鼠标和键盘输入不会发送"
   },
   "hosts": {
     "nativeRdpOpened": "已在 Windows 远程桌面中打开",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16 位",
       "colorDepth24": "24 位",
-      "colorDepth32": "32 位"
+      "colorDepth32": "32 位",
+      "quickConnectViewOnly": {
+        "label": "以仅查看模式启动快速连接会话",
+        "description": "快速连接的 RDP、VNC 和 ARD 会话将在不发送鼠标和键盘输入的情况下打开。当您需要进行操作时，可以从工具栏开启输入功能。"
+      }
     },
     "admin": {
       "enabled": {

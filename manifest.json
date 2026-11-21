@@ -1,7 +1,7 @@
 {
   "id": "remote-desktop",
   "name": "Remote Desktop",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "RDP, VNC, Apple Remote Desktop, RustDesk and Telnet sessions in your browser, with clipboard, file transfer, sharing and recording.",
   "author": {
     "name": "Termix"
@@ -167,6 +167,10 @@
       {
         "id": "remote-desktop.toolbar",
         "accepts": ["button"]
+      },
+      {
+        "id": "remote-desktop.sidePanel",
+        "accepts": ["component"]
       }
     ],
     "protocols": [
@@ -333,6 +337,15 @@
           "labelKey": "settings.admin.hostGuacdMigrated.label",
           "default": false,
           "hidden": true
+        }
+      ],
+      "user": [
+        {
+          "key": "quickConnectViewOnly",
+          "type": "boolean",
+          "labelKey": "settings.user.quickConnectViewOnly.label",
+          "descriptionKey": "settings.user.quickConnectViewOnly.description",
+          "default": false
         }
       ],
       "host": {

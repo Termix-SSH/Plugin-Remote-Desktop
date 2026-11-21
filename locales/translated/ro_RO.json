@@ -85,7 +85,8 @@
         "logoff": "Deconectare",
         "record": "Înregistrare",
         "monitors": "Monitoare",
-        "softKeyboard": "Tastatură"
+        "softKeyboard": "Tastatură",
+        "viewOnly": "Doar vizualizare"
       },
       "hints": {
         "files": "Se afișează doar după activarea unității RDP",
@@ -94,7 +95,8 @@
         "logoff": "Se deconectează de la Windows rulând comanda logoff din caseta Run. Sesiunea trebuie să fie deschisă și să afișeze desktopul.",
         "record": "Începe sau oprește înregistrarea acestei sesiuni. Necesită pluginul Session Recording și motorul integrat.",
         "monitors": "Comută între monitoarele de la distanță",
-        "softKeyboard": "Afișează tastatura pe ecran pe un telefon sau tabletă"
+        "softKeyboard": "Afișează tastatura pe ecran pe un telefon sau tabletă",
+        "viewOnly": "Oprește trimiterea intrărilor de la mouse și tastatură, astfel încât să poți urmări fără a face modificări."
       },
       "option": "Opțiune",
       "logoffConfirm": "Doriți să vă deconectați de la această sesiune Windows? Lucrul nesalvat va fi pierdut.",
@@ -106,7 +108,9 @@
       "recordRequired": "Un administrator a impus înregistrarea pe acest gazdă",
       "recordRequiredLabel": "Înregistrare (obligatorie)",
       "monitor": "Monitor {{number}}",
-      "showKeyboard": "Afișează tastatura"
+      "showKeyboard": "Afișează tastatura",
+      "viewOnlyOn": "Modul doar vizualizare este activat. Faceți clic pentru a trimite din nou intrări.",
+      "viewOnlyOff": "Activează modul doar vizualizare"
     },
     "disabled": "Remote Desktop este dezactivat. Un administrator îl poate activa în Setări.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Dispozitivul de la distanță necesită codul din aplicația sa de autentificare.",
       "codeWrong": "Acest cod nu a fost acceptat. Încearcă din nou.",
       "code": "Cod"
-    }
+    },
+    "viewOnlyStarted": "Doar vizualizare: mouse-ul și tastatura nu sunt transmise"
   },
   "hosts": {
     "nativeRdpOpened": "Deschis în Windows Remote Desktop",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16 biți",
       "colorDepth24": "24 biți",
-      "colorDepth32": "32 biți"
+      "colorDepth32": "32 biți",
+      "quickConnectViewOnly": {
+        "label": "Începe sesiunile Quick Connect în modul doar vizualizare",
+        "description": "Sesiunile Quick Connect RDP, VNC și ARD se deschid fără a trimite intrările de la mouse și tastatură. Activați intrările din bara de instrumente când doriți să interacționați."
+      }
     },
     "admin": {
       "enabled": {

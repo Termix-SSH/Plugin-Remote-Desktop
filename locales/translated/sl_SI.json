@@ -85,7 +85,8 @@
         "logoff": "Odjava",
         "record": "Snemanje",
         "monitors": "Zasloni",
-        "softKeyboard": "Tipkovnica"
+        "softKeyboard": "Tipkovnica",
+        "viewOnly": "Samo za ogled"
       },
       "hints": {
         "files": "Prikaže se, ko je RDP pogon vklopljen",
@@ -94,7 +95,8 @@
         "logoff": "Odjava iz Windows z izvajanjem ukaza logoff iz polja Zaženi. Seja mora biti odprta in prikazovati namizje.",
         "record": "Začne ali ustavi snemanje te seje. Zahteva vtičnik za snemanje sej in vgrajeni motor.",
         "monitors": "Preklopi med oddaljenimi zasloni",
-        "softKeyboard": "Prikaže tipkovnico na zaslonu na telefonu ali tabličnem računalniku"
+        "softKeyboard": "Prikaže tipkovnico na zaslonu na telefonu ali tabličnem računalniku",
+        "viewOnly": "Ustavi pošiljanje ukazov miške in tipkovnice, da lahko opazujete, ne da bi kaj spreminjali."
       },
       "option": "Option",
       "logoffConfirm": "Se želite odjaviti iz te seje Windows? Neshranjeno delo bo izgubljeno.",
@@ -106,7 +108,9 @@
       "recordRequired": "Upravitelj je na tem gostitelju zahteval snemanje",
       "recordRequiredLabel": "Snemanje (obvezno)",
       "monitor": "Zaslon {{number}}",
-      "showKeyboard": "Prikaži tipkovnico"
+      "showKeyboard": "Prikaži tipkovnico",
+      "viewOnlyOn": "Način samo za ogled je vklopljen. Kliknite za ponovno pošiljanje ukazov.",
+      "viewOnlyOff": "Vklopi način samo za ogled"
     },
     "disabled": "Oddaljena namizna površina je izklopljena. Skrbnik jo lahko vklopi v Nastavitev.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Oddaljena naprava zahteva kodo iz aplikacije za preverjanje pristnosti.",
       "codeWrong": "Ta koda ni bila sprejeta. Poskusite znova.",
       "code": "Koda"
-    }
+    },
+    "viewOnlyStarted": "Samo za ogled: vaša miška in tipkovnica ne pošiljata ukazov"
   },
   "hosts": {
     "nativeRdpOpened": "Odprto v Windows Oddaljeno namizje",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bitno",
       "colorDepth24": "24-bitno",
-      "colorDepth32": "32-bitno"
+      "colorDepth32": "32-bitno",
+      "quickConnectViewOnly": {
+        "label": "Seje hitre povezave začni v načinu samo za ogled",
+        "description": "Seje hitre povezave RDP, VNC in ARD se odprejo brez pošiljanja ukazov miške in tipkovnice. Ko želite delovati, vklopite vnose s pomočjo orodne vrstice."
+      }
     },
     "admin": {
       "enabled": {

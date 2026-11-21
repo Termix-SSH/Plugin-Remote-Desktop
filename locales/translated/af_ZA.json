@@ -85,7 +85,8 @@
         "logoff": "Teken uit",
         "record": "Neem op",
         "monitors": "Monitors",
-        "softKeyboard": "Sleutelbord"
+        "softKeyboard": "Sleutelbord",
+        "viewOnly": "Slegs lees"
       },
       "hints": {
         "files": "Verskyn eers wanneer die RDP-stoor is aangeskakel",
@@ -94,7 +95,8 @@
         "logoff": "Teken uit van Windows deur logoff uit die Run-boks te hardloop. Die sessie moet oop wees en die bureblad wys.",
         "record": "Begin of stop 'n opname van hierdie sessie. Vereis die Session Recording-plug-in en die ingeboude enjin.",
         "monitors": "Skakel tussen die afgeleë monitors",
-        "softKeyboard": "Wys die skerm-sleutelbord op 'n foon of tablet"
+        "softKeyboard": "Wys die skerm-sleutelbord op 'n foon of tablet",
+        "viewOnly": "Stop die stuur van jou muis en toetsbord, sodat jy kan kyk sonder om iets te verander."
       },
       "option": "Opsie",
       "logoffConfirm": "Teken uit van hierdie Windows-sessie? Ongespaarde werk daarin gaan verlore.",
@@ -106,7 +108,9 @@
       "recordRequired": "'n Admin het opname verpligtend gemaak op hierdie gasheer",
       "recordRequiredLabel": "Opname (verpligtend)",
       "monitor": "Monitor {{number}}",
-      "showKeyboard": "Wys sleutelbord"
+      "showKeyboard": "Wys sleutelbord",
+      "viewOnlyOn": "Slegs lees is aan. Klik om invoer weer te stuur",
+      "viewOnlyOff": "Skakel slegs lees aan"
     },
     "disabled": "Afgeleë Bureaublad is afgeskakel. 'n Admin kan dit in Instellings aanskakel.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Die afgeleë toestel benodig die kode van sy autentikator-toepassing.",
       "codeWrong": "Daardie kode is nie aanvaar nie. Probeer weer.",
       "code": "Kode"
-    }
+    },
+    "viewOnlyStarted": "Slegs lees: jou muis en toetsbord word nie gestuur nie"
   },
   "hosts": {
     "nativeRdpOpened": "Oopgemaak in Windows Afgeleë Bureaublad",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
-      "colorDepth32": "32-bit"
+      "colorDepth32": "32-bit",
+      "quickConnectViewOnly": {
+        "label": "Begin Vinnige Verbindingsessies slegs lees",
+        "description": "Vinnige Verbindings RDP, VNC en ARD-sessies open sonder om jou muis en toetsbord te stuur. Skakel invoer aan vanaf die werkbalk wanneer jy wil optree."
+      }
     },
     "admin": {
       "enabled": {

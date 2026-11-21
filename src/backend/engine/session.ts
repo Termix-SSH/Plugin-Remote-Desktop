@@ -49,6 +49,8 @@ export interface SessionOptions {
     message: string,
     meta?: Record<string, unknown>,
   ) => void;
+  /** Start with the owner's input off. They can turn it on in the session. */
+  viewOnly?: boolean;
   /** Called once, after every user is gone and the worker stopped. */
   onEnd?: (session: EngineSession) => void;
   keepaliveMs?: number;
@@ -66,6 +68,8 @@ interface User {
 }
 
 const OPEN = 1;
+/** The owner's own switch for view only, sent over the tunnel as "1" or "0". */
+export const VIEW_ONLY_OPCODE = "termix-view-only";
 /** What a read-only viewer may still send: frame acks and goodbyes. */
 const READ_ONLY_OPCODES = new Set(["sync", "nop", "ack", "disconnect", ""]);
 
@@ -129,6 +133,8 @@ export class EngineSession {
   private ended = false;
   private ready = false;
   private ownerId: string | null = null;
+  /** The owner only watches: their input is dropped here, like a viewer's. */
+  private ownerViewOnly = false;
 
   constructor(private readonly options: SessionOptions) {
     this.id = options.id ?? `$${crypto.randomUUID()}`;
@@ -148,6 +154,7 @@ export class EngineSession {
         this.fail("The remote desktop engine stopped", Status.SERVER_ERROR);
     });
     worker.postMessage({ t: "start", config: options.config });
+    this.ownerViewOnly = options.viewOnly === true;
 
     const keepaliveMs = options.keepaliveMs ?? 5000;
     // A hidden browser tab or a phone app in the background sends no nop for
@@ -204,6 +211,13 @@ export class EngineSession {
     if (user.owner) this.ownerId = user.id;
     this.users.set(user.id, user);
     this.sendTo(user, encode("", this.id));
+    // Also tells the browser this session has the switch at all.
+    if (user.owner) {
+      this.sendTo(
+        user,
+        encode(VIEW_ONLY_OPCODE, this.ownerViewOnly ? "1" : "0"),
+      );
+    }
     socket.on("message", (data) => this.fromUser(user, data));
     socket.on("pong", () => {
       user.lastSeen = Date.now();
@@ -217,6 +231,20 @@ export class EngineSession {
       readOnly: user.readOnly,
     });
     return user.id;
+  }
+
+  get viewOnly(): boolean {
+    return this.ownerViewOnly;
+  }
+
+  /** Turns the owner's input off or on, and tells their browser. */
+  setViewOnly(on: boolean): void {
+    this.ownerViewOnly = on;
+    const owner = this.ownerId ? this.users.get(this.ownerId) : undefined;
+    if (owner) this.sendTo(owner, encode(VIEW_ONLY_OPCODE, on ? "1" : "0"));
+    this.options.log("info", on ? "View only on" : "View only off", {
+      session: this.id,
+    });
   }
 
   get isRecording(): boolean {
@@ -365,7 +393,19 @@ export class EngineSession {
         this.detach(user.id, "disconnect");
         return;
       }
+      if (opcode === VIEW_ONLY_OPCODE) {
+        if (user.owner) this.setViewOnly(args[0] === "1");
+        continue;
+      }
       if (user.readOnly && !READ_ONLY_OPCODES.has(opcode)) continue;
+      if (
+        user.owner &&
+        this.ownerViewOnly &&
+        !READ_ONLY_OPCODES.has(opcode) &&
+        opcode !== "size"
+      ) {
+        continue;
+      }
       if (!user.readOnly) this.recording?.input(opcode, args);
       this.options.worker.postMessage({
         t: "input",

@@ -5,8 +5,10 @@ import tls from "node:tls";
 import { describe, expect, it, vi } from "vitest";
 import {
   CLIPBOARD_KEY_HOLD_MS,
+  LEGACY_TLS,
   RSA_KEY_EXCHANGE,
   RdpClient,
+  retryWithLegacyTls,
   retryWithRsaKeyExchange,
   nextSize,
   normalizeKdcUrl,
@@ -323,5 +325,62 @@ describe("certificates without the Digital Signature use", () => {
     } finally {
       await new Promise<void>((resolve) => server.close(() => resolve()));
     }
+  });
+});
+
+describe("legacy TLS retry (#76)", () => {
+  const dir = new URL("./fixtures/", import.meta.url);
+  const key = fs.readFileSync(new URL("no-signature-key.pem", dir));
+  const cert = fs.readFileSync(new URL("no-signature-cert.pem", dir));
+
+  it("retries once after the server breaks off the handshake", () => {
+    const reset = Object.assign(new Error("read ECONNRESET"), {
+      code: "ECONNRESET",
+    });
+    expect(retryWithLegacyTls(reset, false)).toBe(true);
+    expect(retryWithLegacyTls(reset, true)).toBe(false);
+    expect(
+      retryWithLegacyTls(new Error("ssl routines:unsupported protocol"), false),
+    ).toBe(true);
+    expect(
+      retryWithLegacyTls(new Error("certificate has expired"), false),
+    ).toBe(false);
+  });
+
+  async function handshake(options: tls.ConnectionOptions) {
+    const server = tls.createServer({
+      key,
+      cert,
+      minVersion: "TLSv1",
+      maxVersion: "TLSv1",
+      ciphers: "DEFAULT:@SECLEVEL=0",
+    });
+    server.on("tlsClientError", () => {});
+    await new Promise<void>((resolve) =>
+      server.listen(0, "127.0.0.1", resolve),
+    );
+    const { port } = server.address() as net.AddressInfo;
+    try {
+      return await new Promise<boolean>((resolve) => {
+        const socket = tls.connect({
+          host: "127.0.0.1",
+          port,
+          rejectUnauthorized: false,
+          minVersion: "TLSv1",
+          ...options,
+        });
+        socket.once("secureConnect", () => {
+          socket.destroy();
+          resolve(true);
+        });
+        socket.once("error", () => resolve(false));
+      });
+    } finally {
+      server.close();
+    }
+  }
+
+  it("reaches a server that only speaks TLS 1.0", async () => {
+    expect(await handshake(LEGACY_TLS)).toBe(true);
   });
 });

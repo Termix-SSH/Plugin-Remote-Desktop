@@ -85,7 +85,8 @@
         "logoff": "Cerrar sesión",
         "record": "Grabar",
         "monitors": "Monitores",
-        "softKeyboard": "Teclado"
+        "softKeyboard": "Teclado",
+        "viewOnly": "Solo lectura"
       },
       "hints": {
         "files": "Se muestra una vez que la unidad RDP está activa",
@@ -94,7 +95,8 @@
         "logoff": "Cierra la sesión de Windows ejecutando logoff desde el cuadro Ejecutar. La sesión debe estar abierta y mostrando el escritorio.",
         "record": "Inicia o detiene la grabación de esta sesión. Requiere el complemento Session Recording y el motor integrado.",
         "monitors": "Cambiar entre los monitores remotos",
-        "softKeyboard": "Muestra el teclado en pantalla en un teléfono o tableta"
+        "softKeyboard": "Muestra el teclado en pantalla en un teléfono o tableta",
+        "viewOnly": "Deja de enviar el ratón y el teclado, para que puedas observar sin realizar cambios."
       },
       "option": "Opción",
       "logoffConfirm": "¿Quieres cerrar la sesión de Windows? Se perderá el trabajo no guardado.",
@@ -106,7 +108,9 @@
       "recordRequired": "Un administrador ha establecido la grabación como obligatoria en este host",
       "recordRequiredLabel": "Grabación (obligatoria)",
       "monitor": "Monitor {{number}}",
-      "showKeyboard": "Mostrar teclado"
+      "showKeyboard": "Mostrar teclado",
+      "viewOnlyOn": "La vista de solo lectura está activada. Haz clic para volver a enviar la entrada",
+      "viewOnlyOff": "Activar solo lectura"
     },
     "disabled": "El escritorio remoto está desactivado. Un administrador puede activarlo en Configuración.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "El dispositivo remoto necesita el código de su aplicación de autenticación.",
       "codeWrong": "Ese código no fue aceptado. Inténtalo de nuevo.",
       "code": "Código"
-    }
+    },
+    "viewOnlyStarted": "Solo lectura: no se envían el ratón ni el teclado"
   },
   "hosts": {
     "nativeRdpOpened": "Abierto en Escritorio remoto de Windows",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16 bits",
       "colorDepth24": "24 bits",
-      "colorDepth32": "32 bits"
+      "colorDepth32": "32 bits",
+      "quickConnectViewOnly": {
+        "label": "Iniciar sesiones de Conexión rápida en modo solo lectura",
+        "description": "Las sesiones de Conexión rápida de RDP, VNC y ARD se abren sin enviar el ratón ni el teclado. Activa la entrada desde la barra de herramientas cuando quieras interactuar."
+      }
     },
     "admin": {
       "enabled": {

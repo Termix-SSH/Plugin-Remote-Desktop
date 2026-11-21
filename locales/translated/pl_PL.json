@@ -85,7 +85,8 @@
         "logoff": "Wyloguj się",
         "record": "Nagrywaj",
         "monitors": "Monitory",
-        "softKeyboard": "Klawiatura"
+        "softKeyboard": "Klawiatura",
+        "viewOnly": "Tylko do podglądu"
       },
       "hints": {
         "files": "Wyświetlane po włączeniu dysku RDP",
@@ -94,7 +95,8 @@
         "logoff": "Wylogowuje z systemu Windows, uruchamiając polecenie logoff z okna Uruchom. Sesja musi być otwarta i wyświetlać pulpit.",
         "record": "Rozpoczyna lub zatrzymuje nagrywanie tej sesji. Wymaga wtyczki Nagrywanie sesji i wbudowanego silnika.",
         "monitors": "Przełączaj się między monitorami zdalnymi",
-        "softKeyboard": "Wyświetla klawiaturę ekranową na telefonie lub tablecie"
+        "softKeyboard": "Wyświetla klawiaturę ekranową na telefonie lub tablecie",
+        "viewOnly": "Zatrzymuje wysyłanie danych z myszy i klawiatury, dzięki czemu możesz obserwować, nie wprowadzając żadnych zmian."
       },
       "option": "Opcja",
       "logoffConfirm": "Wylogować się z tej sesji Windows? Niezapisana praca zostanie utracona.",
@@ -106,7 +108,9 @@
       "recordRequired": "Administrator wymusił nagrywanie na tym hoście",
       "recordRequiredLabel": "Nagrywanie (wymagane)",
       "monitor": "Monitor {{number}}",
-      "showKeyboard": "Pokaż klawiaturę"
+      "showKeyboard": "Pokaż klawiaturę",
+      "viewOnlyOn": "Tryb tylko do podglądu jest włączony. Kliknij, aby ponownie wysyłać dane wejściowe.",
+      "viewOnlyOff": "Włącz tryb tylko do podglądu"
     },
     "disabled": "Zdalny pulpit jest wyłączony. Administrator może go włączyć w ustawieniach.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Zdalne urządzenie wymaga kodu z aplikacji uwierzytelniającej.",
       "codeWrong": "Ten kod został odrzucony. Spróbuj ponownie.",
       "code": "Kod"
-    }
+    },
+    "viewOnlyStarted": "Tylko do podglądu: dane z myszy i klawiatury nie są wysyłane"
   },
   "hosts": {
     "nativeRdpOpened": "Otwarto w Zdalnym pulpicie Windows",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
-      "colorDepth32": "32-bit"
+      "colorDepth32": "32-bit",
+      "quickConnectViewOnly": {
+        "label": "Uruchamiaj sesje Szybkiego połączenia w trybie tylko do podglądu",
+        "description": "Sesje RDP, VNC i ARD w Szybkim połączeniu otwierają się bez wysyłania danych z myszy i klawiatury. Włącz wprowadzanie danych z paska narzędzi, gdy chcesz wykonać jakąś akcję."
+      }
     },
     "admin": {
       "enabled": {

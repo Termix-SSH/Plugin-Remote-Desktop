@@ -39,7 +39,15 @@ export function pasteTextToRemote(
   const writer = new Guacamole.StringWriter(stream);
   writer.sendText(text);
   writer.sendEnd();
+  sendPasteKeys(client, modifier, pressedKeys);
+}
 
+/** Presses the paste shortcut in the session without touching its clipboard. */
+export function sendPasteKeys(
+  client: Pick<GuacamoleClipboardClient, "sendKeyEvent">,
+  modifier: number = CONTROL_LEFT_KEYSYM,
+  pressedKeys: Readonly<Record<number, boolean>> = {},
+): void {
   // Guacamole tracks browser Command as Meta, translated to Super for ARD.
   const modifierKeys =
     modifier === SUPER_LEFT_KEYSYM
@@ -83,20 +91,51 @@ export function createPasteCatcher(
     }
   };
 
-  element.addEventListener("paste", (event) => {
-    const text = event.clipboardData?.getData("text/plain") ?? "";
-    event.preventDefault();
+  let waiting = false;
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const finish = (text: string) => {
+    if (!waiting) return;
+    waiting = false;
+    clearTimeout(timer);
     restore();
-    if (text) onText(text);
+    onText(text);
+  };
+
+  element.addEventListener("paste", (event) => {
+    event.preventDefault();
+    finish(event.clipboardData?.getData("text/plain") ?? "");
   });
 
   return {
     element,
     capture() {
       element.value = "";
+      waiting = true;
       element.focus({ preventScroll: true });
       // No paste event follows when the clipboard has nothing the page may read.
-      setTimeout(restore, 200);
+      clearTimeout(timer);
+      timer = setTimeout(() => finish(""), 200);
+    },
+  };
+}
+
+/**
+ * Remembers the last text that went either way, so a paste only replaces the
+ * session's clipboard when the local one really changed. Otherwise files or
+ * rich text copied inside the session would be swapped for plain text.
+ */
+export function createClipboardSync() {
+  let last: string | null = null;
+  return {
+    /** True when this local text should be sent before pasting. */
+    shouldSend(text: string): boolean {
+      if (!text || text === last) return false;
+      last = text;
+      return true;
+    },
+    /** Text that came from the session or was sent to it. */
+    note(text: string): void {
+      last = text;
     },
   };
 }

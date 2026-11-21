@@ -85,7 +85,8 @@
         "logoff": "Oturumu kapat",
         "record": "Kaydet",
         "monitors": "Monitörler",
-        "softKeyboard": "Klavye"
+        "softKeyboard": "Klavye",
+        "viewOnly": "Saltık görüntüleme"
       },
       "hints": {
         "files": "RDP sürücüsü açıldığında görünür",
@@ -94,7 +95,8 @@
         "logoff": "Çalıştır kutusundan logoff komutunu çalıştırarak Windows oturumunu kapatır. Oturumun açık ve masaüstünün görünür olması gerekir.",
         "record": "Bu oturumun kaydını başlatır veya durdurur. Oturum Kaydı eklentisi ve yerleşik motor gerektirir.",
         "monitors": "Uzaktaki monitörler arasında geçiş yap",
-        "softKeyboard": "Telefon veya tablette ekranda klavye gösterir"
+        "softKeyboard": "Telefon veya tablette ekranda klavye gösterir",
+        "viewOnly": "Fare ve klavye girişlerini göndermeyi durdurur, böylece hiçbir şeyi değiştirmeden izleyebilirsiniz."
       },
       "option": "Seçenek",
       "logoffConfirm": "Bu Windows oturumundan çıkış yapılsın mı? Kaydedilmemiş işler kaybolacak.",
@@ -106,7 +108,9 @@
       "recordRequired": "Bir yönetici bu ana makinede kaydı zorunlu kıldı",
       "recordRequiredLabel": "Kayıt (zorunlu)",
       "monitor": "Monitör {{number}}",
-      "showKeyboard": "Klavyeyi göster"
+      "showKeyboard": "Klavyeyi göster",
+      "viewOnlyOn": "Salt görüntüleme açık. Girişi tekrar göndermek için tıklayın",
+      "viewOnlyOff": "Salt görüntülemeyi aç"
     },
     "disabled": "Uzak Masaüstü kapalı. Bir yönetici bunu Ayarlar'dan açabilir.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Uzaktaki cihazın doğrulayıcı uygulamasından gelen koda ihtiyacı var.",
       "codeWrong": "Bu kod kabul edilmedi. Tekrar deneyin.",
       "code": "Kod"
-    }
+    },
+    "viewOnlyStarted": "Salt görüntüleme: fare ve klavye girişleri gönderilmiyor"
   },
   "hosts": {
     "nativeRdpOpened": "Windows Uzak Masaüstü'nde açıldı",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
-      "colorDepth32": "32-bit"
+      "colorDepth32": "32-bit",
+      "quickConnectViewOnly": {
+        "label": "Hızlı Bağlantı oturumlarını salt görüntüleme olarak başlat",
+        "description": "Hızlı Bağlantı RDP, VNC ve ARD oturumları fare ve klavye girişlerini göndermeden açılır. Eylem gerçekleştirmek istediğinizde araç çubuğundan girişi açın."
+      }
     },
     "admin": {
       "enabled": {

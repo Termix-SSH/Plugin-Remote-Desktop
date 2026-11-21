@@ -85,7 +85,8 @@
         "logoff": "Izrakstīties",
         "record": "Ierakstīt",
         "monitors": "Monitori",
-        "softKeyboard": "Tastatūra"
+        "softKeyboard": "Tastatūra",
+        "viewOnly": "Tikai skatīties"
       },
       "hints": {
         "files": "Parādās, kad RDP diskzīme ir ieslēgta",
@@ -94,7 +95,8 @@
         "logoff": "Izrakstās no Windows, izpildot logoff no Run lodziņa. Sesijai ir jābūt atvērtai un jāparāda darbvirsma.",
         "record": "Sāk vai aptur šīs sesijas ierakstīšanu. Nepieciešama Session Recording spraudprogramma un iebūvētais dzinējs.",
         "monitors": "Pārslēgties starp attālo monitoriem",
-        "softKeyboard": "Rāda ekrāntastatūru telefonā vai planšetdatorā"
+        "softKeyboard": "Rāda ekrāntastatūru telefonā vai planšetdatorā",
+        "viewOnly": "Pārtrauc peli un tastatūru nosūtīt, lai varētu vērot, neko nemainot."
       },
       "option": "Opcija",
       "logoffConfirm": "Vai vēlaties izrakstīties no šīs Windows sesijas? Nesaglabātais darbs tajā tiks zaudēts.",
@@ -106,7 +108,9 @@
       "recordRequired": "Šī hosta administrators ir noteicis, ka ierakstīšana ir obligāta",
       "recordRequiredLabel": "Ierakstīšana (obligāti)",
       "monitor": "Monitors {{number}}",
-      "showKeyboard": "Rādīt tastatūru"
+      "showKeyboard": "Rādīt tastatūru",
+      "viewOnlyOn": "Režīms „Tikai skatīties” ir ieslēgts. Noklikšķiniet, lai atkal nosūtītu ievadi",
+      "viewOnlyOff": "Ieslēgt režīmu „Tikai skatīties”"
     },
     "disabled": "Tālvadības darbvirsma ir izslēgta. Administrators to var ieslēgt Iestatījumos.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Attālinātajai ierīcei ir nepieciešams kods no autentifikatora lietotnes.",
       "codeWrong": "Šis kods netika pieņemts. Mēģiniet vēlreiz.",
       "code": "Kods"
-    }
+    },
+    "viewOnlyStarted": "Režīms „Tikai skatīties”: jūsu pele un tastatūra netiek nosūtītas"
   },
   "hosts": {
     "nativeRdpOpened": "Atvērts Windows tālvadības darbvirsmā",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bitu",
       "colorDepth24": "24-bitu",
-      "colorDepth32": "32-bitu"
+      "colorDepth32": "32-bitu",
+      "quickConnectViewOnly": {
+        "label": "Ātrā savienojuma sesijas sākt režīmā „Tikai skatīties”",
+        "description": "Ātrā savienojuma RDP, VNC un ARD sesijas tiek atvērtas, nenosūtot peli un tastatūru. Ieslēdziet ievadi no rīkjoslas, kad vēlaties veikt darbības."
+      }
     },
     "admin": {
       "enabled": {

@@ -85,7 +85,8 @@
         "logoff": "Kirjaudu ulos",
         "record": "Nauhoita",
         "monitors": "Näytöt",
-        "softKeyboard": "Näppäimistö"
+        "softKeyboard": "Näppäimistö",
+        "viewOnly": "Vain katselu"
       },
       "hints": {
         "files": "Näytetään, kun RDP-levy on käytössä",
@@ -94,7 +95,8 @@
         "logoff": "Kirjautuu Windowsista ulos suorittamalla logoff-käskyn Suorita-ruudusta. Istunnon on oltava auki ja työpöydän näkyvissä.",
         "record": "Aloittaa tai lopettaa tämän istunnon nauhoituksen. Vaatii Session Recording -liitännäisen ja sisäänrakennetun moottorin.",
         "monitors": "Vaihda etänäytön näyttöjen välillä",
-        "softKeyboard": "Näyttää ruutunäppäimistön puhelimessa tai tabletissa"
+        "softKeyboard": "Näyttää ruutunäppäimistön puhelimessa tai tabletissa",
+        "viewOnly": "Lopettaa hiiren ja näppäimistön syötteiden lähettämisen, jotta voit seurata etätyöpöytää muuttamatta mitään."
       },
       "option": "Option",
       "logoffConfirm": "Kirjaudu ulos tästä Windows-istunnosta? Tallentamaton työ istunnossa menetetään.",
@@ -106,7 +108,9 @@
       "recordRequired": "Ylläpitäjä on vaatinut tallennuksen tälle palvelimelle",
       "recordRequiredLabel": "Tallennus (pakollinen)",
       "monitor": "Näyttö {{number}}",
-      "showKeyboard": "Näytä näppäimistö"
+      "showKeyboard": "Näytä näppäimistö",
+      "viewOnlyOn": "Vain katselu on päällä. Napsauta lähettääksesi syötteet uudelleen.",
+      "viewOnlyOff": "Ota vain katselu käyttöön"
     },
     "disabled": "Etätyöpöytä on poissa käytöstä. Ylläpitäjä voi ottaa sen käyttöön Asetuksista.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Kohdelaitteen tarvitsee koodin todennussovelluksesta.",
       "codeWrong": "Koodia ei hyväksytty. Yritä uudelleen.",
       "code": "Koodi"
-    }
+    },
+    "viewOnlyStarted": "Vain katselu: hiirtäsi ja näppäimistöäsi ei lähetetä"
   },
   "hosts": {
     "nativeRdpOpened": "Avattu Windowsin etätyöpöydässä",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bittinen",
       "colorDepth24": "24-bittinen",
-      "colorDepth32": "32-bittinen"
+      "colorDepth32": "32-bittinen",
+      "quickConnectViewOnly": {
+        "label": "Aloita Pikayhteys-sessiot vain katselutilassa",
+        "description": "Pikayhteys RDP-, VNC- ja ARD-sessiot avataan ilman hiiren ja näppäimistön syötteiden lähettämistä. Ota syötteet käyttöön työkaluriviltä, kun haluat toimia."
+      }
     },
     "admin": {
       "enabled": {

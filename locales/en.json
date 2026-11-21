@@ -85,7 +85,8 @@
         "logoff": "Sign out",
         "record": "Record",
         "monitors": "Monitors",
-        "softKeyboard": "Keyboard"
+        "softKeyboard": "Keyboard",
+        "viewOnly": "View only"
       },
       "hints": {
         "files": "Shows once the RDP drive is on",
@@ -94,7 +95,8 @@
         "logoff": "Signs out of Windows by running logoff from the Run box. The session must be open and showing the desktop.",
         "record": "Starts or stops a recording of this session. Needs the Session Recording plugin and the built-in engine.",
         "monitors": "Switch between the remote monitors",
-        "softKeyboard": "Shows the on-screen keyboard on a phone or tablet"
+        "softKeyboard": "Shows the on-screen keyboard on a phone or tablet",
+        "viewOnly": "Stops sending your mouse and keyboard, so you can watch without changing anything."
       },
       "option": "Option",
       "logoffConfirm": "Sign out of this Windows session? Unsaved work in it is lost.",
@@ -106,7 +108,9 @@
       "recordRequired": "An admin made recording required on this host",
       "recordRequiredLabel": "Recording (required)",
       "monitor": "Monitor {{number}}",
-      "showKeyboard": "Show keyboard"
+      "showKeyboard": "Show keyboard",
+      "viewOnlyOn": "View only is on. Click to send input again",
+      "viewOnlyOff": "Turn on view only"
     },
     "disabled": "Remote Desktop is turned off. An admin can turn it on in Settings.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "The remote device needs the code from its authenticator app.",
       "codeWrong": "That code was not accepted. Try again.",
       "code": "Code"
-    }
+    },
+    "viewOnlyStarted": "View only: your mouse and keyboard are not sent"
   },
   "hosts": {
     "nativeRdpOpened": "Opened in Windows Remote Desktop",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
-      "colorDepth32": "32-bit"
+      "colorDepth32": "32-bit",
+      "quickConnectViewOnly": {
+        "label": "Start Quick Connect sessions view only",
+        "description": "Quick Connect RDP, VNC and ARD sessions open without sending your mouse and keyboard. Turn input on from the toolbar when you want to act."
+      }
     },
     "admin": {
       "enabled": {

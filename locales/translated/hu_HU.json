@@ -85,7 +85,8 @@
         "logoff": "Kijelentkezés",
         "record": "Felvétel",
         "monitors": "Monitorok",
-        "softKeyboard": "Billentyűzet"
+        "softKeyboard": "Billentyűzet",
+        "viewOnly": "Csak megtekintés"
       },
       "hints": {
         "files": "Csak akkor jelenik meg, ha az RDP-meghajtó be van kapcsolva",
@@ -94,7 +95,8 @@
         "logoff": "Kijelentkezik a Windowsból a logoff parancs futtatásával a Futtató ablakból. A munkamenetnek nyitottnak kell lennie, és meg kell jelenítenie az asztalt.",
         "record": "Egy munkamenet-felvétel indítását vagy leállítását kezdeményezi. Szükséges a Session Recording bővítmény és a beépített motor.",
         "monitors": "Váltás a távoli monitorok között",
-        "softKeyboard": "Megjeleníti a képernyőbillentyűzetet telefonon vagy táblagépen"
+        "softKeyboard": "Megjeleníti a képernyőbillentyűzetet telefonon vagy táblagépen",
+        "viewOnly": "Leállítja az egér és billentyűzet bemenetek küldését, így csak nézhet, anélkül, hogy bármit is módosítana."
       },
       "option": "Option",
       "logoffConfirm": "Kijelentkezik ebből a Windows munkamenetből? A mentetlen munka elveszik.",
@@ -106,7 +108,9 @@
       "recordRequired": "Egy rendszergazda kötelezővé tette a felvételt ezen a hoszton",
       "recordRequiredLabel": "Felvétel (kötelező)",
       "monitor": "{{number}}. monitor",
-      "showKeyboard": "Billentyűzet megjelenítése"
+      "showKeyboard": "Billentyűzet megjelenítése",
+      "viewOnlyOn": "Csak megtekintés mód bekapcsolva. Kattintson ide a bemenet újraküldéséhez",
+      "viewOnlyOff": "Csak megtekintés mód bekapcsolása"
     },
     "disabled": "A Távoli asztal kikapcsolva van. Egy rendszergazda bekapcsolhatja a Beállításokban.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "A távoli eszköznek szüksége van a hitelesítő alkalmazásból származó kódra.",
       "codeWrong": "A kód nem lett elfogadva. Próbálja újra.",
       "code": "Kód"
-    }
+    },
+    "viewOnlyStarted": "Csak megtekintés: az egér és billentyűzet bemenetek nem kerülnek küldésre"
   },
   "hosts": {
     "nativeRdpOpened": "Megnyitva a Windows Távoli asztalban",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16 bites",
       "colorDepth24": "24 bites",
-      "colorDepth32": "32 bites"
+      "colorDepth32": "32 bites",
+      "quickConnectViewOnly": {
+        "label": "Gyors kapcsolódási munkamenetek csak megtekintés módban induljanak",
+        "description": "A Gyors kapcsolódás RDP, VNC és ARD munkamenetei úgy nyílnak meg, hogy az egér és billentyűzet bemenetek ne kerüljenek küldésre. A eszköztárból kapcsolhatja be a bemenetet, amikor cselekedni szeretne."
+      }
     },
     "admin": {
       "enabled": {

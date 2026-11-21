@@ -85,7 +85,8 @@
         "logoff": "Keluar",
         "record": "Rekam",
         "monitors": "Monitor",
-        "softKeyboard": "Papan Ketik"
+        "softKeyboard": "Papan Ketik",
+        "viewOnly": "Hanya lihat"
       },
       "hints": {
         "files": "Muncul setelah drive RDP diaktifkan",
@@ -94,7 +95,8 @@
         "logoff": "Keluar dari Windows dengan menjalankan logoff dari kotak Run. Sesi harus terbuka dan menampilkan desktop.",
         "record": "Memulai atau menghentikan rekaman sesi ini. Membutuhkan plugin Session Recording dan mesin bawaan.",
         "monitors": "Beralih antar monitor jarak jauh",
-        "softKeyboard": "Menampilkan papan ketik layar pada ponsel atau tablet"
+        "softKeyboard": "Menampilkan papan ketik layar pada ponsel atau tablet",
+        "viewOnly": "Berhenti mengirim input mouse dan keyboard, sehingga Anda bisa menonton tanpa mengubah apa pun."
       },
       "option": "Opsi",
       "logoffConfirm": "Keluar dari sesi Windows ini? Pekerjaan yang belum disimpan akan hilang.",
@@ -106,7 +108,9 @@
       "recordRequired": "Admin telah mewajibkan perekaman pada host ini",
       "recordRequiredLabel": "Perekaman (wajib)",
       "monitor": "Monitor {{number}}",
-      "showKeyboard": "Tampilkan papan ketik"
+      "showKeyboard": "Tampilkan papan ketik",
+      "viewOnlyOn": "Hanya lihat aktif. Klik untuk mengirim input lagi",
+      "viewOnlyOff": "Aktifkan hanya lihat"
     },
     "disabled": "Remote Desktop dimatikan. Admin dapat mengaktifkannya di Pengaturan.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Perangkat jarak jauh memerlukan kode dari aplikasi autentikatornya.",
       "codeWrong": "Kode tersebut tidak diterima. Coba lagi.",
       "code": "Kode"
-    }
+    },
+    "viewOnlyStarted": "Hanya lihat: mouse dan keyboard Anda tidak dikirim"
   },
   "hosts": {
     "nativeRdpOpened": "Dibuka di Windows Remote Desktop",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
-      "colorDepth32": "32-bit"
+      "colorDepth32": "32-bit",
+      "quickConnectViewOnly": {
+        "label": "Mulai sesi Quick Connect dalam mode hanya lihat",
+        "description": "Sesi RDP, VNC, dan ARD Quick Connect terbuka tanpa mengirim input mouse dan keyboard. Aktifkan input dari toolbar saat Anda ingin berinteraksi."
+      }
     },
     "admin": {
       "enabled": {

@@ -85,7 +85,8 @@
         "logoff": "登出",
         "record": "錄製",
         "monitors": "顯示器",
-        "softKeyboard": "鍵盤"
+        "softKeyboard": "鍵盤",
+        "viewOnly": "唯讀"
       },
       "hints": {
         "files": "啟用 RDP 磁碟機後顯示",
@@ -94,7 +95,8 @@
         "logoff": "透過執行「執行」視窗中的 logoff 命令來登出 Windows。會話必須處於開啟狀態並顯示桌面。",
         "record": "開始或停止錄製此會話。需要會話錄製外掛程式與內建引擎。",
         "monitors": "切換遠端顯示器",
-        "softKeyboard": "在手機或平板上顯示螢幕鍵盤"
+        "softKeyboard": "在手機或平板上顯示螢幕鍵盤",
+        "viewOnly": "停止傳送您的滑鼠與鍵盤輸入，讓您可以觀看而不做任何變更。"
       },
       "option": "選項",
       "logoffConfirm": "要登出此 Windows 會話嗎？未儲存的作業將會遺失。",
@@ -106,7 +108,9 @@
       "recordRequired": "管理員已在此主機上強制要求錄製",
       "recordRequiredLabel": "錄製（強制）",
       "monitor": "顯示器 {{number}}",
-      "showKeyboard": "顯示鍵盤"
+      "showKeyboard": "顯示鍵盤",
+      "viewOnlyOn": "唯讀模式已開啟。按一下以恢復傳送輸入",
+      "viewOnlyOff": "開啟唯讀模式"
     },
     "disabled": "遠端桌面已關閉。管理員可在設定中開啟。",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "遠端裝置需要驗證器應用程式中的驗證碼。",
       "codeWrong": "驗證碼不正確，請再試一次。",
       "code": "驗證碼"
-    }
+    },
+    "viewOnlyStarted": "唯讀模式：您的滑鼠與鍵盤輸入不會被傳送"
   },
   "hosts": {
     "nativeRdpOpened": "已在 Windows 遠端桌面中開啟",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16 位元",
       "colorDepth24": "24 位元",
-      "colorDepth32": "32 位元"
+      "colorDepth32": "32 位元",
+      "quickConnectViewOnly": {
+        "label": "以唯讀模式啟動快速連線工作階段",
+        "description": "快速連線的 RDP、VNC 和 ARD 工作階段開啟時不會傳送您的滑鼠與鍵盤輸入。當您需要操作時，可從工具列開啟輸入功能。"
+      }
     },
     "admin": {
       "enabled": {

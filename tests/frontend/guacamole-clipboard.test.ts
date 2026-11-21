@@ -1,9 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 import {
+  createClipboardSync,
   createPasteCatcher,
   isPasteShortcut,
   pasteModifierFor,
   pasteTextToRemote,
+  sendPasteKeys,
   type GuacamoleClipboardClient,
 } from "../../src/frontend/guacamole-clipboard.js";
 
@@ -175,7 +177,7 @@ describe("paste catcher", () => {
     document.body.innerHTML = "";
   });
 
-  it("returns focus when no paste event arrives", () => {
+  it("hands over empty text when no paste event arrives", () => {
     vi.useFakeTimers();
     const display = document.createElement("div");
     display.tabIndex = 0;
@@ -187,8 +189,52 @@ describe("paste catcher", () => {
     catcher.capture();
     vi.advanceTimersByTime(200);
     expect(document.activeElement).toBe(display);
-    expect(onText).not.toHaveBeenCalled();
+    expect(onText).toHaveBeenCalledExactlyOnceWith("");
     vi.useRealTimers();
     document.body.innerHTML = "";
+  });
+
+  it("hands over one paste per capture", () => {
+    vi.useFakeTimers();
+    const display = document.createElement("div");
+    document.body.appendChild(display);
+    const onText = vi.fn();
+    const catcher = createPasteCatcher(display, onText);
+    document.body.appendChild(catcher.element);
+
+    catcher.capture();
+    catcher.element.dispatchEvent(pasteEvent("hi"));
+    vi.advanceTimersByTime(200);
+    catcher.element.dispatchEvent(pasteEvent("again"));
+    expect(onText).toHaveBeenCalledExactlyOnceWith("hi");
+    vi.useRealTimers();
+    document.body.innerHTML = "";
+  });
+});
+
+describe("paste keys", () => {
+  it("presses Ctrl+V without touching the session clipboard", () => {
+    const keys: string[] = [];
+    sendPasteKeys({
+      sendKeyEvent: (pressed, keysym) => keys.push(`${pressed}:${keysym}`),
+    });
+    expect(keys).toEqual(["1:65507", "1:118", "0:118", "0:65507"]);
+  });
+});
+
+describe("clipboard sync", () => {
+  it("sends local text only when it changed", () => {
+    const sync = createClipboardSync();
+    expect(sync.shouldSend("one")).toBe(true);
+    expect(sync.shouldSend("one")).toBe(false);
+    expect(sync.shouldSend("two")).toBe(true);
+    expect(sync.shouldSend("")).toBe(false);
+  });
+
+  it("keeps files copied in the session when the local text is old", () => {
+    const sync = createClipboardSync();
+    sync.note("copied in the session");
+    expect(sync.shouldSend("copied in the session")).toBe(false);
+    expect(sync.shouldSend("copied on this PC")).toBe(true);
   });
 });

@@ -85,7 +85,8 @@
         "logoff": "Logi välja",
         "record": "Salvesta",
         "monitors": "Monitorid",
-        "softKeyboard": "Klaviatuur"
+        "softKeyboard": "Klaviatuur",
+        "viewOnly": "Ainult vaatamine"
       },
       "hints": {
         "files": "Näidatakse, kui RDP draiv on sisse lülitatud",
@@ -94,7 +95,8 @@
         "logoff": "Logib Windowsist välja, käivitades käsu logoff käivitusaknast. Sessioon peab olema avatud ja töölaud nähtav.",
         "record": "Alustab või peatab selle sessiooni salvestamist. Vajab Session Recording pluginat ja sisseehitatud mootorit.",
         "monitors": "Lülita kaugmonitorite vahel",
-        "softKeyboard": "Kuvab ekraaniklaviatuuri telefonis või tahvelarvutis"
+        "softKeyboard": "Kuvab ekraaniklaviatuuri telefonis või tahvelarvutis",
+        "viewOnly": "Lõpetab hiire ja klaviatuuri sisendi saatmise, nii et saate vaadata ilma midagi muutmata."
       },
       "option": "Option",
       "logoffConfirm": "Kas soovid sellest Windowsi sessioonist välja logida? Salvestamata töö kaob.",
@@ -106,7 +108,9 @@
       "recordRequired": "Haldur on sellel hostil salvestamise kohustuslikuks määranud",
       "recordRequiredLabel": "Salvestamine (kohustuslik)",
       "monitor": "Monitor {{number}}",
-      "showKeyboard": "Kuva klaviatuur"
+      "showKeyboard": "Kuva klaviatuur",
+      "viewOnlyOn": "Ainult vaatamine on sisse lülitatud. Klõpsake, et sisendit uuesti saata",
+      "viewOnlyOff": "Lülita sisse ainult vaatamine"
     },
     "disabled": "Kaugtöölaud on väljas lülitatud. Haldaja saab selle Sätted menüüst sisse lülitada.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Kaugseade vajab autentimise rakmusest saadud koodi.",
       "codeWrong": "Seda koodi ei aktsepteeritud. Proovi uuesti.",
       "code": "Kood"
-    }
+    },
+    "viewOnlyStarted": "Ainult vaatamine: teie hiire ja klaviatuuri sisendit ei saadeta"
   },
   "hosts": {
     "nativeRdpOpened": "Avatud Windowsi Kaugtöölaual",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bitine",
       "colorDepth24": "24-bitine",
-      "colorDepth32": "32-bitine"
+      "colorDepth32": "32-bitine",
+      "quickConnectViewOnly": {
+        "label": "Alusta kiirühenduse sessioone ainult vaatamise režiimis",
+        "description": "Kiirühenduse RDP, VNC ja ARD sessioonid avanevad ilma hiire ja klaviatuuri sisendita. Lülitage sisend tööriistaribal sisse, kui soovite tegutseda."
+      }
     },
     "admin": {
       "enabled": {

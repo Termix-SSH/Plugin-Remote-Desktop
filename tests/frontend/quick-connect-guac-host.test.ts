@@ -56,3 +56,17 @@ describe("quickConnectGuacHost", () => {
     });
   });
 });
+
+describe("quickConnectGuacHost credential", () => {
+  it("passes a saved credential id instead of a secret", () => {
+    const host = quickConnectGuacHost({
+      id: "quick-connect-2",
+      name: "10.0.0.3",
+      ip: "10.0.0.3",
+      pluginSettings: { "remote-desktop": { enableRdp: true } },
+      quickConnectLogin: { protocol: "rdp", credentialId: 4 },
+    } as never);
+    expect(host).toMatchObject({ credentialId: 4 });
+    expect(host.password).toBeUndefined();
+  });
+});

@@ -138,6 +138,30 @@ export const RSA_KEY_EXCHANGE = {
     "AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA",
 } as const;
 
+/**
+ * Plugin processes run on Node's OpenSSL, whose default security level
+ * refuses TLS 1.0 and 1.1. Older Windows Servers only speak those, so they
+ * reset the connection (Plugin-Remote-Desktop#76).
+ */
+export const LEGACY_TLS = {
+  minVersion: "TLSv1",
+  ciphers: "DEFAULT:@SECLEVEL=0",
+} as const;
+
+/** Once, when the handshake broke off before any certificate check. */
+export function retryWithLegacyTls(
+  error: Error & { code?: string },
+  alreadyTried: boolean,
+): boolean {
+  if (alreadyTried) return false;
+  return (
+    error.code === "ECONNRESET" ||
+    /ECONNRESET|unsupported protocol|no protocols available|wrong version number|handshake failure|tlsv1 alert protocol version/i.test(
+      error.message,
+    )
+  );
+}
+
 /** Only when the user turned off certificate checks, and only once. */
 export function retryWithRsaKeyExchange(
   error: Error,
@@ -326,6 +350,8 @@ export class RdpClient implements RemoteClient, PixelSource {
   private hops = 0;
   /** Set after a certificate without the Digital Signature use was refused. */
   private rsaKeyExchange = false;
+  /** Set after an old server broke off the handshake. */
+  private legacyTls = false;
   private size = { width: 0, height: 0, dpi: 96 };
   width = 0;
   height = 0;
@@ -476,7 +502,11 @@ export class RdpClient implements RemoteClient, PixelSource {
         : { servername: hostname, host: hostname }),
       // RDP servers often only offer old TLS versions.
       minVersion: "TLSv1",
+      ...(this.legacyTls ? LEGACY_TLS : {}),
       ...(this.rsaKeyExchange ? RSA_KEY_EXCHANGE : {}),
+      ...(this.legacyTls && this.rsaKeyExchange
+        ? { ciphers: `${RSA_KEY_EXCHANGE.ciphers}:@SECLEVEL=0` }
+        : {}),
     });
     this.socket = secure;
     secure.on("data", (chunk: Buffer) => this.feed(chunk));
@@ -488,6 +518,15 @@ export class RdpClient implements RemoteClient, PixelSource {
           this.host.log(
             "warn",
             "RDP certificate lacks the Digital Signature use, retrying with RSA key exchange",
+          );
+          this.reconnect();
+          return;
+        }
+        if (retryWithLegacyTls(error, this.legacyTls)) {
+          this.legacyTls = true;
+          this.host.log(
+            "warn",
+            `TLS handshake failed (${error.message}), retrying with older TLS versions`,
           );
           this.reconnect();
           return;

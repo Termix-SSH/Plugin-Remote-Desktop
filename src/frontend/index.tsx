@@ -41,7 +41,10 @@ import {
 } from "./guacamole-api";
 import { waitForGuacamoleConnectionId } from "./guacamole-session-id";
 import { quickConnectGuacHost } from "./quick-connect-guac-host";
-import { REMOTE_DESKTOP_TOOLBAR_SLOT } from "./toolbar-items";
+import {
+  REMOTE_DESKTOP_SIDE_PANEL_SLOT,
+  REMOTE_DESKTOP_TOOLBAR_SLOT,
+} from "./toolbar-items";
 import { HostToolbarCard } from "./HostToolbarCard";
 import { HostEditorRustdeskTab } from "./HostEditorRustdeskTab";
 import { HostEditorMoonlightTab } from "./HostEditorMoonlightTab";
@@ -493,6 +496,11 @@ export function activate(app: TermixApp): void {
   app.declareActionSlot({
     id: REMOTE_DESKTOP_TOOLBAR_SLOT,
     accepts: ["button"],
+  });
+  app.declareActionSlot({
+    id: REMOTE_DESKTOP_SIDE_PANEL_SLOT,
+    accepts: ["component"],
+    fit: "fill",
   });
 
   // Mints a token for presenting a host in a collab room.

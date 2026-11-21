@@ -85,7 +85,8 @@
         "logoff": "Tanca la sessió",
         "record": "Enregistra",
         "monitors": "Monitors",
-        "softKeyboard": "Teclat"
+        "softKeyboard": "Teclat",
+        "viewOnly": "Només visualització"
       },
       "hints": {
         "files": "Es mostra un cop s'activa la unitat RDP",
@@ -94,7 +95,8 @@
         "logoff": "Tanca la sessió de Windows executant logoff des de la caixa Executa. La sessió ha d'estar oberta i mostrar l'escriptori.",
         "record": "Inicia o atura l'enregistrament d'aquesta sessió. Requereix el complement d'Enregistrament de sessions i el motor integrat.",
         "monitors": "Canviar entre els monitors remots",
-        "softKeyboard": "Mostra el teclat a la pantalla en un telèfon o tauleta"
+        "softKeyboard": "Mostra el teclat a la pantalla en un telèfon o tauleta",
+        "viewOnly": "Deixa d'enviar les accions del ratolí i el teclat, de manera que puguis observar sense modificar res."
       },
       "option": "Opció",
       "logoffConfirm": "Voleu tancar la sessió d'aquesta sessió de Windows? Es perdrà la feina no desada.",
@@ -106,7 +108,9 @@
       "recordRequired": "Un administrador ha fet que la gravació sigui obligatòria en aquest host",
       "recordRequiredLabel": "Gravació (obligatòria)",
       "monitor": "Monitor {{number}}",
-      "showKeyboard": "Mostra el teclat"
+      "showKeyboard": "Mostra el teclat",
+      "viewOnlyOn": "La visualització només està activada. Feu clic per tornar a enviar les accions.",
+      "viewOnlyOff": "Activa la visualització només"
     },
     "disabled": "L'escriptori remot està desactivat. Un administrador el pot activar a Configuració.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "El dispositiu remot necessita el codi de la seva aplicació d'autenticació.",
       "codeWrong": "Aquest codi no ha estat acceptat. Torna-ho a intentar.",
       "code": "Codi"
-    }
+    },
+    "viewOnlyStarted": "Visualització només: les accions del ratolí i el teclat no s'envien"
   },
   "hosts": {
     "nativeRdpOpened": "S'ha obert a l'Escriptori remot de Windows",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16 bits",
       "colorDepth24": "24 bits",
-      "colorDepth32": "32 bits"
+      "colorDepth32": "32 bits",
+      "quickConnectViewOnly": {
+        "label": "Inicia les sessions de connexió ràpida en mode només visualització",
+        "description": "Les sessions RDP, VNC i ARD de connexió ràpida s'obren sense enviar les accions del ratolí i el teclat. Activeu la interacció des de la barra d'eines quan vulgueu actuar."
+      }
     },
     "admin": {
       "enabled": {

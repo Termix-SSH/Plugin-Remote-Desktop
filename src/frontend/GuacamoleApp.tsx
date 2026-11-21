@@ -56,6 +56,7 @@ import {
   type ToolbarSettings,
 } from "./toolbar-settings.ts";
 import { GuacamoleFileBrowser } from "./GuacamoleFileBrowser.tsx";
+import { RemoteSidePanel, type RemoteSidePanelState } from "./RemoteSidePanel";
 import { describeUploadError } from "./guacamole-filesystem.ts";
 import { canUploadToRdpDrive } from "./guacamole-file-drop.ts";
 import { needsRdpCredentialPrompt } from "./rdp-credential-prompt";
@@ -100,6 +101,8 @@ export interface GuacamoleHostConfig {
   port?: number;
   username?: string;
   password?: string;
+  credentialId?: number;
+  viewOnly?: boolean;
 }
 
 export type GuacamoleQuickHost = GuacamoleHostConfig;
@@ -253,6 +256,11 @@ const GuacamoleAppInner = React.forwardRef<
   const [displayZoom, setDisplayZoom] = useState(1);
   const [filesystem, setFilesystem] = useState<Guacamole.Object | null>(null);
   const [fileBrowserOpen, setFileBrowserOpen] = useState(false);
+  // What the server says: input is dropped there, not only here.
+  const [viewOnly, setViewOnly] = useState(false);
+  // guacd sessions have no switch; the built-in engine says so on connect.
+  const [viewOnlySupported, setViewOnlySupported] = useState(false);
+  const [sidePanel, setSidePanel] = useState<RemoteSidePanelState | null>(null);
   const [pendingUploads, setPendingUploads] = useState<File[]>([]);
 
   const guacConfig = hostConfig.guacamoleConfig ?? {};
@@ -423,6 +431,8 @@ const GuacamoleAppInner = React.forwardRef<
               port: hostConfig.port,
               username: hostConfig.username,
               password: hostConfig.password,
+              credentialId: hostConfig.credentialId,
+              viewOnly: hostConfig.viewOnly,
               domain: hostConfig.domain,
               ignoreCert: true,
               guacamoleConfig: hostConfig.guacamoleConfig,
@@ -715,6 +725,12 @@ const GuacamoleAppInner = React.forwardRef<
           hasFilesystem={filesystem !== null}
           fileBrowserOpen={fileBrowserOpen}
           onToggleFileBrowser={() => setFileBrowserOpen((open) => !open)}
+          viewOnly={viewOnly}
+          onToggleViewOnly={
+            viewOnlySupported
+              ? () => displayRef.current?.setViewOnly(!viewOnly)
+              : undefined
+          }
           onTouchModeChange={handleTouchModeChange}
           zoom={displayZoom}
           displays={rustdeskDisplays}
@@ -728,6 +744,10 @@ const GuacamoleAppInner = React.forwardRef<
                   tabInstanceId: tabId,
                   origin:
                     sessionLookup?.origin === "remote" ? "remote" : "local",
+                  openSidePanel: (
+                    id: string,
+                    props?: Record<string, unknown>,
+                  ) => setSidePanel({ id, props: props ?? {} }),
                 }
               : undefined
           }
@@ -739,96 +759,109 @@ const GuacamoleAppInner = React.forwardRef<
   return (
     <div className="flex h-full w-full flex-col">
       {toolbarSettings.position === "top" && toolbar}
-      <div className="relative min-h-0 w-full flex-1">
-        {(!isDisplayReady || connectionError) && (
-          <ConnectionScreen
-            status={connectionError ? "disconnected" : "connecting"}
-            message={t("remoteDesktop.connecting", {
-              type: resolvedProtocol.toUpperCase(),
-            })}
-            detail={hostDetail}
-            errorDetail={connectionError}
-            onManualRetry={handleReconnect}
-            className="z-50"
-          />
-        )}
-        <GuacamoleDisplay
-          key={token}
-          ref={displayRef}
-          connectionConfig={{
-            token,
-            protocol: resolvedProtocol,
-            type: resolvedProtocol,
-            connectionOrigin: hostConfig.connectionOrigin,
-            width: configuredWidth,
-            rdpAutoResize: hostConfig.rdpAutoResize,
-            height: configuredHeight,
-            dpi: configuredDpi,
-          }}
-          isVisible={isVisible}
-          touchMode={touchMode}
-          allowUpload={canUploadToRdpDrive(
-            allowUpload,
-            guacConfig.enableDrive === true,
-            filesystem !== null,
+      <div className="flex min-h-0 w-full flex-1">
+        <div className="relative min-h-0 min-w-0 flex-1">
+          {(!isDisplayReady || connectionError) && (
+            <ConnectionScreen
+              status={connectionError ? "disconnected" : "connecting"}
+              message={t("remoteDesktop.connecting", {
+                type: resolvedProtocol.toUpperCase(),
+              })}
+              detail={hostDetail}
+              errorDetail={connectionError}
+              onManualRetry={handleReconnect}
+              className="z-50"
+            />
           )}
-          onConnect={() => {
-            autoReconnects.current = 0;
-            setIsDisplayReady(true);
-          }}
-          onLost={handleLost}
-          onError={(err) => {
-            const prompt = rustdeskPromptFor(err);
-            if (prompt) {
-              setConnectionError(null);
-              setRustdeskPrompt(prompt);
-              return;
-            }
-            setConnectionError(err);
-            addLog({ type: "error", stage: "error", message: err });
-          }}
-          onDisplays={setRustdeskDisplays}
-          onStageChange={(stage) => {
-            const type = resolvedProtocol.toUpperCase();
-            switch (stage) {
-              case "guac_connecting":
-                addLog({
-                  type: "info",
-                  stage,
-                  message: t("remoteDesktop.openingSession", { type }),
-                });
-                break;
-              case "guac_handshake":
-                addLog({
-                  type: "info",
-                  stage,
-                  message: t("remoteDesktop.negotiating", { type }),
-                });
-                break;
-              case "guac_ready":
-                addLog({
-                  type: "success",
-                  stage,
-                  message: t("remoteDesktop.sessionReady", { type }),
-                });
-                break;
-              default:
-                break;
-            }
-          }}
-          onZoomChange={setDisplayZoom}
-          onFilesystem={setFilesystem}
-          onDropFiles={handleDropFiles}
-          onDropUnavailable={handleDropUnavailable}
-        />
-        {filesystem && fileBrowserOpen && (
-          <GuacamoleFileBrowser
-            filesystem={filesystem}
-            allowUpload={allowUpload}
-            allowDownload={allowDownload}
-            pendingUploads={pendingUploads}
-            onPendingUploadsHandled={() => setPendingUploads([])}
-            onClose={() => setFileBrowserOpen(false)}
+          <GuacamoleDisplay
+            key={token}
+            ref={displayRef}
+            connectionConfig={{
+              token,
+              protocol: resolvedProtocol,
+              type: resolvedProtocol,
+              connectionOrigin: hostConfig.connectionOrigin,
+              width: configuredWidth,
+              rdpAutoResize: hostConfig.rdpAutoResize,
+              height: configuredHeight,
+              dpi: configuredDpi,
+            }}
+            isVisible={isVisible}
+            touchMode={touchMode}
+            allowUpload={canUploadToRdpDrive(
+              allowUpload,
+              guacConfig.enableDrive === true,
+              filesystem !== null,
+            )}
+            onConnect={() => {
+              autoReconnects.current = 0;
+              setIsDisplayReady(true);
+            }}
+            onViewOnlyChange={(on) => {
+              setViewOnlySupported(true);
+              setViewOnly(on);
+            }}
+            onLost={handleLost}
+            onError={(err) => {
+              const prompt = rustdeskPromptFor(err);
+              if (prompt) {
+                setConnectionError(null);
+                setRustdeskPrompt(prompt);
+                return;
+              }
+              setConnectionError(err);
+              addLog({ type: "error", stage: "error", message: err });
+            }}
+            onDisplays={setRustdeskDisplays}
+            onStageChange={(stage) => {
+              const type = resolvedProtocol.toUpperCase();
+              switch (stage) {
+                case "guac_connecting":
+                  addLog({
+                    type: "info",
+                    stage,
+                    message: t("remoteDesktop.openingSession", { type }),
+                  });
+                  break;
+                case "guac_handshake":
+                  addLog({
+                    type: "info",
+                    stage,
+                    message: t("remoteDesktop.negotiating", { type }),
+                  });
+                  break;
+                case "guac_ready":
+                  addLog({
+                    type: "success",
+                    stage,
+                    message: t("remoteDesktop.sessionReady", { type }),
+                  });
+                  break;
+                default:
+                  break;
+              }
+            }}
+            onZoomChange={setDisplayZoom}
+            onFilesystem={setFilesystem}
+            onDropFiles={handleDropFiles}
+            onDropUnavailable={handleDropUnavailable}
+          />
+          {filesystem && fileBrowserOpen && (
+            <GuacamoleFileBrowser
+              filesystem={filesystem}
+              allowUpload={allowUpload}
+              allowDownload={allowDownload}
+              pendingUploads={pendingUploads}
+              onPendingUploadsHandled={() => setPendingUploads([])}
+              onClose={() => setFileBrowserOpen(false)}
+            />
+          )}
+        </div>
+        {sidePanel && (
+          <RemoteSidePanel
+            panel={sidePanel}
+            hostId={typeof hostId === "number" ? hostId : undefined}
+            onClose={() => setSidePanel(null)}
           />
         )}
       </div>

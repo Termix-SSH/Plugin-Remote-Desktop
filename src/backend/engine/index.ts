@@ -15,7 +15,11 @@ import {
   type RecordingOptions,
   type UserSocket,
 } from "./session.js";
-import { SHARE_ID_SETTING, type GuacamoleToken } from "../token-service.js";
+import {
+  SHARE_ID_SETTING,
+  VIEW_ONLY_SETTING,
+  type GuacamoleToken,
+} from "../token-service.js";
 import type { RemoteSessions } from "../sessions.js";
 import { errorMessage, type RemoteDesktopLogger } from "../log.js";
 
@@ -188,6 +192,7 @@ export class BuiltinEngine {
       config,
       worker,
       recording: recording?.options,
+      viewOnly: token.connection.settings[VIEW_ONLY_SETTING] === "true",
       log: (level, message, logMeta) => {
         const write =
           level === "error"

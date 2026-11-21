@@ -33,5 +33,15 @@ export function quickConnectGuacHost(
     rdpAuthType: "direct",
     username: login?.username,
     password: login?.password,
+    // Newer than the SDK types: Termix 26.11.3 carries it.
+    credentialId: credentialIdOf(login),
+    viewOnly: (login as { viewOnly?: unknown } | undefined)?.viewOnly === true,
   };
+}
+
+function credentialIdOf(login: unknown): number | undefined {
+  const id = (login as { credentialId?: unknown } | undefined)?.credentialId;
+  return typeof id === "number" && Number.isSafeInteger(id) && id > 0
+    ? id
+    : undefined;
 }

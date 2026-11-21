@@ -74,6 +74,8 @@ export interface GuacamoleRecordingMetadata {
 
 /** The session share a join came through, so revoking it can kick the viewer. */
 export const SHARE_ID_SETTING = "termix-share-id";
+/** "true" starts the owner's session view only. Only ever turned on. */
+export const VIEW_ONLY_SETTING = "termix-view-only";
 
 const CIPHER = "aes-256-cbc";
 const KEY_LENGTH = 32;

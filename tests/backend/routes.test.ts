@@ -251,6 +251,61 @@ describe("POST /connect-host/:hostId", () => {
     });
   });
 
+  it("opens a saved credential for a quick connect on the server", async () => {
+    server = await start();
+    const credentials = server.mock.ctx.credentials as unknown as Record<
+      string,
+      unknown
+    >;
+    const resolveLogin = vi.fn(async (id: number) =>
+      id === 4 ? { username: "admin", password: "s3cret" } : null,
+    );
+    credentials.resolveLogin = resolveLogin;
+    const response = await server.request("POST", "/token", {
+      type: "rdp",
+      hostname: "10.0.0.9",
+      username: "ignored",
+      credentialId: 4,
+    });
+    expect(response.status).toBe(200);
+    const token = tokens.decryptToken(response.body.token);
+    expect(token?.connection.settings).toMatchObject({
+      username: "admin",
+      password: "s3cret",
+    });
+    expect(
+      (
+        await server.request("POST", "/token", {
+          type: "rdp",
+          hostname: "10.0.0.9",
+          credentialId: 9,
+        })
+      ).status,
+    ).toBe(404);
+  });
+
+  it("starts a quick connect view only when asked or by the user's default, never the other way", async () => {
+    server = await start();
+    const mint = async (body: Record<string, unknown>) => {
+      const response = await server!.request("POST", "/token", {
+        type: "vnc",
+        hostname: "10.0.0.9",
+        ...body,
+      });
+      return tokens.decryptToken(response.body.token)?.connection.settings;
+    };
+    expect((await mint({}))?.["termix-view-only"]).toBeUndefined();
+    expect((await mint({ viewOnly: true }))?.["termix-view-only"]).toBe("true");
+    await server.mock.ctx.settings.setUser(
+      "user-1",
+      "quickConnectViewOnly",
+      true,
+    );
+    expect(
+      (await mint({ "termix-view-only": "false" }))?.["termix-view-only"],
+    ).toBe("true");
+  });
+
   it("refuses a protocol the host has switched off", async () => {
     server = await start({ protocolTargets: { "7:vnc": target() } });
     const response = await server.request("POST", "/connect-host/7", {

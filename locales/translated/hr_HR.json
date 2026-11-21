@@ -85,7 +85,8 @@
         "logoff": "Odjava",
         "record": "Snimanje",
         "monitors": "Monitori",
-        "softKeyboard": "Tipkovnica"
+        "softKeyboard": "Tipkovnica",
+        "viewOnly": "Samo za pregled"
       },
       "hints": {
         "files": "Prikazuje se nakon uključivanja RDP pogona",
@@ -94,7 +95,8 @@
         "logoff": "Odjava iz Windowsa pokretanjem naredbe logoff iz dijaloškog okvira Run. Sesija mora biti otvorena i prikazivati radnu površinu.",
         "record": "Pokreće ili zaustavlja snimanje ove sesije. Zahtijeva dodatak Session Recording i ugrađeni mehanizam.",
         "monitors": "Prebacivanje između udaljenih monitora",
-        "softKeyboard": "Prikazuje tipkovnicu na zaslonu na telefonu ili tabletu"
+        "softKeyboard": "Prikazuje tipkovnicu na zaslonu na telefonu ili tabletu",
+        "viewOnly": "Prestaje slati unos miša i tipkovnice, tako da možete promatrati bez ikakvih promjena."
       },
       "option": "Opcija",
       "logoffConfirm": "Odjaviti se iz ove Windows sesije? Nesavedeni rad u njoj bit će izgubljen.",
@@ -106,7 +108,9 @@
       "recordRequired": "Administrator je postavio snimanje kao obavezno za ovaj host",
       "recordRequiredLabel": "Snimanje (obavezno)",
       "monitor": "Monitor {{number}}",
-      "showKeyboard": "Prikaži tipkovnicu"
+      "showKeyboard": "Prikaži tipkovnicu",
+      "viewOnlyOn": "Način samo za pregled je uključen. Kliknite za ponovno slanje unosa",
+      "viewOnlyOff": "Uključi način samo za pregled"
     },
     "disabled": "Udaljeni radni stol je isključen. Administrator ga može uključiti u postavkama.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Udaljeni uređaj zahtijeva kod iz aplikacije za autentifikaciju.",
       "codeWrong": "Taj kod nije prihvaćen. Pokušaj ponovo.",
       "code": "Kod"
-    }
+    },
+    "viewOnlyStarted": "Samo za pregled: unos miša i tipkovnice se ne šalje"
   },
   "hosts": {
     "nativeRdpOpened": "Otvoreno u Windows Remote Desktopu",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bitno",
       "colorDepth24": "24-bitno",
-      "colorDepth32": "32-bitno"
+      "colorDepth32": "32-bitno",
+      "quickConnectViewOnly": {
+        "label": "Pokreni sesije Brzog povezivanja u načinu samo za pregled",
+        "description": "Sesije Brzog povezivanja za RDP, VNC i ARD otvaraju se bez slanja unosa miša i tipkovnice. Uključite unos s alatne trake kada želite djelovati."
+      }
     },
     "admin": {
       "enabled": {

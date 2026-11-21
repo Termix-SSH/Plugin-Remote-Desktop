@@ -71,6 +71,9 @@ interface GuacamoleToolbarProps {
   fileBrowserOpen?: boolean;
   onToggleFileBrowser?: () => void;
   onTouchModeChange?: (mode: GuacamoleTouchMode) => void;
+  /** The session only watches: input is dropped on the server. */
+  viewOnly?: boolean;
+  onToggleViewOnly?: () => void;
   zoom?: number;
   metaKeyFamily?: MetaKeyFamily;
   /** Handed to "remote-desktop.toolbar" actions (the share button). */
@@ -88,6 +91,8 @@ interface RemoteDesktopToolbarContext {
   tabInstanceId?: string;
   /** The backend the session runs on. */
   origin?: "local" | "remote";
+  /** Docks a "remote-desktop.sidePanel" contribution beside the display. */
+  openSidePanel?: (id: string, props?: Record<string, unknown>) => void;
 }
 
 const BUTTON =
@@ -127,6 +132,8 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
   hasFilesystem = false,
   fileBrowserOpen = false,
   onToggleFileBrowser,
+  viewOnly = false,
+  onToggleViewOnly,
   onTouchModeChange,
   zoom = 1,
   metaKeyFamily,
@@ -148,6 +155,7 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
       visibleButtons(catalog, settings.buttons).filter((item) => {
         if (item.protocols && !item.protocols.includes(protocol)) return false;
         if (item.id === "files") return hasFilesystem && !!onToggleFileBrowser;
+        if (item.id === "viewOnly") return !!onToggleViewOnly;
         if (item.id === "record") return recording.available;
         if (item.id === "monitors") return (displays?.list.length ?? 0) > 1;
         if (item.id === "touchMode") {
@@ -162,6 +170,7 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
       protocol,
       hasFilesystem,
       onToggleFileBrowser,
+      onToggleViewOnly,
       touchMode,
       onTouchModeChange,
       displays,
@@ -403,6 +412,16 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
             )}
           </span>
         );
+      case "viewOnly":
+        return textButton(
+          item.id,
+          viewOnly
+            ? t("remoteDesktop.toolbar.viewOnlyOn")
+            : t("remoteDesktop.toolbar.viewOnlyOff"),
+          labeled ? title : null,
+          () => onToggleViewOnly?.(),
+          { icon: item.icon, active: viewOnly, pressed: viewOnly },
+        );
       case "files":
         return textButton(
           item.id,
@@ -592,6 +611,16 @@ export const GuacamoleToolbar: React.FC<GuacamoleToolbarProps> = ({
   const menuEntries = (item: ToolbarItemInfo): MenuEntry[] => {
     const title = t(item.titleKey);
     switch (item.id) {
+      case "viewOnly":
+        return [
+          {
+            key: item.id,
+            label: title,
+            icon: item.icon,
+            checked: viewOnly,
+            run: () => onToggleViewOnly?.(),
+          },
+        ];
       case "files":
         return [
           {

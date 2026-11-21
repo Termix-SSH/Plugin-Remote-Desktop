@@ -85,7 +85,8 @@
         "logoff": "Logg av",
         "record": "Ta opp",
         "monitors": "Skjermer",
-        "softKeyboard": "Tastatur"
+        "softKeyboard": "Tastatur",
+        "viewOnly": "Kun visning"
       },
       "hints": {
         "files": "Vises når RDP-enheten er aktivert",
@@ -94,7 +95,8 @@
         "logoff": "Logger av Windows ved å kjøre logoff fra Utfør-boksen. Økten må være åpen og vise skrivebordet.",
         "record": "Starter eller stopper opptak av denne økten. Krever Session Recording-pluginen og den innebygde motoren.",
         "monitors": "Bytt mellom fjerntskjermene",
-        "softKeyboard": "Viser skjerm-tastaturet på en telefon eller nettbrett"
+        "softKeyboard": "Viser skjerm-tastaturet på en telefon eller nettbrett",
+        "viewOnly": "Stanser sending av mus og tastatur, slik at du kan se uten å endre noe."
       },
       "option": "Alternativ",
       "logoffConfirm": "Vil du logge av denne Windows-økten? Ulagret arbeid i den går tapt.",
@@ -106,7 +108,9 @@
       "recordRequired": "En administrator har gjort opptak påkrevd på denne verten",
       "recordRequiredLabel": "Opptak (påkrevd)",
       "monitor": "Skjerm {{number}}",
-      "showKeyboard": "Vis tastatur"
+      "showKeyboard": "Vis tastatur",
+      "viewOnlyOn": "Kun visning er på. Klikk for å sende inndata igjen",
+      "viewOnlyOff": "Aktiver kun visning"
     },
     "disabled": "Fjernskrivebord er slått av. En administrator kan slå det på i Innstillinger.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Den fjerne enheten krever koden fra autentiseringsappen.",
       "codeWrong": "Denne koden ble ikke akseptert. Prøv igjen.",
       "code": "Kode"
-    }
+    },
+    "viewOnlyStarted": "Kun visning: mus og tastatur sendes ikke"
   },
   "hosts": {
     "nativeRdpOpened": "Åpnet i Windows Fjernskrivebord",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
-      "colorDepth32": "32-bit"
+      "colorDepth32": "32-bit",
+      "quickConnectViewOnly": {
+        "label": "Start hurtigtilkoblingssesjoner i kun visning",
+        "description": "Hurtigtilkobling for RDP, VNC og ARD-sesjoner åpnes uten å sende mus og tastatur. Aktiver inndata fra verktøylinjen når du vil gjøre noe."
+      }
     },
     "admin": {
       "enabled": {

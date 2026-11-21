@@ -85,7 +85,8 @@
         "logoff": "Log ud",
         "record": "Optag",
         "monitors": "Skærme",
-        "softKeyboard": "Tastatur"
+        "softKeyboard": "Tastatur",
+        "viewOnly": "Kun visning"
       },
       "hints": {
         "files": "Vises, når RDP-drevet er aktiveret",
@@ -94,7 +95,8 @@
         "logoff": "Logger ud af Windows ved at køre logoff fra Kør-boksen. Sessionen skal være åben og vise skrivebordet.",
         "record": "Starter eller stopper optagelse af denne session. Kræver Session Recording-pluginet og den indbyggede motor.",
         "monitors": "Skift mellem de fjerne skærme",
-        "softKeyboard": "Viser skærmtastaturet på en telefon eller tablet"
+        "softKeyboard": "Viser skærmtastaturet på en telefon eller tablet",
+        "viewOnly": "Stopper sending af din mus og tastatur, så du kan se uden at ændre noget."
       },
       "option": "Option",
       "logoffConfirm": "Vil du logge ud af denne Windows-session? Ugemte ændringer i den går tabt.",
@@ -106,7 +108,9 @@
       "recordRequired": "En administrator har gjort optagelse påkrævet på denne vært",
       "recordRequiredLabel": "Optagelse (påkrævet)",
       "monitor": "Skærm {{number}}",
-      "showKeyboard": "Vis tastatur"
+      "showKeyboard": "Vis tastatur",
+      "viewOnlyOn": "Kun visning er slået til. Klik for at sende input igen",
+      "viewOnlyOff": "Slå kun visning til"
     },
     "disabled": "Remote Desktop er slået fra. En administrator kan slå det til i Indstillinger.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Den eksterne enhed har brug for koden fra dens autentifikator-app.",
       "codeWrong": "Den kode blev ikke accepteret. Prøv igen.",
       "code": "Kode"
-    }
+    },
+    "viewOnlyStarted": "Kun visning: din mus og dit tastatur sendes ikke"
   },
   "hosts": {
     "nativeRdpOpened": "Åbnet i Windows Remote Desktop",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
-      "colorDepth32": "32-bit"
+      "colorDepth32": "32-bit",
+      "quickConnectViewOnly": {
+        "label": "Start Quick Connect-sessioner i kun visning",
+        "description": "Quick Connect RDP-, VNC- og ARD-sessioner åbnes uden at sende din mus og dit tastatur. Slå input til fra værktøjslinjen, når du vil handle."
+      }
     },
     "admin": {
       "enabled": {

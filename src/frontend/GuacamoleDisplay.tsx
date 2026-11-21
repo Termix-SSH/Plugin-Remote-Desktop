@@ -14,6 +14,9 @@ import { useTranslation } from "@termix-ssh/plugin-sdk/frontend";
 import { toast } from "sonner";
 import { createRemoteClipboard } from "./remote-clipboard";
 import { getGuacamoleToken, remoteByDefault } from "./guacamole-api";
+
+/** Matches the engine's own switch, see VIEW_ONLY_OPCODE in session.ts. */
+const VIEW_ONLY_OPCODE = "termix-view-only";
 import { watchTunnel, type TunnelWatch } from "./tunnel-watch";
 import {
   buildGuacamoleWebSocketBaseUrl,
@@ -37,10 +40,12 @@ import {
 } from "./rustdesk-video";
 import { guacStateToStage } from "./guacamole-state.ts";
 import {
+  createClipboardSync,
   createPasteCatcher,
   isPasteShortcut,
   pasteModifierFor,
   pasteTextToRemote,
+  sendPasteKeys,
 } from "./guacamole-clipboard.ts";
 import {
   getGuacamoleDisplaySize,
@@ -125,6 +130,8 @@ export interface GuacamoleDisplayHandle {
   isSoftKeyboardOpen: () => boolean;
   /** Shows another RustDesk monitor. */
   selectDisplay: (index: number) => void;
+  /** Asks the server to drop or pass this session's input again. */
+  setViewOnly: (on: boolean) => void;
 }
 
 export type GuacamoleTouchMode = "touchscreen" | "touchpad";
@@ -138,6 +145,8 @@ interface GuacamoleDisplayProps {
   onDisconnect?: () => void;
   onError?: (error: string) => void;
   onFilesystem?: (filesystem: Guacamole.Object | null) => void;
+  /** The server's view only state for this session. */
+  onViewOnlyChange?: (on: boolean) => void;
   onDropFiles?: (files: File[]) => void;
   onDropUnavailable?: () => void;
   onStageChange?: (stage: ConnectionStage) => void;
@@ -161,6 +170,7 @@ export const GuacamoleDisplay = forwardRef<
     onDisconnect,
     onError,
     onFilesystem,
+    onViewOnlyChange,
     onDisplays,
     onDropFiles,
     onDropUnavailable,
@@ -185,6 +195,7 @@ export const GuacamoleDisplay = forwardRef<
   const remoteClipboardRef = useRef<ReturnType<
     typeof createRemoteClipboard
   > | null>(null);
+  const clipboardSyncRef = useRef(createClipboardSync());
   useEffect(() => {
     const clipboard = createRemoteClipboard(() =>
       toast.info(t("remoteDesktop.clipboardWaiting")),
@@ -198,6 +209,9 @@ export const GuacamoleDisplay = forwardRef<
   }, []);
   const displayElementRef = useRef<HTMLElement | null>(null);
   const clientRef = useRef<Guacamole.Client | null>(null);
+  const tunnelRef = useRef<Guacamole.WebSocketTunnel | null>(null);
+  const onViewOnlyChangeRef = useRef(onViewOnlyChange);
+  onViewOnlyChangeRef.current = onViewOnlyChange;
   const filesystemRef = useRef<Guacamole.Object | null>(null);
   // Held in a ref so tearing down the client can report the loss without
   // rebuilding the connect callback whenever the parent re-renders.
@@ -374,6 +388,7 @@ export const GuacamoleDisplay = forwardRef<
         const writer = new Guacamole.StringWriter(stream);
         writer.sendText(data);
         writer.sendEnd();
+        clipboardSyncRef.current.note(data);
       }
     },
     getFilesystem: () => filesystemRef.current,
@@ -388,6 +403,9 @@ export const GuacamoleDisplay = forwardRef<
     zoomIn: () => applyZoom(stepGuacamoleZoom(zoomRef.current, 1)),
     zoomOut: () => applyZoom(stepGuacamoleZoom(zoomRef.current, -1)),
     resetZoom: () => applyZoom(1),
+    setViewOnly: (on) => {
+      tunnelRef.current?.sendMessage(VIEW_ONLY_OPCODE, on ? "1" : "0");
+    },
     openSoftKeyboard: () => {
       const input = softKeyboardRef.current;
       if (!input) return;
@@ -665,6 +683,17 @@ export const GuacamoleDisplay = forwardRef<
 
     const tunnel = new Guacamole.WebSocketTunnel(wsConnection.url);
     const client = new Guacamole.Client(tunnel);
+    tunnelRef.current = tunnel;
+    // The server answers the view only switch with its own instruction,
+    // which the Guacamole client does not know.
+    const toClient = tunnel.oninstruction;
+    tunnel.oninstruction = (opcode: string, args: string[]) => {
+      if (opcode === VIEW_ONLY_OPCODE) {
+        onViewOnlyChangeRef.current?.(args[0] === "1");
+        return;
+      }
+      toClient?.call(tunnel, opcode, args);
+    };
     // Keys held on a previous client must be released there, not here.
     softKeys.releaseAll();
     clientRef.current = client;
@@ -681,15 +710,18 @@ export const GuacamoleDisplay = forwardRef<
     const displayElement = display.getElement();
     displayElementRef.current = displayElement;
 
-    const pasteCatcher = createPasteCatcher(displayElement, (text) => {
-      if (clientRef.current === client) {
-        pasteTextToRemote(
-          client,
-          text,
-          pasteModifierFor(sessionProtocolRef.current),
-          keyboardRef.current?.pressed,
-        );
+    const pasteLocal = (text: string) => {
+      const modifier = pasteModifierFor(sessionProtocolRef.current);
+      const pressed = keyboardRef.current?.pressed;
+      if (clipboardSyncRef.current.shouldSend(text)) {
+        pasteTextToRemote(client, text, modifier, pressed);
+      } else {
+        sendPasteKeys(client, modifier, pressed);
       }
+    };
+
+    const pasteCatcher = createPasteCatcher(displayElement, (text) => {
+      if (clientRef.current === client) pasteLocal(text);
     });
 
     if (displayRef.current) {
@@ -729,12 +761,7 @@ export const GuacamoleDisplay = forwardRef<
 
         event.preventDefault();
         event.stopImmediatePropagation();
-        pasteTextToRemote(
-          client,
-          text,
-          pasteModifierFor(sessionProtocolRef.current),
-          keyboardRef.current?.pressed,
-        );
+        pasteLocal(text);
       },
       true,
     );
@@ -894,6 +921,7 @@ export const GuacamoleDisplay = forwardRef<
           data += text;
         };
         reader.onend = () => {
+          clipboardSyncRef.current.note(data);
           remoteClipboardRef.current?.copy(data);
         };
       }

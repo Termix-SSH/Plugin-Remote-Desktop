@@ -85,7 +85,8 @@
         "logoff": "Đăng xuất",
         "record": "Ghi lại",
         "monitors": "Màn hình",
-        "softKeyboard": "Bàn phím"
+        "softKeyboard": "Bàn phím",
+        "viewOnly": "Chỉ xem"
       },
       "hints": {
         "files": "Hiển thị khi ổ RDP đã bật",
@@ -94,7 +95,8 @@
         "logoff": "Đăng xuất khỏi Windows bằng cách chạy lệnh logoff từ hộp Run. Phiên làm việc phải đang mở và hiển thị màn hình desktop.",
         "record": "Bắt đầu hoặc dừng ghi lại phiên làm việc này. Cần có plugin Session Recording và công cụ ghi tích hợp.",
         "monitors": "Chuyển đổi giữa các màn hình từ xa",
-        "softKeyboard": "Hiển thị bàn phím trên màn hình trên điện thoại hoặc máy tính bảng"
+        "softKeyboard": "Hiển thị bàn phím trên màn hình trên điện thoại hoặc máy tính bảng",
+        "viewOnly": "Ngừng gửi thao tác chuột và bàn phím, cho phép bạn quan sát mà không thay đổi bất kỳ điều gì."
       },
       "option": "Tùy chọn",
       "logoffConfirm": "Đăng xuất khỏi phiên Windows này? Các công việc chưa lưu sẽ bị mất.",
@@ -106,7 +108,9 @@
       "recordRequired": "Quản trị viên đã yêu cầu ghi lại phiên trên máy chủ này",
       "recordRequiredLabel": "Đang ghi (bắt buộc)",
       "monitor": "Màn hình {{number}}",
-      "showKeyboard": "Hiển thị bàn phím"
+      "showKeyboard": "Hiển thị bàn phím",
+      "viewOnlyOn": "Chế độ chỉ xem đang bật. Nhấp để gửi đầu vào trở lại",
+      "viewOnlyOff": "Bật chế độ chỉ xem"
     },
     "disabled": "Màn hình từ xa đang bị tắt. Quản trị viên có thể bật tính năng này trong Cài đặt.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Thiết bị từ xa yêu cầu mã từ ứng dụng xác thực của nó.",
       "codeWrong": "Mã không được chấp nhận. Vui lòng thử lại.",
       "code": "Mã"
-    }
+    },
+    "viewOnlyStarted": "Chỉ xem: thao tác chuột và bàn phím của bạn không được gửi"
   },
   "hosts": {
     "nativeRdpOpened": "Đã mở trong Windows Remote Desktop",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
-      "colorDepth32": "32-bit"
+      "colorDepth32": "32-bit",
+      "quickConnectViewOnly": {
+        "label": "Bắt đầu phiên Kết nối nhanh ở chế độ chỉ xem",
+        "description": "Các phiên RDP, VNC và ARD của Kết nối nhanh sẽ mở mà không gửi thao tác chuột và bàn phím. Bật đầu vào từ thanh công cụ khi bạn muốn tương tác."
+      }
     },
     "admin": {
       "enabled": {

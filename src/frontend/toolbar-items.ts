@@ -1,6 +1,7 @@
 import { useMemo, type ComponentType } from "react";
 import {
   ArrowUpDown,
+  Eye,
   FolderOpen,
   Circle,
   Keyboard,
@@ -21,6 +22,8 @@ import {
 } from "@termix-ssh/plugin-sdk/frontend";
 
 export const REMOTE_DESKTOP_TOOLBAR_SLOT = "remote-desktop.toolbar";
+/** Panels other plugins dock beside the display, opened by a toolbar action. */
+export const REMOTE_DESKTOP_SIDE_PANEL_SLOT = "remote-desktop.sidePanel";
 
 type Icon = ComponentType<{ className?: string }>;
 
@@ -120,6 +123,14 @@ const RECORDABLE: ToolbarProtocol[] = ["rdp", "vnc", "ard"];
 
 /** The toolbar's own buttons, in their default order. */
 export const BUILTIN_ITEMS: ToolbarItemInfo[] = [
+  {
+    id: "viewOnly",
+    titleKey: "remoteDesktop.toolbar.items.viewOnly",
+    icon: Eye,
+    hintKey: "remoteDesktop.toolbar.hints.viewOnly",
+    protocols: DESKTOP,
+    source: { kind: "builtin" },
+  },
   {
     id: "files",
     titleKey: "remoteDesktop.toolbar.items.files",

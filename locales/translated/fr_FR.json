@@ -85,7 +85,8 @@
         "logoff": "Se déconnecter",
         "record": "Enregistrer",
         "monitors": "Écrans",
-        "softKeyboard": "Clavier"
+        "softKeyboard": "Clavier",
+        "viewOnly": "Lecture seule"
       },
       "hints": {
         "files": "Apparaît une fois le lecteur RDP activé",
@@ -94,7 +95,8 @@
         "logoff": "Se déconnecte de Windows en exécutant logoff depuis la boîte Exécuter. La session doit être ouverte et afficher le bureau.",
         "record": "Démarrer ou arrêter l'enregistrement de cette session. Nécessite le plugin Enregistrement de session et le moteur intégré.",
         "monitors": "Basculer entre les écrans distants",
-        "softKeyboard": "Affiche le clavier à l'écran sur un téléphone ou une tablette"
+        "softKeyboard": "Affiche le clavier à l'écran sur un téléphone ou une tablette",
+        "viewOnly": "Arrête l'envoi de votre souris et clavier, vous permettant d'observer sans rien modifier."
       },
       "option": "Option",
       "logoffConfirm": "Se déconnecter de cette session Windows ? Le travail non enregistré sera perdu.",
@@ -106,7 +108,9 @@
       "recordRequired": "Un administrateur a rendu l'enregistrement obligatoire sur cet hôte",
       "recordRequiredLabel": "Enregistrement (obligatoire)",
       "monitor": "Écran {{number}}",
-      "showKeyboard": "Afficher le clavier"
+      "showKeyboard": "Afficher le clavier",
+      "viewOnlyOn": "Lecture seule activée. Cliquez pour réactiver l'envoi des entrées",
+      "viewOnlyOff": "Activer la lecture seule"
     },
     "disabled": "Le Bureau à distance est désactivé. Un administrateur peut l'activer dans les Paramètres.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "L'appareil distant a besoin du code de son application d'authentification.",
       "codeWrong": "Ce code n'a pas été accepté. Réessayez.",
       "code": "Code"
-    }
+    },
+    "viewOnlyStarted": "Lecture seule : votre souris et clavier ne sont pas envoyés"
   },
   "hosts": {
     "nativeRdpOpened": "Ouvert dans Bureau à distance Windows",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16 bits",
       "colorDepth24": "24 bits",
-      "colorDepth32": "32 bits"
+      "colorDepth32": "32 bits",
+      "quickConnectViewOnly": {
+        "label": "Démarrer les sessions de connexion rapide en lecture seule",
+        "description": "Les sessions RDP, VNC et ARD de connexion rapide s'ouvrent sans envoyer les entrées de la souris et du clavier. Activez les entrées depuis la barre d'outils lorsque vous souhaitez interagir."
+      }
     },
     "admin": {
       "enabled": {

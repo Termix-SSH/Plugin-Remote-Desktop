@@ -1,8 +1,8 @@
 /**
  * Puts text from the remote session on the local clipboard. The async
  * clipboard API only exists on HTTPS (and wants focus), so over plain HTTP
- * the text waits for the next click or key press in the page, where the old
- * execCommand copy is allowed.
+ * the old execCommand copy is used while the last click still counts, or the
+ * text waits for the next click or key press in the page.
  */
 
 function copyWithCommand(text: string): boolean {
@@ -40,6 +40,16 @@ export function createRemoteClipboard(onWaiting?: () => void) {
     document.addEventListener(event, flush, { capture: true });
 
   const wait = (text: string) => {
+    // A right-click Copy in the session sends its text just after the click,
+    // while the browser still counts that click and allows the copy.
+    if (
+      (navigator as { userActivation?: { isActive: boolean } }).userActivation
+        ?.isActive &&
+      copyWithCommand(text)
+    ) {
+      pending = null;
+      return;
+    }
     const first = pending === null;
     pending = text;
     if (first) onWaiting?.();

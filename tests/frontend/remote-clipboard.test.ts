@@ -35,4 +35,32 @@ describe("remote clipboard", () => {
     expect(exec).toHaveBeenCalledTimes(1);
     clipboard.dispose();
   });
+
+  it("copies right away while the last click still counts", () => {
+    vi.stubGlobal("isSecureContext", false);
+    vi.stubGlobal("navigator", { userActivation: { isActive: true } });
+    const exec = vi.fn(() => true);
+    document.execCommand = exec as never;
+    const waiting = vi.fn();
+    const clipboard = createRemoteClipboard(waiting);
+    clipboard.copy("from a right-click");
+    expect(exec).toHaveBeenCalledWith("copy");
+    expect(waiting).not.toHaveBeenCalled();
+
+    document.dispatchEvent(new Event("pointerup"));
+    expect(exec).toHaveBeenCalledTimes(1);
+    clipboard.dispose();
+  });
+
+  it("still waits when the quick copy is refused", () => {
+    vi.stubGlobal("isSecureContext", false);
+    vi.stubGlobal("navigator", { userActivation: { isActive: true } });
+    const exec = vi.fn(() => false);
+    document.execCommand = exec as never;
+    const waiting = vi.fn();
+    const clipboard = createRemoteClipboard(waiting);
+    clipboard.copy("text");
+    expect(waiting).toHaveBeenCalledTimes(1);
+    clipboard.dispose();
+  });
 });

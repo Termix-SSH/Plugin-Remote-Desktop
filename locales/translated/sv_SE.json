@@ -85,7 +85,8 @@
         "logoff": "Logga ut",
         "record": "Spela in",
         "monitors": "Skärmar",
-        "softKeyboard": "Tangentbord"
+        "softKeyboard": "Tangentbord",
+        "viewOnly": "Endast visning"
       },
       "hints": {
         "files": "Visas när RDP-enheten är aktiverad",
@@ -94,7 +95,8 @@
         "logoff": "Loggar ut från Windows genom att köra logoff från Kör-rutan. Sessionen måste vara öppen och visa skrivbordet.",
         "record": "Startar eller stoppar inspelning av denna session. Kräver tillägget Session Recording och den inbyggda motorn.",
         "monitors": "Byt mellan de fjärrskärmarna",
-        "softKeyboard": "Visar skärmtangentbordet på en telefon eller surfplatta"
+        "softKeyboard": "Visar skärmtangentbordet på en telefon eller surfplatta",
+        "viewOnly": "Slutar skicka din mus och tangentbord, så att du kan titta utan att ändra något."
       },
       "option": "Alternativ",
       "logoffConfirm": "Vill du logga ut från denna Windows-session? Osparat arbete i den går förlorat.",
@@ -106,7 +108,9 @@
       "recordRequired": "En administratör har gjort inspelning obligatorisk på denna värd",
       "recordRequiredLabel": "Inspelning (obligatoriskt)",
       "monitor": "Skärm {{number}}",
-      "showKeyboard": "Visa tangentbord"
+      "showKeyboard": "Visa tangentbord",
+      "viewOnlyOn": "Endast visning är på. Klicka för att skicka indata igen",
+      "viewOnlyOff": "Aktivera endast visning"
     },
     "disabled": "Fjärrskrivbord är inaktiverat. En administratör kan aktivera det i Inställningar.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Den fjärran enheten kräver koden från dess autentiseringsapp.",
       "codeWrong": "Den koden accepterades inte. Försök igen.",
       "code": "Kod"
-    }
+    },
+    "viewOnlyStarted": "Endast visning: din mus och ditt tangentbord skickas inte"
   },
   "hosts": {
     "nativeRdpOpened": "Öppnat i Windows Fjärrskrivbord",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
-      "colorDepth32": "32-bit"
+      "colorDepth32": "32-bit",
+      "quickConnectViewOnly": {
+        "label": "Starta Snabbanslutning-sessioner i endast visning",
+        "description": "Snabbanslutning för RDP, VNC och ARD öppnas utan att skicka din mus och ditt tangentbord. Aktivera indata från verktygsfältet när du vill interagera."
+      }
     },
     "admin": {
       "enabled": {

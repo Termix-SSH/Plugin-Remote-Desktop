@@ -6,6 +6,7 @@ import type { Request, Response, Router } from "express";
 import type { PluginContext } from "@termix-ssh/plugin-sdk/backend";
 import {
   isServerOwnedSetting,
+  VIEW_ONLY_SETTING,
   type GuacamoleTokenService,
 } from "./token-service.js";
 import type { GuacdOptions } from "./guacd-config.js";
@@ -454,8 +455,17 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
     async (req: Request, res: Response) => {
       try {
         if (await refuseWhenOff(res)) return;
-        const { type, hostname, port, username, password, domain, ...raw } =
-          (req.body ?? {}) as Record<string, unknown>;
+        const {
+          type,
+          hostname,
+          port,
+          username,
+          password,
+          domain,
+          credentialId,
+          viewOnly,
+          ...raw
+        } = (req.body ?? {}) as Record<string, unknown>;
         if (!type || !hostname) {
           return res
             .status(400)
@@ -480,8 +490,33 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
           if (value !== "auto") options[key] = value;
         }
         const host = String(hostname);
-        const user = username ? String(username) : "";
-        const pass = password ? String(password) : "";
+        let user = username ? String(username) : "";
+        let pass = password ? String(password) : "";
+        // A saved credential is opened here, so its secret never passes
+        // through the browser. Only the caller's own or shared ones.
+        if (credentialId !== undefined && credentialId !== null) {
+          const id = Number(credentialId);
+          const resolveLogin = (
+            ctx.credentials as {
+              resolveLogin?: (
+                id: number,
+              ) => Promise<{ username: string; password: string } | null>;
+            }
+          ).resolveLogin;
+          if (typeof resolveLogin !== "function") {
+            return res
+              .status(400)
+              .json({ error: "Update Termix to use a saved credential here" });
+          }
+          const login = Number.isSafeInteger(id)
+            ? await resolveLogin.call(ctx.credentials, id)
+            : null;
+          if (!login) {
+            return res.status(404).json({ error: "Credential not found" });
+          }
+          user = login.username || user;
+          pass = login.password;
+        }
         const targetPort = Number(port) || DEFAULT_PORT[type];
         const userId = ctx.currentActor();
         if (type === "rdp" && userId) {
@@ -491,6 +526,20 @@ export function registerRoutes(router: Router, deps: RouteDeps): void {
             if (isServerOwnedSetting(key)) continue;
             if (options[key] === undefined) options[key] = value;
           }
+        }
+
+        // View only is only ever added: a link or a plugin can ask for it,
+        // the user's own default can set it, nothing here turns it off.
+        delete options[VIEW_ONLY_SETTING];
+        if (
+          viewOnly === true ||
+          (userId &&
+            (await ctx.settings.getUser<boolean>(
+              userId,
+              "quickConnectViewOnly",
+            )) === true)
+        ) {
+          options[VIEW_ONLY_SETTING] = "true";
         }
 
         let token: string;

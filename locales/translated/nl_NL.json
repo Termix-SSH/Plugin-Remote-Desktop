@@ -85,7 +85,8 @@
         "logoff": "Afmelden",
         "record": "Opnemen",
         "monitors": "Monitors",
-        "softKeyboard": "Toetsenbord"
+        "softKeyboard": "Toetsenbord",
+        "viewOnly": "Alleen bekijken"
       },
       "hints": {
         "files": "Wordt weergegeven zodra het RDP-station is ingeschakeld",
@@ -94,7 +95,8 @@
         "logoff": "Meldt af bij Windows door logoff uit te voeren via het Uitvoeren-dialoogvenster. De sessie moet open zijn en het bureaublad tonen.",
         "record": "Start of stopt de opname van deze sessie. Vereist de plugin Sessieopname en de ingebouwde engine.",
         "monitors": "Schakel tussen de externe monitors",
-        "softKeyboard": "Toont het schermtoetsenbord op een telefoon of tablet"
+        "softKeyboard": "Toont het schermtoetsenbord op een telefoon of tablet",
+        "viewOnly": "Stopt met het verzenden van je muis- en toetsenbordinput, zodat je kunt kijken zonder iets te wijzigen."
       },
       "option": "Optie",
       "logoffConfirm": "Afmelden van deze Windows-sessie? Niet-opgeslagen werk hierin gaat verloren.",
@@ -106,7 +108,9 @@
       "recordRequired": "Een beheerder heeft opnemen verplicht gesteld op deze host",
       "recordRequiredLabel": "Opname (verplicht)",
       "monitor": "Monitor {{number}}",
-      "showKeyboard": "Toetsenbord tonen"
+      "showKeyboard": "Toetsenbord tonen",
+      "viewOnlyOn": "Alleen bekijken is ingeschakeld. Klik om input weer te verzenden",
+      "viewOnlyOff": "Alleen bekijken inschakelen"
     },
     "disabled": "Remote Desktop is uitgeschakeld. Een beheerder kan het inschakelen in Instellingen.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Het externe apparaat vereist de code uit de authenticator-app.",
       "codeWrong": "Die code is niet geaccepteerd. Probeer het opnieuw.",
       "code": "Code"
-    }
+    },
+    "viewOnlyStarted": "Alleen bekijken: je muis- en toetsenbordinput worden niet verzonden"
   },
   "hosts": {
     "nativeRdpOpened": "Geopend in Windows Remote Desktop",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-bit",
       "colorDepth24": "24-bit",
-      "colorDepth32": "32-bit"
+      "colorDepth32": "32-bit",
+      "quickConnectViewOnly": {
+        "label": "Quick Connect-sessies starten in alleen-lezen-modus",
+        "description": "Quick Connect-sessies voor RDP, VNC en ARD openen zonder je muis- en toetsenbordinput te verzenden. Schakel input in via de werkbalk als je actie wilt ondernemen."
+      }
     },
     "admin": {
       "enabled": {

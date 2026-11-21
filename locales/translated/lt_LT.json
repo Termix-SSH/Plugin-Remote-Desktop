@@ -85,7 +85,8 @@
         "logoff": "Atsijungti",
         "record": "Įrašyti",
         "monitors": "Monitoriai",
-        "softKeyboard": "Klaviatūra"
+        "softKeyboard": "Klaviatūra",
+        "viewOnly": "Tik peržiūra"
       },
       "hints": {
         "files": "Rodoma tik įjungus RDP diską",
@@ -94,7 +95,8 @@
         "logoff": "Atsijungia nuo Windows, paleidžiant logoff iš Run langelio. Sesija turi būti atidaryta ir rodyti darbalaukį.",
         "record": "Pradeda arba sustabdo šios sesijos įrašymą. Reikalingas Session Recording priedas ir integruota variklio sistema.",
         "monitors": "Perjungti tarp nuotolinių monitorių",
-        "softKeyboard": "Rodo ekraninę klaviatūrą telefone ar planšetiniame kompiuteryje"
+        "softKeyboard": "Rodo ekraninę klaviatūrą telefone ar planšetiniame kompiuteryje",
+        "viewOnly": "Nustoja siųsti pelės ir klaviatūros įvesčius, kad galėtumėte stebėti nieko nekeisdami."
       },
       "option": "Option",
       "logoffConfirm": "Atsijungti nuo šios Windows sesijos? Neišsaugotas darbas bus prarastas.",
@@ -106,7 +108,9 @@
       "recordRequired": "Administratorius šiam hostui nustatė privalomą įrašymą",
       "recordRequiredLabel": "Įrašymas (privaloma)",
       "monitor": "Monitorius {{number}}",
-      "showKeyboard": "Rodyti klaviatūrą"
+      "showKeyboard": "Rodyti klaviatūrą",
+      "viewOnlyOn": "Įjungta tik peržiūra. Spustelėkite, kad vėl siųstumėte įvesčius",
+      "viewOnlyOff": "Įjungti tik peržiūrą"
     },
     "disabled": "Nuotolinis darbalaukis išjungtas. Administratorius gali jį įjungti „Nustatymuose“.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Nuotoliniam įrenginiui reikia kodo iš autentifikatoriaus programėlės.",
       "codeWrong": "Šis kodas nebuvo priimtas. Bandykite dar kartą.",
       "code": "Kodas"
-    }
+    },
+    "viewOnlyStarted": "Tik peržiūra: jūsų pelės ir klaviatūros įvesčiai nesiunčiami"
   },
   "hosts": {
     "nativeRdpOpened": "Atidaryta „Windows Remote Desktop“",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16 bitų",
       "colorDepth24": "24 bitų",
-      "colorDepth32": "32 bitų"
+      "colorDepth32": "32 bitų",
+      "quickConnectViewOnly": {
+        "label": "Pradėti „Quick Connect“ sesijas tik peržiūros režimu",
+        "description": "„Quick Connect“ RDP, VNC ir ARD sesijos atsidaro nesiunčiant jūsų pelės ir klaviatūros įvesčių. Įjunkite įvestį iš įrankių juostos, kai norėsite atlikti veiksmus."
+      }
     },
     "admin": {
       "enabled": {

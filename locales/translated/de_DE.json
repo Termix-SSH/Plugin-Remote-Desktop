@@ -85,7 +85,8 @@
         "logoff": "Abmelden",
         "record": "Aufnahme",
         "monitors": "Monitore",
-        "softKeyboard": "Tastatur"
+        "softKeyboard": "Tastatur",
+        "viewOnly": "Nur anzeigen"
       },
       "hints": {
         "files": "Wird angezeigt, sobald das RDP-Laufwerk aktiv ist",
@@ -94,7 +95,8 @@
         "logoff": "Meldet sich von Windows ab, indem logoff über das Ausführen-Dialogfeld ausgeführt wird. Die Sitzung muss geöffnet sein und den Desktop anzeigen.",
         "record": "Startet oder stoppt die Aufnahme dieser Sitzung. Erfordert das Plugin „Session Recording“ und die integrierte Engine.",
         "monitors": "Zwischen den entfernten Monitoren wechseln",
-        "softKeyboard": "Zeigt die Bildschirmtastatur auf einem Telefon oder Tablet an"
+        "softKeyboard": "Zeigt die Bildschirmtastatur auf einem Telefon oder Tablet an",
+        "viewOnly": "Sendet keine Maus- und Tastatureingaben mehr, sodass Sie zuschauen können, ohne etwas zu ändern."
       },
       "option": "Option",
       "logoffConfirm": "Von dieser Windows-Sitzung abmelden? Nicht gespeicherte Arbeit geht dabei verloren.",
@@ -106,7 +108,9 @@
       "recordRequired": "Ein Administrator hat die Aufzeichnung für diesen Host als obligatorisch festgelegt",
       "recordRequiredLabel": "Aufzeichnung (obligatorisch)",
       "monitor": "Monitor {{number}}",
-      "showKeyboard": "Tastatur anzeigen"
+      "showKeyboard": "Tastatur anzeigen",
+      "viewOnlyOn": "Nur-Anzeigen-Modus ist aktiv. Klicken, um Eingaben wieder zu senden.",
+      "viewOnlyOff": "Nur-Anzeigen-Modus aktivieren"
     },
     "disabled": "Remote Desktop ist deaktiviert. Ein Administrator kann es in den Einstellungen aktivieren.",
     "rustdesk": {
@@ -118,7 +122,8 @@
       "codeDescription": "Das entfernte Gerät benötigt den Code aus der Authentifizierungs-App.",
       "codeWrong": "Der Code wurde nicht akzeptiert. Versuchen Sie es erneut.",
       "code": "Code"
-    }
+    },
+    "viewOnlyStarted": "Nur anzeigen: Maus- und Tastatureingaben werden nicht gesendet"
   },
   "hosts": {
     "nativeRdpOpened": "In Windows Remote Desktop geöffnet",
@@ -437,7 +442,11 @@
       },
       "colorDepth16": "16-Bit",
       "colorDepth24": "24-Bit",
-      "colorDepth32": "32-Bit"
+      "colorDepth32": "32-Bit",
+      "quickConnectViewOnly": {
+        "label": "Quick-Connect-Sitzungen im Nur-Anzeigen-Modus starten",
+        "description": "Quick-Connect-RDP-, VNC- und ARD-Sitzungen öffnen sich ohne Maus- und Tastatureingaben. Aktivieren Sie die Eingabe über die Symbolleiste, wenn Sie interagieren möchten."
+      }
     },
     "admin": {
       "enabled": {
