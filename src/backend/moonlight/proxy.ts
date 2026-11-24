@@ -1,3 +1,4 @@
+import { randomBytes } from "node:crypto";
 import http, {
   type IncomingMessage,
   type OutgoingHttpHeaders,
@@ -17,6 +18,11 @@ import type { MoonlightClient, MoonlightConfig } from "./client.js";
  * Only the stream page, its files and the calls it makes are passed on, and
  * only for someone who just launched a PC from Termix (a grant). Moonlight
  * Web's own admin and user pages stay out of reach.
+ *
+ * The tab frames the page from inside its sandboxed plugin frame, so the page
+ * is sandboxed too: it has no Termix login, cookie or storage. The launch
+ * hands out a ticket instead, which the page carries in its path (and the
+ * socket in its query), and Termix serves these routes without its own login.
  */
 
 export const PROXY_HTTP_PATH = "/moonlight/web";
@@ -25,6 +31,10 @@ const HTTP_PREFIX = `/plugin-api/${PLUGIN_ID}${PROXY_HTTP_PATH}`;
 const WS_PREFIX = `/plugin-ws/${PLUGIN_ID}${PROXY_HTTP_PATH}`;
 const STREAM_SOCKET = "/api/host/stream/web_socket";
 export const PROXY_WS_PATH = `${PROXY_HTTP_PATH}${STREAM_SOCKET}`;
+/** Served without Termix's login: the ticket in the path is checked instead. */
+export const PROXY_PUBLIC = `${PROXY_HTTP_PATH}/*`;
+/** Per address and minute: the page loads a few dozen files, then sends ICE candidates one call each. */
+export const PROXY_RATE_LIMIT = 600;
 
 /** How long a launch lets someone stream that PC through the proxy. */
 const GRANT_MS = 12 * 60 * 60 * 1000;
@@ -42,32 +52,48 @@ const API: Array<[RegExp, string[]]> = [
   [/^\/api\/host\/stream\/webrtc\/[\w-]+$/, ["PATCH", "DELETE"]],
 ];
 
-/** Who may stream which Moonlight PC, from their launches. */
+/**
+ * Who may stream which Moonlight PC, from their launches. Each person with a
+ * live grant has one ticket, which goes when their last grant does.
+ */
 export function createGrants(now: () => number = Date.now) {
-  const grants = new Map<string, Map<number, number>>();
-  const live = (userId: string): Map<number, number> | undefined => {
-    const hosts = grants.get(userId);
-    if (!hosts) return undefined;
-    for (const [hostId, until] of hosts) {
-      if (until <= now()) hosts.delete(hostId);
+  const grants = new Map<
+    string,
+    { ticket: string; hosts: Map<number, number> }
+  >();
+  const tickets = new Map<string, string>();
+  const live = (userId: string) => {
+    const entry = grants.get(userId);
+    if (!entry) return undefined;
+    for (const [hostId, until] of entry.hosts) {
+      if (until <= now()) entry.hosts.delete(hostId);
     }
-    if (hosts.size === 0) {
+    if (entry.hosts.size === 0) {
       grants.delete(userId);
+      tickets.delete(entry.ticket);
       return undefined;
     }
-    return hosts;
+    return entry;
   };
   return {
-    allow(userId: string, moonlightHostId: number) {
-      const hosts = grants.get(userId) ?? new Map<number, number>();
-      hosts.set(moonlightHostId, now() + GRANT_MS);
-      grants.set(userId, hosts);
+    /** Lets the user stream the PC and returns their ticket. */
+    allow(userId: string, moonlightHostId: number): string {
+      const entry = live(userId) ?? {
+        ticket: randomBytes(24).toString("base64url"),
+        hosts: new Map<number, number>(),
+      };
+      entry.hosts.set(moonlightHostId, now() + GRANT_MS);
+      grants.set(userId, entry);
+      tickets.set(entry.ticket, userId);
+      return entry.ticket;
     },
-    any(userId: string): boolean {
-      return !!live(userId);
+    /** The person a ticket belongs to, while they still have a grant. */
+    userOf(ticket: string): string | null {
+      const userId = tickets.get(ticket);
+      return userId && live(userId) ? userId : null;
     },
     has(userId: string, moonlightHostId: number): boolean {
-      return !!live(userId)?.has(moonlightHostId);
+      return !!live(userId)?.hosts.has(moonlightHostId);
     },
   };
 }
@@ -87,33 +113,91 @@ export function allowedRequest(method: string, path: string): boolean {
  * Moonlight Web's config.js, pointed at the proxy. The page works out the
  * prefix from its own path, since Termix can sit behind a base path (the dev
  * server, a reverse proxy). It also moves the one WebSocket the page opens
- * from the HTTP path to Termix's plugin socket path under /plugin-ws.
+ * from the HTTP path to Termix's plugin socket path under /plugin-ws, with the
+ * ticket in its query.
+ *
+ * The page is sandboxed, so it gets a storage of its own in memory, and its
+ * calls go without cookies: CORS refuses a sandboxed page's credentialed
+ * calls, and the ticket is what lets them in.
  */
-export function configScript(): string {
+export function configScript(ticket: string): string {
   const http = JSON.stringify(HTTP_PREFIX);
   const ws = JSON.stringify(WS_PREFIX);
+  const id = JSON.stringify(ticket);
   return `(function () {
   var path = location.pathname;
   var at = path.lastIndexOf(${http});
-  var prefix = at < 0 ? ${http} : path.slice(0, at + ${http}.length);
+  var root = at < 0 ? ${http} : path.slice(0, at + ${http}.length);
+  var prefix = root + "/" + ${id};
   window.__CONFIG_JS__ = { path_prefix: prefix };
+  try {
+    window.localStorage.getItem("mlSettings");
+  } catch (e) {
+    var memory = {};
+    Object.defineProperty(window, "localStorage", {
+      configurable: true,
+      value: {
+        getItem: function (key) { return Object.prototype.hasOwnProperty.call(memory, key) ? memory[key] : null; },
+        setItem: function (key, value) { memory[key] = String(value); },
+        removeItem: function (key) { delete memory[key]; },
+        clear: function () { memory = {}; },
+      },
+    });
+  }
+  // A sandboxed page may not start a worker from its server's address, but a
+  // worker it made itself may load that script.
+  var NativeWorker = window.Worker;
+  if (NativeWorker && window.Blob && window.URL && URL.createObjectURL) {
+    window.Worker = function (url, options) {
+      var href = new URL(String(url), location.href);
+      if (href.origin !== location.origin || (options && options.type === "module")) {
+        return new NativeWorker(url, options);
+      }
+      var boot = new Blob(["importScripts(" + JSON.stringify(href.href) + ");"], { type: "text/javascript" });
+      return new NativeWorker(URL.createObjectURL(boot), options);
+    };
+    window.Worker.prototype = NativeWorker.prototype;
+  }
+  // Termix's frames don't pass the gamepad feature on, so asking throws.
+  var nav = window.navigator;
+  if (nav && nav.getGamepads) {
+    var nativeGamepads = nav.getGamepads.bind(nav);
+    nav.getGamepads = function () {
+      try {
+        return nativeGamepads();
+      } catch (e) {
+        return [];
+      }
+    };
+  }
+  var nativeFetch = window.fetch;
+  if (nativeFetch) {
+    window.fetch = function (input, init) {
+      if (init && init.credentials === "include") {
+        init = Object.assign({}, init, { credentials: "same-origin" });
+      }
+      return nativeFetch.call(window, input, init);
+    };
+  }
   // Moonlight Web asks for H.264 only by default, which some browsers can't
   // decode. Auto offers the host every codec this browser can play.
   try {
-    var saved = JSON.parse(localStorage.getItem("mlSettings") || "null");
+    var saved = JSON.parse(window.localStorage.getItem("mlSettings") || "null");
     if (!saved || typeof saved !== "object") saved = {};
     if (!saved.videoCodec) {
       saved.videoCodec = "auto";
-      localStorage.setItem("mlSettings", JSON.stringify(saved));
+      window.localStorage.setItem("mlSettings", JSON.stringify(saved));
     }
   } catch (e) {}
-  var socketPrefix = prefix.slice(0, prefix.length - ${http}.length) + ${ws};
+  var socketPrefix = root.slice(0, root.length - ${http}.length) + ${ws};
   var Native = window.WebSocket;
   var origin = location.origin.replace(/^http/, "ws");
   var from = origin + prefix + "/";
   var to = origin + socketPrefix + "/";
   function Moved(url, protocols) {
-    var target = typeof url === "string" && url.indexOf(from) === 0 ? to + url.slice(from.length) : url;
+    var target = typeof url === "string" && url.indexOf(from) === 0
+      ? to + url.slice(from.length) + (url.indexOf("?") < 0 ? "?" : "&") + "ticket=" + encodeURIComponent(${id})
+      : url;
     return protocols === undefined ? new Native(target) : new Native(target, protocols);
   }
   Moved.prototype = Native.prototype;
@@ -237,24 +321,39 @@ export function sdpHostId(sdp: string): number | null {
 export interface ProxyDeps {
   client: MoonlightClient;
   grants: Grants;
+  /** Whether the ticket's owner may still open sessions, checked every time. */
+  mayStream?: (userId: string) => Promise<boolean>;
   /** Checks a WebRTC offer or socket request names a PC the user may stream. */
   hostIdOf?: (text: string) => number | null;
   log?: (message: string, meta?: Record<string, unknown>) => void;
 }
 
-/** The HTTP side: stream page, its files and its API calls. */
+/**
+ * Replaces Termix's default policy for plugin routes, whose frame-ancestors
+ * 'self' never matches the sandboxed plugin frame the page sits in. Only
+ * someone holding the ticket can open the page, wherever it is framed.
+ */
+const FRAMED_CSP = "object-src 'none'; base-uri 'self'";
+
+/** The stream page reads the WebRTC answer's Location and Link over CORS. */
+const EXPOSED_HEADERS = "Location, Link";
+
+/** The HTTP side: stream page, its files and its API calls, under a ticket. */
 export function createHttpProxy(deps: ProxyDeps) {
   return async (req: Request, res: Response): Promise<void> => {
-    const userId = (req as Request & { userId?: string }).userId;
-    if (!userId || !deps.grants.any(userId)) {
+    const [, ticket = "", ...rest] = (req.path || "/").split("/");
+    const userId = await streamer(deps, ticket);
+    if (!userId) {
       res.status(403).json({ error: "Open this PC from Termix first" });
       return;
     }
-    const path = req.path || "/";
+    res.setHeader("content-security-policy", FRAMED_CSP);
+    res.setHeader("access-control-expose-headers", EXPOSED_HEADERS);
+    const path = `/${rest.join("/")}`;
     if (path === "/config.js") {
       res.setHeader("content-type", "text/javascript; charset=utf-8");
       res.setHeader("cache-control", "no-store");
-      res.send(configScript());
+      res.send(configScript(ticket));
       return;
     }
     if (!allowedRequest(req.method, path)) {
@@ -398,21 +497,42 @@ function refuse(socket: Duplex, status: string): void {
   );
 }
 
+/** The person a ticket lets in, while they may still open sessions. */
+async function streamer(
+  deps: ProxyDeps,
+  ticket: string,
+): Promise<string | null> {
+  const userId = deps.grants.userOf(ticket);
+  if (!userId) return null;
+  return !deps.mayStream || (await deps.mayStream(userId)) ? userId : null;
+}
+
+/** The ticket a socket request carries in its query. */
+function socketTicket(url: string | undefined): string {
+  try {
+    return (
+      new URL(url ?? "/", "http://termix.local").searchParams.get("ticket") ??
+      ""
+    );
+  } catch {
+    return "";
+  }
+}
+
 /** The WebSocket side: the stream page's fallback transport. */
 export function createSocketProxy(deps: ProxyDeps) {
-  return (
-    request: IncomingMessage,
-    socket: Duplex,
-    head: Buffer,
-    userId: string,
-  ): void => {
-    if (!userId || !deps.grants.any(userId)) {
+  return (request: IncomingMessage, socket: Duplex, head: Buffer): void => {
+    const userId = deps.grants.userOf(socketTicket(request.url));
+    if (!userId) {
       refuse(socket, "403 Forbidden");
       return;
     }
-    void deps.client
-      .session()
-      .then(({ config, token }) => {
+    void Promise.all([deps.client.session(), deps.mayStream?.(userId) ?? true])
+      .then(([{ config, token }, allowed]) => {
+        if (!allowed) {
+          refuse(socket, "403 Forbidden");
+          return;
+        }
         const url = upstreamUrl(config, STREAM_SOCKET, "");
         const headers: OutgoingHttpHeaders = {
           connection: "Upgrade",

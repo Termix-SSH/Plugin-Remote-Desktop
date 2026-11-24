@@ -144,6 +144,10 @@ describe("Moonlight launch", () => {
     expect(res.body.url).toBe(
       "http://moonlight.internal:8080/stream.html?hostId=5&appId=7&bitrate=20000",
     );
+    // Under the plugin's own routes, which the frontend reaches on its API base.
+    expect(res.body.proxyUrl).toMatch(
+      /^\/moonlight\/web\/[\w-]{32}\/stream\.html\?hostId=5&appId=7&bitrate=20000$/,
+    );
     expect(audit).toHaveBeenCalledWith(
       expect.objectContaining({ action: "moonlight_connect" }),
     );
