@@ -120,13 +120,24 @@ describe("grants", () => {
   it("lets a user stream only the PCs they launched, for a while", () => {
     let now = 0;
     const grants = createGrants(() => now);
-    expect(grants.any("u1")).toBe(false);
-    grants.allow("u1", 5);
+    const ticket = grants.allow("u1", 5);
     expect(grants.has("u1", 5)).toBe(true);
     expect(grants.has("u1", 6)).toBe(false);
     expect(grants.has("u2", 5)).toBe(false);
+    expect(grants.userOf(ticket)).toBe("u1");
     now = 13 * 60 * 60 * 1000;
-    expect(grants.any("u1")).toBe(false);
+    expect(grants.userOf(ticket)).toBeNull();
+    expect(grants.has("u1", 5)).toBe(false);
+  });
+
+  it("gives each person one unguessable ticket while they have a grant", () => {
+    const grants = createGrants();
+    const ticket = grants.allow("u1", 5);
+    expect(ticket).toMatch(/^[\w-]{32}$/);
+    expect(grants.allow("u1", 6)).toBe(ticket);
+    expect(grants.allow("u2", 5)).not.toBe(ticket);
+    expect(grants.userOf("")).toBeNull();
+    expect(grants.userOf("guess")).toBeNull();
   });
 });
 
@@ -138,44 +149,144 @@ describe("configScript", () => {
         opened.push(url);
       }
     }
-    const window: Record<string, unknown> = { WebSocket: FakeSocket };
-    vm.runInNewContext(configScript(), {
-      window,
+    const window: Record<string, unknown> = {
+      WebSocket: FakeSocket,
       location: { pathname, origin: "http://termix.test" },
-    });
+    };
+    window.window = window;
+    vm.runInNewContext(configScript("T1"), window);
     return { window, opened };
   };
 
   it("works out the prefix under any base path and moves the socket", () => {
     const { window, opened } = run(
-      "/__termix_api/30001/plugin-api/remote-desktop/moonlight/web/stream.html",
+      "/__termix_api/30001/plugin-api/remote-desktop/moonlight/web/T1/stream.html",
     );
     expect((window.__CONFIG_JS__ as { path_prefix: string }).path_prefix).toBe(
-      "/__termix_api/30001/plugin-api/remote-desktop/moonlight/web",
+      "/__termix_api/30001/plugin-api/remote-desktop/moonlight/web/T1",
     );
     const Socket = window.WebSocket as new (url: string) => unknown;
     new Socket(
-      "ws://termix.test/__termix_api/30001/plugin-api/remote-desktop/moonlight/web/api/host/stream/web_socket",
+      "ws://termix.test/__termix_api/30001/plugin-api/remote-desktop/moonlight/web/T1/api/host/stream/web_socket",
     );
     expect(opened[0]).toBe(
-      "ws://termix.test/__termix_api/30001/plugin-ws/remote-desktop/moonlight/web/api/host/stream/web_socket",
+      "ws://termix.test/__termix_api/30001/plugin-ws/remote-desktop/moonlight/web/api/host/stream/web_socket?ticket=T1",
     );
+  });
+
+  it("gives a sandboxed page storage and drops cookies from its calls", async () => {
+    const calls: unknown[] = [];
+    const window: Record<string, unknown> = {
+      WebSocket: class {},
+      location: { pathname: "/x", origin: "http://termix.test" },
+      fetch: (...args: unknown[]) => {
+        calls.push(args);
+        return Promise.resolve("ok");
+      },
+    };
+    Object.defineProperty(window, "localStorage", {
+      configurable: true,
+      get: () => {
+        throw new Error("SecurityError");
+      },
+    });
+    window.window = window;
+    vm.runInNewContext(configScript("T1"), window);
+
+    const storage = window.localStorage as Storage;
+    expect(JSON.parse(storage.getItem("mlSettings") as string)).toEqual({
+      videoCodec: "auto",
+    });
+    storage.setItem("a", "1");
+    expect(storage.getItem("a")).toBe("1");
+    storage.removeItem("a");
+    expect(storage.getItem("a")).toBeNull();
+
+    const fetch = window.fetch as (url: string, init?: object) => unknown;
+    await fetch("/api/role", { method: "GET", credentials: "include" });
+    await fetch("/api/role");
+    expect(calls).toEqual([
+      ["/api/role", { method: "GET", credentials: "same-origin" }],
+      ["/api/role", undefined],
+    ]);
+  });
+});
+
+describe("configScript in a sandboxed frame", () => {
+  it("starts the page's workers from a script of its own and keeps gamepads optional", () => {
+    const started: Array<[string, unknown]> = [];
+    class FakeWorker {
+      constructor(url: string, options?: unknown) {
+        started.push([url, options]);
+      }
+    }
+    const blobs: string[] = [];
+    class FakeBlob {
+      constructor(parts: string[]) {
+        blobs.push(parts.join(""));
+      }
+    }
+    const FakeURL = Object.assign(
+      function (this: URL, input: string, base?: string) {
+        return new URL(input, base);
+      } as unknown as typeof URL,
+      { createObjectURL: () => "blob:termix/1" },
+    );
+    const window: Record<string, unknown> = {
+      WebSocket: class {},
+      Worker: FakeWorker,
+      Blob: FakeBlob,
+      URL: FakeURL,
+      location: {
+        pathname: "/plugin-api/remote-desktop/moonlight/web/T1/stream.html",
+        origin: "http://termix.test",
+        href: "http://termix.test/plugin-api/remote-desktop/moonlight/web/T1/stream.html",
+      },
+      navigator: {
+        getGamepads: () => {
+          throw new Error("disallowed by permissions policy");
+        },
+      },
+    };
+    window.window = window;
+    vm.runInNewContext(configScript("T1"), window);
+
+    const Worker = window.Worker as new (url: unknown, o?: unknown) => unknown;
+    new Worker(
+      "http://termix.test/plugin-api/remote-desktop/moonlight/web/T1/478.js",
+      { type: undefined },
+    );
+    new Worker("https://elsewhere.test/w.js");
+    expect(started).toEqual([
+      ["blob:termix/1", { type: undefined }],
+      ["https://elsewhere.test/w.js", undefined],
+    ]);
+    expect(blobs).toEqual([
+      'importScripts("http://termix.test/plugin-api/remote-desktop/moonlight/web/T1/478.js");',
+    ]);
+    const nav = window.navigator as { getGamepads: () => unknown };
+    expect(nav.getGamepads()).toEqual([]);
   });
 });
 
 describe("configScript codec", () => {
-  const PAGE = "/plugin-api/remote-desktop/moonlight/web/stream.html";
-  const run = (saved: string | null) => {
-    const store = new Map<string, string>();
-    if (saved !== null) store.set("mlSettings", saved);
-    vm.runInNewContext(configScript(), {
-      window: { WebSocket: class {} },
+  const PAGE = "/plugin-api/remote-desktop/moonlight/web/T1/stream.html";
+  const page = (store: Map<string, string>) => {
+    const window: Record<string, unknown> = {
+      WebSocket: class {},
       location: { pathname: PAGE, origin: "http://termix.test" },
       localStorage: {
         getItem: (key: string) => store.get(key) ?? null,
         setItem: (key: string, value: string) => store.set(key, value),
       },
-    });
+    };
+    window.window = window;
+    return window;
+  };
+  const run = (saved: string | null) => {
+    const store = new Map<string, string>();
+    if (saved !== null) store.set("mlSettings", saved);
+    vm.runInNewContext(configScript("T1"), page(store));
     return JSON.parse(store.get("mlSettings") ?? "null") as Record<
       string,
       unknown
@@ -197,14 +308,7 @@ describe("configScript codec", () => {
   it("leaves broken saved settings to the page", () => {
     const store = new Map([["mlSettings", "{oops"]]);
     expect(() =>
-      vm.runInNewContext(configScript(), {
-        window: { WebSocket: class {} },
-        location: { pathname: PAGE, origin: "http://termix.test" },
-        localStorage: {
-          getItem: (key: string) => store.get(key) ?? null,
-          setItem: (key: string, value: string) => store.set(key, value),
-        },
-      }),
+      vm.runInNewContext(configScript("T1"), page(store)),
     ).not.toThrow();
     expect(store.get("mlSettings")).toBe("{oops");
   });
@@ -224,7 +328,7 @@ describe("createHttpProxy", () => {
     return `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
   };
 
-  const setup = async () => {
+  const setup = async (mayStream?: (userId: string) => Promise<boolean>) => {
     const seen: Array<{
       method?: string;
       url?: string;
@@ -264,13 +368,9 @@ describe("createHttpProxy", () => {
     } as unknown as MoonlightClient;
     const app = express();
     app.use(express.json());
-    app.use((req, _res, next) => {
-      (req as express.Request & { userId?: string }).userId = "u1";
-      next();
-    });
     app.use(
       "/web",
-      createHttpProxy({ client, grants, hostIdOf: hostIdFromJson }),
+      createHttpProxy({ client, grants, mayStream, hostIdOf: hostIdFromJson }),
     );
     const base = await listen(http.createServer(app));
     return { base, grants, seen };
@@ -278,19 +378,35 @@ describe("createHttpProxy", () => {
 
   it("refuses anyone who has not launched a PC", async () => {
     const { base } = await setup();
-    const res = await fetch(`${base}/web/stream.html`);
-    expect(res.status).toBe(403);
+    expect((await fetch(`${base}/web/stream.html`)).status).toBe(403);
+    expect((await fetch(`${base}/web/guess/stream.html`)).status).toBe(403);
+  });
+
+  it("stops a ticket once its owner may no longer open sessions", async () => {
+    let allowed = true;
+    const { base, grants } = await setup(async () => allowed);
+    const ticket = grants.allow("u1", 9);
+    expect((await fetch(`${base}/web/${ticket}/stream.html`)).status).toBe(200);
+    allowed = false;
+    expect((await fetch(`${base}/web/${ticket}/stream.html`)).status).toBe(403);
   });
 
   it("passes the page with Termix's session and never the browser's cookies", async () => {
     const { base, grants, seen } = await setup();
-    grants.allow("u1", 9);
-    const res = await fetch(`${base}/web/stream.html?hostId=9`, {
+    const ticket = grants.allow("u1", 9);
+    const res = await fetch(`${base}/web/${ticket}/stream.html?hostId=9`, {
       headers: { cookie: "jwt=termix-session" },
     });
     expect(res.status).toBe(200);
     expect(await res.text()).toBe("page");
     expect(res.headers.get("set-cookie")).toBeNull();
+    // Framed inside the sandboxed plugin frame, read over CORS.
+    expect(res.headers.get("content-security-policy")).not.toContain(
+      "frame-ancestors",
+    );
+    expect(res.headers.get("access-control-expose-headers")).toBe(
+      "Location, Link",
+    );
     expect(seen[0]).toMatchObject({
       url: "/stream.html?hostId=9",
       cookie: "mlSession=tok",
@@ -299,23 +415,23 @@ describe("createHttpProxy", () => {
 
   it("keeps admin pages out and serves its own config", async () => {
     const { base, grants, seen } = await setup();
-    grants.allow("u1", 9);
-    expect((await fetch(`${base}/web/admin.html`)).status).toBe(404);
-    const config = await fetch(`${base}/web/config.js`);
-    expect(await config.text()).toContain("path_prefix");
+    const ticket = grants.allow("u1", 9);
+    expect((await fetch(`${base}/web/${ticket}/admin.html`)).status).toBe(404);
+    const config = await fetch(`${base}/web/${ticket}/config.js`);
+    expect(await config.text()).toContain(JSON.stringify(ticket));
     expect(seen).toHaveLength(0);
   });
 
   it("checks the offer names a launched PC and rewrites its location", async () => {
     const { base, grants, seen } = await setup();
-    grants.allow("u1", 9);
-    const other = await fetch(`${base}/web/api/host/stream/webrtc`, {
+    const ticket = grants.allow("u1", 9);
+    const other = await fetch(`${base}/web/${ticket}/api/host/stream/webrtc`, {
       method: "POST",
       headers: { "content-type": "application/sdp" },
       body: "v=0\r\na=x-moonlight-host-id:10\r\n",
     });
     expect(other.status).toBe(403);
-    const ok = await fetch(`${base}/web/api/host/stream/webrtc`, {
+    const ok = await fetch(`${base}/web/${ticket}/api/host/stream/webrtc`, {
       method: "POST",
       headers: { "content-type": "application/sdp" },
       body: "v=0\r\na=x-moonlight-host-id:9\r\n",

@@ -115,11 +115,7 @@ export function launchMoonlight(
   );
 }
 
-/**
- * Where this frontend reaches the backend, in front of /plugin-api. Empty when
- * it is the page's own origin, a prefix behind the dev server, or a full
- * address in the desktop app.
- */
+/** Where this frontend reaches the plugin's routes: <server>/plugin-api/remote-desktop. */
 export function apiBase(origin: Origin): string {
   const client = guacamoleApi(origin) as { defaults?: { baseURL?: string } };
   return (client.defaults?.baseURL ?? "").replace(/\/+$/, "");

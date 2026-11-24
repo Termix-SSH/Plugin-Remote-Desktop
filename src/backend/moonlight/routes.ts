@@ -35,13 +35,17 @@ export interface MoonlightDeps {
   grants?: Grants;
 }
 
-/** The stream page through Termix's own address, as a path. */
+/**
+ * The stream page through Termix's own address, as a path under this plugin's
+ * routes (the frontend adds the /plugin-api prefix it reaches them on).
+ */
 function proxiedStreamPath(
+  ticket: string,
   options: Parameters<typeof moonlightStreamUrl>[1],
 ): string {
   const url = new URL(
     moonlightStreamUrl(
-      `http://termix.local/plugin-api/remote-desktop${PROXY_HTTP_PATH}`,
+      `http://termix.local${PROXY_HTTP_PATH}/${ticket}`,
       options,
     ),
   );
@@ -125,27 +129,28 @@ export function registerMoonlightRoutes(
   const proxyDeps = {
     client,
     grants,
+    mayStream: (userId: string) => ctx.rbac.hasFor(userId, "sessions"),
     hostIdOf: hostIdFromJson,
     log: (message: string, meta?: Record<string, unknown>) =>
       log.warn(message, { operation: "moonlight_proxy", ...meta }),
   };
   const httpProxy = createHttpProxy(proxyDeps);
   const socketProxy = createSocketProxy(proxyDeps);
-  router.use(
-    PROXY_HTTP_PATH,
-    ctx.rbac.require("sessions"),
-    async (req: Request, res: Response) => {
-      if (await refuseWhenOff(res)) return;
-      await httpProxy(req, res);
-    },
-  );
-  ctx.ws.upgrade(PROXY_WS_PATH, (request, socket, head, userId) =>
-    socketProxy(
-      request as Parameters<typeof socketProxy>[0],
-      socket as Parameters<typeof socketProxy>[1],
-      head as Buffer,
-      userId,
-    ),
+  // Public in core (see PROXY_PUBLIC): the ticket a launch hands out is the
+  // login here, since the sandboxed page has no other.
+  router.use(PROXY_HTTP_PATH, async (req: Request, res: Response) => {
+    if (await refuseWhenOff(res)) return;
+    await httpProxy(req, res);
+  });
+  ctx.ws.upgrade(
+    PROXY_WS_PATH,
+    (request, socket, head) =>
+      socketProxy(
+        request as Parameters<typeof socketProxy>[0],
+        socket as Parameters<typeof socketProxy>[1],
+        head as Buffer,
+      ),
+    { public: true },
   );
 
   /**
@@ -490,22 +495,17 @@ export function registerMoonlightRoutes(
           success: true,
         });
         const userId = ctx.currentActor();
-        if (userId) grants.allow(userId, pc.id);
+        const ticket = userId ? grants.allow(userId, pc.id) : null;
+        const stream = {
+          hostId: pc.id,
+          appId: app.id,
+          bitrate: settings.moonlightBitrate,
+          fps: settings.moonlightFps,
+          transport: settings.moonlightTransport,
+        };
         res.json({
-          proxyUrl: proxiedStreamPath({
-            hostId: pc.id,
-            appId: app.id,
-            bitrate: settings.moonlightBitrate,
-            fps: settings.moonlightFps,
-            transport: settings.moonlightTransport,
-          }),
-          url: moonlightStreamUrl(base, {
-            hostId: pc.id,
-            appId: app.id,
-            bitrate: settings.moonlightBitrate,
-            fps: settings.moonlightFps,
-            transport: settings.moonlightTransport,
-          }),
+          proxyUrl: ticket ? proxiedStreamPath(ticket, stream) : undefined,
+          url: moonlightStreamUrl(base, stream),
           app: app.title,
         });
       } catch (error) {

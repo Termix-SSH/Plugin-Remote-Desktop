@@ -11,6 +11,7 @@ import { BuiltinEngine, resolveEngineMode } from "./engine/index.js";
 import { createDisplayGateway } from "./display-gateway.js";
 import { resolveGuacdOptions } from "./guacd-config.js";
 import { registerRoutes } from "./routes.js";
+import { PROXY_PUBLIC, PROXY_RATE_LIMIT } from "./moonlight/proxy.js";
 import { createLiveSessions } from "./live-sessions.js";
 import {
   hostPayloadLegacy,
@@ -115,7 +116,11 @@ export async function activate(ctx: PluginContext) {
     }),
   );
 
-  registerRoutes(ctx.http.router(), {
+  const router = ctx.http.router({
+    public: [PROXY_PUBLIC],
+    publicRateLimit: PROXY_RATE_LIMIT,
+  });
+  registerRoutes(router, {
     ctx,
     log,
     tokens,
